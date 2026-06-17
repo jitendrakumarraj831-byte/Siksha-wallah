@@ -52,4 +52,4 @@ firebase apphosting:secrets:set NEXT_PUBLIC_FIREBASE_PROJECT_ID
 ## Step 4: Automatic Deploy
 Ab jab bhi aap GitHub par `git push` karenge, Firebase automatically aapka naya version build aur deploy kar dega.
 
-Aap deployment status Firebase Console ke **App Hosting** tab mein dekh sakte hain.
+Aap deployment status Firebase Console ke **App Hosting** tab mein dekh sakte hain.# Siksha-wallah
