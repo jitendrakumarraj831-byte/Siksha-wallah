@@ -1,0 +1,35 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "hero-education",
+      "description": "Educational background with students",
+      "imageUrl": "https://picsum.photos/seed/ed-1/1200/600",
+      "imageHint": "college campus student"
+    },
+    {
+      "id": "course-nursing",
+      "description": "Nursing students in training",
+      "imageUrl": "https://picsum.photos/seed/nurse-1/600/400",
+      "imageHint": "nursing healthcare"
+    },
+    {
+      "id": "course-pharmacy",
+      "description": "Pharmacist working in lab",
+      "imageUrl": "https://picsum.photos/seed/pharma-1/600/400",
+      "imageHint": "pharmacy medicine"
+    },
+    {
+      "id": "course-teaching",
+      "description": "Classroom teaching environment",
+      "imageUrl": "https://picsum.photos/seed/teach-1/600/400",
+      "imageHint": "teaching classroom"
+    },
+    {
+      "id": "counselor",
+      "description": "Friendly AI advisor illustration",
+      "imageUrl": "https://picsum.photos/seed/advisor-1/400/400",
+      "imageHint": "office counseling"
+    }
+  ]
+}
