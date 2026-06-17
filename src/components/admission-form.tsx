@@ -1,13 +1,12 @@
-
 "use client";
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { CheckCircle2, Mail, Phone, User, BookOpen } from "lucide-react";
+import { Mail, Phone, User, BookOpen } from "lucide-react";
 
 export function AdmissionForm() {
   const { toast } = useToast();
@@ -20,7 +19,7 @@ export function AdmissionForm() {
       setSending(false);
       toast({
         title: "Inquiry Sent!",
-        description: "Rajesh Sah will contact you shortly regarding your admission.",
+        description: "Rajesh Kr. Sah will contact you shortly regarding your admission.",
       });
     }, 1500);
   };
@@ -34,7 +33,7 @@ export function AdmissionForm() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-5xl font-headline font-bold mb-4">Admission Inquiry Portal</h2>
-            <p className="text-muted-foreground text-lg">Quickly submit your interest and our administrative team will reach out with detailed brochures and fee structures.</p>
+            <p className="text-muted-foreground text-lg">Submit your interest for India or Abroad courses. Student Credit Card support available.</p>
           </div>
 
           <Card className="border-none shadow-2xl bg-white/80 backdrop-blur-sm">
@@ -69,16 +68,18 @@ export function AdmissionForm() {
                     <SelectContent>
                       <SelectItem value="bed">B.Ed (Bachelor of Education)</SelectItem>
                       <SelectItem value="ded">D.El.Ed (Diploma in El. Ed)</SelectItem>
-                      <SelectItem value="nursing">B.Sc Nursing / GNM</SelectItem>
-                      <SelectItem value="pharmacy">B.Pharm / D.Pharm</SelectItem>
                       <SelectItem value="mbbs">MBBS / BAMS / BHMS</SelectItem>
-                      <SelectItem value="other">Other Professional Course</SelectItem>
+                      <SelectItem value="nursing">B.Sc Nursing / GNM / ANM</SelectItem>
+                      <SelectItem value="pharmacy">B.Pharm / D.Pharm / M.Pharm</SelectItem>
+                      <SelectItem value="comp">BCA / MCA</SelectItem>
+                      <SelectItem value="mgmt">BBA / MBA</SelectItem>
+                      <SelectItem value="other">Polytechnic / ITI / Agri / Law</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="md:col-span-2 space-y-2">
                   <label className="text-sm font-semibold">Message or Specific Query</label>
-                  <Input placeholder="Tell us more about your requirements..." className="h-12" />
+                  <Input placeholder="Tell us more about your academic background..." className="h-12" />
                 </div>
                 <div className="md:col-span-2 pt-4">
                   <Button type="submit" className="w-full h-14 text-xl font-bold bg-primary hover:bg-primary/90 shadow-lg shadow-primary/25" disabled={sending}>

@@ -25,17 +25,17 @@ export function Navbar() {
 
   return (
     <nav className={cn(
-      "sticky top-0 z-50 w-full transition-all duration-300",
-      scrolled ? "bg-white/80 backdrop-blur-lg border-b shadow-sm h-16" : "bg-transparent h-20"
+      "fixed top-0 z-50 w-full transition-all duration-300",
+      scrolled ? "bg-white/90 backdrop-blur-lg border-b shadow-md h-16" : "bg-transparent h-20"
     )}>
       <div className="container mx-auto px-4 h-full">
         <div className="flex h-full items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="bg-primary p-2 rounded-xl group-hover:rotate-12 transition-transform">
+            <div className="bg-primary p-2 rounded-xl group-hover:rotate-12 transition-transform shadow-lg shadow-primary/20">
               <GraduationCap className="h-6 w-6 text-white" />
             </div>
             <span className="font-headline text-xl font-bold tracking-tighter text-primary">
-              SIKSHA WALLAH <span className="text-foreground">HUB</span>
+              SIKSHA <span className="text-foreground">WALLAH</span>
             </span>
           </Link>
 
@@ -49,8 +49,8 @@ export function Navbar() {
                 {link.name}
               </Link>
             ))}
-            <Button size="lg" className="rounded-xl px-6 bg-primary font-bold shadow-lg shadow-primary/20 hover:shadow-xl">
-              Talk to Rajesh Sah <ChevronRight className="ml-1 h-4 w-4" />
+            <Button size="lg" className="rounded-xl px-6 bg-primary font-bold shadow-lg shadow-primary/20 hover:shadow-xl transition-all hover:scale-105">
+              Call Rajesh Sah <ChevronRight className="ml-1 h-4 w-4" />
             </Button>
           </div>
 
@@ -79,7 +79,7 @@ export function Navbar() {
               {link.name}
             </Link>
           ))}
-          <Button className="w-full h-12 rounded-xl text-lg font-bold">Contact Now</Button>
+          <Button className="w-full h-12 rounded-xl text-lg font-bold" onClick={() => window.open('tel:+916203138576')}>Contact Now</Button>
         </div>
       </div>
     </nav>
