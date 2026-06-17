@@ -1,58 +1,87 @@
-
 "use client";
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { GraduationCap, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { GraduationCap, Menu, X, ChevronRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { cn } from "@/lib/utils";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const navLinks = [
+    { name: "Courses", href: "#courses" },
+    { name: "AI Counselor", href: "#ai-advisor" },
+    { name: "Admissions", href: "#inquiry" },
+    { name: "Location", href: "#location" },
+  ];
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center gap-2">
-            <GraduationCap className="h-8 w-8 text-primary" />
-            <span className="font-headline text-xl font-bold tracking-tight text-primary">
-              SIKSHA WALLAH HUB
-            </span>
-          </div>
-
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
-              <Link href="#courses" className="text-sm font-medium hover:text-primary transition-colors">Course Navigator</Link>
-              <Link href="#ai-advisor" className="text-sm font-medium hover:text-primary transition-colors">AI Advisor</Link>
-              <Link href="#inquiry" className="text-sm font-medium hover:text-primary transition-colors">Admission Portal</Link>
-              <Link href="#location" className="text-sm font-medium hover:text-primary transition-colors">Our Office</Link>
-              <Button variant="default" className="bg-primary hover:bg-primary/90">
-                Contact Rajesh Sah
-              </Button>
+    <nav className={cn(
+      "sticky top-0 z-50 w-full transition-all duration-300",
+      scrolled ? "bg-white/80 backdrop-blur-lg border-b shadow-sm h-16" : "bg-transparent h-20"
+    )}>
+      <div className="container mx-auto px-4 h-full">
+        <div className="flex h-full items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="bg-primary p-2 rounded-xl group-hover:rotate-12 transition-transform">
+              <GraduationCap className="h-6 w-6 text-white" />
             </div>
+            <span className="font-headline text-xl font-bold tracking-tighter text-primary">
+              SIKSHA WALLAH <span className="text-foreground">HUB</span>
+            </span>
+          </Link>
+
+          <div className="hidden md:flex items-center gap-8">
+            {navLinks.map((link) => (
+              <Link 
+                key={link.name} 
+                href={link.href} 
+                className="text-sm font-semibold text-muted-foreground hover:text-primary transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 hover:after:w-full after:bg-primary after:transition-all"
+              >
+                {link.name}
+              </Link>
+            ))}
+            <Button size="lg" className="rounded-xl px-6 bg-primary font-bold shadow-lg shadow-primary/20 hover:shadow-xl">
+              Talk to Rajesh Sah <ChevronRight className="ml-1 h-4 w-4" />
+            </Button>
           </div>
 
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-foreground hover:bg-accent focus:outline-none"
-            >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-          </div>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden p-2 rounded-xl bg-secondary text-foreground"
+          >
+            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
         </div>
       </div>
 
       {/* Mobile Menu */}
-      {isOpen && (
-        <div className="md:hidden bg-background border-b border-border p-4 space-y-4">
-          <Link href="#courses" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-base font-medium hover:bg-accent rounded-md">Courses</Link>
-          <Link href="#ai-advisor" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-base font-medium hover:bg-accent rounded-md">AI Advisor</Link>
-          <Link href="#inquiry" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-base font-medium hover:bg-accent rounded-md">Admission Portal</Link>
-          <Link href="#location" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-base font-medium hover:bg-accent rounded-md">Office</Link>
-          <Button className="w-full bg-primary">Contact Rajesh Sah</Button>
+      <div className={cn(
+        "fixed inset-x-0 top-[100%] bg-white border-b shadow-2xl transition-all duration-300 md:hidden overflow-hidden",
+        isOpen ? "max-h-screen opacity-100 py-6" : "max-h-0 opacity-0 py-0"
+      )}>
+        <div className="container mx-auto px-4 space-y-4">
+          {navLinks.map((link) => (
+            <Link 
+              key={link.name} 
+              href={link.href} 
+              onClick={() => setIsOpen(false)}
+              className="block text-lg font-bold text-foreground hover:text-primary py-2"
+            >
+              {link.name}
+            </Link>
+          ))}
+          <Button className="w-full h-12 rounded-xl text-lg font-bold">Contact Now</Button>
         </div>
-      )}
+      </div>
     </nav>
   );
 }
