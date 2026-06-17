@@ -30,13 +30,21 @@ export function Navbar() {
     )}>
       <div className="container mx-auto px-4 h-full">
         <div className="flex h-full items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="bg-primary p-2 rounded-xl group-hover:rotate-12 transition-transform shadow-lg shadow-primary/20">
-              <GraduationCap className="h-6 w-6 text-white" />
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="relative">
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary to-accent rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-300"></div>
+              <div className="relative bg-white p-2 rounded-xl border border-primary/10 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <GraduationCap className="h-7 w-7 text-primary" />
+              </div>
             </div>
-            <span className="font-headline text-xl font-bold tracking-tighter text-primary">
-              SIKSHA <span className="text-foreground">WALLAH</span>
-            </span>
+            <div className="flex flex-col -space-y-1">
+              <span className="font-headline text-2xl font-black tracking-tighter leading-none">
+                <span className="text-primary">SIKSHA</span>
+              </span>
+              <span className="font-headline text-sm font-bold tracking-[0.2em] text-foreground/60">
+                WALLAH HUB
+              </span>
+            </div>
           </Link>
 
           <div className="hidden md:flex items-center gap-8">
@@ -49,7 +57,7 @@ export function Navbar() {
                 {link.name}
               </Link>
             ))}
-            <Button size="lg" className="rounded-xl px-6 bg-primary font-bold shadow-lg shadow-primary/20 hover:shadow-xl transition-all hover:scale-105">
+            <Button size="lg" className="rounded-xl px-6 bg-primary font-bold shadow-lg shadow-primary/20 hover:shadow-xl transition-all hover:scale-105 active:scale-95" onClick={() => window.open('tel:+916203138576')}>
               Call Rajesh Sah <ChevronRight className="ml-1 h-4 w-4" />
             </Button>
           </div>
