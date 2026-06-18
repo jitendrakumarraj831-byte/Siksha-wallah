@@ -1,24 +1,31 @@
-import type {Metadata} from 'next';
-import './globals.css';
+import type { Metadata } from "next";
+import "./globals.css";
 
 export const metadata: Metadata = {
-  title: 'Siksha Wallah Hub | Premier Educational Pathways',
-  description: 'Your trusted partner for B.Ed, Nursing, Pharmacy, and MBBS admissions in Forbesganj.',
+  title: "Siksha Wallah | Admissions & Career Guidance",
+  description:
+    "Expert admission guidance for B.Ed, D.El.Ed, Nursing, Pharmacy, Management and professional courses in India and abroad.",
+  keywords: [
+    "Siksha Wallah",
+    "college admission Forbesganj",
+    "B.Ed admission",
+    "D.El.Ed admission",
+    "career counselling",
+  ],
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap"
+          rel="stylesheet"
+        />
       </head>
-      <body className="font-body antialiased">{children}</body>
+      <body>{children}</body>
     </html>
   );
 }
