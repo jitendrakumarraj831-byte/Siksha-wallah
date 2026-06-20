@@ -64,12 +64,12 @@ export default function AdminLoginPage() {
             </Link>
 
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold backdrop-blur">
-              <ShieldCheck size={15} className="text-amber-400" /> Admin &amp; Staff Portal
+              <ShieldCheck size={15} className="text-amber-400" /> 🏢 Office Staff Portal
             </div>
 
             <h1 className="font-headline text-4xl font-extrabold leading-tight mb-4">
-              Office Management<br />
-              <span className="text-amber-400">Dashboard</span>
+              Office Login<br />
+              <span className="text-amber-400">Staff Dashboard</span>
             </h1>
 
             <p className="text-blue-100 leading-relaxed mb-8">
@@ -93,11 +93,17 @@ export default function AdminLoginPage() {
               ))}
             </div>
 
-            <div className="mt-8 pt-6 border-t border-white/20">
+            <div className="mt-8 pt-6 border-t border-white/20 space-y-2">
               <p className="text-sm text-blue-200">
                 Student हैं?{" "}
                 <Link href="/auth/login" className="font-bold text-amber-400 hover:text-amber-300 underline">
                   Student Login →
+                </Link>
+              </p>
+              <p className="text-sm text-blue-200">
+                Login page choose करें:{" "}
+                <Link href="/login" className="font-bold text-amber-400 hover:text-amber-300 underline">
+                  Login Options →
                 </Link>
               </p>
             </div>
@@ -106,9 +112,12 @@ export default function AdminLoginPage() {
           {/* Right — Glassmorphism Login Form */}
           <div className="rounded-2xl border border-white/20 bg-white/10 p-8 shadow-2xl backdrop-blur-xl">
             <div className="mb-6">
-              <h2 className="font-headline text-2xl font-extrabold text-white">Admin Login</h2>
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-amber-400/20 border border-amber-400/30 px-3 py-1 text-xs font-bold text-amber-300">
+                🏢 OFFICE LOGIN
+              </div>
+              <h2 className="font-headline text-2xl font-extrabold text-white">Staff Access</h2>
               <p className="mt-1 text-sm text-blue-200">
-                Admin credentials से login करें
+                Office credentials से login करें
               </p>
             </div>
 
