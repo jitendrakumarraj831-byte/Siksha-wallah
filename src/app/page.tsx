@@ -13,6 +13,7 @@ import {
 import { SiteNavbar } from "@/components/site-navbar";
 import { SiteFooter } from "@/components/site-footer";
 import { CountUp } from "@/components/count-up";
+import { AnimateIn } from "@/components/animate-in";
 import { streamTabs, colorMap, faqs, type StreamKey } from "@/lib/courses-data";
 
 /* ─── Data imported from @/lib/courses-data ────────── */
@@ -263,13 +264,13 @@ export default function Home() {
       {/* ── COURSES SECTION ── */}
       <section id="courses" className="py-24 bg-gray-50">
         <div className="container-shell">
-          <div className="text-center mb-12">
+          <AnimateIn type="fade-up" className="text-center mb-12">
             <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">सभी स्ट्रीम्स उपलब्ध हैं (Streams Available)</p>
             <h2 className="font-headline text-4xl md:text-5xl font-extrabold">अपना Stream चुनें</h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto">
               3 main streams — 40+ courses — सभी के लिए expert guidance available
             </p>
-          </div>
+          </AnimateIn>
 
           {/* Stream Tabs */}
           <div className="mb-10 flex flex-wrap justify-center gap-3">
@@ -566,7 +567,7 @@ export default function Home() {
         <div className="pointer-events-none absolute -top-24 right-0 h-96 w-96 rounded-full bg-amber-400 opacity-10 blur-3xl" />
         <div className="container-shell relative">
           {/* Banner */}
-          <div className="mb-16 text-center">
+          <AnimateIn type="zoom-in" className="mb-16 text-center">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 px-4 py-2 text-sm font-bold text-amber-300">
               <CreditCard size={16} /> Bihar Government Scheme
             </div>
@@ -586,7 +587,7 @@ export default function Home() {
                 पूरा प्रोसेस जानें <ArrowRight size={17} />
               </Link>
             </div>
-          </div>
+          </AnimateIn>
 
           {/* BSCC Benefits Row */}
           <div className="mb-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
@@ -786,29 +787,32 @@ export default function Home() {
       {/* ── WHY US ── */}
       <section id="why-us" className="py-24 bg-white">
         <div className="container-shell">
-          <div className="text-center mb-14">
+          <AnimateIn type="fade-up" className="text-center mb-14">
             <p className="text-sm font-bold uppercase tracking-widest text-primary-red mb-2">हमारी विशेषता</p>
             <h2 className="font-headline text-4xl md:text-5xl font-extrabold">सिर्फ Admission नहीं, सही Career</h2>
-          </div>
+          </AnimateIn>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 stagger-child">
             {[
               { icon: ShieldCheck, color: "bg-blue-600", title: "100% Transparent", desc: "No hidden charges. Every fee clearly explained upfront." },
               { icon: Users, color: "bg-primary-red", title: "Dedicated Counsellor", desc: "One personal expert with you from inquiry to admission." },
               { icon: BadgeCheck, color: "bg-green-600", title: "Document Assistance", desc: "We handle all paperwork, forms, and verifications." },
               { icon: Sparkles, color: "bg-amber-500", title: "BSCC Specialist", desc: "Complete guidance for Bihar Student Credit Card scheme." },
-            ].map(({ icon: Icon, color, title, desc }) => (
-              <div key={title} className="group rounded-2xl border-2 border-gray-100 bg-gray-50 p-6 text-center transition hover:border-blue-200 hover:bg-white hover:shadow-lg card-lift">
+            ].map(({ icon: Icon, color, title, desc }, i) => (
+              <AnimateIn key={title} type="zoom-in" delay={i * 80}>
+              <div className="group rounded-2xl border-2 border-gray-100 bg-gray-50 p-6 text-center transition hover:border-blue-200 hover:bg-white hover:shadow-lg card-lift card-glow">
                 <div className={`mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl ${color} text-white shadow-md`}>
                   <Icon size={26} />
                 </div>
                 <h3 className="font-headline text-lg font-extrabold">{title}</h3>
                 <p className="mt-2 text-sm text-gray-500">{desc}</p>
               </div>
+              </AnimateIn>
             ))}
           </div>
 
           {/* Process Steps */}
+          <AnimateIn type="fade-up" delay={100}>
           <div className="mt-20 rounded-2xl bg-gradient-to-r from-primary-green to-green-600 p-8 md:p-12 text-white">
             <h3 className="font-headline text-3xl font-extrabold text-center mb-10">Admission कैसे मिलता है? Simple 4 Steps</h3>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -829,16 +833,17 @@ export default function Home() {
               ))}
             </div>
           </div>
+          </AnimateIn>
         </div>
       </section>
 
       {/* ── SUCCESS STORIES ── */}
       <section className="py-24 bg-gray-50">
         <div className="container-shell">
-          <div className="text-center mb-14">
+          <AnimateIn type="fade-up" className="text-center mb-14">
             <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">Success Stories</p>
             <h2 className="font-headline text-4xl md:text-5xl font-extrabold">हमारे Students की Achievements</h2>
-          </div>
+          </AnimateIn>
           <div className="grid gap-6 md:grid-cols-3">
             {[
               { name: "Priya Kumari", course: "B.Ed (2024)", place: "Forbesganj", text: "Counsellor ने बहुत अच्छे से guide किया। BSCC loan में भी help मिली। Admission एकदम tension-free था।" },
@@ -853,8 +858,13 @@ export default function Home() {
               { name: "Rahul Paswan", course: "ITI (2024)", place: "Forbesganj", text: "ITI में admission के लिए घर वाले confused थे। Siksha Wallah के counsellor ने सब explain किया और सही trade choose करने में help की।" },
               { name: "Komal Singh", course: "M.Ed (2024)", place: "Araria", text: "M.Ed admission के लिए Bihar से बाहर जाना पड़ा। Siksha Wallah ने out-of-state college में भी admission दिलाया। Great experience!" },
               { name: "Deepak Jha", course: "MBA (2023)", place: "Purnea", text: "MBA के लिए BSCC loan apply किया। पूरी file Siksha Wallah team ने prepare की। बिना tension के loan approve हो गया।" },
-            ].map(({ name, course, place, text }) => (
-              <article key={name} className="rounded-2xl bg-white border-2 border-gray-100 p-7 shadow-sm card-lift hover:border-blue-100">
+            ].map(({ name, course, place, text }, i) => (
+              <AnimateIn
+                key={name}
+                type={i % 3 === 0 ? "fade-right" : i % 3 === 1 ? "fade-up" : "fade-left"}
+                delay={((i % 3) * 100)}
+              >
+              <article className="rounded-2xl bg-white border-2 border-gray-100 p-7 shadow-sm card-lift card-glow hover:border-blue-100 h-full">
                 <div className="flex gap-1 text-amber-400 mb-4">
                   {[...Array(5)].map((_, i) => <Star key={i} size={18} fill="currentColor" />)}
                 </div>
@@ -869,6 +879,7 @@ export default function Home() {
                   </div>
                 </div>
               </article>
+              </AnimateIn>
             ))}
           </div>
         </div>
@@ -877,13 +888,13 @@ export default function Home() {
       {/* ── DOCUMENTS CHECKLIST ── */}
       <section id="documents" className="py-24 bg-white">
         <div className="container-shell">
-          <div className="text-center mb-12">
+          <AnimateIn type="fade-up" className="text-center mb-12">
             <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">Admission Preparation</p>
             <h2 className="font-headline text-4xl md:text-5xl font-extrabold">Required Documents Checklist</h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto">
               Tick off each document as you gather it. Bring all originals + 2 photocopies to the Siksha Wallah office.
             </p>
-          </div>
+          </AnimateIn>
 
           <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr] items-start">
             {/* Interactive Checklist */}
@@ -1088,6 +1099,7 @@ export default function Home() {
       <section id="faq" className="py-24 bg-gray-50">
         <div className="container-shell">
           <div className="grid gap-12 lg:grid-cols-[1fr_1.6fr] items-start">
+            <AnimateIn type="fade-right">
             <div>
               <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-3">FAQ</p>
               <h2 className="font-headline text-4xl font-extrabold">अक्सर पूछे जाने वाले सवाल</h2>
@@ -1104,7 +1116,9 @@ export default function Home() {
                 ))}
               </div>
             </div>
+            </AnimateIn>
 
+            <AnimateIn type="fade-left" delay={100}>
             <div className="divide-y divide-gray-200 rounded-2xl border border-gray-200 overflow-hidden">
               {faqs.map(({ q, a }, i) => (
                 <div key={q}>
@@ -1123,6 +1137,7 @@ export default function Home() {
                 </div>
               ))}
             </div>
+            </AnimateIn>
           </div>
         </div>
       </section>
@@ -1132,6 +1147,7 @@ export default function Home() {
         <div className="container-shell">
           <div className="grid gap-12 lg:grid-cols-2">
             {/* Left — contact info */}
+            <AnimateIn type="fade-right">
             <div>
               <p className="text-sm font-bold uppercase tracking-widest mb-3 text-amber-400">हमसे मिलें</p>
               <h2 className="font-headline text-4xl md:text-5xl font-extrabold mb-6">
@@ -1183,8 +1199,10 @@ export default function Home() {
                 <MessageCircle size={20} /> WhatsApp पर Chat करें
               </a>
             </div>
+            </AnimateIn>
 
             {/* Right — Contact form with Firestore save */}
+            <AnimateIn type="fade-left" delay={100}>
             <div className="rounded-2xl bg-white p-8 text-gray-900 shadow-xl">
               <h3 className="font-headline text-2xl font-extrabold mb-2">Admission Plan बनाइए</h3>
               <p className="text-gray-500 text-sm mb-6">Fill the form — हमारा counsellor 30 minutes में call करेगा।</p>
@@ -1233,6 +1251,7 @@ export default function Home() {
               </form>
               <p className="mt-4 text-center text-xs text-gray-400">100% Free. No spam. No hidden charges.</p>
             </div>
+            </AnimateIn>
           </div>
         </div>
       </section>

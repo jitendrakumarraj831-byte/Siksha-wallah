@@ -84,6 +84,56 @@ h1, h2, h3, h4, h5, h6, .font-display {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* ── Floating pulse for CTA badges ─────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+.animate-float { animation: float 3.5s ease-in-out infinite; }
+
+/* ── Shimmer on hero badge ──────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.animate-shimmer {
+  background: linear-gradient(90deg, #ffc107 25%, #fff9c4 50%, #ffc107 75%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s linear infinite;
+}
+
+/* ── Gentle pulse ring on WhatsApp button ───────────── */
+@keyframes ping-slow {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  80%  { transform: scale(1.6); opacity: 0; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+.animate-ping-slow { animation: ping-slow 2.2s cubic-bezier(0,0,0.2,1) infinite; }
+
+/* ── Staggered card entrance ────────────────────────── */
+.stagger-child > *:nth-child(1) { transition-delay: 0ms  !important; }
+.stagger-child > *:nth-child(2) { transition-delay: 80ms !important; }
+.stagger-child > *:nth-child(3) { transition-delay: 160ms !important; }
+.stagger-child > *:nth-child(4) { transition-delay: 240ms !important; }
+.stagger-child > *:nth-child(5) { transition-delay: 320ms !important; }
+.stagger-child > *:nth-child(6) { transition-delay: 400ms !important; }
+.stagger-child > *:nth-child(7) { transition-delay: 480ms !important; }
+.stagger-child > *:nth-child(8) { transition-delay: 560ms !important; }
+.stagger-child > *:nth-child(9) { transition-delay: 640ms !important; }
+.stagger-child > *:nth-child(10){ transition-delay: 720ms !important; }
+.stagger-child > *:nth-child(11){ transition-delay: 800ms !important; }
+.stagger-child > *:nth-child(12){ transition-delay: 880ms !important; }
+
+/* ── Gradient border pulse on featured cards ────────── */
+@keyframes border-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0,63,159,0.0); }
+  50%       { box-shadow: 0 0 0 4px rgba(0,63,159,0.15); }
+}
+.card-glow:hover { animation: border-glow 2s ease infinite; }
+
 /* Responsive */
 @media (max-width: 768px) {
   .container-shell { width: min(100% - 24px, 1280px); }
