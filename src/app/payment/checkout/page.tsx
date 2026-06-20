@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/components/auth-provider';
 import { courseService } from '@/services/course-service';
@@ -17,6 +17,22 @@ declare global {
 }
 
 export default function CheckoutPage() {
+  return (
+    <Suspense
+      fallback={
+        <PortalShell>
+          <div className="flex min-h-screen items-center justify-center">
+            <Loader className="animate-spin" size={40} />
+          </div>
+        </PortalShell>
+      }
+    >
+      <CheckoutContent />
+    </Suspense>
+  );
+}
+
+function CheckoutContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, isAuthenticated } = useAuth();

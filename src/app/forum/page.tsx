@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { AuthContext } from '@/components/auth-provider';
+import { useAuth } from '@/components/auth-provider';
 import { forumService, ForumPost } from '@/services/forum-service';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,7 +11,7 @@ import { Loader2 } from 'lucide-react';
 const CATEGORIES = ['general', 'doubts', 'course', 'admission', 'payment'] as const;
 
 export default function ForumPage() {
-  const { user, loading: authLoading } = useContext(AuthContext);
+  const { user, loading: authLoading } = useAuth();
   const [posts, setPosts] = useState<ForumPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
