@@ -12,8 +12,7 @@ import {
 const counsellors = [
   { name: "Rajesh Kumar Sah", role: "Founder & Chief Counsellor", phone: "6203138576", expertise: "B.Ed, D.El.Ed, All Courses" },
   { name: "Helpline 2", role: "Admission Helpline", phone: "7858062498", expertise: "BSCC, Nursing, Pharmacy" },
-  { name: "Gautam Kumar", role: "BSCC Enquiry", phone: "7979713626", expertise: "Bihar Student Credit Card" },
-  { name: "Kursakanta Office", role: "Branch Office", phone: "9162653235", expertise: "All Courses — Kursakanta" },
+  { name: "Gautam Kumar", role: "BSCC Enquiry & Branch Office", phone: "9162653235", expertise: "Bihar Student Credit Card — Kursakanta" },
 ];
 
 const officeHours = [

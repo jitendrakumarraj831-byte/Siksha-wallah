@@ -68,7 +68,7 @@ export function SiteFooter() {
                 <MapPin size={15} className="mt-0.5 text-amber-400 flex-shrink-0" />
                 College Chowk, Near HP Petrol Pump, Forbesganj, Araria
               </li>
-              {["6203138576", "7858062498", "7979713626", "9162653235"].map((num) => (
+              {["6203138576", "7858062498", "9162653235"].map((num) => (
                 <li key={num}>
                   <a
                     href={`tel:+91${num}`}
