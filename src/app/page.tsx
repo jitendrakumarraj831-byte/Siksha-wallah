@@ -6,33 +6,189 @@ import {
   ChevronDown, CreditCard, GraduationCap, HeartPulse, MapPin, Menu,
   MessageCircle, Phone, ShieldCheck, Sparkles, Star, Users, X,
   Stethoscope, FlaskConical, Cpu, Clock, Award, CheckCircle2,
+  Briefcase, BookMarked, ChevronUp, FileCheck2, FileText, ListChecks,
 } from "lucide-react";
 
 /* ─── Data ─────────────────────────────────────────── */
 
-const teachingCourses = [
-  { name: "B.Ed", full: "Bachelor of Education", duration: "2 Years", eligibility: "Graduation (50%)", fee: "₹50,000/yr" },
-  { name: "D.El.Ed", full: "Diploma in Elementary Education", duration: "2 Years", eligibility: "12th Pass", fee: "₹25,000/yr" },
-  { name: "M.Ed", full: "Master of Education", duration: "2 Years", eligibility: "B.Ed (55%)", fee: "₹60,000/yr" },
+type Course = {
+  name: string;
+  full: string;
+  duration: string;
+  eligibility: string;
+  fee: string;
+  careerScope: string;
+  mode: string;
+  bscc: boolean;
+};
+
+const teachingCourses: Course[] = [
+  {
+    name: "B.Ed",
+    full: "Bachelor of Education",
+    duration: "2 Years",
+    eligibility: "Graduation with minimum 50% marks in any stream from a recognized university",
+    fee: "₹50,000/yr",
+    careerScope: "Government School Teacher (TET/CTET qualified), Private School Teacher, Education Officer, School Principal, Content Developer for EdTech companies. Bihar STET qualified B.Ed graduates get direct government job opportunities in middle & high schools.",
+    mode: "Regular & Distance options available from NCTE-approved recognized Indian universities. Siksha Wallah guides students for both modes based on eligibility and career goals.",
+    bscc: true,
+  },
+  {
+    name: "D.El.Ed",
+    full: "Diploma in Elementary Education",
+    duration: "2 Years",
+    eligibility: "12th Pass (any stream) with minimum 50% marks. Age limit: 18–35 years",
+    fee: "₹25,000/yr",
+    careerScope: "Primary School Teacher (Class 1–8) in government and private schools, Anganwadi Supervisor, NGO Education Worker. BTET/CTET qualification opens government Primary Teacher posts across Bihar with excellent salary packages.",
+    mode: "Regular mode from SCERT/state-approved institutions. Distance mode available from select NCTE-recognized universities. We assist with both options.",
+    bscc: true,
+  },
+  {
+    name: "M.Ed",
+    full: "Master of Education",
+    duration: "2 Years",
+    eligibility: "B.Ed with minimum 55% marks from a UGC-recognized university",
+    fee: "₹60,000/yr",
+    careerScope: "College Lecturer (NET/SET qualified), School Principal, Curriculum Developer, Educational Researcher, Teacher Trainer, Academic Coordinator at SCERT/NCERT. M.Ed opens doors to PhD in Education and academic careers.",
+    mode: "Regular mode from NAAC-accredited universities. Distance mode available from select institutions recognized by DEB (Distance Education Bureau). We guide based on your preference.",
+    bscc: false,
+  },
 ];
 
-const medicalCourses = [
-  { name: "MBBS", full: "Bachelor of Medicine", duration: "5.5 Years", eligibility: "12th (PCB) + NEET", fee: "₹8-25L/yr" },
-  { name: "BDS", full: "Bachelor of Dental Surgery", duration: "5 Years", eligibility: "12th (PCB) + NEET", fee: "₹5-15L/yr" },
-  { name: "B.Sc Nursing", full: "Bachelor of Science Nursing", duration: "4 Years", eligibility: "12th (PCB)", fee: "₹60,000/yr" },
-  { name: "GNM", full: "General Nursing & Midwifery", duration: "3 Years", eligibility: "12th Pass", fee: "₹40,000/yr" },
-  { name: "ANM", full: "Auxiliary Nursing Midwifery", duration: "2 Years", eligibility: "10th Pass", fee: "₹25,000/yr" },
-  { name: "B.Pharma", full: "Bachelor of Pharmacy", duration: "4 Years", eligibility: "12th (PCB/PCM)", fee: "₹55,000/yr" },
+const medicalCourses: Course[] = [
+  {
+    name: "MBBS",
+    full: "Bachelor of Medicine & Bachelor of Surgery",
+    duration: "5.5 Years (inc. 1-yr internship)",
+    eligibility: "12th Science (PCB) with minimum 50% marks + NEET UG qualification. Age: 17+ years",
+    fee: "₹8–25 Lakh/yr (varies by college)",
+    careerScope: "Government Doctor (BPSC Civil Services), Private Hospital Specialist, Surgeon, Researcher, Medical Officer. MBBS graduates from recognized colleges are eligible for PG (MD/MS) entrance. Extremely high demand in Bihar's rural health sector.",
+    mode: "Regular mode only from MCI/NMC-approved medical colleges. We guide for both government and private college admissions through NEET counselling.",
+    bscc: false,
+  },
+  {
+    name: "BDS",
+    full: "Bachelor of Dental Surgery",
+    duration: "5 Years (inc. 1-yr internship)",
+    eligibility: "12th Science (PCB) with minimum 50% marks + NEET UG qualification",
+    fee: "₹5–15 Lakh/yr",
+    careerScope: "Private Dental Clinic Owner, Hospital Dental Surgeon, Government Dental Officer, MDS Specialist (Orthodontist, Endodontist). BDS graduates can also join dental product companies and public health programs.",
+    mode: "Regular mode only from DCI-approved dental colleges. We provide complete NEET counselling guidance for state and all-India quota seats.",
+    bscc: false,
+  },
+  {
+    name: "B.Sc Nursing",
+    full: "Bachelor of Science in Nursing",
+    duration: "4 Years",
+    eligibility: "12th Science (PCB or PCM+Biology) with minimum 45% marks (40% for SC/ST). Age: 17–35 years",
+    fee: "₹60,000/yr",
+    careerScope: "Staff Nurse in Government Hospitals (AIIMS, ESIC, Railway, Armed Forces), Private Hospitals, Nursing Tutor, Community Health Nurse. B.Sc Nursing is the most in-demand healthcare course with jobs across India and abroad (UK, Canada, Gulf countries).",
+    mode: "Regular mode from INC (Indian Nursing Council) approved colleges. We help with both Bihar state quota and all-India private college admissions.",
+    bscc: true,
+  },
+  {
+    name: "GNM",
+    full: "General Nursing & Midwifery",
+    duration: "3 Years + 6-month internship",
+    eligibility: "12th Pass (Science preferred, PCB). Minimum 40% marks. Age: 17–35 years",
+    fee: "₹40,000/yr",
+    careerScope: "Staff Nurse in Government & Private Hospitals, Community Health Worker, Midwife, Home Care Nurse. GNM nurses are eligible for government nursing recruitment exams (NHM, ESIC, Railway). High demand in Bihar's Primary Health Centers.",
+    mode: "Regular mode from INC-approved nursing schools and colleges. Both government and private institutions available. BSCC loan assistance available for eligible students.",
+    bscc: true,
+  },
+  {
+    name: "ANM",
+    full: "Auxiliary Nursing & Midwifery",
+    duration: "2 Years",
+    eligibility: "10th Pass (for girls only) from a recognized board. Age: 17–35 years",
+    fee: "₹25,000/yr",
+    careerScope: "ANM/ASHA Worker in Government Health Programs, Community Health Center Nurse, Health Education Worker, Sub-Center Nurse. Bihar government regularly recruits ANM graduates under NHM with good salary and job security.",
+    mode: "Regular mode from INC-approved schools. Short duration and low-cost course — ideal for girls from rural areas seeking stable government healthcare jobs.",
+    bscc: true,
+  },
+  {
+    name: "B.Pharma",
+    full: "Bachelor of Pharmacy",
+    duration: "4 Years",
+    eligibility: "12th Science (PCB or PCM) with minimum 45% marks from recognized board",
+    fee: "₹55,000/yr",
+    careerScope: "Pharmacist in Government Hospitals & Dispensaries, Drug Inspector, Quality Control Officer in Pharma Companies, Medical Representative, Clinical Research Associate, Retail Pharmacy Owner. B.Pharma graduates are eligible for government pharmacy exams.",
+    mode: "Regular & Distance modes available from PCI (Pharmacy Council of India) and AICTE-approved institutions. We guide for both Bihar and out-of-state admissions.",
+    bscc: true,
+  },
 ];
 
-const technicalCourses = [
-  { name: "B.Tech", full: "Bachelor of Technology", duration: "4 Years", eligibility: "12th (PCM) / JEE", fee: "₹80,000/yr" },
-  { name: "Polytechnic", full: "Diploma in Engineering", duration: "3 Years", eligibility: "10th Pass", fee: "₹30,000/yr" },
-  { name: "ITI", full: "Industrial Training Institute", duration: "1-2 Years", eligibility: "8th/10th Pass", fee: "₹15,000/yr" },
-  { name: "BCA", full: "Bachelor of Computer Applications", duration: "3 Years", eligibility: "12th Pass", fee: "₹40,000/yr" },
-  { name: "MCA", full: "Master of Computer Applications", duration: "2 Years", eligibility: "BCA/B.Sc", fee: "₹55,000/yr" },
-  { name: "BBA", full: "Bachelor of Business Administration", duration: "3 Years", eligibility: "12th Pass", fee: "₹35,000/yr" },
-  { name: "MBA", full: "Master of Business Administration", duration: "2 Years", eligibility: "Graduation", fee: "₹70,000/yr" },
+const technicalCourses: Course[] = [
+  {
+    name: "B.Tech",
+    full: "Bachelor of Technology",
+    duration: "4 Years",
+    eligibility: "12th Science (PCM) with minimum 45% marks. JEE Main/State CET scores preferred",
+    fee: "₹80,000/yr (varies by branch & college)",
+    careerScope: "Software Engineer, Civil/Mechanical/Electrical Engineer, Government Engineer (BPSC/SSC JE), IT Company Employee, Startup Founder. B.Tech from AICTE-approved colleges is recognized for both private sector and government recruitment.",
+    mode: "Regular mode from AICTE-approved colleges. We guide for JEE counselling, Bihar DCECE, and private B.Tech admissions with lateral entry options.",
+    bscc: true,
+  },
+  {
+    name: "Polytechnic",
+    full: "Diploma in Engineering",
+    duration: "3 Years",
+    eligibility: "10th Pass with minimum 35% marks in any recognized board",
+    fee: "₹30,000/yr",
+    careerScope: "Junior Engineer in PWD/BSEB/NHAI, Factory Supervisor, Technical Assistant, ITI Instructor. Diploma holders can directly enter 2nd year B.Tech (Lateral Entry). Government jobs via BSSC and SSC JE after diploma.",
+    mode: "Regular mode from AICTE-approved polytechnic colleges in Bihar and other states. Government polytechnic seats available at very low fees through DCECE counselling.",
+    bscc: true,
+  },
+  {
+    name: "ITI",
+    full: "Industrial Training Institute",
+    duration: "1–2 Years (varies by trade)",
+    eligibility: "8th/10th Pass depending on trade. No upper age limit for most trades",
+    fee: "₹15,000/yr (Government ITI is near free)",
+    careerScope: "Electrician, Fitter, Welder, Plumber, AC Mechanic, Computer Operator in Industries, Railways, Defence, and Private sector. ITI certificate holders get direct railway apprenticeship and factory jobs. Self-employment through workshops also common.",
+    mode: "Regular mode from DGT (Directorate General of Training) affiliated government and private ITI colleges. Hostel and BSCC facilities available at select colleges.",
+    bscc: true,
+  },
+  {
+    name: "BCA",
+    full: "Bachelor of Computer Applications",
+    duration: "3 Years",
+    eligibility: "12th Pass (any stream, preferably with Maths or Computer Science). Minimum 45% marks",
+    fee: "₹40,000/yr",
+    careerScope: "Software Developer, Web Designer, Database Administrator, IT Support Engineer, App Developer. BCA graduates can join MCA (2 years) or directly apply to IT companies like Infosys, TCS, Wipro. High demand in Bihar's growing IT sector.",
+    mode: "Regular & Distance modes available from AICTE/UGC-approved universities. Distance BCA from IGNOU and state universities is widely recognized for government jobs too.",
+    bscc: true,
+  },
+  {
+    name: "MCA",
+    full: "Master of Computer Applications",
+    duration: "2 Years",
+    eligibility: "BCA / B.Sc (Computer Science / IT / Maths) with minimum 50% marks",
+    fee: "₹55,000/yr",
+    careerScope: "Senior Software Developer, System Analyst, Project Manager, Cybersecurity Specialist, IT Consultant. MCA qualifies for SSC (CPO/CGL), IBPS IT Officer, and State PSC technical posts. Excellent placement in top IT companies.",
+    mode: "Regular & Distance modes from AICTE-approved universities. NIMCET for NIT admissions. We assist with both state universities and top private college admissions.",
+    bscc: false,
+  },
+  {
+    name: "BBA",
+    full: "Bachelor of Business Administration",
+    duration: "3 Years",
+    eligibility: "12th Pass (any stream) with minimum 45% marks from recognized board",
+    fee: "₹35,000/yr",
+    careerScope: "Business Manager, Marketing Executive, HR Officer, Sales Manager, Entrepreneur, Bank Officer (IBPS PO/Clerk). BBA is the ideal foundation for MBA. Graduates are hired by banks, FMCG companies, and retail chains across India.",
+    mode: "Regular & Distance modes available. Distance BBA from recognized universities like IGNOU, SMU, Amity is valid for government and private sector jobs. BSCC loan available.",
+    bscc: true,
+  },
+  {
+    name: "MBA",
+    full: "Master of Business Administration",
+    duration: "2 Years",
+    eligibility: "Graduation (any stream) with minimum 50% marks. CAT/MAT/CMAT scores for premium institutes",
+    fee: "₹70,000–3 Lakh/yr (varies widely)",
+    careerScope: "Operations Manager, Finance Manager, Marketing Head, HR Director, Startup CEO, IAS/IPS (Civil Services). MBA from AICTE-approved college is a top credential for corporate and government leadership roles.",
+    mode: "Regular & Distance modes available. Regular MBA for premium placements; Distance MBA from UGC-DEB approved universities valid for government jobs. We guide for both entrance and direct admission routes.",
+    bscc: false,
+  },
 ];
 
 const faqs = [
@@ -64,10 +220,10 @@ const faqs = [
 
 type StreamKey = "teaching" | "medical" | "technical";
 
-const streamTabs: { key: StreamKey; label: string; icon: typeof GraduationCap; color: string; courses: typeof teachingCourses }[] = [
+const streamTabs: { key: StreamKey; label: string; icon: typeof GraduationCap; color: string; courses: Course[] }[] = [
   { key: "teaching", label: "Teaching Courses", icon: GraduationCap, color: "blue", courses: teachingCourses },
-  { key: "medical", label: "Medical & Nursing", icon: Stethoscope, color: "red", courses: medicalCourses as typeof teachingCourses },
-  { key: "technical", label: "Technical & Management", icon: Cpu, color: "orange", courses: technicalCourses as typeof teachingCourses },
+  { key: "medical", label: "Medical & Nursing", icon: Stethoscope, color: "red", courses: medicalCourses },
+  { key: "technical", label: "Technical & Management", icon: Cpu, color: "orange", courses: technicalCourses },
 ];
 
 const colorMap: Record<string, { tab: string; active: string; badge: string; btn: string; card: string; icon: string }> = {
@@ -104,6 +260,8 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [activeStream, setActiveStream] = useState<StreamKey>("teaching");
+  const [expandedCard, setExpandedCard] = useState<string | null>(null);
+  const [checkedDocs, setCheckedDocs] = useState<Record<string, boolean>>({});
   const [bsccEligible, setBsccEligible] = useState<null | boolean>(null);
   const [bsccIncome, setBsccIncome] = useState("");
   const [bsccBihar, setBsccBihar] = useState("");
@@ -153,7 +311,7 @@ export default function Home() {
           </a>
 
           <nav className="hidden items-center gap-7 text-sm font-semibold lg:flex">
-            {[["#courses", "Courses"], ["#bscc", "BSCC Scheme"], ["#why-us", "Why Us"], ["#contact", "Contact"]].map(([href, label]) => (
+            {[["#courses", "Courses"], ["#bscc", "BSCC Scheme"], ["#documents", "Documents"], ["#why-us", "Why Us"], ["#contact", "Contact"]].map(([href, label]) => (
               <a key={href} href={href} className="transition hover:text-primary-blue">{label}</a>
             ))}
           </nav>
@@ -175,7 +333,7 @@ export default function Home() {
         {menuOpen && (
           <div className="border-t border-gray-100 bg-white px-6 py-5 lg:hidden">
             <div className="flex flex-col gap-4 font-semibold text-sm">
-              {[["#courses", "Courses"], ["#bscc", "BSCC Scheme"], ["#why-us", "Why Us"], ["#contact", "Contact"]].map(([href, label]) => (
+              {[["#courses", "Courses"], ["#bscc", "BSCC Scheme"], ["#documents", "Documents"], ["#why-us", "Why Us"], ["#contact", "Contact"]].map(([href, label]) => (
                 <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</a>
               ))}
               <a href="#inquiry" onClick={() => setMenuOpen(false)} className="rounded-lg bg-primary-red px-4 py-2.5 text-center text-white font-bold">
@@ -413,42 +571,93 @@ export default function Home() {
 
           {/* Course Cards Grid */}
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {stream.courses.map((course) => (
-              <div
-                key={course.name}
-                className={`group relative rounded-2xl border-2 border-gray-200 bg-white p-6 shadow-sm transition-all card-lift ${colors.card}`}
-              >
-                <div className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ${colors.badge}`}>
-                  <Award size={12} /> {course.name}
-                </div>
-
-                <h3 className="mt-4 font-headline text-xl font-extrabold text-gray-900">{course.full}</h3>
-
-                <div className="mt-4 space-y-2 text-sm text-gray-600">
-                  <div className="flex items-center gap-2">
-                    <Clock size={14} className="text-gray-400" />
-                    <span><strong>Duration:</strong> {course.duration}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 size={14} className="text-gray-400" />
-                    <span><strong>Eligibility:</strong> {course.eligibility}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CreditCard size={14} className="text-gray-400" />
-                    <span><strong>Approx. Fee:</strong> {course.fee}</span>
-                  </div>
-                </div>
-
-                <a
-                  href={`https://wa.me/916203138576?text=Hi! I want to inquire about ${course.name} (${course.full}). Please guide me.`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`mt-5 flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold text-white transition ${colors.btn}`}
+            {stream.courses.map((course) => {
+              const isExpanded = expandedCard === course.name;
+              return (
+                <div
+                  key={course.name}
+                  className={`group relative rounded-2xl border-2 bg-white shadow-sm transition-all ${colors.card} ${isExpanded ? "border-opacity-100 shadow-lg" : "border-gray-200"}`}
                 >
-                  Inquire Fee & Admission <ArrowRight size={15} />
-                </a>
-              </div>
-            ))}
+                  {/* Card Header — always visible */}
+                  <div className="p-6">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ${colors.badge}`}>
+                        <Award size={12} /> {course.name}
+                      </div>
+                      {course.bscc && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-bold text-green-700">
+                          <CreditCard size={10} /> BSCC
+                        </span>
+                      )}
+                    </div>
+
+                    <h3 className="mt-3 font-headline text-xl font-extrabold text-gray-900 leading-tight">{course.full}</h3>
+
+                    {/* Core facts — always shown */}
+                    <div className="mt-4 space-y-2.5 text-sm text-gray-600">
+                      <div className="flex items-start gap-2">
+                        <Clock size={14} className="mt-0.5 flex-shrink-0 text-gray-400" />
+                        <span><strong className="text-gray-800">Duration:</strong> {course.duration}</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <CheckCircle2 size={14} className="mt-0.5 flex-shrink-0 text-gray-400" />
+                        <span><strong className="text-gray-800">Eligibility:</strong> {course.eligibility}</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <CreditCard size={14} className="mt-0.5 flex-shrink-0 text-gray-400" />
+                        <span><strong className="text-gray-800">Approx. Fee:</strong> {course.fee}</span>
+                      </div>
+                    </div>
+
+                    {/* Expanded Details */}
+                    {isExpanded && (
+                      <div className="mt-5 space-y-4 border-t border-gray-100 pt-4">
+                        <div>
+                          <div className="mb-1.5 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">
+                            <Briefcase size={12} /> Career Scope
+                          </div>
+                          <p className="text-sm leading-relaxed text-gray-700">{course.careerScope}</p>
+                        </div>
+                        <div>
+                          <div className="mb-1.5 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">
+                            <BookMarked size={12} /> Study Mode
+                          </div>
+                          <p className="text-sm leading-relaxed text-gray-700">{course.mode}</p>
+                        </div>
+                        {course.bscc && (
+                          <div className="rounded-xl bg-green-50 border border-green-200 p-3 flex items-start gap-2">
+                            <CreditCard size={15} className="mt-0.5 flex-shrink-0 text-green-600" />
+                            <p className="text-xs text-green-700 font-semibold">Bihar Student Credit Card (BSCC) eligible — get up to ₹4 Lakh loan for this course at 4% interest.</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Toggle + CTA */}
+                    <div className="mt-5 flex flex-col gap-2">
+                      <button
+                        onClick={() => setExpandedCard(isExpanded ? null : course.name)}
+                        className="flex w-full items-center justify-center gap-1.5 rounded-xl border-2 border-gray-200 py-2.5 text-sm font-bold text-gray-700 transition hover:border-gray-300 hover:bg-gray-50"
+                      >
+                        {isExpanded ? (
+                          <><ChevronUp size={15} /> Hide Details</>
+                        ) : (
+                          <><ChevronDown size={15} /> View Career Scope & Mode</>
+                        )}
+                      </button>
+                      <a
+                        href={`https://wa.me/916203138576?text=Hi! I want to inquire about ${course.name} (${course.full}). Duration: ${course.duration}. Please guide me on fees and admission process.`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold text-white transition ${colors.btn}`}
+                      >
+                        <MessageCircle size={15} /> Inquire Fee & Admission
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -472,24 +681,107 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid gap-10 lg:grid-cols-2 items-start">
-            {/* Benefits */}
-            <div className="space-y-5">
-              <h3 className="font-headline text-2xl font-extrabold text-amber-400">BSCC में क्या मिलता है?</h3>
+          {/* BSCC Benefits Row */}
+          <div className="mb-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            {[
+              ["₹4 Lakh Loan", "Tuition, hostel, food, books — all covered"],
+              ["4% Interest", "1% for women & differently-abled"],
+              ["40+ Courses", "B.Ed, Nursing, B.Tech, MBBS & more"],
+              ["No Collateral", "No guarantor, no property mortgage"],
+              ["Pay After Job", "Repay only after you start earning"],
+            ].map(([title, desc]) => (
+              <div key={title as string} className="flex gap-3 rounded-xl border border-white/10 bg-white/5 p-4">
+                <div className="mt-0.5 flex-shrink-0 rounded-full bg-green-500 p-1">
+                  <Check size={13} />
+                </div>
+                <div>
+                  <p className="font-bold text-white text-sm">{title}</p>
+                  <p className="text-xs text-blue-200 mt-0.5">{desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* BSCC Step-by-Step Process */}
+          <div className="mb-12 rounded-2xl border border-white/15 bg-white/5 p-7 backdrop-blur-sm">
+            <div className="mb-6 flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-400">
+                <ListChecks size={18} className="text-gray-900" />
+              </div>
+              <h3 className="font-headline text-2xl font-extrabold text-amber-400">BSCC Application Process — Step by Step</h3>
+            </div>
+
+            <div className="grid gap-5 md:grid-cols-3">
               {[
-                ["₹4 Lakh तक Loan", "Tuition fee, hostel, food, books सब covered"],
-                ["4% Simple Interest", "महिलाओं और दिव्यांगों के लिए 1% ब्याज"],
-                ["40+ Courses Covered", "B.Ed, Nursing, B.Tech, BBA, MBBS और भी बहुत कुछ"],
-                ["No Collateral Required", "कोई गारंटर नहीं, कोई property mortgage नहीं"],
-                ["Repay After Job", "नौकरी मिलने के बाद loan repay करें"],
-              ].map(([title, desc]) => (
-                <div key={title as string} className="flex gap-4 rounded-xl border border-white/10 bg-white/5 p-4">
-                  <div className="mt-0.5 flex-shrink-0 rounded-full bg-green-500 p-1">
-                    <Check size={14} />
+                {
+                  num: "01",
+                  title: "Document Verification at Siksha Wallah",
+                  location: "College Chowk, Forbesganj (Our Office)",
+                  desc: "Visit our office with your original documents. Our expert team verifies your eligibility, checks all certificates, and prepares a complete document file for BSCC application. We ensure nothing is missing before proceeding.",
+                  icon: FileCheck2,
+                  color: "text-blue-300",
+                },
+                {
+                  num: "02",
+                  title: "College Selection & Bonafide Certificate",
+                  location: "Selected BSCC-Approved College",
+                  desc: "We help you select the right BSCC-approved college based on your course and location preference. After securing admission, the college provides a Bonafide Certificate confirming your enrollment — required for BSCC loan application.",
+                  icon: GraduationCap,
+                  color: "text-green-300",
+                },
+                {
+                  num: "03",
+                  title: "DRCC Office Registration & Approval",
+                  location: "District Registration & Counselling Centre (DRCC)",
+                  desc: "Your complete application is submitted at the DRCC office (District Headquarter). The loan is processed through your bank account directly. Siksha Wallah team accompanies and guides you through the entire DRCC process.",
+                  icon: BadgeCheck,
+                  color: "text-amber-300",
+                },
+              ].map(({ num, title, location, desc, icon: StepIcon, color }) => (
+                <div key={num} className="relative">
+                  {/* Connector line */}
+                  <div className="relative rounded-2xl border border-white/10 bg-white/5 p-5 h-full">
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="font-headline text-5xl font-extrabold text-white/10 leading-none">{num}</span>
+                      <div className={`flex h-9 w-9 items-center justify-center rounded-xl border border-white/20 bg-white/10 ${color}`}>
+                        <StepIcon size={18} />
+                      </div>
+                    </div>
+                    <h4 className="font-headline font-extrabold text-white text-base mb-1">{title}</h4>
+                    <p className={`text-xs font-semibold mb-3 ${color}`}>📍 {location}</p>
+                    <p className="text-sm text-blue-100 leading-relaxed">{desc}</p>
                   </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6 flex items-start gap-3 rounded-xl border border-green-500/30 bg-green-500/10 p-4">
+              <CheckCircle2 size={20} className="mt-0.5 flex-shrink-0 text-green-400" />
+              <p className="text-sm font-semibold text-green-200">
+                <strong className="text-green-300">100% Free Guidance:</strong> हमारी team पूरे BSCC application process में आपकी निःशुल्क (free) सहायता करती है — document preparation से DRCC approval तक। कोई extra charge नहीं।
+              </p>
+            </div>
+          </div>
+
+          <div className="grid gap-10 lg:grid-cols-2 items-start">
+            {/* Documents required for BSCC */}
+            <div className="space-y-4">
+              <h3 className="font-headline text-xl font-extrabold text-amber-400">BSCC के लिए Required Documents</h3>
+              {[
+                ["Aadhaar Card", "Student's original Aadhaar linked to mobile"],
+                ["10th & 12th Marksheet + Certificate", "Original & photocopy both required"],
+                ["Domicile Certificate", "Bihar state residence proof"],
+                ["Income Certificate", "Family annual income below ₹4.5 Lakh"],
+                ["Bank Account Details", "Student's own savings account (SBI/BOI preferred)"],
+                ["College Bonafide Certificate", "Issued by BSCC-approved enrolled college"],
+                ["Passport Size Photos", "4 recent color photographs on white background"],
+                ["PAN Card (if available)", "Student's or parent's PAN for verification"],
+              ].map(([doc, detail]) => (
+                <div key={doc as string} className="flex gap-3 rounded-xl border border-white/10 bg-white/5 p-3.5">
+                  <Check size={15} className="mt-0.5 flex-shrink-0 text-green-400" />
                   <div>
-                    <p className="font-bold text-white">{title}</p>
-                    <p className="text-sm text-blue-200">{desc}</p>
+                    <p className="text-sm font-bold text-white">{doc}</p>
+                    <p className="text-xs text-blue-300 mt-0.5">{detail}</p>
                   </div>
                 </div>
               ))}
@@ -580,7 +872,7 @@ export default function Home() {
                 </div>
               )}
             </div>
-          </div>
+          </div>{/* end lg:grid-cols-2 */}
         </div>
       </section>
 
@@ -666,8 +958,218 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── DOCUMENTS CHECKLIST ── */}
+      <section id="documents" className="py-24 bg-white">
+        <div className="container-shell">
+          <div className="text-center mb-12">
+            <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">Admission Preparation</p>
+            <h2 className="font-headline text-4xl md:text-5xl font-extrabold">Required Documents Checklist</h2>
+            <p className="mt-3 text-gray-500 max-w-xl mx-auto">
+              Tick off each document as you gather it. Bring all originals + 2 photocopies to the Siksha Wallah office.
+            </p>
+          </div>
+
+          <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr] items-start">
+            {/* Interactive Checklist */}
+            <div className="rounded-2xl border-2 border-gray-100 bg-gray-50 overflow-hidden">
+              {/* Header */}
+              <div className="flex items-center justify-between bg-primary-blue px-6 py-4">
+                <div className="flex items-center gap-2 text-white">
+                  <ListChecks size={20} />
+                  <span className="font-headline font-extrabold text-lg">Document Checklist</span>
+                </div>
+                <span className="rounded-full bg-white/20 px-3 py-1 text-sm font-bold text-white">
+                  {Object.values(checkedDocs).filter(Boolean).length} / {[
+                    "10th-marksheet", "12th-marksheet", "graduation", "aadhaar",
+                    "residential", "income", "caste", "photos", "tc", "migration"
+                  ].length} Done
+                </span>
+              </div>
+
+              {/* Progress bar */}
+              <div className="h-2 w-full bg-gray-200">
+                <div
+                  className="h-full bg-green-500 transition-all duration-500"
+                  style={{
+                    width: `${(Object.values(checkedDocs).filter(Boolean).length / 10) * 100}%`,
+                  }}
+                />
+              </div>
+
+              {/* Document Groups */}
+              <div className="p-5 space-y-5">
+                {[
+                  {
+                    group: "Academic Documents",
+                    color: "bg-blue-100 text-blue-700",
+                    docs: [
+                      { id: "10th-marksheet", label: "10th Marksheet & Passing Certificate", note: "Original board certificate required", required: true },
+                      { id: "12th-marksheet", label: "12th Marksheet & Passing Certificate", note: "All subjects marksheet + passing/migration cert.", required: true },
+                      { id: "graduation", label: "Graduation Degree & All Year Marksheets", note: "Required for B.Ed, M.Ed, MBA, MCA, and all PG courses", required: false },
+                    ],
+                  },
+                  {
+                    group: "Identity & Residence Documents",
+                    color: "bg-green-100 text-green-700",
+                    docs: [
+                      { id: "aadhaar", label: "Aadhaar Card (Student)", note: "Must be linked to active mobile number", required: true },
+                      { id: "residential", label: "Residential / Domicile Certificate", note: "Bihar domicile certificate from SDO/Circle Office", required: true },
+                      { id: "income", label: "Income Certificate", note: "Annual family income certificate from CO/SDO (₹4.5L limit for BSCC)", required: true },
+                      { id: "caste", label: "Caste Certificate (SC/ST/OBC if applicable)", note: "Required for reserved category seats & scholarships", required: false },
+                    ],
+                  },
+                  {
+                    group: "Other Essential Documents",
+                    color: "bg-amber-100 text-amber-700",
+                    docs: [
+                      { id: "photos", label: "Passport Size Photographs", note: "6–8 recent color photos on white background", required: true },
+                      { id: "tc", label: "Transfer Certificate (TC)", note: "From your last attended school/college", required: true },
+                      { id: "migration", label: "Migration Certificate (if from another board)", note: "Required if 12th was from CBSE/ISC for state university admission", required: false },
+                    ],
+                  },
+                ].map(({ group, color, docs }) => (
+                  <div key={group}>
+                    <h3 className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-extrabold uppercase tracking-wider mb-3 ${color}`}>
+                      <FileText size={12} /> {group}
+                    </h3>
+                    <div className="space-y-2">
+                      {docs.map(({ id, label, note, required }) => (
+                        <label
+                          key={id}
+                          htmlFor={id}
+                          className={`flex cursor-pointer items-start gap-3 rounded-xl border-2 p-4 transition-all ${
+                            checkedDocs[id]
+                              ? "border-green-300 bg-green-50"
+                              : "border-gray-200 bg-white hover:border-gray-300"
+                          }`}
+                        >
+                          <div className="relative mt-0.5 flex-shrink-0">
+                            <input
+                              type="checkbox"
+                              id={id}
+                              checked={!!checkedDocs[id]}
+                              onChange={() => setCheckedDocs((prev) => ({ ...prev, [id]: !prev[id] }))}
+                              className="sr-only"
+                            />
+                            <div className={`flex h-5 w-5 items-center justify-center rounded border-2 transition-all ${
+                              checkedDocs[id] ? "border-green-500 bg-green-500" : "border-gray-300"
+                            }`}>
+                              {checkedDocs[id] && <Check size={12} className="text-white" strokeWidth={3} />}
+                            </div>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className={`text-sm font-bold ${checkedDocs[id] ? "text-green-700 line-through" : "text-gray-900"}`}>
+                                {label}
+                              </span>
+                              {required && (
+                                <span className="rounded bg-red-100 px-1.5 py-0.5 text-[10px] font-bold text-red-600">REQUIRED</span>
+                              )}
+                            </div>
+                            <p className="mt-0.5 text-xs text-gray-500">{note}</p>
+                          </div>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+
+                {/* CTA after checklist */}
+                <div className="rounded-xl bg-primary-blue p-4 text-white flex items-center justify-between gap-4 flex-wrap">
+                  <div>
+                    <p className="font-bold text-sm">Documents ready? Visit us or call!</p>
+                    <p className="text-xs text-blue-200">We verify all documents for FREE at our Forbesganj office.</p>
+                  </div>
+                  <a
+                    href="https://wa.me/916203138576?text=Hi! I have collected my admission documents. Please guide me for next steps."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-shrink-0 flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-primary-blue hover:bg-blue-50 transition"
+                  >
+                    <MessageCircle size={15} /> WhatsApp Now
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Right panel — course-wise special docs */}
+            <div className="space-y-5">
+              <h3 className="font-headline text-2xl font-extrabold text-gray-900">Course-Specific Additional Requirements</h3>
+              {[
+                {
+                  course: "B.Ed / M.Ed",
+                  color: "border-blue-200 bg-blue-50",
+                  badge: "bg-blue-100 text-blue-700",
+                  extras: [
+                    "Graduation Degree & marksheets (all years)",
+                    "Character Certificate from last institution",
+                    "CTET/STET score card (if available, for preference)",
+                    "Teaching Experience Certificate (for lateral entry if applicable)",
+                  ],
+                },
+                {
+                  course: "B.Sc Nursing / GNM / ANM",
+                  color: "border-red-200 bg-red-50",
+                  badge: "bg-red-100 text-red-700",
+                  extras: [
+                    "Medical Fitness Certificate from MBBS Doctor",
+                    "PCB (Physics, Chemistry, Biology) 12th marksheet mandatory",
+                    "Date of Birth Certificate (birth certificate or 10th admit card)",
+                    "HIV/Hepatitis B test report (required by some colleges)",
+                  ],
+                },
+                {
+                  course: "B.Pharma / D.Pharma",
+                  color: "border-green-200 bg-green-50",
+                  badge: "bg-green-100 text-green-700",
+                  extras: [
+                    "12th PCB or PCM marksheet (Biology/Maths required)",
+                    "NEET score card (for some private pharmacy colleges)",
+                    "Gap Certificate (if gap year after 12th)",
+                    "Pharmacy Council registration form (provided at admission)",
+                  ],
+                },
+                {
+                  course: "D.El.Ed",
+                  color: "border-amber-200 bg-amber-50",
+                  badge: "bg-amber-100 text-amber-700",
+                  extras: [
+                    "12th Marksheet & Certificate (any stream, 50% marks)",
+                    "Character Certificate from 12th school Principal",
+                    "Domicile & Caste certificate for Bihar state merit list",
+                    "SCERT application form (filled & signed)",
+                  ],
+                },
+              ].map(({ course, color, badge, extras }) => (
+                <div key={course} className={`rounded-xl border-2 p-5 ${color}`}>
+                  <span className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-extrabold mb-3 ${badge}`}>
+                    <BookOpen size={11} /> {course}
+                  </span>
+                  <ul className="space-y-2">
+                    {extras.map((item) => (
+                      <li key={item} className="flex items-start gap-2 text-sm text-gray-700">
+                        <CheckCircle2 size={14} className="mt-0.5 flex-shrink-0 text-gray-500" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+
+              <div className="rounded-xl border-2 border-dashed border-amber-300 bg-amber-50 p-5">
+                <p className="font-bold text-amber-800 text-sm mb-1">Not sure what to bring?</p>
+                <p className="text-xs text-amber-700 mb-3">Call us and our team will give you a complete custom document list for your specific course in 2 minutes.</p>
+                <a href="tel:+916203138576" className="inline-flex items-center gap-2 rounded-xl bg-amber-500 px-4 py-2.5 text-sm font-bold text-white hover:bg-amber-600 transition">
+                  <Phone size={14} /> Call: 6203138576
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── FAQ ACCORDION ── */}
-      <section id="faq" className="py-24 bg-white">
+      <section id="faq" className="py-24 bg-gray-50">
         <div className="container-shell">
           <div className="grid gap-12 lg:grid-cols-[1fr_1.6fr] items-start">
             <div>
@@ -822,7 +1324,7 @@ export default function Home() {
             <div>
               <h4 className="font-bold text-white mb-4">Quick Links</h4>
               <ul className="space-y-2 text-sm">
-                {[["#courses", "Courses"], ["#bscc", "BSCC Scheme"], ["#why-us", "Why Us"], ["#faq", "FAQ"], ["#contact", "Contact"]].map(([href, label]) => (
+                {[["#courses", "Courses"], ["#bscc", "BSCC Scheme"], ["#documents", "Documents"], ["#why-us", "Why Us"], ["#faq", "FAQ"], ["#contact", "Contact"]].map(([href, label]) => (
                   <li key={href}><a href={href} className="hover:text-white transition">{label}</a></li>
                 ))}
               </ul>
