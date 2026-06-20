@@ -38,12 +38,13 @@ export default function AdminDashboardPage() {
   const [filterCourse, setFilterCourse] = useState("");
   const [filterStatus, setFilterStatus] = useState<"" | InquiryStatus>("");
 
-  // Auth check
+  // Auth check — runs only on client after hydration
   useEffect(() => {
-    const session = typeof window !== "undefined" ? localStorage.getItem("sw_admin_session") : null;
-    const user = typeof window !== "undefined" ? localStorage.getItem("sw_admin_user") : null;
+    const session = localStorage.getItem("sw_admin_session");
+    const user = localStorage.getItem("sw_admin_user");
     if (!session) {
       router.replace("/admin/login");
+      // Keep authorized === null so the spinner shows until redirect completes
     } else {
       setAuthorized(true);
       setAdminUser(user || "Admin");
@@ -81,11 +82,9 @@ export default function AdminDashboardPage() {
   }
 
   function handleLogout() {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("sw_admin_session");
-      localStorage.removeItem("sw_admin_user");
-    }
-    router.push("/");
+    localStorage.removeItem("sw_admin_session");
+    localStorage.removeItem("sw_admin_user");
+    router.replace("/admin/login");
   }
 
   // Derived stats
