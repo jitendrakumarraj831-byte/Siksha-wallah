@@ -1,114 +1,153 @@
-# Siksha Wallah - Education Admission Platform
+# Siksha-Wallah
 
-A comprehensive education platform built with Next.js, React 19, Firebase, and modern technologies for seamless student admissions, course enrollment, and educational management.
+An educational platform built with Next.js 15, Firebase, and Razorpay — enabling students to explore courses, apply online, manage their dashboard, and make payments.
 
-## 🚀 Features Implemented
+---
 
-### ✅ Complete Authentication System
-- User registration & login with Firebase
-- Password reset functionality
-- Role-based access control (Student/Admin)
-- Protected routes with middleware
-- Session management
+## Tech Stack
 
-### ✅ Student Portal
-- Complete dashboard with analytics widgets
-- Profile management with document uploads
-- Application tracking
-- Enrollment management
-- Payment history & invoices
-- Notification center
+| Layer | Technology |
+|-------|------------|
+| Framework | Next.js 15 (App Router, Turbopack) |
+| Language | TypeScript |
+| Styling | Tailwind CSS + shadcn/ui |
+| Database | Firebase Firestore |
+| Auth | Firebase Authentication |
+| Payments | Razorpay |
+| AI | Google Genkit (AI Admission Advisor) |
+| Email | Nodemailer |
 
-### ✅ Course Management
-- Advanced course directory with filters
-- Course detail pages with eligibility checker
-- Real-time seat availability
-- Enrollment applications
-- Course materials access
-- Instructor profiles
+---
 
-### ✅ Payment Integration
-- Razorpay payment gateway
-- Secure checkout process
-- Invoice generation
-- Payment verification & tracking
-- EMI support ready
-- Refund management
+## Features
 
-### ✅ Admin Dashboard
-- Comprehensive analytics dashboard
-- Student management system
-- Application review & approval
-- Payment tracking
-- Bulk notification system
-- Email/SMS communications
-- Course management
-- Activity logs
+### Student Side
+- **Home Page** — Hero section with stats, featured courses, trust indicators
+- **Courses** — Browse all courses, individual course detail pages
+- **Apply** — Online admission application form
+- **Auth** — Register, Login, Forgot Password (Firebase Auth)
+- **Dashboard** — Student profile, documents, application status
+- **Student Portal** — Section-based portal shell (`/portal/[section]`)
+- **Student Credit Card** — Dedicated credit card page for students
+- **Blog** — Articles list and individual blog post pages
+- **Forum** — Community discussion page
+- **Contact** — Contact form with email via Nodemailer API
+- **Payment** — Razorpay checkout and payment success flow
 
-### ✅ Community Features
-- Forum with categories (general, doubts, courses, admission, payment)
-- Post creation and replies
-- Upvoting system
-- Blog & news management
-- Success stories & testimonials
-- Comment system
+### Admin Side
+- **Admin Dashboard** — Overview panel
+- **Applications** — View and manage student applications
+- **Students** — Student management
+- **Activity** — Recent activity log
+- **Analytics** — Analytics page
+- **Communications** — Messaging/communications panel
+- **Courses** — Course management
+- **Payments** — Payment records
 
-### ✅ Analytics & Reporting
-- Event tracking
-- Conversion funnel analysis
-- Student acquisition metrics
-- Revenue tracking
-- Course-wise analytics
-- User behavior analysis
+### AI Feature
+- **AI Admission Advisor** — Powered by Google Genkit + Gemini, guides students through the admission process
 
-## 📁 Project Structure
+### SEO & PWA
+- `sitemap.ts` — Auto-generated sitemap
+- `robots.ts` — Robots.txt
+- `manifest.ts` — PWA manifest
+- `not-found.tsx` — Custom 404 page
+
+---
+
+## Project Structure
 
 ```
 src/
-├── app/
-│   ├── auth/              # Authentication pages
-│   ├── dashboard/         # Student dashboard
-│   ├── courses/           # Course listing & details
-│   ├── payment/           # Payment pages
-│   ├── admin/             # Admin panel
-│   ├── forum/             # Forum pages
-│   ├── blog/              # Blog pages
-│   ├── api/               # API routes
-│   └── layout.tsx         # Root layout
-├── components/            # UI components
-├── services/              # Business logic
-│   ├── auth-service.ts
-│   ├── student-service.ts
+├── app/                        # Next.js App Router pages
+│   ├── page.tsx                # Home
+│   ├── about/
+│   ├── apply/
+│   ├── auth/                   # login, register, forgot-password
+│   ├── blog/
+│   ├── contact/
+│   ├── courses/
+│   ├── dashboard/              # profile, documents
+│   ├── forum/
+│   ├── payment/                # checkout, success
+│   ├── portal/[section]/
+│   ├── student-credit-card/
+│   ├── admin/                  # dashboard, students, applications, etc.
+│   ├── api/
+│   │   ├── contact/            # Email sending
+│   │   └── payment/            # Razorpay create-order & verify
+│   └── lib/
+│       └── placeholder-images.ts
+│
+├── components/
+│   ├── site-navbar.tsx         # Main navigation bar
+│   ├── site-footer.tsx         # Footer
+│   ├── auth-provider.tsx       # Firebase auth context
+│   ├── portal-shell.tsx        # Student portal layout
+│   ├── floating-contact.tsx    # Floating contact button
+│   ├── animate-in.tsx          # Scroll animation wrapper
+│   ├── count-up.tsx            # Animated number counter
+│   └── ui/                     # shadcn/ui base components
+│       (alert, badge, button, card, input, label,
+│        select, separator, sheet, skeleton, table, tabs, textarea)
+│
+├── services/                   # Firebase Firestore service layer
+│   ├── activity-service.ts
+│   ├── application-service.ts
 │   ├── course-service.ts
-│   ├── payment-service.ts
-│   ├── admin-service.ts
 │   ├── forum-service.ts
-│   ├── blog-service.ts
-│   └── analytics-service.ts
+│   ├── inquiry-service.ts
+│   ├── payment-service.ts
+│   └── student-service.ts
+│
 ├── lib/
-│   ├── firebase.ts        # Firebase config
-│   └── auth-service.ts
-└── middleware.ts          # Protected routes
+│   ├── firebase.ts             # Firebase app initialization
+│   ├── auth-service.ts         # Firebase Auth helpers
+│   ├── courses-data.ts         # Static course data
+│   ├── blog-data.ts            # Static blog data
+│   └── utils.ts                # Tailwind class utilities
+│
+├── ai/
+│   ├── genkit.ts               # Genkit setup
+│   ├── dev.ts                  # Genkit dev server entry
+│   └── flows/
+│       └── ai-admission-advisor-flow.ts
+│
+├── hooks/
+│   ├── use-mobile.tsx
+│   └── use-toast.ts
+│
+└── middleware.ts               # Auth route protection
 ```
 
-## 🛠️ Tech Stack
+---
 
-- **Frontend**: Next.js 15, React 19, TailwindCSS
-- **UI Components**: shadcn/ui
-- **Backend**: Next.js API Routes
-- **Database**: Firebase Firestore
-- **Authentication**: Firebase Auth
-- **Payments**: Razorpay
-- **Email**: SendGrid
-- **SMS**: Twilio (Optional)
-- **Hosting**: Vercel / Firebase App Hosting
-- **State Management**: React Context + SWR
+## Getting Started
 
-## 📋 Environment Variables
+```bash
+# Install dependencies
+npm install
 
-Create a `.env.local` file with:
+# Start development server (port 9002)
+npm run dev
 
+# Start AI Genkit dev server (separate terminal)
+npm run genkit:dev
+
+# Build for production
+npm run build
+
+# Type check
+npm run typecheck
 ```
+
+---
+
+## Environment Variables
+
+Create a `.env.local` file in the root:
+
+```env
 # Firebase
 NEXT_PUBLIC_FIREBASE_API_KEY=
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
@@ -120,115 +159,40 @@ NEXT_PUBLIC_FIREBASE_APP_ID=
 # Razorpay
 RAZORPAY_KEY_ID=
 RAZORPAY_KEY_SECRET=
+NEXT_PUBLIC_RAZORPAY_KEY_ID=
 
-# SendGrid
-SENDGRID_API_KEY=
+# Email (Nodemailer)
+EMAIL_USER=
+EMAIL_PASS=
 
-# Twilio (Optional)
-TWILIO_ACCOUNT_SID=
-TWILIO_AUTH_TOKEN=
-
-# Analytics
-NEXT_PUBLIC_GA_ID=
-
-# API
-NEXT_PUBLIC_API_URL=http://localhost:3000
+# Google AI (Genkit)
+GOOGLE_GENAI_API_KEY=
 ```
-
-## 🚀 Quick Start
-
-### Local Development
-
-```bash
-# Install dependencies
-npm install
-
-# Create .env.local with your credentials
-cp .env.example .env.local
-
-# Run development server
-npm run dev
-
-# Open http://localhost:3000
-```
-
-### Deploy to Vercel
-
-1. Push code to GitHub
-2. Import project in Vercel
-3. Add environment variables
-4. Deploy
-
-See [DEPLOYMENT.md](./docs/DEPLOYMENT.md) for detailed instructions.
-
-## 📚 Documentation
-
-- **[Features Documentation](./docs/FEATURES.md)** - Complete feature list
-- **[API Documentation](./docs/API.md)** - API endpoints & examples
-- **[Deployment Guide](./docs/DEPLOYMENT.md)** - Deployment instructions
-- **[Blueprint](./docs/blueprint.md)** - Project design & architecture
-
-## 🔐 Security
-
-- Firebase authentication with secure tokens
-- Protected API routes with role-based access
-- Input validation and sanitization
-- CORS configuration
-- Security rules for Firestore
-- Rate limiting ready
-- HTTPS enforced in production
-
-## 📊 Database Collections
-
-- `users` - User profiles
-- `courses` - Course information
-- `enrollments` - Student enrollments
-- `payments` - Payment records
-- `notifications` - User notifications
-- `forum_posts` - Forum discussions
-- `blog_posts` - Blog articles
-- `testimonials` - Student testimonials
-- `analytics_events` - Event tracking
-
-## 🧪 Testing
-
-```bash
-# Type checking
-npm run typecheck
-
-# Build
-npm run build
-
-# Run build locally
-npm run start
-```
-
-## 📞 Support & Contribution
-
-For issues or feature requests, open an issue on GitHub.
-
-For contributions:
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see LICENSE file for details.
-
-## 🎯 Roadmap
-
-- [ ] Mobile app (React Native)
-- [ ] AI-powered course recommendations
-- [ ] Video conferencing integration
-- [ ] Assignment & exam system
-- [ ] Advanced analytics dashboard
-- [ ] Multi-language support
-- [ ] Payment gateway expansion
-- [ ] Integration with educational councils
 
 ---
 
-Made with ❤️ for Indian students by Siksha Wallah
+## Database Collections (Firestore)
+
+| Collection | Description |
+|------------|-------------|
+| `users` | User profiles |
+| `courses` | Course information |
+| `applications` | Admission applications |
+| `payments` | Payment records |
+| `forum_posts` | Forum discussions |
+| `activities` | Admin activity log |
+| `inquiries` | Contact form submissions |
+
+---
+
+## Deployment
+
+The project includes `apphosting.yaml` for **Firebase App Hosting** deployment.
+
+```bash
+firebase deploy
+```
+
+---
+
+Made with love for Indian students by Siksha-Wallah
