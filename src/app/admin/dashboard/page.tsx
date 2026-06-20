@@ -13,6 +13,7 @@ import {
   getAllInquiries, updateInquiryStatus, updateInquiryNote,
   type Inquiry, type InquiryStatus,
 } from "@/services/inquiry-service";
+import { subscribeActivities, type Activity, type ActivityType } from "@/services/activity-service";
 
 /* ── helpers ─────────────────────────────────────────── */
 const STATUS_META: Record<InquiryStatus, { label: string; color: string }> = {
@@ -102,6 +103,27 @@ function NoteCell({ inq, onSaved }: { inq: Inquiry; onSaved: (id: string, note: 
   );
 }
 
+/* ── Activity type meta ─────────────────────────────── */
+const ACTIVITY_META: Record<ActivityType, { icon: string; color: string }> = {
+  inquiry:       { icon: "📋", color: "bg-blue-50 border-blue-200 text-blue-800" },
+  contact:       { icon: "📝", color: "bg-purple-50 border-purple-200 text-purple-800" },
+  registration:  { icon: "👤", color: "bg-green-50 border-green-200 text-green-800" },
+  student_login: { icon: "🔑", color: "bg-gray-50 border-gray-200 text-gray-700" },
+  whatsapp:      { icon: "📱", color: "bg-emerald-50 border-emerald-200 text-emerald-800" },
+  bscc_check:    { icon: "🏦", color: "bg-amber-50 border-amber-200 text-amber-800" },
+  course_view:   { icon: "📚", color: "bg-indigo-50 border-indigo-200 text-indigo-800" },
+};
+
+function timeAgo(ts: any): string {
+  const d = ts?.toDate ? ts.toDate() : ts ? new Date(ts) : null;
+  if (!d) return "";
+  const diff = Math.floor((Date.now() - d.getTime()) / 1000);
+  if (diff < 60) return `${diff}s ago`;
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  return `${Math.floor(diff / 86400)}d ago`;
+}
+
 /* ── Main page ──────────────────────────────────────── */
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -110,6 +132,7 @@ export default function AdminDashboardPage() {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [activities, setActivities] = useState<Activity[]>([]);
 
   const [filterCourse, setFilterCourse] = useState("");
   const [filterStatus, setFilterStatus] = useState<"" | InquiryStatus>("");
@@ -123,7 +146,13 @@ export default function AdminDashboardPage() {
     setAdminUser(user || "Admin");
   }, [router]);
 
-  useEffect(() => { if (authorized) loadInquiries(); }, [authorized]);
+  useEffect(() => {
+    if (!authorized) return;
+    loadInquiries();
+    // Real-time activity feed
+    const unsub = subscribeActivities(30, setActivities);
+    return () => unsub();
+  }, [authorized]);
 
   async function loadInquiries() {
     setLoading(true);
@@ -207,7 +236,10 @@ export default function AdminDashboardPage() {
               Inquiries
             </Link>
             <Link href="/admin/students" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">
-              Registered Students
+              Students
+            </Link>
+            <Link href="/admin/activity" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">
+              Activity Log
             </Link>
           </nav>
 
@@ -427,6 +459,57 @@ export default function AdminDashboardPage() {
         <p className="mt-3 text-center text-xs text-gray-400">
           Showing {filtered.length} of {totalInquiries} total inquiries
         </p>
+
+        {/* ── Live Activity Feed ── */}
+        <div className="mt-10">
+          <div className="mb-4 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500" />
+              </span>
+              <h2 className="font-headline text-lg font-extrabold text-gray-900">Live Website Activity</h2>
+              <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-bold text-gray-500">{activities.length}</span>
+            </div>
+            <Link
+              href="/admin/activity"
+              className="text-xs font-bold text-[#003f9f] hover:underline"
+            >
+              View Full Log →
+            </Link>
+          </div>
+
+          {activities.length === 0 ? (
+            <div className="rounded-2xl border-2 border-dashed border-gray-200 py-12 text-center text-gray-400">
+              <p className="text-sm font-semibold">No activity yet</p>
+              <p className="text-xs mt-1">Activities will appear here in real-time as visitors use the website</p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {activities.slice(0, 15).map(act => {
+                const meta = ACTIVITY_META[act.type] || { icon: "📌", color: "bg-gray-50 border-gray-200 text-gray-700" };
+                return (
+                  <div key={act.id} className={`flex items-start gap-3 rounded-xl border px-4 py-3 ${meta.color}`}>
+                    <span className="text-lg leading-none mt-0.5">{meta.icon}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-sm">{act.title}</p>
+                      <p className="text-xs mt-0.5 opacity-80 truncate">{act.description}</p>
+                      {act.mobile && (
+                        <a href={`tel:+91${act.mobile}`} className="mt-1 inline-flex items-center gap-1 text-xs font-bold underline opacity-70 hover:opacity-100">
+                          <Phone size={10} /> {act.mobile}
+                        </a>
+                      )}
+                    </div>
+                    <div className="flex-shrink-0 text-right">
+                      <span className="text-xs opacity-60 whitespace-nowrap">{timeAgo(act.createdAt)}</span>
+                      {act.page && <p className="text-xs opacity-40 mt-0.5">{act.page}</p>}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
 
       </main>
     </div>

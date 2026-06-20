@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { authService } from "@/lib/auth-service";
+import { saveActivity } from "@/services/activity-service";
 import {
   GraduationCap, Lock, Mail, AlertCircle, Loader, ArrowRight,
   Eye, EyeOff, BookOpen, FileCheck2, CreditCard, Bell, UserPlus,
@@ -27,6 +28,13 @@ export default function StudentLoginPage() {
     setLoading(true);
     try {
       await authService.loginStudent(email, password);
+      saveActivity({
+        type: "student_login",
+        title: "🔑 Student Logged In",
+        description: email,
+        email,
+        page: "/auth/login",
+      });
       router.push("/dashboard");
     } catch (err: any) {
       setError(err.message || "Login failed. Please check your credentials.");
