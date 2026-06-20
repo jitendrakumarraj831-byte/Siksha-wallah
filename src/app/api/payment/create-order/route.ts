@@ -2,15 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import Razorpay from 'razorpay';
 import { paymentService } from '@/services/payment-service';
 
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID || '',
-  key_secret: process.env.RAZORPAY_KEY_SECRET || '',
-});
-
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { uid, courseId, courseName, amount, paymentId } = body;
+
+    const razorpay = new Razorpay({
+      key_id: process.env.RAZORPAY_KEY_ID || '',
+      key_secret: process.env.RAZORPAY_KEY_SECRET || '',
+    });
 
     if (!uid || !courseId || !amount || !paymentId) {
       return NextResponse.json(

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { paymentService, Payment } from '@/services/payment-service';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,22 @@ import { CheckCircle2, Download, Loader, Home } from 'lucide-react';
 import Link from 'next/link';
 
 export default function PaymentSuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <PortalShell>
+          <div className="flex min-h-screen items-center justify-center">
+            <Loader className="animate-spin" size={40} />
+          </div>
+        </PortalShell>
+      }
+    >
+      <PaymentSuccessContent />
+    </Suspense>
+  );
+}
+
+function PaymentSuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const paymentId = searchParams.get('paymentId');

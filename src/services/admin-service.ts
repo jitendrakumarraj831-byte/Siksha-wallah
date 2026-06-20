@@ -2,6 +2,7 @@ import { db } from '@/lib/firebase';
 import {
   collection,
   getDocs,
+  getDoc,
   query,
   where,
   updateDoc,
@@ -84,15 +85,10 @@ export const adminService = {
       });
 
       // Get application details to send notification
-      const app = await getDocs(
-        query(
-          collection(db, 'enrollmentRequests'),
-          where('__name__', '==', applicationId)
-        )
-      );
+      const appSnap = await getDoc(doc(db, 'enrollmentRequests', applicationId));
 
-      if (!app.empty) {
-        const appData = app.docs[0].data();
+      if (appSnap.exists()) {
+        const appData = appSnap.data();
         // Send notification to student
         await addDoc(collection(db, 'notifications'), {
           uid: appData.uid,
@@ -123,15 +119,10 @@ export const adminService = {
       });
 
       // Get application details to send notification
-      const app = await getDocs(
-        query(
-          collection(db, 'enrollmentRequests'),
-          where('__name__', '==', applicationId)
-        )
-      );
+      const appSnap = await getDoc(doc(db, 'enrollmentRequests', applicationId));
 
-      if (!app.empty) {
-        const appData = app.docs[0].data();
+      if (appSnap.exists()) {
+        const appData = appSnap.data();
         // Send notification to student
         await addDoc(collection(db, 'notifications'), {
           uid: appData.uid,
