@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
+import { saveInquiry } from "@/services/inquiry-service";
 import {
   ArrowRight, BadgeCheck, BookOpen, BriefcaseBusiness, Building2, Check,
   ChevronDown, CreditCard, GraduationCap, HeartPulse, MapPin, Menu,
@@ -311,18 +313,23 @@ export default function Home() {
           </a>
 
           <nav className="hidden items-center gap-7 text-sm font-semibold lg:flex">
-            {[["#courses", "Courses"], ["#bscc", "BSCC Scheme"], ["#documents", "Documents"], ["#why-us", "Why Us"], ["#contact", "Contact"]].map(([href, label]) => (
-              <a key={href} href={href} className="transition hover:text-primary-blue">{label}</a>
+            {[["#courses", "Courses"], ["#bscc", "BSCC"], ["/about", "About Us"], ["/contact", "Contact"]].map(([href, label]) => (
+              href.startsWith("/")
+                ? <Link key={href} href={href} className="transition hover:text-primary-blue">{label}</Link>
+                : <a key={href} href={href} className="transition hover:text-primary-blue">{label}</a>
             ))}
           </nav>
 
           <div className="hidden items-center gap-2 lg:flex">
-            <a href="tel:+916203138576" className="flex items-center gap-2 rounded-lg border-2 border-primary-blue px-4 py-2 text-sm font-bold text-primary-blue transition hover:bg-primary-blue hover:text-white">
+            <a href="tel:+916203138576" className="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm font-bold text-gray-700 transition hover:border-primary-blue hover:text-primary-blue">
               <Phone size={14} /> 6203138576
             </a>
-            <a href="#inquiry" className="rounded-lg bg-primary-red px-5 py-2 text-sm font-bold text-white transition hover:bg-red-700 shadow-md shadow-red-200">
+            <Link href="/auth/login" className="rounded-lg border-2 border-primary-blue px-4 py-2 text-sm font-bold text-primary-blue transition hover:bg-primary-blue hover:text-white">
+              Student Login
+            </Link>
+            <Link href="/auth/register" className="rounded-lg bg-primary-red px-5 py-2 text-sm font-bold text-white transition hover:bg-red-700 shadow-md shadow-red-200">
               Apply Now →
-            </a>
+            </Link>
           </div>
 
           <button aria-label="Open menu" className="rounded-lg p-2 lg:hidden" onClick={() => setMenuOpen(!menuOpen)}>
@@ -333,12 +340,17 @@ export default function Home() {
         {menuOpen && (
           <div className="border-t border-gray-100 bg-white px-6 py-5 lg:hidden">
             <div className="flex flex-col gap-4 font-semibold text-sm">
-              {[["#courses", "Courses"], ["#bscc", "BSCC Scheme"], ["#documents", "Documents"], ["#why-us", "Why Us"], ["#contact", "Contact"]].map(([href, label]) => (
-                <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</a>
+              {[["#courses", "Courses"], ["#bscc", "BSCC"], ["/about", "About Us"], ["/contact", "Contact"]].map(([href, label]) => (
+                href.startsWith("/")
+                  ? <Link key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</Link>
+                  : <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</a>
               ))}
-              <a href="#inquiry" onClick={() => setMenuOpen(false)} className="rounded-lg bg-primary-red px-4 py-2.5 text-center text-white font-bold">
+              <Link href="/auth/login" onClick={() => setMenuOpen(false)} className="rounded-lg border-2 border-primary-blue px-4 py-2.5 text-center font-bold text-primary-blue">
+                Student Login
+              </Link>
+              <Link href="/auth/register" onClick={() => setMenuOpen(false)} className="rounded-lg bg-primary-red px-4 py-2.5 text-center text-white font-bold">
                 Apply Now →
-              </a>
+              </Link>
             </div>
           </div>
         )}
@@ -1268,19 +1280,24 @@ export default function Home() {
               </a>
             </div>
 
-            {/* Right — multi-step form (duplicate for contact section) */}
+            {/* Right — Contact form with Firestore save */}
             <div className="rounded-2xl bg-white p-8 text-gray-900 shadow-xl">
               <h3 className="font-headline text-2xl font-extrabold mb-2">Admission Plan बनाइए</h3>
-              <p className="text-gray-500 text-sm mb-6">Fill the form and our counsellor will call within 30 minutes.</p>
+              <p className="text-gray-500 text-sm mb-6">Fill the form — हमारा counsellor 30 minutes में call करेगा।</p>
               <form
-                onSubmit={(e) => {
+                onSubmit={async (e) => {
                   e.preventDefault();
                   const f = e.currentTarget as HTMLFormElement;
                   const name = (f.elements.namedItem("cname") as HTMLInputElement).value;
                   const mobile = (f.elements.namedItem("cmobile") as HTMLInputElement).value;
                   const course = (f.elements.namedItem("ccourse") as HTMLSelectElement).value;
-                  const msg = `New Inquiry!%0AName: ${name}%0AMobile: ${mobile}%0ACourse: ${course}`;
+                  const qualify = (f.elements.namedItem("cqualify") as HTMLSelectElement).value;
+                  try {
+                    await saveInquiry({ fullName: name, mobile, course, message: `Qualification: ${qualify}` });
+                  } catch (_) {}
+                  const msg = `New Inquiry from Siksha Wallah!%0AName: ${name}%0AMobile: ${mobile}%0ACourse: ${course}%0AQualification: ${qualify}`;
                   window.open(`https://wa.me/916203138576?text=${msg}`, "_blank");
+                  f.reset();
                 }}
                 className="space-y-4"
               >
@@ -1296,6 +1313,15 @@ export default function Home() {
                   <option>B.Tech / Polytechnic / ITI</option>
                   <option>BCA / MCA</option>
                   <option>अभी decide नहीं किया</option>
+                </select>
+                <select name="cqualify" className="w-full rounded-xl border-2 border-gray-200 px-4 py-3.5 text-gray-600 outline-none focus:border-primary-blue bg-white transition">
+                  <option value="">-- Current Qualification --</option>
+                  <option>10th Pass</option>
+                  <option>12th Pass (Arts)</option>
+                  <option>12th Pass (Science)</option>
+                  <option>12th Pass (Commerce)</option>
+                  <option>Graduation</option>
+                  <option>Post Graduation</option>
                 </select>
                 <button type="submit" className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary-blue py-4 font-extrabold text-white transition hover:bg-blue-700 shadow-lg shadow-blue-200 active:scale-95">
                   Free Counselling Book करें <ArrowRight size={18} />
@@ -1324,8 +1350,10 @@ export default function Home() {
             <div>
               <h4 className="font-bold text-white mb-4">Quick Links</h4>
               <ul className="space-y-2 text-sm">
-                {[["#courses", "Courses"], ["#bscc", "BSCC Scheme"], ["#documents", "Documents"], ["#why-us", "Why Us"], ["#faq", "FAQ"], ["#contact", "Contact"]].map(([href, label]) => (
-                  <li key={href}><a href={href} className="hover:text-white transition">{label}</a></li>
+                {[["#courses", "Courses"], ["#bscc", "BSCC Scheme"], ["/about", "About Us"], ["/contact", "Contact"], ["/auth/login", "Student Login"], ["/admin/login", "Admin Login"]].map(([href, label]) => (
+                  <li key={href}>
+                    <Link href={href} className="hover:text-white transition">{label}</Link>
+                  </li>
                 ))}
               </ul>
             </div>
