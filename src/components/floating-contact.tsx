@@ -1,49 +1,35 @@
 "use client";
 
-import { Phone, MessageSquare } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
+import { Phone, MessageCircle } from "lucide-react";
 
 export function FloatingContact() {
-  const handleWhatsApp = () => {
-    window.open('https://wa.me/916203138576', '_blank');
-  };
-
-  const handleCall = () => {
-    window.open('tel:+916203138576');
-  };
-
   return (
-    <div className="fixed bottom-8 right-8 flex flex-col gap-4 z-50">
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              size="icon"
-              className="w-14 h-14 rounded-full bg-green-500 hover:bg-green-600 shadow-xl shadow-green-500/20 animate-in slide-in-from-right-10"
-              onClick={handleWhatsApp}
-            >
-              <MessageSquare className="h-6 w-6 text-white" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="left" className="font-bold">WhatsApp Inquiry</TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+    <div className="fixed bottom-6 right-5 z-50 flex flex-col items-end gap-3">
+      {/* Call button */}
+      <a
+        href="tel:+916203138576"
+        aria-label="Call Siksha Wallah"
+        className="group flex items-center gap-2 rounded-full bg-[#003f9f] px-4 py-3 text-white shadow-xl shadow-blue-500/25 transition hover:scale-105 hover:bg-blue-700 active:scale-95"
+      >
+        <Phone size={20} />
+        <span className="max-w-0 overflow-hidden whitespace-nowrap text-sm font-bold transition-all duration-300 group-hover:max-w-xs">
+          Call Now
+        </span>
+      </a>
 
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              size="icon"
-              className="w-14 h-14 rounded-full bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20 animate-in slide-in-from-right-10 delay-100"
-              onClick={handleCall}
-            >
-              <Phone className="h-6 w-6 text-white" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="left" className="font-bold">Call Rajesh Kr. Sah</TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      {/* WhatsApp button */}
+      <a
+        href="https://wa.me/916203138576?text=Hi! I need admission guidance from Siksha Wallah."
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Chat on WhatsApp"
+        className="group flex items-center gap-2 rounded-full bg-green-500 px-4 py-3 text-white shadow-xl shadow-green-500/25 transition hover:scale-105 hover:bg-green-600 active:scale-95"
+      >
+        <MessageCircle size={20} fill="currentColor" />
+        <span className="max-w-0 overflow-hidden whitespace-nowrap text-sm font-bold transition-all duration-300 group-hover:max-w-xs">
+          WhatsApp
+        </span>
+      </a>
     </div>
   );
 }

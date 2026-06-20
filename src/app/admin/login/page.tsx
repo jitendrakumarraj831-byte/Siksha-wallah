@@ -30,13 +30,11 @@ export default function AdminLoginPage() {
     await new Promise((r) => setTimeout(r, 600)); // brief delay for UX
 
     if (username.trim() === HARDCODED_USER && password === HARDCODED_PASS) {
-      if (typeof window !== "undefined") {
-        localStorage.setItem("sw_admin_session", "true");
-        localStorage.setItem("sw_admin_user", username.trim());
-      }
+      localStorage.setItem("sw_admin_session", "true");
+      localStorage.setItem("sw_admin_user", username.trim());
       router.push("/admin/dashboard");
     } else {
-      setError("Invalid credentials. Use admin / admin123 for testing.");
+      setError("Invalid username or password. Please try again.");
     }
     setLoading(false);
   };
