@@ -6,6 +6,7 @@ import { SiteNavbar } from "@/components/site-navbar";
 import { SiteFooter } from "@/components/site-footer";
 import { saveApplication } from "@/services/application-service";
 import { saveActivity } from "@/services/activity-service";
+import { saveInquiry } from "@/services/inquiry-service";
 import { useAuth } from "@/components/auth-provider";
 import {
   GraduationCap, User, Phone, Mail, BookOpen, MapPin, CheckCircle2,
@@ -137,6 +138,15 @@ export default function ApplyPage() {
         message: form.message || undefined,
       });
       setAppId(id.slice(0, 8).toUpperCase());
+      saveInquiry({
+        fullName: form.fullName,
+        mobile: form.mobile,
+        email: form.email || undefined,
+        course: form.course,
+        qualification: form.qualification,
+        message: form.message || `Apply page — Ref: ${id.slice(0, 8).toUpperCase()}`,
+        status: "pending",
+      }).catch(() => {});
       saveActivity({
         type: "inquiry",
         title: "📋 Course Application Submitted",
