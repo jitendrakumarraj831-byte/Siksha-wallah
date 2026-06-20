@@ -2,24 +2,33 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { getAllInquiries, type Inquiry } from "@/services/inquiry-service";
+import { useAuth } from "@/components/auth-provider";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { User, Phone, Mail, BookOpen, Clock } from "lucide-react";
+import { User, Phone, BookOpen, Clock } from "lucide-react";
 
 export default function AdminDashboard() {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [loading, setLoading] = useState(true);
+  const { isAuthenticated, userProfile, loading: authLoading } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
+    if (authLoading) return;
+    if (!isAuthenticated || (userProfile?.role !== "admin" && userProfile?.role !== "counselor")) {
+      router.replace("/admin/login");
+      return;
+    }
     async function fetchData() {
       const data = await getAllInquiries();
       setInquiries(data);
       setLoading(false);
     }
     fetchData();
-  }, []);
+  }, [authLoading, isAuthenticated, userProfile, router]);
 
   return (
     <div className="min-h-screen bg-slate-50 p-8">
