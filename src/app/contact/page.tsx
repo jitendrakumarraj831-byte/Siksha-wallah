@@ -4,6 +4,7 @@ import { useState } from "react";
 import { SiteNavbar } from "@/components/site-navbar";
 import { SiteFooter } from "@/components/site-footer";
 import { saveInquiry } from "@/services/inquiry-service";
+import { saveActivity } from "@/services/activity-service";
 import {
   Phone, MessageCircle, MapPin, Clock, CheckCircle2,
   Send, ArrowRight, Mail, User,
@@ -46,7 +47,18 @@ export default function ContactPage() {
         // Email failure is non-blocking
       }
 
+      saveActivity({
+        type: "contact",
+        title: "📝 Contact Form Submitted",
+        description: `${form.fullName} → ${form.course || "General inquiry"}`,
+        name: form.fullName,
+        mobile: form.mobile,
+        email: form.email,
+        course: form.course,
+        page: "/contact",
+      });
       const msg = `New Inquiry from Contact Page!%0AName: ${form.fullName}%0AMobile: ${form.mobile}%0ACourse: ${form.course}%0AMessage: ${form.message}`;
+      saveActivity({ type: "whatsapp", title: "📱 WhatsApp Opened", description: `${form.fullName} — Contact page`, name: form.fullName, mobile: form.mobile, page: "/contact" });
       window.open(`https://wa.me/916203138576?text=${msg}`, "_blank");
       setSubmitted(true);
     } catch (_) {

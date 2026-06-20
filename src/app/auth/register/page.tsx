@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { authService } from '@/lib/auth-service';
+import { saveActivity } from '@/services/activity-service';
 import { PortalShell } from '@/components/portal-shell';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -58,6 +59,15 @@ export default function RegisterPage() {
         formData.fullName,
         formData.phone
       );
+      saveActivity({
+        type: "registration",
+        title: "👤 New Student Registered",
+        description: `${formData.fullName} — ${formData.email}`,
+        name: formData.fullName,
+        mobile: formData.phone,
+        email: formData.email,
+        page: "/auth/register",
+      });
       setSuccess('Account created successfully! Redirecting...');
       setTimeout(() => router.push('/dashboard'), 2000);
     } catch (err: any) {

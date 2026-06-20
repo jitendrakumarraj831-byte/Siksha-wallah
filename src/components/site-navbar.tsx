@@ -55,10 +55,16 @@ export function SiteNavbar() {
             <Phone size={14} /> 6203138576
           </a>
           <Link
+            href="/admin/login"
+            className="rounded-lg border-2 border-gray-300 px-4 py-2 text-sm font-bold text-gray-600 transition hover:border-gray-500 hover:text-gray-900"
+          >
+            🏢 Office Login
+          </Link>
+          <Link
             href="/auth/login"
             className="rounded-lg border-2 border-primary-blue px-4 py-2 text-sm font-bold text-primary-blue transition hover:bg-primary-blue hover:text-white"
           >
-            Student Login
+            🎓 Student Login
           </Link>
           <Link
             href="/auth/register"
@@ -97,11 +103,18 @@ export function SiteNavbar() {
               </Link>
             ))}
             <Link
+              href="/admin/login"
+              onClick={() => setMenuOpen(false)}
+              className="rounded-lg border-2 border-gray-300 px-4 py-2.5 text-center font-bold text-gray-700"
+            >
+              🏢 Office Login
+            </Link>
+            <Link
               href="/auth/login"
               onClick={() => setMenuOpen(false)}
               className="rounded-lg border-2 border-primary-blue px-4 py-2.5 text-center font-bold text-primary-blue"
             >
-              Student Login
+              🎓 Student Login
             </Link>
             <Link
               href="/auth/register"

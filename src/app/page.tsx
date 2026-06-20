@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { saveInquiry } from "@/services/inquiry-service";
+import { saveActivity } from "@/services/activity-service";
 import {
   ArrowRight, BadgeCheck, BookOpen, Building2, Check,
   ChevronDown, CreditCard, GraduationCap, MapPin,
@@ -46,6 +47,13 @@ export default function Home() {
       parseInt(bsccAge) <= 25 &&
       bsccIncome === "below";
     setBsccEligible(eligible);
+    saveActivity({
+      type: "bscc_check",
+      title: "BSCC Eligibility Checked",
+      description: eligible ? "✅ Eligible — Bihar resident, age ≤25, income below 4.5L" : "❌ Not eligible",
+      page: "/",
+      meta: { bihar: bsccBihar, age: bsccAge, income: bsccIncome, result: eligible ? "eligible" : "not_eligible" },
+    });
   }
 
   function nextStep() {
@@ -53,7 +61,26 @@ export default function Home() {
     else {
       setFormSubmitted(true);
       saveInquiry({ fullName: formData.name, mobile: formData.mobile, course: formData.course, qualification: formData.qualify, message: `Qualification: ${formData.qualify}` }).catch(() => {});
+      // Log inquiry activity
+      saveActivity({
+        type: "inquiry",
+        title: "📋 New Inquiry Submitted",
+        description: `${formData.name} → ${formData.course} (${formData.qualify})`,
+        name: formData.name,
+        mobile: formData.mobile,
+        course: formData.course,
+        page: "/",
+      });
       const msg = `New Inquiry from Siksha Wallah Website!%0AName: ${formData.name}%0AMobile: ${formData.mobile}%0ACourse: ${formData.course}%0AQualification: ${formData.qualify}`;
+      // Log WhatsApp click
+      saveActivity({
+        type: "whatsapp",
+        title: "📱 WhatsApp Opened",
+        description: `${formData.name} ne WhatsApp click kiya — ${formData.course}`,
+        name: formData.name,
+        mobile: formData.mobile,
+        page: "/",
+      });
       window.open(`https://wa.me/916203138576?text=${msg}`, "_blank");
     }
   }
