@@ -193,7 +193,7 @@ const technicalCourses: Course[] = [
     hindiDesc: "B.Tech engineering का 4 साल का degree course है। Computer Science, Civil, Mechanical, Electrical — अपना branch चुनें। JEE Main या Bihar DCECE से government college में admission पाएं। TCS, Infosys जैसी IT companies और BPSC/SSC JE से government engineer — दोनों रास्ते खुले हैं। BSCC loan available।",
     salary: "₹30,000–₹1,20,000/month (IT Companies / Govt Engineer)",
     entranceExam: "JEE Main (for NIT/central colleges). Bihar DCECE (for state govt colleges). Direct admission available at private colleges.",
-    govtJobs: "BPSC Junior Engineer, SSC JE, BSPHCL Engineer, PWD Engineer, BRO (Border Roads), Defence Techincal Officer",
+    govtJobs: "BPSC Junior Engineer, SSC JE, BSPHCL Engineer, PWD Engineer, BRO (Border Roads), Defence Technical Officer",
     topColleges: ["NIT Patna", "BIT Mesra (Ranchi)", "GIET Gunupur", "Chandragupt Institute (Patna)", "LNCT (Bhopal)", "Galgotias University (UP)"],
     highlights: ["Highest salary potential among all courses", "IT companies: TCS, Infosys, Wipro campus recruitment", "Govt Engineer via SSC JE / BPSC JE", "BSCC loan up to ₹4 Lakh"],
   },
@@ -654,7 +654,7 @@ export default function Home() {
       <section id="courses" className="py-24 bg-gray-50">
         <div className="container-shell">
           <div className="text-center mb-12">
-            <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">सभी Streams Available</p>
+            <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">सभी स्ट्रीम्स उपलब्ध हैं (Streams Available)</p>
             <h2 className="font-headline text-4xl md:text-5xl font-extrabold">अपना Stream चुनें</h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto">
               3 main streams — 40+ courses — सभी के लिए expert guidance available
@@ -682,6 +682,98 @@ export default function Home() {
               );
             })}
           </div>
+
+          {/* Partnered Colleges Banner */}
+          {activeStream === "teaching" && (
+            <div className="mb-8 rounded-2xl border-2 border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-6">
+              <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white shadow-md">
+                  <Building2 size={22} />
+                </div>
+                <div className="flex-1">
+                  <div className="flex flex-wrap items-center gap-2 mb-2">
+                    <h3 className="font-headline text-lg font-extrabold text-blue-900">हमारे Partnered &amp; Approved Colleges</h3>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-blue-600 px-2.5 py-0.5 text-xs font-bold text-white"><BadgeCheck size={11} /> NCTE Approved</span>
+                  </div>
+                  <p className="text-sm text-blue-800 leading-relaxed mb-3">
+                    हम केवल <strong>NCTE (National Council for Teacher Education) Approved</strong> colleges के साथ partner हैं — Bihar, Purnea, Katihar, Patna, और West Bengal में।
+                  </p>
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {[
+                      "NCTE Approved colleges in Patna, Purnea & Katihar (Bihar)",
+                      "NCTE Recognized institutions in West Bengal",
+                      "100% BSCC (Bihar Student Credit Card) facility available",
+                      "Regular & Distance mode — both options guided",
+                    ].map((point, i) => (
+                      <div key={i} className="flex items-start gap-2 rounded-lg bg-white/70 border border-blue-100 px-3 py-2 text-xs text-blue-800 font-medium">
+                        <CheckCircle2 size={13} className="mt-0.5 flex-shrink-0 text-blue-500" /> {point}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          {activeStream === "medical" && (
+            <div className="mb-8 rounded-2xl border-2 border-red-200 bg-gradient-to-r from-red-50 to-pink-50 p-6">
+              <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-red-600 text-white shadow-md">
+                  <Building2 size={22} />
+                </div>
+                <div className="flex-1">
+                  <div className="flex flex-wrap items-center gap-2 mb-2">
+                    <h3 className="font-headline text-lg font-extrabold text-red-900">हमारे Partnered &amp; Approved Colleges</h3>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-red-600 px-2.5 py-0.5 text-xs font-bold text-white"><BadgeCheck size={11} /> INC &amp; PCI Approved</span>
+                  </div>
+                  <p className="text-sm text-red-800 leading-relaxed mb-3">
+                    हम <strong>INC (Indian Nursing Council) &amp; PCI (Pharmacy Council of India) Approved</strong> premier institutes के साथ partner हैं — Bangalore, Madhya Pradesh, और West Bengal में।
+                  </p>
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {[
+                      "INC Approved Nursing colleges in Bangalore & West Bengal",
+                      "PCI Approved Pharmacy institutes in Madhya Pradesh",
+                      "Premier private medical institutes with hostel facility",
+                      "NEET counselling & direct admission both available",
+                    ].map((point, i) => (
+                      <div key={i} className="flex items-start gap-2 rounded-lg bg-white/70 border border-red-100 px-3 py-2 text-xs text-red-800 font-medium">
+                        <CheckCircle2 size={13} className="mt-0.5 flex-shrink-0 text-red-500" /> {point}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          {activeStream === "technical" && (
+            <div className="mb-8 rounded-2xl border-2 border-orange-200 bg-gradient-to-r from-orange-50 to-amber-50 p-6">
+              <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-orange-600 text-white shadow-md">
+                  <Building2 size={22} />
+                </div>
+                <div className="flex-1">
+                  <div className="flex flex-wrap items-center gap-2 mb-2">
+                    <h3 className="font-headline text-lg font-extrabold text-orange-900">हमारे Partnered &amp; Approved Colleges</h3>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-orange-600 px-2.5 py-0.5 text-xs font-bold text-white"><BadgeCheck size={11} /> AICTE &amp; UGC Recognized</span>
+                  </div>
+                  <p className="text-sm text-orange-800 leading-relaxed mb-3">
+                    हम <strong>AICTE (All India Council for Technical Education) &amp; UGC Recognized</strong> top universities के साथ partner हैं — engineering, management, और computer courses के लिए।
+                  </p>
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {[
+                      "AICTE Approved B.Tech & Polytechnic colleges across India",
+                      "UGC Recognized universities for BCA, MCA, BBA & MBA",
+                      "JEE / DCECE counselling guidance included",
+                      "Distance mode also available for UGC-DEB approved courses",
+                    ].map((point, i) => (
+                      <div key={i} className="flex items-start gap-2 rounded-lg bg-white/70 border border-orange-100 px-3 py-2 text-xs text-orange-800 font-medium">
+                        <CheckCircle2 size={13} className="mt-0.5 flex-shrink-0 text-orange-500" /> {point}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Course Cards Grid */}
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -1094,8 +1186,8 @@ export default function Home() {
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {[
                 { step: "01", title: "Call या WhatsApp करें", desc: "हमसे contact करें — free में बात करें" },
-                { step: "02", title: "Profile Share करें", desc: "Marks, budget, और goals बताएं" },
-                { step: "03", title: "Best Options पाएं", desc: "Top colleges और courses की list मिलेगी" },
+                { step: "02", title: "प्रोफाइल और डॉक्यूमेंट शेयर करें", desc: "Marks, budget, documents, और goals बताएं" },
+                { step: "03", title: "सर्वश्रेष्ठ कॉलेज विकल्प चुनें", desc: "Top colleges और courses की verified list मिलेगी" },
                 { step: "04", title: "Admission Confirm", desc: "Documents से admission तक — हम साथ हैं" },
               ].map(({ step, title, desc }, i) => (
                 <div key={step} className="relative">
