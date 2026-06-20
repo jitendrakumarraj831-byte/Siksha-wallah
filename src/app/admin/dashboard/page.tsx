@@ -300,7 +300,7 @@ export default function AdminDashboardPage() {
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">{label}</p>
-                    <p className={`mt-2 text-4xl font-extrabold ${txt[color]}`}>{value}</p>
+                    <p className={`mt-2 text-3xl font-extrabold ${txt[color]}`}>{value}</p>
                     <p className="mt-1 text-xs text-gray-400">{sub}</p>
                   </div>
                   <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${bg[color]}`}>
@@ -375,7 +375,7 @@ export default function AdminDashboardPage() {
           </button>
         </div>
 
-        {/* ── Table ── */}
+        {/* ── Inquiry Cards ── */}
         <div className="rounded-2xl border-2 border-gray-100 bg-white shadow-sm overflow-hidden">
           {loading ? (
             <div className="flex items-center justify-center py-20">
@@ -391,70 +391,69 @@ export default function AdminDashboardPage() {
               </Link>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b-2 border-gray-100 bg-gray-50">
-                    {["Date", "Student", "Mobile", "Course", "Qualification", "Status", "Note", "Actions"].map(h => (
-                      <th key={h} className="px-4 py-3.5 text-left text-xs font-bold uppercase tracking-wider text-gray-500">{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {filtered.map(inq => {
-                    const st = (inq.status || "pending") as InquiryStatus;
-                    const { label, color } = STATUS_META[st];
-                    return (
-                      <tr key={inq.id} className="transition hover:bg-blue-50/30">
-                        <td className="whitespace-nowrap px-4 py-3.5 text-gray-500 text-xs">{formatDate(inq.createdAt)}</td>
-                        <td className="px-4 py-3.5">
-                          <p className="font-bold text-gray-900">{inq.fullName}</p>
-                          {inq.email && <p className="text-xs text-gray-400">{inq.email}</p>}
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-3.5 font-semibold text-gray-800">{inq.mobile}</td>
-                        <td className="px-4 py-3.5">
-                          <span className="rounded-lg bg-blue-50 px-2 py-1 text-xs font-bold text-blue-800">
-                            {inq.course || "—"}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3.5 text-xs text-gray-600">{getQualification(inq)}</td>
-                        <td className="px-4 py-3.5">
-                          <select
-                            value={st}
-                            onChange={e => inq.id && handleStatusChange(inq.id, e.target.value as InquiryStatus)}
-                            className={`rounded-full border px-3 py-1 text-xs font-bold outline-none cursor-pointer transition ${color}`}
-                          >
-                            <option value="pending">Pending</option>
-                            <option value="called">Called</option>
-                            <option value="admission_done">Admission Done</option>
-                          </select>
-                        </td>
-                        <td className="px-4 py-3.5">
-                          <NoteCell inq={inq} onSaved={handleNoteSaved} />
-                        </td>
-                        <td className="px-4 py-3.5">
-                          <div className="flex items-center gap-2">
-                            <a
-                              href={`tel:+91${inq.mobile}`}
-                              className="inline-flex items-center gap-1 rounded-lg bg-green-500 px-2.5 py-1.5 text-xs font-bold text-white hover:bg-green-600 transition"
-                            >
-                              <Phone size={11} /> Call
-                            </a>
-                            <a
-                              href={`https://wa.me/91${inq.mobile}?text=Hello%20${encodeURIComponent(inq.fullName)}%2C%20I%20am%20calling%20from%20Siksha%20Wallah%20regarding%20your%20inquiry%20for%20${encodeURIComponent(inq.course || "admission")}.`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 rounded-lg bg-[#25D366] px-2.5 py-1.5 text-xs font-bold text-white hover:bg-green-500 transition"
-                            >
-                              <MessageCircle size={11} /> WA
-                            </a>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+            <div className="divide-y divide-gray-100">
+              {filtered.map(inq => {
+                const st = (inq.status || "pending") as InquiryStatus;
+                const { label, color } = STATUS_META[st];
+                return (
+                  <div key={inq.id} className="flex flex-wrap items-start gap-3 px-4 py-4 hover:bg-blue-50/20 transition">
+                    {/* Left: avatar + name */}
+                    <div className="flex items-center gap-3 min-w-[160px] flex-1">
+                      <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#003f9f] font-headline font-extrabold text-sm text-white">
+                        {inq.fullName?.[0]?.toUpperCase() || "?"}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-bold text-gray-900 text-sm leading-tight">{inq.fullName}</p>
+                        <p className="text-xs text-gray-400">{formatDate(inq.createdAt)}</p>
+                      </div>
+                    </div>
+
+                    {/* Course + Qualification */}
+                    <div className="min-w-[120px]">
+                      <span className="rounded-lg bg-blue-50 px-2 py-0.5 text-xs font-bold text-blue-800">
+                        {inq.course || "—"}
+                      </span>
+                      <p className="mt-1 text-xs text-gray-400">{getQualification(inq)}</p>
+                    </div>
+
+                    {/* Status */}
+                    <div className="flex-shrink-0">
+                      <select
+                        value={st}
+                        onChange={e => inq.id && handleStatusChange(inq.id, e.target.value as InquiryStatus)}
+                        className={`rounded-full border px-3 py-1 text-xs font-bold outline-none cursor-pointer transition ${color}`}
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="called">Called</option>
+                        <option value="admission_done">Admission Done</option>
+                      </select>
+                    </div>
+
+                    {/* Note */}
+                    <div className="flex-shrink-0">
+                      <NoteCell inq={inq} onSaved={handleNoteSaved} />
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex items-center gap-2 flex-shrink-0 ml-auto">
+                      <a
+                        href={`tel:+91${inq.mobile}`}
+                        className="inline-flex items-center gap-1 rounded-lg bg-green-500 px-3 py-1.5 text-xs font-bold text-white hover:bg-green-600 transition"
+                      >
+                        <Phone size={11} /> {inq.mobile}
+                      </a>
+                      <a
+                        href={`https://wa.me/91${inq.mobile}?text=Hello%20${encodeURIComponent(inq.fullName)}%2C%20I%20am%20calling%20from%20Siksha%20Wallah%20regarding%20your%20inquiry%20for%20${encodeURIComponent(inq.course || "admission")}.`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 rounded-lg bg-[#25D366] px-3 py-1.5 text-xs font-bold text-white hover:bg-green-500 transition"
+                      >
+                        <MessageCircle size={11} /> WA
+                      </a>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
