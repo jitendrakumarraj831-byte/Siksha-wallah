@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { SiteNavbar } from "@/components/site-navbar";
 import { SiteFooter } from "@/components/site-footer";
 import { saveApplication } from "@/services/application-service";
 import { saveActivity } from "@/services/activity-service";
+import { useAuth } from "@/components/auth-provider";
 import {
   GraduationCap, User, Phone, Mail, BookOpen, MapPin, CheckCircle2,
   Send, Loader, AlertCircle, ArrowRight, MessageCircle, FileText,
@@ -59,12 +60,25 @@ const EMPTY: FormData = {
 };
 
 export default function ApplyPage() {
+  const { user, userProfile, loading: authLoading } = useAuth();
   const [form, setForm] = useState<FormData>(EMPTY);
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [appId, setAppId] = useState("");
+
+  // Pre-fill form fields when logged-in student visits
+  useEffect(() => {
+    if (user && userProfile) {
+      setForm(f => ({
+        ...f,
+        fullName: f.fullName || userProfile.name || "",
+        mobile: f.mobile || userProfile.phone || "",
+        email: f.email || userProfile.email || "",
+      }));
+    }
+  }, [user, userProfile]);
 
   const set = (k: keyof FormData, v: string | boolean) =>
     setForm(f => ({ ...f, [k]: v }));
@@ -103,6 +117,7 @@ export default function ApplyPage() {
     setError("");
     try {
       const id = await saveApplication({
+        userId: user?.uid || undefined,
         fullName: form.fullName,
         mobile: form.mobile,
         email: form.email || undefined,
@@ -174,7 +189,10 @@ export default function ApplyPage() {
                 <Phone size={18} /> Call Now
               </a>
             </div>
-            <Link href="/" className="text-sm text-gray-400 hover:text-gray-600 transition">← वापस Homepage पर जाएं</Link>
+            {user
+              ? <Link href="/dashboard" className="text-sm font-bold text-[#003f9f] hover:underline">📊 My Dashboard पर जाएं →</Link>
+              : <Link href="/" className="text-sm text-gray-400 hover:text-gray-600 transition">← वापस Homepage पर जाएं</Link>
+            }
           </div>
         </main>
         <SiteFooter />
@@ -200,6 +218,20 @@ export default function ApplyPage() {
             </p>
           </div>
         </section>
+
+        {/* Login status banner */}
+        {!authLoading && (
+          <div className={`border-b py-3 text-sm text-center font-semibold ${user ? "bg-green-50 border-green-100 text-green-700" : "bg-amber-50 border-amber-100 text-amber-700"}`}>
+            {user
+              ? `✅ आप logged in हैं (${userProfile?.name || user.email}) — application आपके dashboard में save होगी`
+              : <>⚠️ Guest के रूप में apply कर रहे हैं — application track करने के लिए{" "}
+                  <Link href="/auth/login" className="underline font-bold hover:text-amber-900">login करें</Link>
+                  {" "}या{" "}
+                  <Link href="/auth/register" className="underline font-bold hover:text-amber-900">register करें</Link>
+                </>
+            }
+          </div>
+        )}
 
         {/* Progress bar */}
         <div className="bg-white border-b border-gray-100 py-4">

@@ -1,6 +1,6 @@
 import { db } from "@/lib/firebase";
 import {
-  collection, addDoc, serverTimestamp, query, orderBy,
+  collection, addDoc, serverTimestamp, query, orderBy, where,
   getDocs, doc, updateDoc, onSnapshot, Unsubscribe,
 } from "firebase/firestore";
 
@@ -8,6 +8,7 @@ export type ApplicationStatus = "new" | "contacted" | "documents_pending" | "adm
 
 export interface CourseApplication {
   id?: string;
+  userId?: string;          // Firebase Auth UID — set when logged-in student applies
   // Personal
   fullName: string;
   mobile: string;
@@ -72,4 +73,14 @@ export async function updateApplicationStatus(id: string, status: ApplicationSta
 
 export async function updateApplicationNote(id: string, note: string) {
   await updateDoc(doc(db, COL, id), { note, noteUpdatedAt: serverTimestamp() });
+}
+
+export async function getApplicationsByUser(userId: string): Promise<CourseApplication[]> {
+  try {
+    const q = query(collection(db, COL), where("userId", "==", userId), orderBy("createdAt", "desc"));
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...d.data() })) as CourseApplication[];
+  } catch {
+    return [];
+  }
 }
