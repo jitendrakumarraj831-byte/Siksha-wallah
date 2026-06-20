@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth-provider';
 import { studentService, Document } from '@/services/student-service';
+import { saveActivity } from '@/services/activity-service';
 import { Button } from '@/components/ui/button';
 import { PortalShell } from '@/components/portal-shell';
 import { ArrowLeft, Download, Trash2, Upload, Loader, AlertCircle, CheckCircle2, FileText } from 'lucide-react';
@@ -64,6 +65,16 @@ export default function DocumentsPage() {
         type: uploadFormData.type,
         url: uploadFormData.url || '#',
       });
+      saveActivity({
+        type: "doc_upload",
+        title: "📄 Document Upload kiya",
+        description: `${user.displayName || user.email} ne "${uploadFormData.name}" (${uploadFormData.type.replace(/_/g, " ")}) upload kiya — BSCC verification ke liye`,
+        name: user.displayName || undefined,
+        email: user.email || undefined,
+        userId: user.uid,
+        meta: { docType: uploadFormData.type, docName: uploadFormData.name },
+        page: "/dashboard/documents",
+      }).catch(() => {});
       setSuccess('Document uploaded successfully!');
       setUploadFormData({ name: '', type: '', url: '' });
       setShowUploadForm(false);

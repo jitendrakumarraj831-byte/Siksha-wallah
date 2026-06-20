@@ -6,13 +6,16 @@ import {
 } from "firebase/firestore";
 
 export type ActivityType =
-  | "inquiry"       // Homepage form submit
-  | "contact"       // Contact page form submit
-  | "registration"  // New student account created
-  | "student_login" // Student logged in
-  | "whatsapp"      // WhatsApp button clicked
-  | "bscc_check"    // BSCC eligibility checked
-  | "course_view";  // Course card expanded
+  | "inquiry"        // Homepage form submit
+  | "contact"        // Contact page form submit
+  | "registration"   // New student account created
+  | "student_login"  // Student logged in
+  | "application"    // Course application submitted via /apply
+  | "doc_upload"     // Document uploaded in dashboard
+  | "profile_update" // Student updated their profile
+  | "whatsapp"       // WhatsApp button clicked
+  | "bscc_check"     // BSCC eligibility checked
+  | "course_view";   // Course card expanded
 
 export interface Activity {
   id?: string;
@@ -24,6 +27,8 @@ export interface Activity {
   email?: string;
   course?: string;
   page?: string;
+  userId?: string;   // Firebase UID — links to /admin/students
+  refId?: string;    // Application/doc ID — links to /admin/applications
   meta?: Record<string, string>;
   createdAt?: any;
 }

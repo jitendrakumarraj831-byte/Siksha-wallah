@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth-provider';
 import { studentService, StudentProfile } from '@/services/student-service';
+import { saveActivity } from '@/services/activity-service';
 import { Button } from '@/components/ui/button';
 import { PortalShell } from '@/components/portal-shell';
 import { ArrowLeft, Loader, AlertCircle, CheckCircle2 } from 'lucide-react';
@@ -70,6 +71,16 @@ export default function ProfilePage() {
         ...formData,
         profileComplete: true,
       });
+      saveActivity({
+        type: "profile_update",
+        title: "✏️ Profile Update kiya",
+        description: `${formData.name || user.email} ne contact / profile details update kiye`,
+        name: formData.name || undefined,
+        email: formData.email || user.email || undefined,
+        mobile: formData.phone || undefined,
+        userId: user.uid,
+        page: "/dashboard/profile",
+      }).catch(() => {});
       setSuccess('Profile updated successfully!');
       setProfile(formData as StudentProfile);
     } catch (err: any) {
