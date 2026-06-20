@@ -13,6 +13,8 @@ export interface Inquiry {
   qualification?: string;
   message?: string;
   status?: InquiryStatus;
+  note?: string;
+  noteUpdatedAt?: any;
   createdAt?: any;
 }
 
@@ -52,6 +54,16 @@ export async function updateInquiryStatus(id: string, status: InquiryStatus): Pr
     await updateDoc(ref, { status });
   } catch (error) {
     console.error("Error updating inquiry status:", error);
+    throw error;
+  }
+}
+
+export async function updateInquiryNote(id: string, note: string): Promise<void> {
+  try {
+    const ref = doc(db, INQUIRIES_COLLECTION, id);
+    await updateDoc(ref, { note, noteUpdatedAt: serverTimestamp() });
+  } catch (error) {
+    console.error("Error updating inquiry note:", error);
     throw error;
   }
 }
