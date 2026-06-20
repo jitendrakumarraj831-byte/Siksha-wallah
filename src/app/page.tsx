@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { SiteNavbar } from "@/components/site-navbar";
 import { SiteFooter } from "@/components/site-footer";
+import { CountUp } from "@/components/count-up";
 import { streamTabs, colorMap, faqs, type StreamKey } from "@/lib/courses-data";
 
 /* ─── Data imported from @/lib/courses-data ────────── */
@@ -111,9 +112,15 @@ export default function Home() {
               </div>
 
               <div className="mt-10 grid grid-cols-3 gap-4 border-t border-white/20 pt-8">
-                {[["5,000+", "Students Guided"], ["200+", "Colleges Partnered"], ["98%", "Success Rate"]].map(([num, label]) => (
+                {([
+                  { target: 5000, suffix: "+", label: "Students Guided" },
+                  { target: 200, suffix: "+", label: "Colleges Partnered" },
+                  { target: 98, suffix: "%", label: "Success Rate" },
+                ] as const).map(({ target, suffix, label }) => (
                   <div key={label}>
-                    <p className="font-headline text-3xl font-extrabold text-amber-400">{num}</p>
+                    <p className="font-headline text-3xl font-extrabold text-amber-400">
+                      <CountUp target={target} suffix={suffix} />
+                    </p>
                     <p className="mt-1 text-sm text-blue-100">{label}</p>
                   </div>
                 ))}
