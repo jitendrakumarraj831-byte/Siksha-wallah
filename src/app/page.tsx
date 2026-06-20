@@ -1084,7 +1084,7 @@ export default function Home() {
               <h2 className="font-headline text-4xl font-extrabold">अक्सर पूछे जाने वाले सवाल</h2>
               <p className="mt-4 text-gray-500">Direct बात करना चाहते हैं?</p>
               <div className="mt-6 space-y-3">
-                {[["6203138576", "Rajesh Kr. Sah"], ["7858062498", "Counsellor 2"], ["9472813581", "Counsellor 3"]].map(([num, name]) => (
+                {[["6203138576", "Rajesh Kr. Sah"], ["7858062498", "Counsellor 2"], ["7979713626", "Gautam Kumar"], ["9162653235", "Kursakanta Office"]].map(([num, name]) => (
                   <a key={num} href={`tel:+91${num}`} className="flex items-center gap-3 rounded-xl border border-gray-200 p-4 font-semibold text-gray-700 transition hover:border-primary-blue hover:text-primary-blue">
                     <Phone size={18} className="text-primary-blue" />
                     <div>
@@ -1152,7 +1152,7 @@ export default function Home() {
               </div>
 
               <div className="space-y-3 mb-8">
-                {[["6203138576", "Primary Contact"], ["7858062498", "Admission Helpline"], ["9472813581", "BSCC Enquiry"]].map(([num, label]) => (
+                {[["6203138576", "Primary Contact"], ["7858062498", "Admission Helpline"], ["7979713626", "Gautam Kumar (BSCC)"], ["9162653235", "Kursakanta Office"]].map(([num, label]) => (
                   <a key={num} href={`tel:+91${num}`} className="flex items-center gap-4 rounded-xl border border-white/10 bg-white/5 p-4 transition hover:bg-white/10 hover:border-amber-400/40">
                     <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-blue">
                       <Phone size={18} />
