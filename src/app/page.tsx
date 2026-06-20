@@ -291,7 +291,7 @@ export default function Home() {
     if (step < STEPS.length - 1) setStep(step + 1);
     else {
       setFormSubmitted(true);
-      // WhatsApp redirect
+      saveInquiry({ fullName: formData.name, mobile: formData.mobile, course: formData.course, message: `Qualification: ${formData.qualify}` }).catch(() => {});
       const msg = `New Inquiry from Siksha Wallah Website!%0AName: ${formData.name}%0AMobile: ${formData.mobile}%0ACourse: ${formData.course}%0AQualification: ${formData.qualify}`;
       window.open(`https://wa.me/916203138576?text=${msg}`, "_blank");
     }
