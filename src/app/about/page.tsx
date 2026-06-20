@@ -91,7 +91,7 @@ export default function AboutPage() {
                 { icon: Target, color: "bg-blue-600", title: "Our Mission", desc: "हर Bihar के student को quality education का सही रास्ता दिखाना — बिना किसी hidden charge के।" },
                 { icon: Heart, color: "bg-red-500", title: "Our Vision", desc: "Forbesganj को education hub बनाना जहाँ से students पूरे India के top colleges में जाएं।" },
                 { icon: ShieldCheck, color: "bg-green-600", title: "Our Values", desc: "Transparency, Honesty, और Complete Support — यही हमारी पहचान है।" },
-                { icon: Award, color: "bg-amber-500", title: "Our Expertise", desc: "B.Ed, Nursing, Engineering, Management — सभी streams में 9+ साल का experience।" },
+                { icon: Award, color: "bg-amber-500", title: "Our Expertise", desc: "B.Ed, Nursing, Engineering, Management — सभी स्ट्रीम्स में 9+ साल का experience।" },
               ].map(({ icon: Icon, color, title, desc }) => (
                 <div key={title} className="rounded-2xl border-2 border-gray-100 p-5">
                   <div className={`mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl ${color} text-white`}>
