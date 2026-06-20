@@ -1,0 +1,43 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Registered student profiles — readable by anyone (office uses localStorage auth, not Firebase Auth)
+    match /users/{userId} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Course applications submitted via /apply page
+    match /course_applications/{docId} {
+      allow read, write: if true;
+    }
+
+    // Inquiry leads from homepage and contact page
+    match /inquiries/{docId} {
+      allow read, write: if true;
+    }
+
+    // Activity log — all website events
+    match /activities/{docId} {
+      allow read, write: if true;
+    }
+
+    // Student notifications
+    match /notifications/{docId} {
+      allow read: if request.auth != null && request.auth.uid == resource.data.uid;
+      allow write: if true;
+    }
+
+    // Enrollments
+    match /enrollments/{docId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+    }
+
+    // Enrollment requests
+    match /enrollmentRequests/{docId} {
+      allow read, write: if true;
+    }
+  }
+}
