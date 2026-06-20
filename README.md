@@ -187,11 +187,12 @@ GOOGLE_GENAI_API_KEY=
 
 ## Deployment
 
-The project includes `apphosting.yaml` for **Firebase App Hosting** deployment.
+Deploy on **Vercel**:
 
-```bash
-firebase deploy
-```
+1. Push code to GitHub
+2. Import project at [vercel.com/new](https://vercel.com/new)
+3. Add all environment variables from `.env.local`
+4. Click **Deploy**
 
 ---
 
