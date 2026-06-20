@@ -67,7 +67,7 @@ export function SiteNavbar() {
             🎓 Student Login
           </Link>
           <Link
-            href="/auth/register"
+            href="/apply"
             className="rounded-lg bg-primary-red px-5 py-2 text-sm font-bold text-white transition hover:bg-red-700 shadow-md shadow-red-200"
           >
             Apply Now →
@@ -117,7 +117,7 @@ export function SiteNavbar() {
               🎓 Student Login
             </Link>
             <Link
-              href="/auth/register"
+              href="/apply"
               onClick={() => setMenuOpen(false)}
               className="rounded-lg bg-primary-red px-4 py-2.5 text-center font-bold text-white"
             >
