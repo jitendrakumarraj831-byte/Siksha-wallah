@@ -75,14 +75,9 @@ export default function Home() {
           <div className="grid gap-12 lg:grid-cols-[1.15fr_.85fr] items-center">
             {/* Left */}
             <div>
-              <div className="mb-4 flex flex-wrap gap-2">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold backdrop-blur">
-                  <BadgeCheck size={16} className="text-amber-400" />
-                  College Chowk, Near HP Petrol Pump, Forbesganj, Araria
-                </div>
-                <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/50 bg-amber-400/15 px-4 py-2 text-sm font-bold text-amber-300 backdrop-blur">
-                  🇮🇳 SABHI RAJY SE KARWATE HAI — Pan-India Admissions
-                </div>
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold backdrop-blur">
+                <BadgeCheck size={16} className="text-amber-400" />
+                College Chowk, Near HP Petrol Pump, Forbesganj, Araria
               </div>
 
               <h1 className="font-headline text-4xl md:text-5xl lg:text-[64px] font-extrabold leading-[1.1]">
@@ -312,7 +307,7 @@ export default function Home() {
                     <span className="inline-flex items-center gap-1 rounded-full bg-blue-600 px-2.5 py-0.5 text-xs font-bold text-white"><BadgeCheck size={11} /> NCTE Approved</span>
                   </div>
                   <p className="text-sm text-blue-800 leading-relaxed mb-3">
-                    हम केवल <strong>NCTE (National Council for Teacher Education) Approved</strong> colleges के साथ partner हैं — Bihar (Patna, Purnea, Katihar) और अन्य राज्यों में। <strong>SABHI RAJY SE KARWATE HAI।</strong>
+                    हम केवल <strong>NCTE (National Council for Teacher Education) Approved</strong> colleges के साथ partner हैं — Bihar (Patna, Purnea, Katihar) और अन्य राज्यों में।
                   </p>
                   <div className="grid gap-2 sm:grid-cols-2">
                     {[
@@ -342,7 +337,7 @@ export default function Home() {
                     <span className="inline-flex items-center gap-1 rounded-full bg-red-600 px-2.5 py-0.5 text-xs font-bold text-white"><BadgeCheck size={11} /> INC &amp; PCI Approved</span>
                   </div>
                   <p className="text-sm text-red-800 leading-relaxed mb-3">
-                    हम <strong>INC (Indian Nursing Council) &amp; PCI (Pharmacy Council of India) Approved</strong> premier institutes के साथ partner हैं — Bangalore, Madhya Pradesh, West Bengal और all states में। <strong>SABHI RAJY SE KARWATE HAI।</strong>
+                    हम <strong>INC (Indian Nursing Council) &amp; PCI (Pharmacy Council of India) Approved</strong> premier institutes के साथ partner हैं — Bangalore, Madhya Pradesh, West Bengal और all states में।
                   </p>
                   <div className="grid gap-2 sm:grid-cols-2">
                     {[
