@@ -4,364 +4,21 @@ import Link from "next/link";
 import { useState } from "react";
 import { saveInquiry } from "@/services/inquiry-service";
 import {
-  ArrowRight, BadgeCheck, BookOpen, BriefcaseBusiness, Building2, Check,
-  ChevronDown, CreditCard, GraduationCap, HeartPulse, MapPin, Menu,
+  ArrowRight, BadgeCheck, BookOpen, Building2, Check,
+  ChevronDown, CreditCard, GraduationCap, MapPin,
   MessageCircle, Phone, ShieldCheck, Sparkles, Star, Users, X,
-  Stethoscope, FlaskConical, Cpu, Clock, Award, CheckCircle2,
+  Clock, Award, CheckCircle2,
   Briefcase, BookMarked, ChevronUp, FileCheck2, FileText, ListChecks,
 } from "lucide-react";
+import { SiteNavbar } from "@/components/site-navbar";
+import { SiteFooter } from "@/components/site-footer";
+import { streamTabs, colorMap, faqs, type StreamKey } from "@/lib/courses-data";
 
-/* ─── Data ─────────────────────────────────────────── */
-
-type Course = {
-  name: string;
-  full: string;
-  duration: string;
-  eligibility: string;
-  fee: string;
-  careerScope: string;
-  mode: string;
-  bscc: boolean;
-  hindiDesc: string;
-  salary: string;
-  entranceExam: string;
-  govtJobs: string;
-  topColleges: string[];
-  highlights: string[];
-};
-
-const teachingCourses: Course[] = [
-  {
-    name: "B.Ed",
-    full: "Bachelor of Education",
-    duration: "2 Years",
-    eligibility: "Graduation with minimum 50% marks in any stream from a recognized university",
-    fee: "₹50,000/yr",
-    careerScope: "Government School Teacher (TET/CTET qualified), Private School Teacher, Education Officer, School Principal, Content Developer for EdTech companies. Bihar STET qualified B.Ed graduates get direct government job opportunities in middle & high schools.",
-    mode: "Regular & Distance options available from NCTE-approved recognized Indian universities. Siksha Wallah guides students for both modes based on eligibility and career goals.",
-    bscc: true,
-    hindiDesc: "B.Ed Bihar का सबसे popular teaching course है। Graduation के बाद 2 साल का यह course करके आप government या private school में teacher बन सकते हैं। Bihar STET pass करने के बाद सरकारी नौकरी मिलती है। BSCC loan से fees का बोझ नहीं पड़ता।",
-    salary: "₹25,000–₹55,000/month (Govt Teacher after STET)",
-    entranceExam: "No entrance exam. Direct admission based on graduation marks. CTET/BTET required for govt job after course.",
-    govtJobs: "Bihar STET (Secondary Teacher), CTET qualified Middle/High School Teacher, Education Officer, SCERT Trainer",
-    topColleges: ["Patna University (Patna)", "BRA Bihar University (Muzaffarpur)", "VKS University (Ara)", "LNMU (Darbhanga)", "Magadh University (Bodh Gaya)"],
-    highlights: ["Most popular course in Bihar for govt jobs", "BSCC loan up to ₹4 Lakh available", "Both Regular & Distance mode", "Bihar STET opens ₹40,000+/month govt teacher post"],
-  },
-  {
-    name: "D.El.Ed",
-    full: "Diploma in Elementary Education",
-    duration: "2 Years",
-    eligibility: "12th Pass (any stream) with minimum 50% marks. Age limit: 18–35 years",
-    fee: "₹25,000/yr",
-    careerScope: "Primary School Teacher (Class 1–8) in government and private schools, Anganwadi Supervisor, NGO Education Worker. BTET/CTET qualification opens government Primary Teacher posts across Bihar with excellent salary packages.",
-    mode: "Regular mode from SCERT/state-approved institutions. Distance mode available from select NCTE-recognized universities. We assist with both options.",
-    bscc: true,
-    hindiDesc: "D.El.Ed (पहले BTC) 10th और 12th pass students के लिए primary school teacher बनने का सबसे सीधा रास्ता है। 2 साल के इस diploma के बाद Class 1–8 में teaching कर सकते हैं। Bihar में BTET पास करने पर सरकारी Primary Teacher की नौकरी मिलती है।",
-    salary: "₹20,000–₹45,000/month (Govt Primary Teacher after BTET)",
-    entranceExam: "No entrance exam. Admission based on 12th marks. BTET/CTET exam required for govt job after course.",
-    govtJobs: "Bihar Primary Teacher (Class 1–5), Upper Primary Teacher (Class 6–8), Anganwadi Supervisor, SCERT Resource Person",
-    topColleges: ["DIET Colleges (District level, Bihar)", "SCERT-affiliated institutions", "Patliputra University (Patna)", "BNMU (Madhepura)", "Munger University"],
-    highlights: ["Only 12th pass required", "Lowest cost teaching course", "Govt Primary Teacher vacancy every year in Bihar", "BSCC loan available"],
-  },
-  {
-    name: "M.Ed",
-    full: "Master of Education",
-    duration: "2 Years",
-    eligibility: "B.Ed with minimum 55% marks from a UGC-recognized university",
-    fee: "₹60,000/yr",
-    careerScope: "College Lecturer (NET/SET qualified), School Principal, Curriculum Developer, Educational Researcher, Teacher Trainer, Academic Coordinator at SCERT/NCERT. M.Ed opens doors to PhD in Education and academic careers.",
-    mode: "Regular mode from NAAC-accredited universities. Distance mode available from select institutions recognized by DEB (Distance Education Bureau). We guide based on your preference.",
-    bscc: false,
-    hindiDesc: "M.Ed teaching field की master degree है। B.Ed के बाद यह course करके आप college lecturer, school principal, या education researcher बन सकते हैं। NET/SET qualify करने पर university में professor की नौकरी मिलती है। Education में PhD का रास्ता भी M.Ed से खुलता है।",
-    salary: "₹35,000–₹80,000/month (College Lecturer / NET qualified)",
-    entranceExam: "Entrance test at most universities. UGC-NET/SET required for college lecturer post after M.Ed.",
-    govtJobs: "College Lecturer (UGC-NET), SCERT Academic Staff, NCERT Researcher, Education Officer (State PSC), School Principal",
-    topColleges: ["Patna University", "BRA Bihar University (Muzaffarpur)", "Magadh University", "LNMU Darbhanga", "Nalanda Open University"],
-    highlights: ["Highest qualification in education field", "UGC-NET opens college professor career", "PhD in Education possible after M.Ed", "Principal & Academic leadership roles"],
-  },
-];
-
-const medicalCourses: Course[] = [
-  {
-    name: "MBBS",
-    full: "Bachelor of Medicine & Bachelor of Surgery",
-    duration: "5.5 Years (inc. 1-yr internship)",
-    eligibility: "12th Science (PCB) with minimum 50% marks + NEET UG qualification. Age: 17+ years",
-    fee: "₹8–25 Lakh/yr (varies by college)",
-    careerScope: "Government Doctor (BPSC Civil Services), Private Hospital Specialist, Surgeon, Researcher, Medical Officer. MBBS graduates from recognized colleges are eligible for PG (MD/MS) entrance. Extremely high demand in Bihar's rural health sector.",
-    mode: "Regular mode only from MCI/NMC-approved medical colleges. We guide for both government and private college admissions through NEET counselling.",
-    bscc: false,
-    hindiDesc: "MBBS भारत का सबसे prestigious medical course है। NEET पास करके government या private medical college में admission लें। 5.5 साल (internship सहित) के बाद आप डॉक्टर बनते हैं। Bihar के rural areas में government doctor की बहुत demand है। BPSC civil services से सरकारी नौकरी भी मिलती है।",
-    salary: "₹70,000–₹1,50,000/month (Govt Doctor / BPSC Medical Officer)",
-    entranceExam: "NEET UG (mandatory). Score 450+ for govt college. State quota & all-India quota counselling.",
-    govtJobs: "BPSC Medical Officer, Railway Doctor, ESIC Medical Officer, Armed Forces Doctor (AFMC), NHM Medical Officer",
-    topColleges: ["PMCH Patna (Govt)", "NMCH Patna (Govt)", "AIIMS Patna", "IGIMS Patna", "Darbhanga Medical College"],
-    highlights: ["Highest paying medical degree", "NEET mandatory — start preparation early", "BPSC Medical Officer salary ₹1L+/month", "MD/MS specialization possible after MBBS"],
-  },
-  {
-    name: "BDS",
-    full: "Bachelor of Dental Surgery",
-    duration: "5 Years (inc. 1-yr internship)",
-    eligibility: "12th Science (PCB) with minimum 50% marks + NEET UG qualification",
-    fee: "₹5–15 Lakh/yr",
-    careerScope: "Private Dental Clinic Owner, Hospital Dental Surgeon, Government Dental Officer, MDS Specialist (Orthodontist, Endodontist). BDS graduates can also join dental product companies and public health programs.",
-    mode: "Regular mode only from DCI-approved dental colleges. We provide complete NEET counselling guidance for state and all-India quota seats.",
-    bscc: false,
-    hindiDesc: "BDS dental surgeon बनने का course है। NEET qualify करके 5 साल में Dental Surgeon बनें। अपना private clinic खोलें या government hospital में काम करें। MDS (specialization) करने पर Orthodontist, Endodontist जैसे specialist बन सकते हैं।",
-    salary: "₹40,000–₹1,00,000/month (Govt Dental Officer / Private Practice)",
-    entranceExam: "NEET UG (mandatory). DCI-approved college through state/all-India quota counselling.",
-    govtJobs: "Government Dental Officer (State PSC), ESIC Dental Surgeon, Railway Dental Officer, Armed Forces Dentist",
-    topColleges: ["Patna Dental College (Govt)", "PMCH Dental Dept", "Buddha Institute of Dental Sciences (Patna)", "Awadh Dental College (Jharkhand)"],
-    highlights: ["5-year course with 1-yr internship", "Own clinic possible after BDS", "MDS specialization for higher income", "NEET score 400+ needed for good college"],
-  },
-  {
-    name: "B.Sc Nursing",
-    full: "Bachelor of Science in Nursing",
-    duration: "4 Years",
-    eligibility: "12th Science (PCB or PCM+Biology) with minimum 45% marks (40% for SC/ST). Age: 17–35 years",
-    fee: "₹60,000/yr",
-    careerScope: "Staff Nurse in Government Hospitals (AIIMS, ESIC, Railway, Armed Forces), Private Hospitals, Nursing Tutor, Community Health Nurse. B.Sc Nursing is the most in-demand healthcare course with jobs across India and abroad (UK, Canada, Gulf countries).",
-    mode: "Regular mode from INC (Indian Nursing Council) approved colleges. We help with both Bihar state quota and all-India private college admissions.",
-    bscc: true,
-    hindiDesc: "B.Sc Nursing healthcare sector का सबसे in-demand course है। 4 साल का यह degree course AIIMS, Railway, ESIC जैसे top government hospitals में Staff Nurse की नौकरी दिलाता है। विदेश (UK, Canada, Gulf) में भी भारतीय nurses की बहुत demand है। BSCC loan से fees cover होती है।",
-    salary: "₹25,000–₹60,000/month (Govt Staff Nurse) | Higher abroad (UK/Canada)",
-    entranceExam: "No NEET required. State-level nursing entrance or direct admission based on PCB marks.",
-    govtJobs: "AIIMS Staff Nurse, ESIC Nurse, Railway Nurse, Armed Forces Nursing Officer (MNS), NHM Nurse, State Health Dept Nurse",
-    topColleges: ["PMCH College of Nursing (Patna)", "IGIMS Nursing College (Patna)", "AIIMS Patna", "Shri Krishna Medical College Muzaffarpur", "Nalanda Medical College"],
-    highlights: ["No NEET required — PCB 12th enough", "Jobs in AIIMS, Railway, ESIC, Army", "Foreign jobs (UK, Canada, Gulf) possible", "BSCC loan up to ₹4 Lakh available"],
-  },
-  {
-    name: "GNM",
-    full: "General Nursing & Midwifery",
-    duration: "3 Years + 6-month internship",
-    eligibility: "12th Pass (Science preferred, PCB). Minimum 40% marks. Age: 17–35 years",
-    fee: "₹40,000/yr",
-    careerScope: "Staff Nurse in Government & Private Hospitals, Community Health Worker, Midwife, Home Care Nurse. GNM nurses are eligible for government nursing recruitment exams (NHM, ESIC, Railway). High demand in Bihar's Primary Health Centers.",
-    mode: "Regular mode from INC-approved nursing schools and colleges. Both government and private institutions available. BSCC loan assistance available for eligible students.",
-    bscc: true,
-    hindiDesc: "GNM 3 साल का nursing diploma है जो government और private hospitals में Staff Nurse की नौकरी दिलाता है। NHM, ESIC, और Railway में GNM nurses की regular भर्ती होती है। Bihar के Primary Health Centers में भी बहुत scope है। BSCC loan available है।",
-    salary: "₹18,000–₹45,000/month (Staff Nurse in Govt/Private Hospital)",
-    entranceExam: "State nursing entrance exam or direct admission. No NEET required.",
-    govtJobs: "NHM Staff Nurse, ESIC Nurse, Railway Nurse, State Hospital Nurse, Community Health Nurse (PHC/CHC)",
-    topColleges: ["GNM School PMCH Patna", "Muzaffarpur Nursing School", "Darbhanga Medical College", "SKMCH Muzaffarpur", "Various Private INC-approved colleges across Bihar"],
-    highlights: ["3 years diploma — faster career start", "Regular govt recruitment under NHM Bihar", "PHC & CHC across Bihar hire GNM nurses", "BSCC loan available"],
-  },
-  {
-    name: "ANM",
-    full: "Auxiliary Nursing & Midwifery",
-    duration: "2 Years",
-    eligibility: "10th Pass (for girls only) from a recognized board. Age: 17–35 years",
-    fee: "₹25,000/yr",
-    careerScope: "ANM/ASHA Worker in Government Health Programs, Community Health Center Nurse, Health Education Worker, Sub-Center Nurse. Bihar government regularly recruits ANM graduates under NHM with good salary and job security.",
-    mode: "Regular mode from INC-approved schools. Short duration and low-cost course — ideal for girls from rural areas seeking stable government healthcare jobs.",
-    bscc: true,
-    hindiDesc: "ANM सिर्फ लड़कियों के लिए 2 साल का nursing course है — केवल 10th pass होना जरूरी है। Bihar government NHM के तहत ANM की regular भर्ती करती है। गाँव के Primary Health Center और Sub-Center में stable government नौकरी मिलती है। कम fees, BSCC loan भी मिलता है।",
-    salary: "₹12,000–₹30,000/month (ANM in Govt Health Programs)",
-    entranceExam: "No entrance exam. Direct admission based on 10th marks. Only for female candidates.",
-    govtJobs: "ANM under NHM Bihar, ASHA Supervisor, Sub-Center Nurse, PHC Health Worker, Govt Maternity Center Staff",
-    topColleges: ["ANM Training Centers (District Hospitals)", "PMCH ANM School Patna", "Various District ANM schools across Bihar", "INC-approved private ANM schools"],
-    highlights: ["Only 10th pass required", "For girls only — safe & secure career", "NHM Bihar recruits ANM regularly", "Lowest fees — BSCC loan available"],
-  },
-  {
-    name: "B.Pharma",
-    full: "Bachelor of Pharmacy",
-    duration: "4 Years",
-    eligibility: "12th Science (PCB or PCM) with minimum 45% marks from recognized board",
-    fee: "₹55,000/yr",
-    careerScope: "Pharmacist in Government Hospitals & Dispensaries, Drug Inspector, Quality Control Officer in Pharma Companies, Medical Representative, Clinical Research Associate, Retail Pharmacy Owner. B.Pharma graduates are eligible for government pharmacy exams.",
-    mode: "Regular & Distance modes available from PCI (Pharmacy Council of India) and AICTE-approved institutions. We guide for both Bihar and out-of-state admissions.",
-    bscc: true,
-    hindiDesc: "B.Pharma 4 साल का pharmacy degree course है। Pharmacist, Drug Inspector, Medical Representative, या खुद की pharmacy shop — कई रास्ते हैं। Government hospital में pharmacist बनने का सपना B.Pharma से पूरा होता है। Pharma companies में भी अच्छी salary मिलती है। BSCC loan eligible है।",
-    salary: "₹20,000–₹55,000/month (Govt Pharmacist / Pharma Company)",
-    entranceExam: "State Pharmacy entrance or direct admission based on 12th PCB/PCM marks. No NEET required.",
-    govtJobs: "Government Pharmacist (BPSC/State PSC), Drug Inspector, Hospital Pharmacy Manager, ESIC Pharmacist, Railway Pharmacist",
-    topColleges: ["Patna Sahib Pharmacy College", "Galgotias College (UP)", "Bengal School of Technology", "RKDF University (Bhopal)", "Various PCI-approved colleges near Bihar"],
-    highlights: ["Own medical store / pharmacy possible", "Drug Inspector via State PSC", "Pharma companies hire B.Pharma freshers", "BSCC loan up to ₹4 Lakh available"],
-  },
-];
-
-const technicalCourses: Course[] = [
-  {
-    name: "B.Tech",
-    full: "Bachelor of Technology",
-    duration: "4 Years",
-    eligibility: "12th Science (PCM) with minimum 45% marks. JEE Main/State CET scores preferred",
-    fee: "₹80,000/yr (varies by branch & college)",
-    careerScope: "Software Engineer, Civil/Mechanical/Electrical Engineer, Government Engineer (BPSC/SSC JE), IT Company Employee, Startup Founder. B.Tech from AICTE-approved colleges is recognized for both private sector and government recruitment.",
-    mode: "Regular mode from AICTE-approved colleges. We guide for JEE counselling, Bihar DCECE, and private B.Tech admissions with lateral entry options.",
-    bscc: true,
-    hindiDesc: "B.Tech engineering का 4 साल का degree course है। Computer Science, Civil, Mechanical, Electrical — अपना branch चुनें। JEE Main या Bihar DCECE से government college में admission पाएं। TCS, Infosys जैसी IT companies और BPSC/SSC JE से government engineer — दोनों रास्ते खुले हैं। BSCC loan available।",
-    salary: "₹30,000–₹1,20,000/month (IT Companies / Govt Engineer)",
-    entranceExam: "JEE Main (for NIT/central colleges). Bihar DCECE (for state govt colleges). Direct admission available at private colleges.",
-    govtJobs: "BPSC Junior Engineer, SSC JE, BSPHCL Engineer, PWD Engineer, BRO (Border Roads), Defence Technical Officer",
-    topColleges: ["NIT Patna", "BIT Mesra (Ranchi)", "GIET Gunupur", "Chandragupt Institute (Patna)", "LNCT (Bhopal)", "Galgotias University (UP)"],
-    highlights: ["Highest salary potential among all courses", "IT companies: TCS, Infosys, Wipro campus recruitment", "Govt Engineer via SSC JE / BPSC JE", "BSCC loan up to ₹4 Lakh"],
-  },
-  {
-    name: "Polytechnic",
-    full: "Diploma in Engineering",
-    duration: "3 Years",
-    eligibility: "10th Pass with minimum 35% marks in any recognized board",
-    fee: "₹30,000/yr",
-    careerScope: "Junior Engineer in PWD/BSEB/NHAI, Factory Supervisor, Technical Assistant, ITI Instructor. Diploma holders can directly enter 2nd year B.Tech (Lateral Entry). Government jobs via BSSC and SSC JE after diploma.",
-    mode: "Regular mode from AICTE-approved polytechnic colleges in Bihar and other states. Government polytechnic seats available at very low fees through DCECE counselling.",
-    bscc: true,
-    hindiDesc: "Polytechnic (Diploma in Engineering) 3 साल का course है जो 10th pass के बाद किया जा सकता है। इसके बाद B.Tech 2nd year में lateral entry मिलती है। PWD, BSEB, NHAI में Junior Engineer की नौकरी मिलती है। Government polytechnic में fees बहुत कम है — Bihar DCECE से सस्ती सीट पाएं।",
-    salary: "₹18,000–₹45,000/month (Junior Engineer / Supervisor)",
-    entranceExam: "Bihar DCECE (Diploma) for govt polytechnic. Direct admission at private polytechnic colleges.",
-    govtJobs: "Junior Engineer PWD, BSEB Technician, NHAI Site Supervisor, BSSC Technical Staff, ITI Instructor (after experience)",
-    topColleges: ["Govt Polytechnic Patna", "Govt Polytechnic Muzaffarpur", "Govt Polytechnic Bhagalpur", "Govt Polytechnic Ara", "Govt Polytechnic Gaya"],
-    highlights: ["Only 10th pass needed — entry at early age", "B.Tech lateral entry in 2nd year after diploma", "Government polytechnic fees ₹5,000–15,000/yr", "BSCC loan available"],
-  },
-  {
-    name: "ITI",
-    full: "Industrial Training Institute",
-    duration: "1–2 Years (varies by trade)",
-    eligibility: "8th/10th Pass depending on trade. No upper age limit for most trades",
-    fee: "₹15,000/yr (Government ITI is near free)",
-    careerScope: "Electrician, Fitter, Welder, Plumber, AC Mechanic, Computer Operator in Industries, Railways, Defence, and Private sector. ITI certificate holders get direct railway apprenticeship and factory jobs. Self-employment through workshops also common.",
-    mode: "Regular mode from DGT (Directorate General of Training) affiliated government and private ITI colleges. Hostel and BSCC facilities available at select colleges.",
-    bscc: true,
-    hindiDesc: "ITI 1–2 साल का vocational training course है जो 8th/10th के बाद किया जा सकता है। Electrician, Fitter, Welder, Computer Operator — कई trades हैं। Railway apprenticeship और factory jobs सीधे मिलती हैं। Government ITI में fees लगभग free है। खुद का workshop खोलकर भी अच्छी कमाई होती है।",
-    salary: "₹12,000–₹35,000/month (Railway/Factory) | Self-employment higher",
-    entranceExam: "Bihar ITI CAT (for govt ITI). Direct admission at private ITI. Very low competition.",
-    govtJobs: "Railway Apprentice (RRB), BSEB Electrician, PWD Technical Staff, Defence Tradesman, CISF/BSF Technical Post",
-    topColleges: ["Govt ITI Patna", "Govt ITI Muzaffarpur", "Govt ITI Purnia", "Govt ITI Araria", "Govt ITI Bhagalpur"],
-    highlights: ["8th/10th pass enough — earliest career start", "Railway apprenticeship after ITI", "Govt ITI fees almost FREE", "Self-employment / workshop possible after course"],
-  },
-  {
-    name: "BCA",
-    full: "Bachelor of Computer Applications",
-    duration: "3 Years",
-    eligibility: "12th Pass (any stream, preferably with Maths or Computer Science). Minimum 45% marks",
-    fee: "₹40,000/yr",
-    careerScope: "Software Developer, Web Designer, Database Administrator, IT Support Engineer, App Developer. BCA graduates can join MCA (2 years) or directly apply to IT companies like Infosys, TCS, Wipro. High demand in Bihar's growing IT sector.",
-    mode: "Regular & Distance modes available from AICTE/UGC-approved universities. Distance BCA from IGNOU and state universities is widely recognized for government jobs too.",
-    bscc: true,
-    hindiDesc: "BCA computer science का 3 साल का bachelor degree है जो 12th के बाद किया जाता है। Software Developer, Web Designer, App Developer बनने का सबसे affordable रास्ता। TCS, Infosys, Wipro जैसी IT companies में placement मिलती है। MCA करके career और आगे बढ़ा सकते हैं। BSCC loan से fees cover होती है।",
-    salary: "₹18,000–₹60,000/month (IT Companies / Fresher to Senior)",
-    entranceExam: "No entrance exam. Direct admission based on 12th marks. Maths preferred but not mandatory at all colleges.",
-    govtJobs: "SSC CGL (Data Entry/DEO), IBPS IT Officer, State PSC Computer Operator, NIC Junior Engineer, Bank IT Officer",
-    topColleges: ["Chandragupt Institute (Patna)", "Patna University", "BNMU Madhepura", "IGNOU (Distance)", "Amity University (Distance)"],
-    highlights: ["No NEET, no JEE — direct admission", "MCA possible after BCA for higher salary", "IT companies: TCS, Wipro campus hiring", "BSCC loan up to ₹4 Lakh available"],
-  },
-  {
-    name: "MCA",
-    full: "Master of Computer Applications",
-    duration: "2 Years",
-    eligibility: "BCA / B.Sc (Computer Science / IT / Maths) with minimum 50% marks",
-    fee: "₹55,000/yr",
-    careerScope: "Senior Software Developer, System Analyst, Project Manager, Cybersecurity Specialist, IT Consultant. MCA qualifies for SSC (CPO/CGL), IBPS IT Officer, and State PSC technical posts. Excellent placement in top IT companies.",
-    mode: "Regular & Distance modes from AICTE-approved universities. NIMCET for NIT admissions. We assist with both state universities and top private college admissions.",
-    bscc: false,
-    hindiDesc: "MCA computer science की master degree है — BCA के बाद 2 साल का यह course Senior Developer, System Analyst, या Project Manager बनाता है। SSC CGL, IBPS IT Officer, और State PSC technical posts के लिए भी eligible होते हैं। Top IT companies में excellent placement और high salary package मिलता है।",
-    salary: "₹35,000–₹1,20,000/month (Senior IT roles / MNCs)",
-    entranceExam: "NIMCET (for NIT MCA). State-level entrance or direct admission at private universities.",
-    govtJobs: "NIC Senior Technical Director, IBPS IT Officer, SSC CGL (Comp. Science), State PSC Technical Officer, BPSC IT Post",
-    topColleges: ["NIT Patna (NIMCET)", "Patna University", "Chandragupt Institute", "IGNOU (Distance)", "Sikkim Manipal University (Distance)"],
-    highlights: ["2 years after BCA — fast master degree", "Highest IT salary among short courses", "Govt IT officer via IBPS/SSC/State PSC", "NIMCET for NIT — prestigious option"],
-  },
-  {
-    name: "BBA",
-    full: "Bachelor of Business Administration",
-    duration: "3 Years",
-    eligibility: "12th Pass (any stream) with minimum 45% marks from recognized board",
-    fee: "₹35,000/yr",
-    careerScope: "Business Manager, Marketing Executive, HR Officer, Sales Manager, Entrepreneur, Bank Officer (IBPS PO/Clerk). BBA is the ideal foundation for MBA. Graduates are hired by banks, FMCG companies, and retail chains across India.",
-    mode: "Regular & Distance modes available. Distance BBA from recognized universities like IGNOU, SMU, Amity is valid for government and private sector jobs. BSCC loan available.",
-    bscc: true,
-    hindiDesc: "BBA business management का 3 साल का degree course है। Marketing, HR, Finance, या Sales में career शुरू करें। Bank Officer (IBPS PO) बनने की तैयारी के साथ-साथ करें। MBA के लिए सबसे मजबूत foundation BBA से ही आती है। Companies, banks, और startups सभी BBA graduates hire करते हैं।",
-    salary: "₹15,000–₹40,000/month (Marketing/Sales/HR fresher) | Higher after MBA",
-    entranceExam: "No entrance exam. Direct admission based on 12th marks at most colleges.",
-    govtJobs: "Bank Officer (IBPS PO/Clerk after BBA), SSC CGL (Administrative), State PSC (Commerce), LIC/GIC Officer",
-    topColleges: ["Chandragupt Institute (Patna)", "Patna University Commerce Dept", "Amity University (Distance)", "IGNOU (Distance BBA)", "MIT College Muzaffarpur"],
-    highlights: ["Best foundation for MBA after 3 years", "IBPS PO/Clerk bank recruitment open to BBA", "No entrance exam — easy admission", "BSCC loan available"],
-  },
-  {
-    name: "MBA",
-    full: "Master of Business Administration",
-    duration: "2 Years",
-    eligibility: "Graduation (any stream) with minimum 50% marks. CAT/MAT/CMAT scores for premium institutes",
-    fee: "₹70,000–3 Lakh/yr (varies widely)",
-    careerScope: "Operations Manager, Finance Manager, Marketing Head, HR Director, Startup CEO, IAS/IPS (Civil Services). MBA from AICTE-approved college is a top credential for corporate and government leadership roles.",
-    mode: "Regular & Distance modes available. Regular MBA for premium placements; Distance MBA from UGC-DEB approved universities valid for government jobs. We guide for both entrance and direct admission routes.",
-    bscc: false,
-    hindiDesc: "MBA management की master degree है — business world में सबसे respected qualification। Graduation के बाद CAT/MAT/CMAT देकर top B-School में admission पाएं। Finance Manager, Marketing Head, HR Director, या खुद का business — सब कुछ MBA से possible है। Government leadership roles के लिए भी MBA बहुत काम आती है।",
-    salary: "₹40,000–₹2,00,000/month (Top B-School MBA / MNC Manager)",
-    entranceExam: "CAT (IIM), MAT, CMAT, XAT, NMAT. Direct admission at many private colleges without entrance.",
-    govtJobs: "State PSC (Management Officer), Bank PO (IBPS), LIC AAO, NABARD Officer, Public Sector Manager (PSU)",
-    topColleges: ["IIM Bodh Gaya (Bihar)", "Chandragupt Institute of Management (Patna)", "Birla Institute (Pilani)", "XLRI Jamshedpur", "IMT Ghaziabad"],
-    highlights: ["IIM Bodh Gaya is in Bihar — local option", "CAT score opens IIM & top B-Schools", "PSU management jobs via GATE/PSC", "Highest ROI among all management courses"],
-  },
-];
-
-const faqs = [
-  {
-    q: "Is distance learning available?",
-    a: "Yes! We provide guidance for both regular and distance learning modes. Many courses like B.Ed, BBA, MBA are available through distance education from NAAC-accredited universities.",
-  },
-  {
-    q: "What documents are required for Bihar Student Credit Card (BSCC)?",
-    a: "You need: Aadhar Card, 12th Marksheet, Income Certificate (below ₹4.5L/year), Bank Account Details, Domicile Certificate (Bihar), and college admission letter. We help you prepare all documents.",
-  },
-  {
-    q: "कौन से colleges के साथ काम करते हैं?",
-    a: "We work with 200+ NAAC/NCTE/INC/AICTE approved colleges across Bihar, Jharkhand, UP, and other states. We guide you to the best college matching your budget and eligibility.",
-  },
-  {
-    q: "क्या career counselling free है?",
-    a: "Yes, 100%! Your first counselling session and profile review are completely free. No hidden fees, no obligation. We believe every student deserves the right guidance.",
-  },
-  {
-    q: "Admission के बाद भी support मिलेगा?",
-    a: "Absolutely! We support you from the first inquiry until you complete your admission — document verification, hostel guidance, college visits, and post-admission queries.",
-  },
-  {
-    q: "क्या BSCC से Nursing/B.Tech के लिए भी loan मिलता है?",
-    a: "Yes! Bihar Student Credit Card provides up to ₹4 Lakh loan covering tuition fees, hostel, food, and study materials for courses like B.Ed, Nursing, B.Tech, BBA, and 40+ more.",
-  },
-];
-
-type StreamKey = "teaching" | "medical" | "technical";
-
-const streamTabs: { key: StreamKey; label: string; icon: typeof GraduationCap; color: string; courses: Course[] }[] = [
-  { key: "teaching", label: "Teaching Courses", icon: GraduationCap, color: "blue", courses: teachingCourses },
-  { key: "medical", label: "Medical & Nursing", icon: Stethoscope, color: "red", courses: medicalCourses },
-  { key: "technical", label: "Technical & Management", icon: Cpu, color: "orange", courses: technicalCourses },
-];
-
-const colorMap: Record<string, { tab: string; active: string; badge: string; btn: string; card: string; icon: string }> = {
-  blue: {
-    tab: "text-blue-700 border-blue-600 bg-blue-50",
-    active: "bg-blue-600",
-    badge: "bg-blue-100 text-blue-700",
-    btn: "bg-blue-600 hover:bg-blue-700",
-    card: "hover:border-blue-400",
-    icon: "bg-blue-100 text-blue-700",
-  },
-  red: {
-    tab: "text-red-700 border-red-600 bg-red-50",
-    active: "bg-red-600",
-    badge: "bg-red-100 text-red-700",
-    btn: "bg-red-600 hover:bg-red-700",
-    card: "hover:border-red-400",
-    icon: "bg-red-100 text-red-700",
-  },
-  orange: {
-    tab: "text-orange-700 border-orange-600 bg-orange-50",
-    active: "bg-orange-600",
-    badge: "bg-orange-100 text-orange-700",
-    btn: "bg-orange-600 hover:bg-orange-700",
-    card: "hover:border-orange-400",
-    icon: "bg-orange-100 text-orange-700",
-  },
-};
-
+/* ─── Data imported from @/lib/courses-data ────────── */
 /* ─── Multi-step Form ─────────────────────────────── */
 const STEPS = ["Name", "Mobile", "Course", "Qualify"];
 
 export default function Home() {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [activeStream, setActiveStream] = useState<StreamKey>("teaching");
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
@@ -402,61 +59,7 @@ export default function Home() {
   return (
     <main className="overflow-hidden bg-white text-gray-900">
 
-      {/* ── NAVBAR ── */}
-      <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/95 backdrop-blur shadow-sm">
-        <div className="container-shell flex h-[72px] items-center justify-between">
-          <a href="#" className="flex items-center gap-3">
-            <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary-blue text-white shadow-md">
-              <GraduationCap size={22} />
-            </span>
-            <span className="font-headline text-xl font-extrabold tracking-tight">
-              SIKSHA<span className="text-primary-red">WALLAH</span>
-            </span>
-          </a>
-
-          <nav className="hidden items-center gap-7 text-sm font-semibold lg:flex">
-            {[["#courses", "Courses"], ["#bscc", "BSCC"], ["/about", "About Us"], ["/contact", "Contact"]].map(([href, label]) => (
-              href.startsWith("/")
-                ? <Link key={href} href={href} className="transition hover:text-primary-blue">{label}</Link>
-                : <a key={href} href={href} className="transition hover:text-primary-blue">{label}</a>
-            ))}
-          </nav>
-
-          <div className="hidden items-center gap-2 lg:flex">
-            <a href="tel:+916203138576" className="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm font-bold text-gray-700 transition hover:border-primary-blue hover:text-primary-blue">
-              <Phone size={14} /> 6203138576
-            </a>
-            <Link href="/auth/login" className="rounded-lg border-2 border-primary-blue px-4 py-2 text-sm font-bold text-primary-blue transition hover:bg-primary-blue hover:text-white">
-              Student Login
-            </Link>
-            <Link href="/auth/register" className="rounded-lg bg-primary-red px-5 py-2 text-sm font-bold text-white transition hover:bg-red-700 shadow-md shadow-red-200">
-              Apply Now →
-            </Link>
-          </div>
-
-          <button aria-label="Open menu" className="rounded-lg p-2 lg:hidden" onClick={() => setMenuOpen(!menuOpen)}>
-            {menuOpen ? <X /> : <Menu />}
-          </button>
-        </div>
-
-        {menuOpen && (
-          <div className="border-t border-gray-100 bg-white px-6 py-5 lg:hidden">
-            <div className="flex flex-col gap-4 font-semibold text-sm">
-              {[["#courses", "Courses"], ["#bscc", "BSCC"], ["/about", "About Us"], ["/contact", "Contact"]].map(([href, label]) => (
-                href.startsWith("/")
-                  ? <Link key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</Link>
-                  : <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</a>
-              ))}
-              <Link href="/auth/login" onClick={() => setMenuOpen(false)} className="rounded-lg border-2 border-primary-blue px-4 py-2.5 text-center font-bold text-primary-blue">
-                Student Login
-              </Link>
-              <Link href="/auth/register" onClick={() => setMenuOpen(false)} className="rounded-lg bg-primary-red px-4 py-2.5 text-center text-white font-bold">
-                Apply Now →
-              </Link>
-            </div>
-          </div>
-        )}
-      </header>
+      <SiteNavbar />
 
       {/* ── HERO ── */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#001f6b] via-[#003f9f] to-[#0060c7] text-white">
@@ -938,6 +541,16 @@ export default function Home() {
               );
             })}
           </div>
+
+          {/* View All Courses CTA */}
+          <div className="mt-12 text-center">
+            <Link
+              href="/courses"
+              className="inline-flex items-center gap-2 rounded-xl bg-primary-blue px-8 py-4 font-extrabold text-white shadow-lg shadow-blue-200 transition hover:-translate-y-0.5 hover:bg-blue-700"
+            >
+              सभी कोर्सेज देखें <ArrowRight size={18} />
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -958,6 +571,14 @@ export default function Home() {
               सरकारी योजना के तहत <strong className="text-white">Free Education, Fooding, और Lodging</strong> पाएं।
               BSCC से ₹4 Lakh तक का education loan — <strong className="text-amber-400">4% सालाना ब्याज</strong> पर।
             </p>
+            <div className="mt-6">
+              <Link
+                href="/student-credit-card"
+                className="inline-flex items-center gap-2 rounded-xl bg-amber-400 px-7 py-3.5 font-extrabold text-gray-900 transition hover:bg-amber-300 shadow-lg shadow-amber-400/30"
+              >
+                पूरा प्रोसेस जानें <ArrowRight size={17} />
+              </Link>
+            </div>
           </div>
 
           {/* BSCC Benefits Row */}
@@ -1600,69 +1221,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── FOOTER ── */}
-      <footer className="bg-gray-950 text-gray-500 py-12">
-        <div className="container-shell">
-          <div className="grid gap-8 md:grid-cols-4 mb-8 pb-8 border-b border-gray-800">
-            <div>
-              <div className="flex items-center gap-2 text-white font-headline font-extrabold text-lg mb-3">
-                <GraduationCap size={22} className="text-primary-blue" />
-                SIKSHA<span className="text-primary-red">WALLAH</span>
-              </div>
-              <p className="text-sm leading-relaxed">
-                Forbesganj's most trusted admission consultancy. 5,000+ students guided since 2015.
-              </p>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-white mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-sm">
-                {[["#courses", "Courses"], ["#bscc", "BSCC Scheme"], ["/about", "About Us"], ["/contact", "Contact"], ["/auth/login", "Student Login"], ["/admin/login", "Admin Login"]].map(([href, label]) => (
-                  <li key={href}>
-                    <Link href={href} className="hover:text-white transition">{label}</Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-white mb-4">Courses</h4>
-              <ul className="space-y-2 text-sm">
-                {["B.Ed / D.El.Ed", "B.Sc Nursing / GNM", "B.Pharma / D.Pharma", "BBA / MBA", "B.Tech / Polytechnic", "MBBS / BDS"].map((c) => (
-                  <li key={c}>{c}</li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-white mb-4">Contact</h4>
-              <ul className="space-y-3 text-sm">
-                <li className="flex items-start gap-2">
-                  <MapPin size={15} className="mt-0.5 text-amber-400 flex-shrink-0" />
-                  College Chowk, Near HP Petrol Pump, Forbesganj, Araria
-                </li>
-                {["6203138576", "7858062498", "9472813581"].map((num) => (
-                  <li key={num}>
-                    <a href={`tel:+91${num}`} className="flex items-center gap-2 hover:text-white transition">
-                      <Phone size={13} /> +91 {num}
-                    </a>
-                  </li>
-                ))}
-                <li>
-                  <a href="https://wa.me/916203138576" className="flex items-center gap-2 text-green-400 hover:text-green-300 transition">
-                    <MessageCircle size={13} /> WhatsApp Chat
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="flex flex-col md:flex-row justify-between items-center gap-2 text-sm">
-            <p>© 2026 Siksha Wallah. All rights reserved. | College Chowk, Forbesganj, Araria, Bihar</p>
-            <p>Trusted admission partner — B.Ed • Nursing • Engineering • Management</p>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
 
       {/* ── FLOATING WHATSAPP WIDGET ── */}
       <a
