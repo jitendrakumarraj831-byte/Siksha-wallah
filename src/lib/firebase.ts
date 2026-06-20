@@ -12,8 +12,8 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-let app: FirebaseApp;
-let db: Firestore;
+let app!: FirebaseApp;
+let db!: Firestore;
 let auth: Auth | null = null;
 
 // Only initialize if we have an API key to avoid "invalid-api-key" crash

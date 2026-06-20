@@ -98,6 +98,10 @@ export default function CheckoutPage() {
         }),
       });
 
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error((errData as any).error || `Order creation failed (${response.status})`);
+      }
       const orderData = await response.json();
       if (!orderData.success) {
         throw new Error(orderData.error || 'Failed to create order');
@@ -129,10 +133,10 @@ export default function CheckoutPage() {
             });
 
             const verifyData = await verifyResponse.json();
-            if (verifyData.success) {
+            if (verifyResponse.ok && verifyData.success) {
               router.push(`/payment/success?paymentId=${pId}`);
             } else {
-              setError('Payment verification failed');
+              setError(verifyData.error || 'Payment verification failed. Please contact support.');
             }
           } catch (error: any) {
             setError(error.message);
@@ -149,6 +153,9 @@ export default function CheckoutPage() {
         },
       };
 
+      if (!window.Razorpay) {
+        throw new Error('Payment gateway is not loaded. Please refresh and try again.');
+      }
       const razorpay = new window.Razorpay(options);
       razorpay.open();
     } catch (err: any) {
