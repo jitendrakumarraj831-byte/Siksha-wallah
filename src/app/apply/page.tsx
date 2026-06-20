@@ -148,13 +148,15 @@ export default function ApplyPage() {
         status: "pending",
       }).catch(() => {});
       saveActivity({
-        type: "inquiry",
-        title: "📋 Course Application Submitted",
-        description: `${form.fullName} → ${form.course}`,
+        type: "application",
+        title: "📋 Admission Application Submitted",
+        description: `${form.fullName} ne ${form.course} ke liye apply kiya`,
         name: form.fullName,
         mobile: form.mobile,
         email: form.email || undefined,
         course: form.course,
+        userId: user?.uid || undefined,
+        refId: id,
         page: "/apply",
       }).catch(() => {});
       setSubmitted(true);

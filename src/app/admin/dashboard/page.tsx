@@ -104,14 +104,17 @@ function NoteCell({ inq, onSaved }: { inq: Inquiry; onSaved: (id: string, note: 
 }
 
 /* ── Activity type meta ─────────────────────────────── */
-const ACTIVITY_META: Record<ActivityType, { icon: string; color: string }> = {
-  inquiry:       { icon: "📋", color: "bg-blue-50 border-blue-200 text-blue-800" },
-  contact:       { icon: "📝", color: "bg-purple-50 border-purple-200 text-purple-800" },
-  registration:  { icon: "👤", color: "bg-green-50 border-green-200 text-green-800" },
-  student_login: { icon: "🔑", color: "bg-gray-50 border-gray-200 text-gray-700" },
-  whatsapp:      { icon: "📱", color: "bg-emerald-50 border-emerald-200 text-emerald-800" },
-  bscc_check:    { icon: "🏦", color: "bg-amber-50 border-amber-200 text-amber-800" },
-  course_view:   { icon: "📚", color: "bg-indigo-50 border-indigo-200 text-indigo-800" },
+const ACTIVITY_META: Record<ActivityType, { icon: string; color: string; link?: string }> = {
+  inquiry:        { icon: "📋", color: "bg-blue-50 border-blue-200 text-blue-800",       link: "/admin/dashboard" },
+  contact:        { icon: "📝", color: "bg-purple-50 border-purple-200 text-purple-800" },
+  registration:   { icon: "👤", color: "bg-green-50 border-green-200 text-green-800",    link: "/admin/students" },
+  student_login:  { icon: "🔑", color: "bg-gray-50 border-gray-200 text-gray-700",       link: "/admin/students" },
+  application:    { icon: "🎓", color: "bg-blue-50 border-blue-200 text-blue-800",       link: "/admin/applications" },
+  doc_upload:     { icon: "📄", color: "bg-teal-50 border-teal-200 text-teal-800",       link: "/admin/students" },
+  profile_update: { icon: "✏️",  color: "bg-orange-50 border-orange-200 text-orange-800", link: "/admin/students" },
+  whatsapp:       { icon: "📱", color: "bg-emerald-50 border-emerald-200 text-emerald-800" },
+  bscc_check:     { icon: "🏦", color: "bg-amber-50 border-amber-200 text-amber-800" },
+  course_view:    { icon: "📚", color: "bg-indigo-50 border-indigo-200 text-indigo-800" },
 };
 
 function timeAgo(ts: any): string {
@@ -502,9 +505,13 @@ export default function AdminDashboardPage() {
                         </a>
                       )}
                     </div>
-                    <div className="flex-shrink-0 text-right">
+                    <div className="flex-shrink-0 text-right flex flex-col items-end gap-1">
                       <span className="text-xs opacity-60 whitespace-nowrap">{timeAgo(act.createdAt)}</span>
-                      {act.page && <p className="text-xs opacity-40 mt-0.5">{act.page}</p>}
+                      {meta.link && (
+                        <Link href={meta.link} className="text-xs font-bold underline opacity-70 hover:opacity-100">
+                          View →
+                        </Link>
+                      )}
                     </div>
                   </div>
                 );
