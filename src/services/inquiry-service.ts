@@ -1,6 +1,8 @@
 
 import { db } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp, query, orderBy, getDocs } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, query, orderBy, getDocs, doc, updateDoc } from "firebase/firestore";
+
+export type InquiryStatus = "pending" | "called" | "admission_done";
 
 export interface Inquiry {
   id?: string;
@@ -8,7 +10,9 @@ export interface Inquiry {
   mobile: string;
   email?: string;
   course: string;
+  qualification?: string;
   message?: string;
+  status?: InquiryStatus;
   createdAt?: any;
 }
 
@@ -18,6 +22,7 @@ export async function saveInquiry(inquiry: Omit<Inquiry, "id" | "createdAt">) {
   try {
     const docRef = await addDoc(collection(db, INQUIRIES_COLLECTION), {
       ...inquiry,
+      status: "pending",
       createdAt: serverTimestamp(),
     });
     return { success: true, id: docRef.id };
@@ -38,5 +43,15 @@ export async function getAllInquiries(): Promise<Inquiry[]> {
   } catch (error) {
     console.error("Error fetching inquiries:", error);
     return [];
+  }
+}
+
+export async function updateInquiryStatus(id: string, status: InquiryStatus): Promise<void> {
+  try {
+    const ref = doc(db, INQUIRIES_COLLECTION, id);
+    await updateDoc(ref, { status });
+  } catch (error) {
+    console.error("Error updating inquiry status:", error);
+    throw error;
   }
 }
