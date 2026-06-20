@@ -1,7 +1,13 @@
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  async redirects() {
+    return [
+      { source: "/bscc", destination: "/student-credit-card", permanent: true },
+      { source: "/student-login", destination: "/auth/login", permanent: true },
+      { source: "/student-dashboard", destination: "/dashboard", permanent: true },
+    ];
+  },
   typescript: {
     ignoreBuildErrors: true,
   },
