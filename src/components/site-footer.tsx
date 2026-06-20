@@ -25,6 +25,7 @@ export function SiteFooter() {
                 ["/", "Home"],
                 ["/courses", "Courses"],
                 ["/student-credit-card", "BSCC Guide"],
+                ["/blog", "Blog"],
                 ["/about", "About Us"],
                 ["/contact", "Contact"],
                 ["/auth/login", "Student Login"],
