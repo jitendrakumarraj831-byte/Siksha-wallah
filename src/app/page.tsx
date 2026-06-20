@@ -22,6 +22,7 @@ type Course = {
   careerScope: string;
   mode: string;
   bscc: boolean;
+  hindiDesc: string;
 };
 
 const teachingCourses: Course[] = [
@@ -34,6 +35,7 @@ const teachingCourses: Course[] = [
     careerScope: "Government School Teacher (TET/CTET qualified), Private School Teacher, Education Officer, School Principal, Content Developer for EdTech companies. Bihar STET qualified B.Ed graduates get direct government job opportunities in middle & high schools.",
     mode: "Regular & Distance options available from NCTE-approved recognized Indian universities. Siksha Wallah guides students for both modes based on eligibility and career goals.",
     bscc: true,
+    hindiDesc: "B.Ed Bihar का सबसे popular teaching course है। Graduation के बाद 2 साल का यह course करके आप government या private school में teacher बन सकते हैं। Bihar STET pass करने के बाद सरकारी नौकरी मिलती है। BSCC loan से fees का बोझ नहीं पड़ता।",
   },
   {
     name: "D.El.Ed",
@@ -44,6 +46,7 @@ const teachingCourses: Course[] = [
     careerScope: "Primary School Teacher (Class 1–8) in government and private schools, Anganwadi Supervisor, NGO Education Worker. BTET/CTET qualification opens government Primary Teacher posts across Bihar with excellent salary packages.",
     mode: "Regular mode from SCERT/state-approved institutions. Distance mode available from select NCTE-recognized universities. We assist with both options.",
     bscc: true,
+    hindiDesc: "D.El.Ed (पहले BTC) 10th और 12th pass students के लिए primary school teacher बनने का सबसे सीधा रास्ता है। 2 साल के इस diploma के बाद Class 1–8 में teaching कर सकते हैं। Bihar में BTET पास करने पर सरकारी Primary Teacher की नौकरी मिलती है।",
   },
   {
     name: "M.Ed",
@@ -54,6 +57,7 @@ const teachingCourses: Course[] = [
     careerScope: "College Lecturer (NET/SET qualified), School Principal, Curriculum Developer, Educational Researcher, Teacher Trainer, Academic Coordinator at SCERT/NCERT. M.Ed opens doors to PhD in Education and academic careers.",
     mode: "Regular mode from NAAC-accredited universities. Distance mode available from select institutions recognized by DEB (Distance Education Bureau). We guide based on your preference.",
     bscc: false,
+    hindiDesc: "M.Ed teaching field की master degree है। B.Ed के बाद यह course करके आप college lecturer, school principal, या education researcher बन सकते हैं। NET/SET qualify करने पर university में professor की नौकरी मिलती है। Education में PhD का रास्ता भी M.Ed से खुलता है।",
   },
 ];
 
@@ -67,6 +71,7 @@ const medicalCourses: Course[] = [
     careerScope: "Government Doctor (BPSC Civil Services), Private Hospital Specialist, Surgeon, Researcher, Medical Officer. MBBS graduates from recognized colleges are eligible for PG (MD/MS) entrance. Extremely high demand in Bihar's rural health sector.",
     mode: "Regular mode only from MCI/NMC-approved medical colleges. We guide for both government and private college admissions through NEET counselling.",
     bscc: false,
+    hindiDesc: "MBBS भारत का सबसे prestigious medical course है। NEET पास करके government या private medical college में admission लें। 5.5 साल (internship सहित) के बाद आप डॉक्टर बनते हैं। Bihar के rural areas में government doctor की बहुत demand है। BPSC civil services से सरकारी नौकरी भी मिलती है।",
   },
   {
     name: "BDS",
@@ -77,6 +82,7 @@ const medicalCourses: Course[] = [
     careerScope: "Private Dental Clinic Owner, Hospital Dental Surgeon, Government Dental Officer, MDS Specialist (Orthodontist, Endodontist). BDS graduates can also join dental product companies and public health programs.",
     mode: "Regular mode only from DCI-approved dental colleges. We provide complete NEET counselling guidance for state and all-India quota seats.",
     bscc: false,
+    hindiDesc: "BDS dental surgeon बनने का course है। NEET qualify करके 5 साल में Dental Surgeon बनें। अपना private clinic खोलें या government hospital में काम करें। MDS (specialization) करने पर Orthodontist, Endodontist जैसे specialist बन सकते हैं।",
   },
   {
     name: "B.Sc Nursing",
@@ -87,6 +93,7 @@ const medicalCourses: Course[] = [
     careerScope: "Staff Nurse in Government Hospitals (AIIMS, ESIC, Railway, Armed Forces), Private Hospitals, Nursing Tutor, Community Health Nurse. B.Sc Nursing is the most in-demand healthcare course with jobs across India and abroad (UK, Canada, Gulf countries).",
     mode: "Regular mode from INC (Indian Nursing Council) approved colleges. We help with both Bihar state quota and all-India private college admissions.",
     bscc: true,
+    hindiDesc: "B.Sc Nursing healthcare sector का सबसे in-demand course है। 4 साल का यह degree course AIIMS, Railway, ESIC जैसे top government hospitals में Staff Nurse की नौकरी दिलाता है। विदेश (UK, Canada, Gulf) में भी भारतीय nurses की बहुत demand है। BSCC loan से fees cover होती है।",
   },
   {
     name: "GNM",
@@ -97,6 +104,7 @@ const medicalCourses: Course[] = [
     careerScope: "Staff Nurse in Government & Private Hospitals, Community Health Worker, Midwife, Home Care Nurse. GNM nurses are eligible for government nursing recruitment exams (NHM, ESIC, Railway). High demand in Bihar's Primary Health Centers.",
     mode: "Regular mode from INC-approved nursing schools and colleges. Both government and private institutions available. BSCC loan assistance available for eligible students.",
     bscc: true,
+    hindiDesc: "GNM 3 साल का nursing diploma है जो government और private hospitals में Staff Nurse की नौकरी दिलाता है। NHM, ESIC, और Railway में GNM nurses की regular भर्ती होती है। Bihar के Primary Health Centers में भी बहुत scope है। BSCC loan available है।",
   },
   {
     name: "ANM",
@@ -107,6 +115,7 @@ const medicalCourses: Course[] = [
     careerScope: "ANM/ASHA Worker in Government Health Programs, Community Health Center Nurse, Health Education Worker, Sub-Center Nurse. Bihar government regularly recruits ANM graduates under NHM with good salary and job security.",
     mode: "Regular mode from INC-approved schools. Short duration and low-cost course — ideal for girls from rural areas seeking stable government healthcare jobs.",
     bscc: true,
+    hindiDesc: "ANM सिर्फ लड़कियों के लिए 2 साल का nursing course है — केवल 10th pass होना जरूरी है। Bihar government NHM के तहत ANM की regular भर्ती करती है। गाँव के Primary Health Center और Sub-Center में stable government नौकरी मिलती है। कम fees, BSCC loan भी मिलता है।",
   },
   {
     name: "B.Pharma",
@@ -117,6 +126,7 @@ const medicalCourses: Course[] = [
     careerScope: "Pharmacist in Government Hospitals & Dispensaries, Drug Inspector, Quality Control Officer in Pharma Companies, Medical Representative, Clinical Research Associate, Retail Pharmacy Owner. B.Pharma graduates are eligible for government pharmacy exams.",
     mode: "Regular & Distance modes available from PCI (Pharmacy Council of India) and AICTE-approved institutions. We guide for both Bihar and out-of-state admissions.",
     bscc: true,
+    hindiDesc: "B.Pharma 4 साल का pharmacy degree course है। Pharmacist, Drug Inspector, Medical Representative, या खुद की pharmacy shop — कई रास्ते हैं। Government hospital में pharmacist बनने का सपना B.Pharma से पूरा होता है। Pharma companies में भी अच्छी salary मिलती है। BSCC loan eligible है।",
   },
 ];
 
@@ -130,6 +140,7 @@ const technicalCourses: Course[] = [
     careerScope: "Software Engineer, Civil/Mechanical/Electrical Engineer, Government Engineer (BPSC/SSC JE), IT Company Employee, Startup Founder. B.Tech from AICTE-approved colleges is recognized for both private sector and government recruitment.",
     mode: "Regular mode from AICTE-approved colleges. We guide for JEE counselling, Bihar DCECE, and private B.Tech admissions with lateral entry options.",
     bscc: true,
+    hindiDesc: "B.Tech engineering का 4 साल का degree course है। Computer Science, Civil, Mechanical, Electrical — अपना branch चुनें। JEE Main या Bihar DCECE से government college में admission पाएं। TCS, Infosys जैसी IT companies और BPSC/SSC JE से government engineer — दोनों रास्ते खुले हैं। BSCC loan available।",
   },
   {
     name: "Polytechnic",
@@ -140,6 +151,7 @@ const technicalCourses: Course[] = [
     careerScope: "Junior Engineer in PWD/BSEB/NHAI, Factory Supervisor, Technical Assistant, ITI Instructor. Diploma holders can directly enter 2nd year B.Tech (Lateral Entry). Government jobs via BSSC and SSC JE after diploma.",
     mode: "Regular mode from AICTE-approved polytechnic colleges in Bihar and other states. Government polytechnic seats available at very low fees through DCECE counselling.",
     bscc: true,
+    hindiDesc: "Polytechnic (Diploma in Engineering) 3 साल का course है जो 10th pass के बाद किया जा सकता है। इसके बाद B.Tech 2nd year में lateral entry मिलती है। PWD, BSEB, NHAI में Junior Engineer की नौकरी मिलती है। Government polytechnic में fees बहुत कम है — Bihar DCECE से सस्ती सीट पाएं।",
   },
   {
     name: "ITI",
@@ -150,6 +162,7 @@ const technicalCourses: Course[] = [
     careerScope: "Electrician, Fitter, Welder, Plumber, AC Mechanic, Computer Operator in Industries, Railways, Defence, and Private sector. ITI certificate holders get direct railway apprenticeship and factory jobs. Self-employment through workshops also common.",
     mode: "Regular mode from DGT (Directorate General of Training) affiliated government and private ITI colleges. Hostel and BSCC facilities available at select colleges.",
     bscc: true,
+    hindiDesc: "ITI 1–2 साल का vocational training course है जो 8th/10th के बाद किया जा सकता है। Electrician, Fitter, Welder, Computer Operator — कई trades हैं। Railway apprenticeship और factory jobs सीधे मिलती हैं। Government ITI में fees लगभग free है। खुद का workshop खोलकर भी अच्छी कमाई होती है।",
   },
   {
     name: "BCA",
@@ -160,6 +173,7 @@ const technicalCourses: Course[] = [
     careerScope: "Software Developer, Web Designer, Database Administrator, IT Support Engineer, App Developer. BCA graduates can join MCA (2 years) or directly apply to IT companies like Infosys, TCS, Wipro. High demand in Bihar's growing IT sector.",
     mode: "Regular & Distance modes available from AICTE/UGC-approved universities. Distance BCA from IGNOU and state universities is widely recognized for government jobs too.",
     bscc: true,
+    hindiDesc: "BCA computer science का 3 साल का bachelor degree है जो 12th के बाद किया जाता है। Software Developer, Web Designer, App Developer बनने का सबसे affordable रास्ता। TCS, Infosys, Wipro जैसी IT companies में placement मिलती है। MCA करके career और आगे बढ़ा सकते हैं। BSCC loan से fees cover होती है।",
   },
   {
     name: "MCA",
@@ -170,6 +184,7 @@ const technicalCourses: Course[] = [
     careerScope: "Senior Software Developer, System Analyst, Project Manager, Cybersecurity Specialist, IT Consultant. MCA qualifies for SSC (CPO/CGL), IBPS IT Officer, and State PSC technical posts. Excellent placement in top IT companies.",
     mode: "Regular & Distance modes from AICTE-approved universities. NIMCET for NIT admissions. We assist with both state universities and top private college admissions.",
     bscc: false,
+    hindiDesc: "MCA computer science की master degree है — BCA के बाद 2 साल का यह course Senior Developer, System Analyst, या Project Manager बनाता है। SSC CGL, IBPS IT Officer, और State PSC technical posts के लिए भी eligible होते हैं। Top IT companies में excellent placement और high salary package मिलता है।",
   },
   {
     name: "BBA",
@@ -180,6 +195,7 @@ const technicalCourses: Course[] = [
     careerScope: "Business Manager, Marketing Executive, HR Officer, Sales Manager, Entrepreneur, Bank Officer (IBPS PO/Clerk). BBA is the ideal foundation for MBA. Graduates are hired by banks, FMCG companies, and retail chains across India.",
     mode: "Regular & Distance modes available. Distance BBA from recognized universities like IGNOU, SMU, Amity is valid for government and private sector jobs. BSCC loan available.",
     bscc: true,
+    hindiDesc: "BBA business management का 3 साल का degree course है। Marketing, HR, Finance, या Sales में career शुरू करें। Bank Officer (IBPS PO) बनने की तैयारी के साथ-साथ करें। MBA के लिए सबसे मजबूत foundation BBA से ही आती है। Companies, banks, और startups सभी BBA graduates hire करते हैं।",
   },
   {
     name: "MBA",
@@ -190,6 +206,7 @@ const technicalCourses: Course[] = [
     careerScope: "Operations Manager, Finance Manager, Marketing Head, HR Director, Startup CEO, IAS/IPS (Civil Services). MBA from AICTE-approved college is a top credential for corporate and government leadership roles.",
     mode: "Regular & Distance modes available. Regular MBA for premium placements; Distance MBA from UGC-DEB approved universities valid for government jobs. We guide for both entrance and direct admission routes.",
     bscc: false,
+    hindiDesc: "MBA management की master degree है — business world में सबसे respected qualification। Graduation के बाद CAT/MAT/CMAT देकर top B-School में admission पाएं। Finance Manager, Marketing Head, HR Director, या खुद का business — सब कुछ MBA से possible है। Government leadership roles के लिए भी MBA बहुत काम आती है।",
   },
 ];
 
@@ -624,6 +641,13 @@ export default function Home() {
                     {/* Expanded Details */}
                     {isExpanded && (
                       <div className="mt-5 space-y-4 border-t border-gray-100 pt-4">
+                        {/* Hindi Description */}
+                        <div className="rounded-xl bg-amber-50 border border-amber-200 p-3">
+                          <div className="mb-1.5 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-600">
+                            <Sparkles size={12} /> हिंदी में जानें
+                          </div>
+                          <p className="text-sm leading-relaxed text-amber-900">{course.hindiDesc}</p>
+                        </div>
                         <div>
                           <div className="mb-1.5 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">
                             <Briefcase size={12} /> Career Scope
