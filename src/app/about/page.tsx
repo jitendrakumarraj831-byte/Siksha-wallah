@@ -24,17 +24,10 @@ const team = [
   },
   {
     name: "Gautam Kumar",
-    role: "BSCC Enquiry & Technical Advisor",
-    phone: "7979713626",
-    exp: "4+ Years",
-    bio: "Bihar Student Credit Card aur B.Tech, BBA, MBA admissions ke specialist. Students ko BSCC loan process mein complete guidance dete hain.",
-  },
-  {
-    name: "Kursakanta Office",
-    role: "Branch Office — Kursakanta",
+    role: "BSCC Enquiry & Branch Office — Kursakanta",
     phone: "9162653235",
-    exp: "3+ Years",
-    bio: "Kursakanta branch ke through Bihar ke aas-paas ke students ko sabhi courses mein admission guidance milti hai.",
+    exp: "4+ Years",
+    bio: "Bihar Student Credit Card aur B.Tech, BBA, MBA admissions ke specialist. Kursakanta branch se students ko complete guidance dete hain.",
   },
 ];
 
