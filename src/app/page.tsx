@@ -52,7 +52,7 @@ export default function Home() {
     if (step < STEPS.length - 1) setStep(step + 1);
     else {
       setFormSubmitted(true);
-      saveInquiry({ fullName: formData.name, mobile: formData.mobile, course: formData.course, message: `Qualification: ${formData.qualify}` }).catch(() => {});
+      saveInquiry({ fullName: formData.name, mobile: formData.mobile, course: formData.course, qualification: formData.qualify, message: `Qualification: ${formData.qualify}` }).catch(() => {});
       const msg = `New Inquiry from Siksha Wallah Website!%0AName: ${formData.name}%0AMobile: ${formData.mobile}%0ACourse: ${formData.course}%0AQualification: ${formData.qualify}`;
       window.open(`https://wa.me/916203138576?text=${msg}`, "_blank");
     }
@@ -75,9 +75,14 @@ export default function Home() {
           <div className="grid gap-12 lg:grid-cols-[1.15fr_.85fr] items-center">
             {/* Left */}
             <div>
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold backdrop-blur">
-                <BadgeCheck size={16} className="text-amber-400" />
-                College Chowk, Near HP Petrol Pump, Forbesganj, Araria
+              <div className="mb-4 flex flex-wrap gap-2">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold backdrop-blur">
+                  <BadgeCheck size={16} className="text-amber-400" />
+                  College Chowk, Near HP Petrol Pump, Forbesganj, Araria
+                </div>
+                <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/50 bg-amber-400/15 px-4 py-2 text-sm font-bold text-amber-300 backdrop-blur">
+                  🇮🇳 SABHI RAJY SE KARWATE HAI — Pan-India Admissions
+                </div>
               </div>
 
               <h1 className="font-headline text-4xl md:text-5xl lg:text-[64px] font-extrabold leading-[1.1]">
@@ -307,13 +312,13 @@ export default function Home() {
                     <span className="inline-flex items-center gap-1 rounded-full bg-blue-600 px-2.5 py-0.5 text-xs font-bold text-white"><BadgeCheck size={11} /> NCTE Approved</span>
                   </div>
                   <p className="text-sm text-blue-800 leading-relaxed mb-3">
-                    हम केवल <strong>NCTE (National Council for Teacher Education) Approved</strong> colleges के साथ partner हैं — Bihar, Purnea, Katihar, Patna, और West Bengal में।
+                    हम केवल <strong>NCTE (National Council for Teacher Education) Approved</strong> colleges के साथ partner हैं — Bihar (Patna, Purnea, Katihar) और अन्य राज्यों में। <strong>SABHI RAJY SE KARWATE HAI।</strong>
                   </p>
                   <div className="grid gap-2 sm:grid-cols-2">
                     {[
-                      "NCTE Approved colleges in Patna, Purnea & Katihar (Bihar)",
-                      "NCTE Recognized institutions in West Bengal",
-                      "100% BSCC (Bihar Student Credit Card) facility available",
+                      "NCTE Approved B.Ed/D.El.Ed in Patna, Purnea & Katihar (Bihar)",
+                      "NCTE Recognized institutions across other states",
+                      "100% Bihar Student Credit Card (BSCC) facility support",
                       "Regular & Distance mode — both options guided",
                     ].map((point, i) => (
                       <div key={i} className="flex items-start gap-2 rounded-lg bg-white/70 border border-blue-100 px-3 py-2 text-xs text-blue-800 font-medium">
@@ -337,13 +342,13 @@ export default function Home() {
                     <span className="inline-flex items-center gap-1 rounded-full bg-red-600 px-2.5 py-0.5 text-xs font-bold text-white"><BadgeCheck size={11} /> INC &amp; PCI Approved</span>
                   </div>
                   <p className="text-sm text-red-800 leading-relaxed mb-3">
-                    हम <strong>INC (Indian Nursing Council) &amp; PCI (Pharmacy Council of India) Approved</strong> premier institutes के साथ partner हैं — Bangalore, Madhya Pradesh, और West Bengal में।
+                    हम <strong>INC (Indian Nursing Council) &amp; PCI (Pharmacy Council of India) Approved</strong> premier institutes के साथ partner हैं — Bangalore, Madhya Pradesh, West Bengal और all states में। <strong>SABHI RAJY SE KARWATE HAI।</strong>
                   </p>
                   <div className="grid gap-2 sm:grid-cols-2">
                     {[
                       "INC Approved Nursing colleges in Bangalore & West Bengal",
-                      "PCI Approved Pharmacy institutes in Madhya Pradesh",
-                      "Premier private medical institutes with hostel facility",
+                      "PCI Approved Pharmacy institutes in Madhya Pradesh & all other states",
+                      "Premier private medical institutes with hostel facilities",
                       "NEET counselling & direct admission both available",
                     ].map((point, i) => (
                       <div key={i} className="flex items-start gap-2 rounded-lg bg-white/70 border border-red-100 px-3 py-2 text-xs text-red-800 font-medium">

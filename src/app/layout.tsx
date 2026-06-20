@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import "./globals.css";
 import { AuthProvider } from "@/components/auth-provider";
+import { FloatingContact } from "@/components/floating-contact";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
@@ -54,7 +55,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         />
       </head>
       <body>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          {children}
+          <FloatingContact />
+        </AuthProvider>
         {GA_ID && (
           <>
             <Script

@@ -3,48 +3,47 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { authService } from "@/lib/auth-service";
 import {
-  GraduationCap, Lock, Mail, AlertCircle, Loader, ShieldCheck,
-  BarChart3, Users, BookOpen, ArrowRight,
+  GraduationCap, Lock, User, AlertCircle, Loader, ShieldCheck,
+  BarChart3, Users, BookOpen, ArrowRight, Eye, EyeOff,
 } from "lucide-react";
+
+const HARDCODED_USER = "admin";
+const HARDCODED_PASS = "admin123";
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    if (!email.trim() || !password.trim()) {
-      setError("Email and password are required");
+    if (!username.trim() || !password.trim()) {
+      setError("Username and password are required");
       return;
     }
     setLoading(true);
-    try {
-      const user = await authService.loginStudent(email, password);
-      if (!user) throw new Error("Login failed");
-      const profile = await authService.getUserProfile(user.uid);
-      if (profile?.role !== "admin" && profile?.role !== "counselor") {
-        await authService.logout();
-        setError("Access denied. This portal is for admin/staff only. Students please use Student Login.");
-        setLoading(false);
-        return;
+    await new Promise((r) => setTimeout(r, 600)); // brief delay for UX
+
+    if (username.trim() === HARDCODED_USER && password === HARDCODED_PASS) {
+      if (typeof window !== "undefined") {
+        localStorage.setItem("sw_admin_session", "true");
+        localStorage.setItem("sw_admin_user", username.trim());
       }
       router.push("/admin/dashboard");
-    } catch (err: any) {
-      setError(err.message || "Login failed. Please check your credentials.");
-    } finally {
-      setLoading(false);
+    } else {
+      setError("Invalid credentials. Use admin / admin123 for testing.");
     }
+    setLoading(false);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#001f6b] via-[#003f9f] to-[#0060c7] flex items-center justify-center px-4 py-12">
-      {/* Background decoration */}
+      {/* Background blobs */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-amber-400 opacity-10 blur-3xl" />
         <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-blue-300 opacity-10 blur-3xl" />
@@ -55,7 +54,6 @@ export default function AdminLoginPage() {
 
           {/* Left — Info Panel */}
           <div className="text-white">
-            {/* Logo */}
             <Link href="/" className="inline-flex items-center gap-3 mb-8">
               <span className="grid h-11 w-11 place-items-center rounded-xl bg-white/20 backdrop-blur">
                 <GraduationCap size={24} />
@@ -66,7 +64,7 @@ export default function AdminLoginPage() {
             </Link>
 
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold backdrop-blur">
-              <ShieldCheck size={15} className="text-amber-400" /> Admin & Staff Portal
+              <ShieldCheck size={15} className="text-amber-400" /> Admin &amp; Staff Portal
             </div>
 
             <h1 className="font-headline text-4xl font-extrabold leading-tight mb-4">
@@ -105,59 +103,66 @@ export default function AdminLoginPage() {
             </div>
           </div>
 
-          {/* Right — Login Form */}
-          <div className="rounded-2xl bg-white p-8 shadow-2xl">
+          {/* Right — Glassmorphism Login Form */}
+          <div className="rounded-2xl border border-white/20 bg-white/10 p-8 shadow-2xl backdrop-blur-xl">
             <div className="mb-6">
-              <h2 className="font-headline text-2xl font-extrabold text-gray-900">Admin Login</h2>
-              <p className="mt-1 text-sm text-gray-500">
-                Staff credentials से login करें
+              <h2 className="font-headline text-2xl font-extrabold text-white">Admin Login</h2>
+              <p className="mt-1 text-sm text-blue-200">
+                Admin credentials से login करें
               </p>
             </div>
 
             {error && (
-              <div className="mb-5 flex gap-3 rounded-xl bg-red-50 border border-red-200 p-4 text-sm text-red-700">
+              <div className="mb-5 flex gap-3 rounded-xl bg-red-500/20 border border-red-400/40 p-4 text-sm text-red-200 backdrop-blur">
                 <AlertCircle size={18} className="flex-shrink-0 mt-0.5" />
                 <p>{error}</p>
               </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Email */}
+              {/* Username */}
               <div>
-                <label className="mb-1.5 block text-sm font-semibold text-gray-700">Staff Email</label>
+                <label className="mb-1.5 block text-sm font-semibold text-blue-100">Username</label>
                 <div className="relative">
-                  <Mail size={16} className="absolute left-3.5 top-3.5 text-gray-400" />
+                  <User size={16} className="absolute left-3.5 top-3.5 text-blue-300" />
                   <input
-                    type="email"
+                    type="text"
                     required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="admin@sikshawall.com"
-                    className="w-full rounded-xl border-2 border-gray-200 pl-10 pr-4 py-3.5 text-sm outline-none focus:border-[#003f9f] transition"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="admin"
+                    className="w-full rounded-xl border border-white/30 bg-white/10 pl-10 pr-4 py-3.5 text-sm text-white placeholder-blue-300 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/30 transition"
                   />
                 </div>
               </div>
 
               {/* Password */}
               <div>
-                <label className="mb-1.5 block text-sm font-semibold text-gray-700">Password</label>
+                <label className="mb-1.5 block text-sm font-semibold text-blue-100">Password</label>
                 <div className="relative">
-                  <Lock size={16} className="absolute left-3.5 top-3.5 text-gray-400" />
+                  <Lock size={16} className="absolute left-3.5 top-3.5 text-blue-300" />
                   <input
-                    type="password"
+                    type={showPass ? "text" : "password"}
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter password"
-                    className="w-full rounded-xl border-2 border-gray-200 pl-10 pr-4 py-3.5 text-sm outline-none focus:border-[#003f9f] transition"
+                    className="w-full rounded-xl border border-white/30 bg-white/10 pl-10 pr-12 py-3.5 text-sm text-white placeholder-blue-300 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/30 transition"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPass(!showPass)}
+                    className="absolute right-3.5 top-3.5 text-blue-300 hover:text-white transition"
+                  >
+                    {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
                 </div>
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#003f9f] py-4 font-extrabold text-white hover:bg-blue-700 transition disabled:opacity-60 active:scale-95"
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-amber-400 py-4 font-extrabold text-gray-900 hover:bg-amber-300 transition disabled:opacity-60 active:scale-95 shadow-lg shadow-amber-500/30"
               >
                 {loading ? (
                   <Loader size={18} className="animate-spin" />
@@ -167,19 +172,22 @@ export default function AdminLoginPage() {
               </button>
             </form>
 
-            <div className="mt-6 rounded-xl border-2 border-amber-200 bg-amber-50 p-4">
-              <p className="text-xs font-semibold text-amber-700">
-                <strong>Note:</strong> This portal is for authorized Siksha Wallah staff only. Unauthorized access is prohibited. For student login, use{" "}
-                <Link href="/auth/login" className="underline font-bold">Student Portal</Link>.
+            {/* Demo credentials hint */}
+            <div className="mt-5 rounded-xl border border-amber-400/30 bg-amber-400/10 p-4">
+              <p className="text-xs font-semibold text-amber-300">
+                <strong>Test Credentials:</strong><br />
+                Username: <code className="font-mono bg-white/10 px-1 rounded">admin</code> &nbsp;
+                Password: <code className="font-mono bg-white/10 px-1 rounded">admin123</code>
               </p>
             </div>
 
             <div className="mt-4 text-center">
-              <Link href="/" className="text-sm text-gray-400 hover:text-gray-600 transition">
+              <Link href="/" className="text-sm text-blue-300 hover:text-white transition">
                 ← Back to Home
               </Link>
             </div>
           </div>
+
         </div>
       </div>
     </div>
