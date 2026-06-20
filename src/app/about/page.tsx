@@ -23,11 +23,18 @@ const team = [
     bio: "Bihar Student Credit Card scheme aur Nursing admissions mein expert. Hundreds of students ko BSCC loan dilaya hai.",
   },
   {
-    name: "Counsellor 3",
-    role: "Technical & Management Advisor",
-    phone: "9472813581",
+    name: "Gautam Kumar",
+    role: "BSCC Enquiry & Technical Advisor",
+    phone: "7979713626",
     exp: "4+ Years",
-    bio: "B.Tech, BBA, MBA, BCA aur Polytechnic admissions ke liye dedicated counsellor. Bihar ke top engineering colleges mein guidance.",
+    bio: "Bihar Student Credit Card aur B.Tech, BBA, MBA admissions ke specialist. Students ko BSCC loan process mein complete guidance dete hain.",
+  },
+  {
+    name: "Kursakanta Office",
+    role: "Branch Office — Kursakanta",
+    phone: "9162653235",
+    exp: "3+ Years",
+    bio: "Kursakanta branch ke through Bihar ke aas-paas ke students ko sabhi courses mein admission guidance milti hai.",
   },
 ];
 
