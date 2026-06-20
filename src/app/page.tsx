@@ -841,10 +841,19 @@ export default function Home() {
           </div>
           <div className="grid gap-6 md:grid-cols-3">
             {[
-              { name: "Priya Kumari", course: "B.Ed (2024)", text: "Counsellor ने बहुत अच्छे से guide किया। BSCC loan में भी help मिली। Admission एकदम tension-free था।" },
-              { name: "Aman Raj", course: "B.Pharma (2023)", text: "शुरू से आखिर तक सब transparent रहा। Documents से लेकर hostel तक — perfect support मिला।" },
-              { name: "Sakshi Jha", course: "B.Sc Nursing (2024)", text: "Nursing में career के लिए confused था। यहाँ की guidance से सही college मिला और BSCC भी apply हुआ।" },
-            ].map(({ name, course, text }) => (
+              { name: "Priya Kumari", course: "B.Ed (2024)", place: "Forbesganj", text: "Counsellor ने बहुत अच्छे से guide किया। BSCC loan में भी help मिली। Admission एकदम tension-free था।" },
+              { name: "Aman Raj", course: "B.Pharma (2023)", place: "Araria", text: "शुरू से आखिर तक सब transparent रहा। Documents से लेकर hostel तक — perfect support मिला।" },
+              { name: "Sakshi Jha", course: "B.Sc Nursing (2024)", place: "Kishanganj", text: "Nursing में career के लिए confused था। यहाँ की guidance से सही college मिला और BSCC भी apply हुआ।" },
+              { name: "Ravi Shankar", course: "B.Tech (2023)", place: "Forbesganj", text: "Engineering के लिए कौन सा college सही रहेगा — पता नहीं था। Siksha Wallah ने सब sort कर दिया। AICTE approved college मिला।" },
+              { name: "Anjali Devi", course: "GNM (2024)", place: "Purnea", text: "GNM admission का पूरा process यहाँ बहुत आसान था। BSCC loan भी मिला। Staff बहुत helpful है।" },
+              { name: "Vikash Kumar", course: "D.El.Ed (2023)", place: "Araria", text: "Primary teacher बनना था। D.El.Ed के लिए सही college ढूंढने में Siksha Wallah ने बहुत मदद की। अब मैं govt school में पढ़ा रहा हूँ।" },
+              { name: "Neha Bharti", course: "BBA (2024)", place: "Forbesganj", text: "BBA admission पहली बार में ही confirm हो गई। बिना किसी extra charge के पूरा process हुआ। बहुत trust है इन पर।" },
+              { name: "Sonu Kumar", course: "B.Pharma (2024)", place: "Supaul", text: "Pharmacy में interest था लेकिन कोई proper guidance नहीं थी। यहाँ आकर सब clear हो गया। College भी अच्छा मिला।" },
+              { name: "Puja Kumari", course: "ANM (2023)", place: "Kishanganj", text: "ANM course के लिए सब documents की list और process यहाँ से मिली। बहुत आसान था। 10 में से 10 दूँगी।" },
+              { name: "Rahul Paswan", course: "ITI (2024)", place: "Forbesganj", text: "ITI में admission के लिए घर वाले confused थे। Siksha Wallah के counsellor ने सब explain किया और सही trade choose करने में help की।" },
+              { name: "Komal Singh", course: "M.Ed (2024)", place: "Araria", text: "M.Ed admission के लिए Bihar से बाहर जाना पड़ा। Siksha Wallah ने out-of-state college में भी admission दिलाया। Great experience!" },
+              { name: "Deepak Jha", course: "MBA (2023)", place: "Purnea", text: "MBA के लिए BSCC loan apply किया। पूरी file Siksha Wallah team ने prepare की। बिना tension के loan approve हो गया।" },
+            ].map(({ name, course, place, text }) => (
               <article key={name} className="rounded-2xl bg-white border-2 border-gray-100 p-7 shadow-sm card-lift hover:border-blue-100">
                 <div className="flex gap-1 text-amber-400 mb-4">
                   {[...Array(5)].map((_, i) => <Star key={i} size={18} fill="currentColor" />)}
@@ -856,7 +865,7 @@ export default function Home() {
                   </div>
                   <div>
                     <p className="font-headline font-extrabold text-gray-900">{name}</p>
-                    <p className="text-sm text-gray-500">{course}</p>
+                    <p className="text-sm text-gray-500">{course} · {place}</p>
                   </div>
                 </div>
               </article>
