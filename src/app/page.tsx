@@ -330,7 +330,7 @@ export default function Home() {
                 </div>
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <h3 className="font-headline text-lg font-extrabold text-blue-900">हमारे Partnered &amp; Approved Colleges</h3>
+                    <h3 className="font-headline text-lg font-extrabold text-blue-900">हमारे Partnered & Approved Colleges</h3>
                     <span className="inline-flex items-center gap-1 rounded-full bg-blue-600 px-2.5 py-0.5 text-xs font-bold text-white"><BadgeCheck size={11} /> NCTE Approved</span>
                   </div>
                   <p className="text-sm text-blue-800 leading-relaxed mb-3">
@@ -360,11 +360,11 @@ export default function Home() {
                 </div>
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <h3 className="font-headline text-lg font-extrabold text-red-900">हमारे Partnered &amp; Approved Colleges</h3>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-red-600 px-2.5 py-0.5 text-xs font-bold text-white"><BadgeCheck size={11} /> INC &amp; PCI Approved</span>
+                    <h3 className="font-headline text-lg font-extrabold text-red-900">हमारे Partnered & Approved Colleges</h3>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-red-600 px-2.5 py-0.5 text-xs font-bold text-white"><BadgeCheck size={11} /> INC & PCI Approved</span>
                   </div>
                   <p className="text-sm text-red-800 leading-relaxed mb-3">
-                    हम <strong>INC (Indian Nursing Council) &amp; PCI (Pharmacy Council of India) Approved</strong> premier institutes के साथ partner हैं — Bangalore, Madhya Pradesh, West Bengal और all states में।
+                    हम <strong>INC (Indian Nursing Council) & PCI (Pharmacy Council of India) Approved</strong> premier institutes के साथ partner हैं — Bangalore, Madhya Pradesh, West Bengal और all states में।
                   </p>
                   <div className="grid gap-2 sm:grid-cols-2">
                     {[
@@ -390,11 +390,11 @@ export default function Home() {
                 </div>
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <h3 className="font-headline text-lg font-extrabold text-orange-900">हमारे Partnered &amp; Approved Colleges</h3>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-orange-600 px-2.5 py-0.5 text-xs font-bold text-white"><BadgeCheck size={11} /> AICTE &amp; UGC Recognized</span>
+                    <h3 className="font-headline text-lg font-extrabold text-orange-900">हमारे Partnered & Approved Colleges</h3>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-orange-600 px-2.5 py-0.5 text-xs font-bold text-white"><BadgeCheck size={11} /> AICTE & UGC Recognized</span>
                   </div>
                   <p className="text-sm text-orange-800 leading-relaxed mb-3">
-                    हम <strong>AICTE (All India Council for Technical Education) &amp; UGC Recognized</strong> top universities के साथ partner हैं — engineering, management, और computer courses के लिए।
+                    हम <strong>AICTE (All India Council for Technical Education) & UGC Recognized</strong> top universities के साथ partner हैं — engineering, management, और computer courses के लिए।
                   </p>
                   <div className="grid gap-2 sm:grid-cols-2">
                     {[
@@ -1284,30 +1284,6 @@ export default function Home() {
       </section>
 
       <SiteFooter />
-
-      {/* ── FLOATING WHATSAPP WIDGET ── */}
-      <a
-        href="https://wa.me/916203138576?text=Hi! I need admission guidance from Siksha Wallah."
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Chat on WhatsApp"
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full bg-green-500 px-4 py-3.5 text-white shadow-2xl shadow-green-500/40 transition hover:scale-105 hover:bg-green-400 active:scale-95 group"
-      >
-        <MessageCircle size={24} fill="currentColor" />
-        <span className="max-w-0 overflow-hidden whitespace-nowrap font-bold text-sm transition-all duration-300 group-hover:max-w-xs">
-          Chat Now
-        </span>
-      </a>
-
-      {/* ── FLOATING APPLY BUTTON (mobile sticky CTA) ── */}
-      <div className="fixed bottom-24 right-6 z-50 lg:hidden">
-        <a
-          href="#inquiry"
-          className="flex items-center gap-2 rounded-full bg-primary-red px-4 py-3 text-sm font-bold text-white shadow-xl shadow-red-500/30 transition hover:bg-red-600"
-        >
-          Apply Now <ArrowRight size={15} />
-        </a>
-      </div>
     </main>
   );
 }
