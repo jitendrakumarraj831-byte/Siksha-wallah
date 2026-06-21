@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Razorpay from 'razorpay';
 import { paymentService } from '@/services/payment-service';
+import { rateLimit, getClientIp, tooManyRequests } from '@/lib/rate-limit';
 
 export async function POST(request: NextRequest) {
+  // Abuse protection: 10 order attempts / 5 min per IP.
+  const rl = rateLimit(`pay-order:${getClientIp(request)}`, 10, 5 * 60_000);
+  if (!rl.ok) return tooManyRequests(rl.retryAfter);
+
   const keyId = process.env.RAZORPAY_KEY_ID;
   const keySecret = process.env.RAZORPAY_KEY_SECRET;
 

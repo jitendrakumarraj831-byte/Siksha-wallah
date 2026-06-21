@@ -180,10 +180,10 @@ export default function AdminDashboardPage() {
     setInquiries(prev => prev.map(i => i.id === id ? { ...i, note } : i));
   }
 
-  function handleLogout() {
+  async function handleLogout() {
+    await fetch("/api/admin/logout", { method: "POST" }).catch(() => {});
     localStorage.removeItem("sw_admin_session");
     localStorage.removeItem("sw_admin_user");
-    document.cookie = "sw_admin_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
     router.replace("/admin/login");
   }
 

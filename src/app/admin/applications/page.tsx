@@ -233,10 +233,10 @@ export default function AdminApplicationsPage() {
     return () => unsub();
   }, [authorized]);
 
-  function handleLogout() {
+  async function handleLogout() {
+    await fetch("/api/admin/logout", { method: "POST" }).catch(() => {});
     localStorage.removeItem("sw_admin_session");
     localStorage.removeItem("sw_admin_user");
-    document.cookie = "sw_admin_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
     router.replace("/admin/login");
   }
 
