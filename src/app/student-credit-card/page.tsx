@@ -57,7 +57,7 @@ export default function StudentCreditCardPage() {
               Eligibility Check करें <ArrowRight size={18} />
             </a>
             <a
-              href="https://wa.me/916203138576?text=Hi! I want guidance for Bihar Student Credit Card (BSCC) application."
+              href="https://wa.me/916203138576?text=नमस्ते!%20मुझे%20Bihar%20Student%20Credit%20Card%20(BSCC)%20के%20लिए%20guidance%20चाहिए।%20Kripya%20help%20karein।"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white/40 bg-white/10 px-7 py-4 font-bold text-white backdrop-blur transition hover:bg-white/20"
@@ -234,7 +234,7 @@ export default function StudentCreditCardPage() {
                   <h4 className="font-headline text-2xl font-extrabold text-green-300">🎉 आप Eligible हैं!</h4>
                   <p className="text-blue-100">आप Bihar Student Credit Card के लिए apply कर सकते हैं। हमारे experts आपको पूरा process guide करेंगे।</p>
                   <a
-                    href="https://wa.me/916203138576?text=Hi! I checked BSCC eligibility on your website and I am eligible. Please guide me for the application process."
+                    href="https://wa.me/916203138576?text=नमस्ते!%20मैंने%20BSCC%20eligibility%20check%20की%20और%20मैं%20eligible%20हूँ।%20कृपया%20application%20process%20guide%20करें।"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 rounded-xl bg-green-500 px-6 py-3 font-bold text-white hover:bg-green-600"
@@ -377,7 +377,7 @@ export default function StudentCreditCardPage() {
                     <p className="text-xs text-blue-200">We verify all documents for FREE at our Forbesganj office.</p>
                   </div>
                   <a
-                    href="https://wa.me/916203138576?text=Hi! I have collected my admission documents. Please guide me for next steps."
+                    href="https://wa.me/916203138576?text=नमस्ते!%20मैंने%20सभी%20admission%20documents%20collect%20कर%20लिए%20हैं।%20आगे%20का%20process%20बताएं।"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-shrink-0 flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-primary-blue hover:bg-blue-50 transition"
@@ -474,7 +474,7 @@ export default function StudentCreditCardPage() {
               हमसे संपर्क करें <ArrowRight size={18} />
             </Link>
             <a
-              href="https://wa.me/916203138576?text=Hi! I have prepared all documents for BSCC. Please guide me for the next steps."
+              href="https://wa.me/916203138576?text=नमस्ते!%20मैंने%20BSCC%20के%20लिए%20सभी%20documents%20तैयार%20कर%20लिए%20हैं।%20अब%20आगे%20क्या%20करूँ?%20Please%20guide%20karein।"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white/40 bg-white/10 px-8 py-4 font-bold text-white transition hover:bg-white/20"
@@ -489,7 +489,7 @@ export default function StudentCreditCardPage() {
 
       {/* Floating WhatsApp */}
       <a
-        href="https://wa.me/916203138576?text=Hi! I need guidance for Bihar Student Credit Card (BSCC)."
+        href="https://wa.me/916203138576?text=नमस्ते!%20मुझे%20BSCC%20(Bihar%20Student%20Credit%20Card)%20के%20बारे%20में%20जानकारी%20चाहिए।%20Please%20help%20karein।"
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-lg shadow-green-500/40 transition hover:bg-green-600 hover:scale-110"

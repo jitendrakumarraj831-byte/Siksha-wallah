@@ -191,7 +191,7 @@ export default function ApplyPage() {
             </div>
             <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
               <a
-                href={`https://wa.me/916203138576?text=Hi! Maine course application submit ki hai. Mera naam ${form.fullName} hai aur main ${form.course} ke liye apply kiya hun. Reference: #${appId}`}
+                href={`https://wa.me/916203138576?text=नमस्ते!%20मैंने%20${encodeURIComponent(form.course)}%20के%20लिए%20application%20submit%20की%20है।%20मेरा%20नाम%20${encodeURIComponent(form.fullName)}%20है।%20Reference%20ID:%20%23${appId}%20।%20Kripya%20guide%20karein।`}
                 target="_blank" rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-green-500 px-6 py-3 font-extrabold text-white hover:bg-green-600 transition"
               >
@@ -635,7 +635,7 @@ export default function ApplyPage() {
               <Phone size={16} /> +91 6203138576
             </a>
             <a
-              href="https://wa.me/916203138576?text=Hi! Main course ke liye apply karna chahta/chahti hun."
+              href="https://wa.me/916203138576?text=नमस्ते!%20मैं%20किसी%20course%20के%20लिए%20apply%20करना%20चाहता/चाहती%20हूँ।%20Kripya%20guide%20karein।"
               target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-xl bg-green-500 px-5 py-2.5 text-sm font-extrabold text-white hover:bg-green-600"
             >

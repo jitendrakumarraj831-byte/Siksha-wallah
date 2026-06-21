@@ -71,7 +71,7 @@ export default function Home() {
         course: formData.course,
         page: "/",
       });
-      const msg = `New Inquiry from Siksha Wallah Website!%0AName: ${formData.name}%0AMobile: ${formData.mobile}%0ACourse: ${formData.course}%0AQualification: ${formData.qualify}`;
+      const msg = `नमस्ते! मेरा नाम ${encodeURIComponent(formData.name)} है।%0AMobile: ${formData.mobile}%0AमुझेAdmission चाहिए: ${encodeURIComponent(formData.course)}%0AYogyta: ${encodeURIComponent(formData.qualify)}%0AKripya guide karein.`;
       // Log WhatsApp click
       saveActivity({
         type: "whatsapp",
@@ -563,7 +563,7 @@ export default function Home() {
                         )}
                       </button>
                       <a
-                        href={`https://wa.me/916203138576?text=Hi! I want to inquire about ${course.name} (${course.full}). Duration: ${course.duration}. Please guide me on fees and admission process.`}
+                        href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(course.name)}%20(${encodeURIComponent(course.full)})%20के%20बारे%20में%20जानकारी%20चाहिए।%20Fees%20aur%20admission%20process%20batayein।`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold text-white transition ${colors.btn}`}
@@ -780,7 +780,7 @@ export default function Home() {
                   <h4 className="font-headline text-2xl font-extrabold text-green-300">🎉 आप Eligible हैं!</h4>
                   <p className="text-blue-100">आप Bihar Student Credit Card के लिए apply कर सकते हैं। हमारे experts आपको पूरा process guide करेंगे।</p>
                   <a
-                    href="https://wa.me/916203138576?text=Hi! I checked BSCC eligibility on your website and I am eligible. Please guide me for the application process."
+                    href="https://wa.me/916203138576?text=नमस्ते!%20मैंने%20आपकी%20website%20पर%20BSCC%20eligibility%20check%20की%20और%20मैं%20eligible%20हूँ।%20कृपया%20application%20process%20के%20बारे%20में%20guide%20करें।"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 rounded-xl bg-green-500 px-6 py-3 font-bold text-white hover:bg-green-600"
@@ -1035,7 +1035,7 @@ export default function Home() {
                     <p className="text-xs text-blue-200">We verify all documents for FREE at our Forbesganj office.</p>
                   </div>
                   <a
-                    href="https://wa.me/916203138576?text=Hi! I have collected my admission documents. Please guide me for next steps."
+                    href="https://wa.me/916203138576?text=नमस्ते!%20मैंने%20अपने%20admission%20documents%20collect%20कर%20लिए%20हैं।%20आगे%20का%20process%20बताएं।"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-shrink-0 flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-primary-blue hover:bg-blue-50 transition"
@@ -1132,7 +1132,7 @@ export default function Home() {
               <h2 className="font-headline text-4xl font-extrabold">अक्सर पूछे जाने वाले सवाल</h2>
               <p className="mt-4 text-gray-500">Direct बात करना चाहते हैं?</p>
               <div className="mt-6 space-y-3">
-                {[["6203138576", "Rajesh Kr. Sah"], ["7858062498", "Counsellor 2"], ["9162653235", "Gautam Kumar"]].map(([num, name]) => (
+                {[["6203138576", "Rajesh Kr. Sah"], ["7858062498", "Md. Naseem Ansari"], ["9162653235", "Gautam Kumar"]].map(([num, name]) => (
                   <a key={num} href={`tel:+91${num}`} className="flex items-center gap-3 rounded-xl border border-gray-200 p-4 font-semibold text-gray-700 transition hover:border-primary-blue hover:text-primary-blue">
                     <Phone size={18} className="text-primary-blue" />
                     <div>
@@ -1204,7 +1204,7 @@ export default function Home() {
               </div>
 
               <div className="space-y-3 mb-8">
-                {[["6203138576", "Primary Contact"], ["7858062498", "Admission Helpline"], ["9162653235", "Gautam Kumar"]].map(([num, label]) => (
+                {[["6203138576", "Rajesh Kr. Sah — Head Counsellor"], ["7858062498", "Md. Naseem Ansari — Nursing & BSCC"], ["9162653235", "Gautam Kumar — Technical & Management"]].map(([num, label]) => (
                   <a key={num} href={`tel:+91${num}`} className="flex items-center gap-4 rounded-xl border border-white/10 bg-white/5 p-4 transition hover:bg-white/10 hover:border-amber-400/40">
                     <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-blue">
                       <Phone size={18} />

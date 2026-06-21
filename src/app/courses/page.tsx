@@ -37,7 +37,7 @@ export default function CoursesPage() {
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
             <a
-              href="https://wa.me/916203138576?text=Hi! I want to know about courses at Siksha Wallah."
+              href="https://wa.me/916203138576?text=नमस्ते!%20मुझे%20Siksha%20Wallah%20के%20courses%20के%20बारे%20में%20जानकारी%20चाहिए।%20Free%20counselling%20देंगे?"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-400 px-7 py-4 font-extrabold text-gray-900 shadow-lg transition hover:-translate-y-0.5 hover:bg-amber-300"
@@ -318,7 +318,7 @@ export default function CoursesPage() {
                         )}
                       </button>
                       <a
-                        href={`https://wa.me/916203138576?text=Hi! I want to inquire about ${course.name} (${course.full}). Duration: ${course.duration}. Please guide me on fees and admission process.`}
+                        href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(course.name)}%20(${encodeURIComponent(course.full)})%20के%20बारे%20में%20जानकारी%20चाहिए।%20Fees%20aur%20admission%20process%20batayein।`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold text-white transition ${colors.btn}`}
@@ -346,7 +346,7 @@ export default function CoursesPage() {
             <p className="text-blue-100 mb-6">Our expert counsellors help you pick the best course based on your marks, budget, and career goals — 100% free.</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <a
-                href="https://wa.me/916203138576?text=Hi! I need guidance to choose the right course."
+                href="https://wa.me/916203138576?text=नमस्ते!%20मुझे%20सही%20course%20choose%20करने%20में%20guidance%20चाहिए।%20Please%20help%20karein।"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-400 px-7 py-4 font-extrabold text-gray-900 transition hover:bg-amber-300"
@@ -368,7 +368,7 @@ export default function CoursesPage() {
 
       {/* Floating WhatsApp */}
       <a
-        href="https://wa.me/916203138576?text=Hi! I need admission guidance from Siksha Wallah."
+        href="https://wa.me/916203138576?text=नमस्ते!%20मुझे%20Siksha%20Wallah%20से%20admission%20guidance%20चाहिए।%20Please%20contact%20karein।"
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-lg shadow-green-500/40 transition hover:bg-green-600 hover:scale-110"
