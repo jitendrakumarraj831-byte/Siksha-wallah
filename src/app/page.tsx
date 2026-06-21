@@ -107,27 +107,49 @@ export default function Home() {
 
             {/* ── LEFT: badge + heading + sub + CTAs ── */}
             <div className="order-1">
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold backdrop-blur">
-                <BadgeCheck size={16} className="text-amber-400" />
-                College Chowk, Near HP Petrol Pump, Forbesganj, Araria
+              {/* Location + Trust badge row */}
+              <div className="mb-4 flex flex-wrap items-center gap-3">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold backdrop-blur">
+                  <MapPin size={14} className="text-amber-400" />
+                  कॉलेज चौक, फॉरबेसगंज, अररिया (बिहार)
+                </div>
+                <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-400/15 px-3 py-1.5 text-xs font-bold text-amber-300">
+                  <BadgeCheck size={13} className="text-amber-400" />
+                  ९+ वर्षों का अनुभव
+                </div>
               </div>
 
-              {/* H1 — bilingual, premium gradient on second line */}
+              {/* H1 — शुद्ध हिंदी, premium gradient on second line */}
               <h1 className="font-headline text-[2.1rem] leading-[1.15] tracking-tight md:text-5xl lg:text-[3.6rem] lg:leading-[1.08] font-black">
-                Right College, Sahi Guidance!
+                सही कॉलेज, सही मार्गदर्शन —
                 <br />
                 <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
-                  अब Admission Ki No Tension!
+                  प्रवेश की अब कोई चिंता नहीं!
                 </span>
               </h1>
 
               {/* Sub-heading */}
               <p className="mt-5 max-w-xl text-base md:text-[1.05rem] text-blue-100 leading-[1.75]">
                 B.Ed, D.El.Ed, MBBS से MBA तक —{" "}
-                <strong className="text-white font-extrabold">100% Transparent Guidance</strong>{" "}
-                और Direct Admission Support,{" "}
-                <strong className="text-white font-extrabold">बिना किसी छिपे शुल्क के!</strong>
+                <strong className="text-white font-extrabold">१००% पारदर्शी मार्गदर्शन</strong>{" "}
+                और सीधा प्रवेश सहयोग,{" "}
+                <strong className="text-white font-extrabold">बिना किसी छुपे शुल्क के!</strong>
               </p>
+
+              {/* Feature pills — new addition */}
+              <div className="mt-5 flex flex-wrap gap-2">
+                {[
+                  { icon: GraduationCap, text: "१९+ कोर्सेज" },
+                  { icon: CreditCard,    text: "BSCC लोन सहायता" },
+                  { icon: ShieldCheck,   text: "NCTE / INC मान्यता" },
+                  { icon: Clock,         text: "२४ घंटे सहायता" },
+                ].map(({ icon: Icon, text }) => (
+                  <span key={text} className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold text-blue-100 backdrop-blur">
+                    <Icon size={12} className="text-amber-400" />
+                    {text}
+                  </span>
+                ))}
+              </div>
 
               {/* CTA buttons */}
               <div className="mt-7 flex flex-col sm:flex-row gap-3">
@@ -171,9 +193,12 @@ export default function Home() {
               ) : (
                 <>
                   <div className="mb-4 flex items-center justify-between">
-                    <h3 className="font-headline text-xl font-extrabold">Free Consultation</h3>
+                    <div>
+                      <h3 className="font-headline text-xl font-extrabold">निःशुल्क परामर्श</h3>
+                      <p className="text-xs text-blue-300 mt-0.5">हमारे विशेषज्ञ जल्द संपर्क करेंगे</p>
+                    </div>
                     <span className="rounded-full bg-amber-400/20 px-2.5 py-0.5 text-xs font-bold text-amber-300">
-                      {step + 1} / {STEPS.length}
+                      चरण {step + 1} / {STEPS.length}
                     </span>
                   </div>
 
@@ -227,39 +252,53 @@ export default function Home() {
                           onChange={(e) => setFormData({ ...formData, course: e.target.value })}
                           className="w-full rounded-xl border border-white/30 bg-[#003f9f] px-4 py-3.5 text-white outline-none transition focus:border-amber-400"
                         >
-                          <option value="">-- Course Select करें --</option>
-                          <optgroup label="Teaching">
-                            <option>B.Ed</option><option>D.El.Ed</option><option>M.Ed</option>
+                          <option value="">-- कोर्स चुनें --</option>
+                          <optgroup label="🎓 शिक्षण (Teaching)">
+                            <option>B.Ed</option>
+                            <option>D.El.Ed</option>
+                            <option>B.P.Ed</option>
+                            <option>M.Ed</option>
                           </optgroup>
-                          <optgroup label="Medical & Nursing">
-                            <option>MBBS</option><option>BDS</option><option>B.Sc Nursing</option>
-                            <option>GNM</option><option>ANM</option><option>B.Pharma</option>
+                          <optgroup label="🏥 चिकित्सा एवं नर्सिंग (Medical)">
+                            <option>MBBS</option>
+                            <option>BDS</option>
+                            <option>B.Sc Nursing</option>
+                            <option>GNM</option>
+                            <option>ANM</option>
+                            <option>B.Pharma</option>
+                            <option>D.Pharma</option>
+                            <option>BMLT</option>
                           </optgroup>
-                          <optgroup label="Technical & Management">
-                            <option>B.Tech</option><option>Polytechnic</option><option>ITI</option>
-                            <option>BCA</option><option>MCA</option><option>BBA</option><option>MBA</option>
+                          <optgroup label="💻 तकनीकी एवं प्रबंधन (Technical)">
+                            <option>B.Tech</option>
+                            <option>Polytechnic</option>
+                            <option>ITI</option>
+                            <option>BCA</option>
+                            <option>MCA</option>
+                            <option>BBA</option>
+                            <option>MBA</option>
                           </optgroup>
-                          <option>अभी decide नहीं किया</option>
+                          <option>अभी निर्णय नहीं किया</option>
                         </select>
                       </>
                     )}
                     {step === 3 && (
                       <>
                         <label className="block text-sm font-bold text-blue-100">
-                          आपकी Qualification <span className="text-amber-400">*</span>
+                          आपकी शैक्षणिक योग्यता <span className="text-amber-400">*</span>
                         </label>
                         <select
                           value={formData.qualify}
                           onChange={(e) => setFormData({ ...formData, qualify: e.target.value })}
                           className="w-full rounded-xl border border-white/30 bg-[#003f9f] px-4 py-3.5 text-white outline-none transition focus:border-amber-400"
                         >
-                          <option value="">-- Qualification Select करें --</option>
-                          <option>10th Pass</option>
-                          <option>12th Pass (Arts)</option>
-                          <option>12th Pass (Science)</option>
-                          <option>12th Pass (Commerce)</option>
-                          <option>Graduation</option>
-                          <option>Post Graduation</option>
+                          <option value="">-- योग्यता चुनें --</option>
+                          <option>१०वीं पास</option>
+                          <option>१२वीं पास (कला)</option>
+                          <option>१२वीं पास (विज्ञान)</option>
+                          <option>१२वीं पास (वाणिज्य)</option>
+                          <option>स्नातक (Graduation)</option>
+                          <option>स्नातकोत्तर (Post Graduation)</option>
                         </select>
                       </>
                     )}
@@ -270,7 +309,7 @@ export default function Home() {
                           onClick={() => setStep(step - 1)}
                           className="flex-1 rounded-xl border border-white/40 py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-white/10 active:scale-[0.97]"
                         >
-                          ← Back
+                          ← वापस
                         </button>
                       )}
                       <button
@@ -280,7 +319,7 @@ export default function Home() {
                         <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
                         {step < STEPS.length - 1 ? (
                           <>
-                            Next
+                            आगे बढ़ें
                             <ArrowRight size={16} className="flex-shrink-0 transition-transform duration-200 group-hover:translate-x-1" />
                           </>
                         ) : (
@@ -298,17 +337,18 @@ export default function Home() {
             </div>
 
             {/* ── STATS — order-3 on mobile (below form), stays in left col on lg ── */}
-            <div className="order-3 grid grid-cols-3 gap-3 border-t border-white/20 pt-6 lg:border-t lg:pt-7">
+            <div className="order-3 grid grid-cols-4 gap-3 border-t border-white/20 pt-6 lg:border-t lg:pt-7">
               {([
-                { target: 5000, suffix: "+", label: "Students Guided" },
-                { target: 200,  suffix: "+", label: "Colleges Network" },
-                { target: 98,   suffix: "%", label: "Success Rate" },
+                { target: 5000, suffix: "+", label: "छात्र मार्गदर्शित" },
+                { target: 200,  suffix: "+", label: "कॉलेज नेटवर्क" },
+                { target: 98,   suffix: "%", label: "सफलता दर" },
+                { target: 9,    suffix: "+", label: "वर्षों का अनुभव" },
               ] as const).map(({ target, suffix, label }) => (
-                <div key={label} className="text-center sm:text-left">
+                <div key={label} className="text-center">
                   <p className="font-headline text-2xl font-black text-amber-400 md:text-3xl">
                     <CountUp target={target} suffix={suffix} />
                   </p>
-                  <p className="mt-0.5 text-xs text-blue-200 md:text-sm">{label}</p>
+                  <p className="mt-0.5 text-xs text-blue-200 md:text-sm leading-tight">{label}</p>
                 </div>
               ))}
             </div>
@@ -379,10 +419,10 @@ export default function Home() {
         <div className="container-shell">
           <div className="flex flex-wrap items-center justify-center gap-6 text-sm font-semibold text-gray-300">
             {[
-              [ShieldCheck, "NCTE & UGC Approved"],
-              [Award, "9+ Years Experience"],
-              [Users, "5000+ Students Placed"],
-              [CheckCircle2, "Zero Hidden Charges"],
+              [ShieldCheck, "NCTE & UGC मान्यता प्राप्त"],
+              [Award, "९+ वर्षों का अनुभव"],
+              [Users, "५०००+ छात्र लाभान्वित"],
+              [CheckCircle2, "कोई छुपा शुल्क नहीं"],
             ].map(([Icon, text], i) => (
               <span key={i} className="flex items-center gap-2">
                 {/* @ts-ignore */}
