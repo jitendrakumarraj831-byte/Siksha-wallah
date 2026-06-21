@@ -52,7 +52,7 @@ export default function ForumPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <div className="container mx-auto px-4 py-12">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Community Forum</h1>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent mb-2">Community Forum</h1>
           <p className="text-gray-600">Ask questions, share knowledge, and help fellow students</p>
         </div>
 

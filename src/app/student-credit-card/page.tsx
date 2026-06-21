@@ -41,9 +41,8 @@ export default function StudentCreditCardPage() {
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 px-4 py-2 text-sm font-bold text-amber-300">
             <CreditCard size={16} /> Bihar Government Scheme
           </div>
-          <h1 className="font-headline text-4xl md:text-5xl lg:text-6xl font-extrabold mt-4 leading-tight">
-            Bihar Student Credit Card{" "}
-            <span className="text-amber-400">(BSCC)</span>
+          <h1 className="font-headline text-4xl md:text-5xl lg:text-6xl font-extrabold mt-4 leading-tight bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
+            Bihar Student Credit Card (BSCC)
           </h1>
           <p className="mt-5 max-w-2xl mx-auto text-blue-100 text-lg leading-relaxed">
             सरकारी योजना के तहत <strong className="text-white">Free Education, Fooding, और Lodging</strong> पाएं।
@@ -270,7 +269,7 @@ export default function StudentCreditCardPage() {
         <div className="container-shell">
           <div className="text-center mb-12">
             <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">Admission Preparation</p>
-            <h2 className="font-headline text-4xl md:text-5xl font-extrabold">Required Documents Checklist</h2>
+            <h2 className="font-headline text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Required Documents Checklist</h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto">
               Tick off each document as you gather it. Bring all originals + 2 photocopies to the Siksha Wallah office.
             </p>
@@ -460,7 +459,7 @@ export default function StudentCreditCardPage() {
       <section className="py-20 bg-gradient-to-br from-[#001f6b] to-[#003f9f] text-white">
         <div className="container-shell text-center">
           <CheckCircle2 size={52} className="mx-auto mb-5 text-green-400" />
-          <h2 className="font-headline text-3xl md:text-4xl font-extrabold mb-3">
+          <h2 className="font-headline text-3xl md:text-4xl font-extrabold mb-3 bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
             कागजात तैयार हैं? हमसे संपर्क करें
           </h2>
           <p className="text-blue-100 max-w-xl mx-auto mb-8 text-lg">

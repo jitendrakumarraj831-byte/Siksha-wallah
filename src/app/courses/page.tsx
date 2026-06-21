@@ -29,7 +29,7 @@ export default function CoursesPage() {
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold backdrop-blur">
             <BadgeCheck size={16} className="text-amber-400" /> NCTE • INC • PCI • AICTE Approved Colleges
           </div>
-          <h1 className="font-headline text-4xl md:text-5xl font-extrabold mt-4 leading-tight">
+          <h1 className="font-headline text-4xl md:text-5xl font-extrabold mt-4 leading-tight bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
             सभी कोर्सेज — एक जगह
           </h1>
           <p className="mt-4 max-w-2xl mx-auto text-blue-100 text-lg">
@@ -61,7 +61,7 @@ export default function CoursesPage() {
             <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">
               सभी स्ट्रीम्स उपलब्ध हैं (Streams Available)
             </p>
-            <h2 className="font-headline text-4xl md:text-5xl font-extrabold">अपना Stream चुनें</h2>
+            <h2 className="font-headline text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">अपना Stream चुनें</h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto">
               3 main streams — 40+ courses — सभी के लिए expert guidance available
             </p>
