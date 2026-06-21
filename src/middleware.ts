@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { verifyAdminToken, ADMIN_COOKIE } from '@/lib/admin-session';
 
 const protectedStudentRoutes = ['/dashboard'];
-const protectedAdminRoutes = ['/admin/dashboard', '/admin/activity', '/admin/analytics', '/admin/applications', '/admin/communications', '/admin/courses', '/admin/payments', '/admin/students'];
+// Protect everything under /admin except the public login page.
+const ADMIN_PREFIX = '/admin';
+const ADMIN_PUBLIC = ['/admin/login'];
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Allow Next.js internals, static files, and API routes
@@ -16,11 +19,13 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Admin route protection — check for session cookie set by admin login
-  const isAdminProtected = protectedAdminRoutes.some((r) => pathname.startsWith(r));
+  // Admin route protection — verify the signed (unforgeable) session token.
+  const isAdminProtected =
+    pathname.startsWith(ADMIN_PREFIX) && !ADMIN_PUBLIC.some((r) => pathname.startsWith(r));
   if (isAdminProtected) {
-    const adminSession = request.cookies.get('sw_admin_session');
-    if (!adminSession?.value) {
+    const token = request.cookies.get(ADMIN_COOKIE)?.value;
+    const session = await verifyAdminToken(token);
+    if (!session) {
       const loginUrl = new URL('/admin/login', request.url);
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);

@@ -68,29 +68,34 @@ export const forumService = {
 
   async getPosts(category?: string, limit_count = 20): Promise<ForumPost[]> {
     try {
-      let q = query(
-        collection(db, 'forum_posts'),
-        orderBy('createdAt', 'desc'),
-        limit(limit_count)
-      );
-
-      if (category) {
-        q = query(
-          collection(db, 'forum_posts'),
-          where('category', '==', category),
-          orderBy('createdAt', 'desc'),
-          limit(limit_count)
-        );
-      }
+      // When filtering by category we sort client-side to avoid requiring a
+      // composite Firestore index (category + createdAt), which would otherwise
+      // make category filtering fail until the index is manually created.
+      const q = category
+        ? query(
+            collection(db, 'forum_posts'),
+            where('category', '==', category),
+            limit(limit_count)
+          )
+        : query(
+            collection(db, 'forum_posts'),
+            orderBy('createdAt', 'desc'),
+            limit(limit_count)
+          );
 
       const snapshot = await getDocs(q);
-      return snapshot.docs.map(
+      const posts = snapshot.docs.map(
         (doc) =>
           ({
             id: doc.id,
             ...doc.data(),
           } as ForumPost)
       );
+
+      if (category) {
+        posts.sort((a, b) => (b.createdAt?.toMillis?.() ?? 0) - (a.createdAt?.toMillis?.() ?? 0));
+      }
+      return posts;
     } catch (error) {
       console.error('Error fetching forum posts:', error);
       throw error;
@@ -142,19 +147,21 @@ export const forumService = {
 
   async getReplies(postId: string): Promise<ForumReply[]> {
     try {
+      // Sorted client-side to avoid requiring a composite index (postId + createdAt).
       const q = query(
         collection(db, 'forum_replies'),
-        where('postId', '==', postId),
-        orderBy('createdAt', 'asc')
+        where('postId', '==', postId)
       );
       const snapshot = await getDocs(q);
-      return snapshot.docs.map(
+      const replies = snapshot.docs.map(
         (doc) =>
           ({
             id: doc.id,
             ...doc.data(),
           } as ForumReply)
       );
+      replies.sort((a, b) => (a.createdAt?.toMillis?.() ?? 0) - (b.createdAt?.toMillis?.() ?? 0));
+      return replies;
     } catch (error) {
       console.error('Error fetching forum replies:', error);
       throw error;

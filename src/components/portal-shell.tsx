@@ -187,6 +187,8 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
             <Link href="/admin/login" className="hover:text-white transition">🏢 Office Login</Link>
             {" · "}
             <Link href="/auth/login" className="hover:text-white transition">🎓 Student Login</Link>
+            {" · "}
+            <Link href="/login" className="hover:text-white transition">Login Options</Link>
           </p>
         </div>
       </footer>

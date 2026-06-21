@@ -17,6 +17,7 @@ import {
   getAllApplications, updateApplicationStatus,
   type CourseApplication, type ApplicationStatus,
 } from "@/services/application-service";
+import { adminFetchData, adminUpdate } from "@/lib/admin-api";
 
 /* ── Types ─────────────────────────────────────── */
 interface StudentProfile {
@@ -269,39 +270,38 @@ export default function AdminStudentsPage() {
 
   useEffect(() => { if (authorized) load(); }, [authorized]);
 
+  // Direct client-SDK read — used as a fallback before the admin API / rules lockdown.
+  async function loadStudentsClient(): Promise<StudentProfile[]> {
+    const [usersSnap, apps] = await Promise.all([
+      getDocs(query(collection(db, "users"), where("role", "==", "student"), orderBy("createdAt", "desc"))),
+      getAllApplications(),
+    ]);
+    const appsByUserId: Record<string, CourseApplication[]> = {};
+    apps.forEach(a => {
+      if (a.userId) {
+        appsByUserId[a.userId] = appsByUserId[a.userId] || [];
+        appsByUserId[a.userId].push(a);
+      }
+    });
+    return usersSnap.docs.map(d => ({
+      id: d.id,
+      ...(d.data() as Omit<StudentProfile, "id" | "applications">),
+      applications: appsByUserId[d.id] || [],
+    }));
+  }
+
   async function load() {
     setLoading(true);
     setError("");
     try {
-      // Load both in parallel
-      const [usersSnap, apps] = await Promise.all([
-        getDocs(query(collection(db, "users"), where("role", "==", "student"), orderBy("createdAt", "desc"))),
-        getAllApplications(),
-      ]);
-
-      // Build userId → apps map
-      const appsByUserId: Record<string, CourseApplication[]> = {};
-      apps.forEach(a => {
-        if (a.userId) {
-          appsByUserId[a.userId] = appsByUserId[a.userId] || [];
-          appsByUserId[a.userId].push(a);
-        }
-      });
-
-      const studentList: StudentProfile[] = usersSnap.docs.map(d => ({
-        id: d.id,
-        ...(d.data() as Omit<StudentProfile, "id" | "applications">),
-        applications: appsByUserId[d.id] || [],
-      }));
-
+      // Prefer the cookie-gated admin API (firebase-admin); fall back to client read.
+      const studentList = await adminFetchData<StudentProfile[]>("students", loadStudentsClient);
       setStudents(studentList);
-    } catch (e: any) {
-      // If users collection is blocked by Firestore rules, show what we can
-      setError("Firestore rules may need updating. Deploy firestore.rules to allow office access. See instructions below.");
-      // Still try to show application data
+    } catch {
+      setError("Could not load full student profiles. If Firestore rules are locked, ensure the admin backend (firebase-admin) is configured — see SECURITY.md.");
+      // Last resort: derive student rows from application data only.
       try {
         const apps = await getAllApplications();
-        // Group by userId, show anonymous apps
         const seen = new Set<string>();
         const fallback: StudentProfile[] = [];
         apps.forEach(a => {
@@ -323,15 +323,15 @@ export default function AdminStudentsPage() {
     }
   }
 
-  function handleLogout() {
+  async function handleLogout() {
+    await fetch("/api/admin/logout", { method: "POST" }).catch(() => {});
     localStorage.removeItem("sw_admin_session");
     localStorage.removeItem("sw_admin_user");
-    document.cookie = "sw_admin_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
     router.replace("/admin/login");
   }
 
   function handleAppStatusChange(appId: string, status: ApplicationStatus) {
-    updateApplicationStatus(appId, status).catch(() => {});
+    adminUpdate("course_applications", appId, { status }, () => updateApplicationStatus(appId, status)).catch(() => {});
     setStudents(prev => prev.map(s => ({
       ...s,
       applications: s.applications?.map(a => a.id === appId ? { ...a, status } : a),

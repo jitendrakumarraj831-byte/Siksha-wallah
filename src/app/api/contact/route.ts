@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { rateLimit, getClientIp, tooManyRequests } from "@/lib/rate-limit";
 
 function sanitize(value: unknown): string {
   return String(value ?? "").replace(/[<>]/g, "").trim().slice(0, 500);
 }
 
 export async function POST(req: NextRequest) {
+  // Abuse protection: 5 submissions / 10 min per IP.
+  const rl = rateLimit(`contact:${getClientIp(req)}`, 5, 10 * 60_000);
+  if (!rl.ok) return tooManyRequests(rl.retryAfter);
+
   try {
     const body = await req.json();
     const name = sanitize(body.name);

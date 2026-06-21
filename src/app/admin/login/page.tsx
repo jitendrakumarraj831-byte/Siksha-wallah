@@ -24,25 +24,30 @@ export default function AdminLoginPage() {
       return;
     }
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 400));
-
-    const validUser = process.env.NEXT_PUBLIC_ADMIN_USERNAME || "admin";
-    const validPass = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
-
-    const isValid = validPass
-      ? username.trim() === validUser && password === validPass
-      : username.trim() === "admin" && password === "Siksha@2025!";
-
-    if (isValid) {
-      localStorage.setItem("sw_admin_session", "true");
-      localStorage.setItem("sw_admin_user", username.trim());
-      // Set a cookie so the server-side middleware can also verify the session
-      document.cookie = "sw_admin_session=true; path=/; max-age=86400; SameSite=Lax";
-      router.push("/admin/dashboard");
-    } else {
-      setError("Invalid credentials. Please contact the system administrator.");
+    try {
+      // Credentials are validated server-side; the server sets a signed,
+      // httpOnly session cookie that the middleware verifies.
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: username.trim(), password }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success) {
+        // Display name only — not used for authorization (the httpOnly cookie is).
+        localStorage.setItem("sw_admin_session", "1");
+        localStorage.setItem("sw_admin_user", data.user || username.trim());
+        router.push("/admin/dashboard");
+      } else if (res.status === 429) {
+        setError("Too many attempts. Please wait a few minutes and try again.");
+      } else {
+        setError(data.error || "Invalid credentials. Please contact the system administrator.");
+      }
+    } catch {
+      setError("Login failed. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -88,7 +93,6 @@ export default function AdminLoginPage() {
               ].map(([Icon, text], i) => (
                 <div key={i} className="flex items-center gap-3 text-sm text-blue-100">
                   <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-white/10" aria-hidden="true">
-                    {/* @ts-expect-error dynamic icon */}
                     <Icon size={16} className="text-amber-400" />
                   </div>
                   {text as string}

@@ -1,43 +1,101 @@
 rules_version = '2';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Siksha Wallah — least-privilege Firestore rules.
+//
+// Model: the office dashboard reads/writes private collections through the
+// cookie-gated server API (/api/admin/*) which uses the Firebase Admin SDK and
+// BYPASSES these rules. Therefore clients are denied all access to private
+// collections; only the trusted server can read leads/applications/students.
+//
+// BEFORE DEPLOYING: confirm the admin backend works in production
+// (GET /api/admin/data?type=inquiries returns data while logged in as office).
+// See SECURITY.md for the rollout runbook.
+// ─────────────────────────────────────────────────────────────────────────────
+
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Registered student profiles — readable by anyone (office uses localStorage auth, not Firebase Auth)
+    function isSignedIn() { return request.auth != null; }
+    function isOwner(uid) { return isSignedIn() && request.auth.uid == uid; }
+
+    // Public lead-capture forms (guests may submit). Create-only; never readable
+    // by clients — the office reads these via the server admin API.
+    match /inquiries/{id} {
+      allow create: if true;
+      allow read, update, delete: if false;
+    }
+    match /course_applications/{id} {
+      allow create: if true;
+      allow read, update, delete: if false;
+    }
+    match /activities/{id} {
+      allow create: if true;
+      allow read, update, delete: if false;
+    }
+
+    // Student profiles — each user only their own. Office reads via server API.
     match /users/{userId} {
-      allow read: if true;
-      allow write: if request.auth != null && request.auth.uid == userId;
+      allow create: if isOwner(userId);
+      allow read, update: if isOwner(userId);
+      allow delete: if false;
     }
 
-    // Course applications submitted via /apply page
-    match /course_applications/{docId} {
-      allow read, write: if true;
+    // Payments — owner creates/reads own; status updates are server-side only.
+    match /payments/{id} {
+      allow create: if isOwner(request.resource.data.uid);
+      allow read:   if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow update, delete: if false;
     }
 
-    // Inquiry leads from homepage and contact page
-    match /inquiries/{docId} {
-      allow read, write: if true;
+    // Enrollments & notifications — read own; all writes server-side (Admin SDK).
+    match /enrollments/{id} {
+      allow read:  if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow write: if false;
+    }
+    match /notifications/{id} {
+      allow read:  if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow write: if false;
     }
 
-    // Activity log — all website events
-    match /activities/{docId} {
-      allow read, write: if true;
+    // Document metadata — owner only (file bytes are governed by Storage rules).
+    match /documents/{id} {
+      allow create: if isOwner(request.resource.data.uid);
+      allow read, delete: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow update: if false;
     }
 
-    // Student notifications
-    match /notifications/{docId} {
-      allow read: if request.auth != null && request.auth.uid == resource.data.uid;
-      allow write: if true;
+    // Enrollment requests — student creates & reads own.
+    match /enrollmentRequests/{id} {
+      allow create: if isOwner(request.resource.data.uid);
+      allow read:   if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow update, delete: if false;
     }
 
-    // Enrollments
-    match /enrollments/{docId} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null;
+    // Community forum — public read; signed-in users author their own posts/replies.
+    // Updates allowed for signed-in users (views/replies/upvotes counters, author edits).
+    match /forum_posts/{id} {
+      allow read:   if true;
+      allow create: if isSignedIn() && request.resource.data.uid == request.auth.uid;
+      allow update: if isSignedIn();
+      allow delete: if false;
+    }
+    match /forum_replies/{id} {
+      allow read:   if true;
+      allow create: if isSignedIn() && request.resource.data.uid == request.auth.uid;
+      allow update: if isSignedIn();
+      allow delete: if false;
     }
 
-    // Enrollment requests
-    match /enrollmentRequests/{docId} {
-      allow read, write: if true;
+    // Course catalog (if seeded in Firestore) — public read, no client writes.
+    match /courses/{id} {
+      allow read:  if true;
+      allow write: if false;
+    }
+
+    // Default deny.
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

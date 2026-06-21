@@ -37,17 +37,16 @@ export const metadata: Metadata = {
     title: "Siksha Wallah | Admission Consultancy Forbesganj, Bihar",
     description:
       "Expert admission guidance for B.Ed, Nursing, Engineering & Management. 5,000+ students guided since 2015. Free BSCC loan guidance.",
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Siksha Wallah — Admission Consultancy Bihar" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Siksha Wallah | Admission Consultancy Forbesganj",
     description: "Expert admission guidance. 5,000+ students guided since 2015. Free BSCC loan support.",
-    images: ["/og-image.jpg"],
   },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
-  alternates: { canonical: BASE_URL },
-  verification: {},
+  // Per-page canonicals are set in each route's metadata. The homepage canonical
+  // is set on the page itself; a global canonical here would wrongly point every
+  // page at the site root.
 };
 
 const localBusinessSchema = {

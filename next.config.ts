@@ -9,9 +9,12 @@ const nextConfig: NextConfig = {
     ];
   },
   typescript: {
-    ignoreBuildErrors: true,
+    // Type errors now fail the build (all known errors fixed). Keeps regressions out.
+    ignoreBuildErrors: false,
   },
   eslint: {
+    // ESLint is not configured in this project; leave disabled during builds to
+    // avoid the interactive setup blocking CI. Run `npm run lint` to configure.
     ignoreDuringBuilds: true,
   },
   images: {

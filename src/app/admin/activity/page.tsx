@@ -7,7 +7,8 @@ import {
   GraduationCap, LogOut, Loader, ArrowLeft,
   Phone, Filter, RefreshCw, LayoutDashboard,
 } from "lucide-react";
-import { subscribeActivities, type Activity, type ActivityType } from "@/services/activity-service";
+import { getAllActivities, type Activity, type ActivityType } from "@/services/activity-service";
+import { adminFetchData } from "@/lib/admin-api";
 
 const TYPE_META: Record<ActivityType, { icon: string; label: string; color: string; detailLink?: (act: Activity) => string }> = {
   inquiry:        { icon: "📋", label: "Inquiry",          color: "bg-blue-100 text-blue-800 border-blue-200",       detailLink: () => "/admin/dashboard" },
@@ -51,17 +52,17 @@ export default function ActivityPage() {
 
   useEffect(() => {
     if (!authorized) return;
-    const unsub = subscribeActivities(200, (data) => {
-      setActivities(data);
-      setLoading(false);
-    });
-    return () => unsub();
+    setLoading(true);
+    adminFetchData("activities", () => getAllActivities(200))
+      .then((data) => setActivities(data))
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, [authorized]);
 
-  function handleLogout() {
+  async function handleLogout() {
+    await fetch("/api/admin/logout", { method: "POST" }).catch(() => {});
     localStorage.removeItem("sw_admin_session");
     localStorage.removeItem("sw_admin_user");
-    document.cookie = "sw_admin_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
     router.replace("/admin/login");
   }
 
