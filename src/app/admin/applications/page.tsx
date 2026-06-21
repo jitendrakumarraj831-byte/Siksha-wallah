@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   GraduationCap, LogOut, Loader, Phone, Mail, MapPin,
-  User, BookOpen, CheckCircle2, Clock, XCircle, AlertCircle,
-  Filter, Search, Download, MessageCircle, ChevronDown, ChevronUp,
+  BookOpen, AlertCircle,
+  Filter, Search, MessageCircle, ChevronDown, ChevronUp,
 } from "lucide-react";
 import {
   subscribeApplications,
@@ -236,6 +236,7 @@ export default function AdminApplicationsPage() {
   function handleLogout() {
     localStorage.removeItem("sw_admin_session");
     localStorage.removeItem("sw_admin_user");
+    document.cookie = "sw_admin_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
     router.replace("/admin/login");
   }
 

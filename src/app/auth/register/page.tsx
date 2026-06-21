@@ -7,7 +7,6 @@ import { authService } from '@/lib/auth-service';
 import { saveActivity } from '@/services/activity-service';
 import { PortalShell } from '@/components/portal-shell';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Mail, Lock, User, Phone, AlertCircle, CheckCircle2, Loader } from 'lucide-react';
 
 export default function RegisterPage() {

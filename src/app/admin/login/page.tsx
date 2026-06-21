@@ -36,6 +36,8 @@ export default function AdminLoginPage() {
     if (isValid) {
       localStorage.setItem("sw_admin_session", "true");
       localStorage.setItem("sw_admin_user", username.trim());
+      // Set a cookie so the server-side middleware can also verify the session
+      document.cookie = "sw_admin_session=true; path=/; max-age=86400; SameSite=Lax";
       router.push("/admin/dashboard");
     } else {
       setError("Invalid credentials. Please contact the system administrator.");

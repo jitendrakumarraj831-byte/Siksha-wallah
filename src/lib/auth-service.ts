@@ -41,7 +41,7 @@ export const authService = {
       // Create user document in Firestore
       await setDoc(doc(db, 'users', user.uid), {
         uid: user.uid,
-        email: user.email,
+        email: user.email ?? '',
         name: name,
         phone: phone || '',
         role: 'student',
@@ -49,7 +49,7 @@ export const authService = {
         profileComplete: false,
         createdAt: Date.now(),
         lastLogin: Date.now(),
-      } as UserProfile);
+      } satisfies UserProfile);
 
       return user;
     } catch (error: any) {
