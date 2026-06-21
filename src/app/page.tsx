@@ -1232,12 +1232,39 @@ export default function Home() {
       <section id="faq" className="py-24 bg-gray-50">
         <div className="container-shell">
           {/* Header */}
-          <div className="text-center mb-12">
-            <span className="inline-block rounded-full bg-blue-100 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-[#003f9f] mb-3">अक्सर पूछे जाने वाले सवाल</span>
-            <h2 className="font-headline text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
-              आपके मन में जो भी सवाल हो
+          <div className="mb-14 overflow-hidden rounded-3xl bg-gradient-to-br from-[#001f6b] via-[#003f9f] to-[#0060c7] px-8 py-12 text-center shadow-2xl relative">
+            {/* Decorative blobs */}
+            <div className="pointer-events-none absolute -top-16 -right-16 h-64 w-64 rounded-full bg-orange-400 opacity-20 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-16 -left-16 h-64 w-64 rounded-full bg-blue-300 opacity-20 blur-3xl" />
+            {/* Badge */}
+            <div className="relative mb-5 inline-flex items-center gap-2 rounded-full border border-orange-400/40 bg-orange-400/15 px-5 py-2">
+              <span className="h-2 w-2 rounded-full bg-orange-400 animate-pulse" />
+              <span className="text-xs font-extrabold uppercase tracking-[0.2em] text-orange-300">अक्सर पूछे जाने वाले सवाल</span>
+            </div>
+            {/* Heading */}
+            <h2 className="relative font-headline text-3xl md:text-5xl font-black text-white leading-tight">
+              आपके हर सवाल का{" "}
+              <span className="bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-300 bg-clip-text text-transparent">
+                जवाब यहाँ है
+              </span>
             </h2>
-            <p className="mt-3 text-gray-500 max-w-xl mx-auto">परामर्श से लेकर admission तक — हर जरूरी सवाल का जवाब यहाँ है।</p>
+            <p className="relative mt-4 text-blue-200 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+              कोर्स चुनाव से लेकर BSCC लोन तक, दाखिला प्रक्रिया से लेकर सरकारी नौकरी तक —<br className="hidden md:block" />
+              <strong className="text-white">Siksha Wallah</strong> के विशेषज्ञ आपकी हर जिज्ञासा का समाधान करते हैं।
+            </p>
+            {/* Stats row */}
+            <div className="relative mt-8 flex flex-wrap justify-center gap-6">
+              {[
+                { num: "17+", label: "सवाल & जवाब" },
+                { num: "5", label: "विषय श्रेणियाँ" },
+                { num: "100%", label: "निःशुल्क परामर्श" },
+              ].map(({ num, label }) => (
+                <div key={label} className="flex flex-col items-center">
+                  <span className="font-headline text-2xl font-black text-orange-400">{num}</span>
+                  <span className="text-xs text-blue-200 font-medium mt-0.5">{label}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className="grid gap-12 lg:grid-cols-[1fr_1.8fr] items-start">
