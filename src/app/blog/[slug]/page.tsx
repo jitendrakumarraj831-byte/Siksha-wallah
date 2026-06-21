@@ -144,26 +144,26 @@ export default async function BlogArticlePage({ params }: Props) {
       <SiteNavbar />
       <main className="bg-gray-50 min-h-screen">
         {/* Hero */}
-        <div className="bg-gradient-to-br from-primary-blue to-blue-800 text-white py-12">
+        <div className="bg-gray-900 text-white py-12">
           <div className="container-shell max-w-3xl">
             <Link
               href="/blog"
-              className="inline-flex items-center gap-2 text-blue-200 hover:text-white text-sm mb-6 transition"
+              className="inline-flex items-center gap-2 text-gray-400 hover:text-white text-sm mb-6 transition"
             >
               <ArrowLeft size={14} /> Back to Blog
             </Link>
             <div className="flex items-center gap-3 mb-3">
-              <span className="text-xs font-bold bg-white/20 px-3 py-1 rounded-full">
+              <span className="text-xs font-bold bg-gray-700 text-gray-200 px-3 py-1 rounded-full">
                 {article.category}
               </span>
-              <span className="flex items-center gap-1 text-blue-200 text-xs">
+              <span className="flex items-center gap-1 text-gray-400 text-xs">
                 <Clock size={11} /> {article.readTime} read
               </span>
             </div>
-            <h1 className="font-headline text-3xl md:text-4xl font-extrabold leading-tight mb-2 bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
+            <h1 className="font-headline text-4xl md:text-5xl font-black leading-tight mb-2 text-white">
               {article.titleHi ?? article.title}
             </h1>
-            <p className="text-blue-100 text-sm">{article.excerpt}</p>
+            <p className="text-gray-400 text-sm">{article.excerpt}</p>
           </div>
         </div>
 
@@ -174,23 +174,23 @@ export default async function BlogArticlePage({ params }: Props) {
           </article>
 
           {/* Sidebar CTA */}
-          <div className="mt-8 bg-primary-blue rounded-2xl text-white p-6 text-center">
-            <h3 className="font-headline text-xl font-bold mb-2">
+          <div className="mt-8 bg-amber-50 border border-amber-200 rounded-2xl text-gray-900 p-6 text-center">
+            <h3 className="font-headline text-xl font-bold mb-2 text-amber-900">
               Admission Guidance चाहिए?
             </h3>
-            <p className="text-blue-100 text-sm mb-4">
+            <p className="text-amber-700 text-sm mb-4">
               Siksha Wallah के experts से मिलें — College Chowk, Forbesganj
             </p>
             <div className="flex gap-3 justify-center flex-wrap">
               <a
                 href="tel:+916203138576"
-                className="inline-flex items-center gap-2 bg-white text-primary-blue px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-blue-50 transition"
+                className="inline-flex items-center gap-2 bg-amber-400 text-gray-900 px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-amber-300 transition"
               >
                 <Phone size={14} /> 6203138576
               </a>
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 border-2 border-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-white/10 transition"
+                className="inline-flex items-center gap-2 border-2 border-amber-400 text-amber-800 px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-amber-100 transition"
               >
                 Contact Us →
               </Link>
@@ -210,8 +210,8 @@ export default async function BlogArticlePage({ params }: Props) {
                     href={`/blog/${related.slug}`}
                     className="bg-white rounded-xl border border-gray-100 p-4 hover:shadow-md transition group"
                   >
-                    <span className="text-xs font-bold text-primary-blue">{related.category}</span>
-                    <p className="font-semibold text-gray-800 text-sm mt-1 group-hover:text-primary-blue transition leading-snug">
+                    <span className="text-xs font-bold text-amber-600">{related.category}</span>
+                    <p className="font-semibold text-gray-800 text-sm mt-1 group-hover:text-amber-600 transition leading-snug">
                       {related.titleHi ?? related.title}
                     </p>
                   </Link>

@@ -34,9 +34,11 @@ export default function StudentCreditCardPage() {
       <SiteNavbar />
 
       {/* ── PAGE HERO ── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#003f9f] to-[#001f6b] text-white py-20 md:py-28">
-        <div className="pointer-events-none absolute -top-24 right-0 h-96 w-96 rounded-full bg-amber-400 opacity-10 blur-3xl" />
-        <div className="pointer-events-none absolute bottom-0 -left-24 h-64 w-64 rounded-full bg-blue-300 opacity-15 blur-3xl" />
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#134e4a] via-[#0f766e] to-[#0d9488] text-white py-20 md:py-28">
+        {/* Diagonal stripe pattern */}
+        <div className="pointer-events-none absolute inset-0" style={{ backgroundImage: "repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.03) 10px, rgba(255,255,255,0.03) 20px)" }} />
+        <div className="pointer-events-none absolute -top-24 right-0 h-96 w-96 rounded-full bg-teal-300 opacity-10 blur-3xl" />
+        <div className="pointer-events-none absolute bottom-0 -left-24 h-64 w-64 rounded-full bg-cyan-300 opacity-15 blur-3xl" />
         <div className="container-shell relative text-center">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 px-4 py-2 text-sm font-bold text-amber-300">
             <CreditCard size={16} /> Bihar Government Scheme
@@ -68,7 +70,7 @@ export default function StudentCreditCardPage() {
       </section>
 
       {/* ── BSCC BENEFITS ── */}
-      <section className="py-16 bg-gradient-to-br from-[#003f9f] to-[#001f6b] text-white">
+      <section className="py-16 bg-gradient-to-br from-[#134e4a] to-[#0f766e] text-white">
         <div className="container-shell">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {[
@@ -93,7 +95,7 @@ export default function StudentCreditCardPage() {
       </section>
 
       {/* ── STEP-BY-STEP PROCESS ── */}
-      <section className="py-20 bg-gradient-to-br from-[#003f9f] to-[#001f6b] text-white">
+      <section className="py-20 bg-gradient-to-br from-[#134e4a] to-[#0f766e] text-white">
         <div className="container-shell">
           <div className="mb-10 rounded-2xl border border-white/15 bg-white/5 p-7 backdrop-blur-sm">
             <div className="mb-6 flex items-center gap-3">
@@ -178,7 +180,7 @@ export default function StudentCreditCardPage() {
             </div>
 
             {/* Eligibility Checker */}
-            <div id="eligibility-checker" className="rounded-2xl border border-white/20 bg-white/10 p-7 backdrop-blur-xl">
+            <div id="eligibility-checker" className="rounded-2xl border border-teal-200 bg-teal-50/10 p-7 backdrop-blur-xl">
               <h3 className="font-headline text-xl font-extrabold mb-5">Check BSCC Eligibility</h3>
 
               {bsccEligible === null ? (
@@ -201,7 +203,7 @@ export default function StudentCreditCardPage() {
                       value={bsccIncome}
                       onChange={(e) => setBsccIncome(e.target.value)}
                       required
-                      className="w-full rounded-xl border border-white/30 bg-[#003f9f] px-4 py-3 text-white outline-none"
+                      className="w-full rounded-xl border border-white/30 bg-teal-900 px-4 py-3 text-white outline-none"
                     >
                       <option value="">Select Income</option>
                       <option value="below">₹4.5 Lakh से कम</option>
@@ -278,7 +280,7 @@ export default function StudentCreditCardPage() {
           <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr] items-start">
             {/* Interactive Checklist */}
             <div className="rounded-2xl border-2 border-gray-100 bg-gray-50 overflow-hidden">
-              <div className="flex items-center justify-between bg-primary-blue px-6 py-4">
+              <div className="flex items-center justify-between bg-teal-700 px-6 py-4">
                 <div className="flex items-center gap-2 text-white">
                   <ListChecks size={20} />
                   <span className="font-headline font-extrabold text-lg">Document Checklist</span>
@@ -370,7 +372,7 @@ export default function StudentCreditCardPage() {
                   </div>
                 ))}
 
-                <div className="rounded-xl bg-primary-blue p-4 text-white flex items-center justify-between gap-4 flex-wrap">
+                <div className="rounded-xl bg-teal-700 p-4 text-white flex items-center justify-between gap-4 flex-wrap">
                   <div>
                     <p className="font-bold text-sm">Documents ready? Visit us or call!</p>
                     <p className="text-xs text-blue-200">We verify all documents for FREE at our Forbesganj office.</p>
@@ -379,7 +381,7 @@ export default function StudentCreditCardPage() {
                     href="https://wa.me/916203138576?text=नमस्ते!%20मैंने%20सभी%20admission%20documents%20collect%20कर%20लिए%20हैं।%20आगे%20का%20process%20बताएं।"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-shrink-0 flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-primary-blue hover:bg-blue-50 transition"
+                    className="flex-shrink-0 flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-teal-700 hover:bg-teal-50 transition"
                   >
                     <MessageCircle size={15} /> WhatsApp Now
                   </a>
@@ -456,13 +458,13 @@ export default function StudentCreditCardPage() {
       </section>
 
       {/* ── BOTTOM CTA → CONTACT ── */}
-      <section className="py-20 bg-gradient-to-br from-[#001f6b] to-[#003f9f] text-white">
+      <section className="py-20 bg-gradient-to-r from-teal-700 to-cyan-700 text-white">
         <div className="container-shell text-center">
           <CheckCircle2 size={52} className="mx-auto mb-5 text-green-400" />
           <h2 className="font-headline text-3xl md:text-4xl font-extrabold mb-3 bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
             कागजात तैयार हैं? हमसे संपर्क करें
           </h2>
-          <p className="text-blue-100 max-w-xl mx-auto mb-8 text-lg">
+          <p className="text-teal-100 max-w-xl mx-auto mb-8 text-lg">
             अब अगला कदम उठाएं। हमारे office में visit करें या call करें — हमारी team तुरंत आपकी मदद करेगी।
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
