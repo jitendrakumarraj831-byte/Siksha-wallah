@@ -19,7 +19,7 @@ export function FloatingContact() {
 
       {/* WhatsApp button */}
       <a
-        href="https://wa.me/916203138576?text=Hi! I need admission guidance from Siksha Wallah."
+        href="https://wa.me/916203138576?text=नमस्ते!%20मुझे%20Siksha%20Wallah%20से%20admission%20guidance%20चाहिए।%20Please%20help%20karein।"
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat on WhatsApp"

@@ -25,7 +25,7 @@ const COURSES = [
 
 const PHONES = [
   { num: "6203138576", label: "Rajesh Kr. Sah (Primary)" },
-  { num: "7858062498", label: "Admission Helpline" },
+  { num: "7858062498", label: "Md. Naseem Ansari" },
   { num: "9162653235", label: "Gautam Kumar" },
 ];
 
@@ -47,7 +47,7 @@ export function SiteFooter() {
               <Phone size={15} aria-hidden="true" /> Call Now
             </a>
             <a
-              href="https://wa.me/916203138576?text=Hi! I want free admission counselling."
+              href="https://wa.me/916203138576?text=नमस्ते!%20मुझे%20Free%20Admission%20Counselling%20चाहिए।%20Please%20guide%20karein।"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 rounded-xl border-2 border-white/40 bg-white/10 px-5 py-2.5 text-sm font-bold text-white backdrop-blur transition hover:bg-white/20"

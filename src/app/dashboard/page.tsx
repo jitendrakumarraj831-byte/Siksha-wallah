@@ -194,7 +194,7 @@ export default function DashboardPage() {
               <Phone size={15} /> +91 6203138576
             </a>
             <a
-              href="https://wa.me/916203138576?text=Hi! Main Siksha Wallah Student Dashboard se bol raha/rahi hun. Mujhe guidance chahiye."
+              href="https://wa.me/916203138576?text=नमस्ते!%20मैं%20Siksha%20Wallah%20Student%20Dashboard%20से%20बात%20कर%20रहा/रही%20हूँ।%20Mujhe%20admission%20guidance%20chahiye।"
               target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-xl bg-green-500 px-5 py-2.5 text-sm font-bold text-white hover:bg-green-600"
             >
