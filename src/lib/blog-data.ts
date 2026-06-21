@@ -206,6 +206,378 @@ NCTE-approved colleges में D.El.Ed और B.Ed दोनों में d
 📞 **6203138576** | College Chowk, Forbesganj`,
   },
   {
+    slug: "gnm-nursing-admission-bihar-2025",
+    title: "GNM Nursing Admission Bihar 2025 — Complete Guide",
+    titleHi: "GNM नर्सिंग एडमिशन बिहार 2025 — पूरी जानकारी हिंदी में",
+    excerpt: "GNM (General Nursing & Midwifery) में admission कैसे लें? पात्रता, फीस, INC-approved colleges और BSCC loan की पूरी जानकारी Bihar students के लिए।",
+    date: "2025-05-20",
+    readTime: "6 min",
+    category: "Medical",
+    content: `## GNM Nursing Admission Bihar 2025 — पूरी गाइड
+
+**GNM (General Nursing and Midwifery)** एक 3.5 वर्षीय diploma course है जो 12वीं pass students को nurses बनने का मौका देता है। बिहार में सरकारी अस्पतालों में GNM nurses की भारी मांग है।
+
+### पात्रता (Eligibility)
+
+- 12वीं पास — **किसी भी stream** (Arts, Science, Commerce) से
+- न्यूनतम **40–45% अंक** 12वीं में
+- आयु: 17–35 वर्ष
+- INC (Indian Nursing Council) की मान्यता प्राप्त college अनिवार्य
+
+### फीस संरचना
+
+| कॉलेज प्रकार | वार्षिक फीस |
+|---|---|
+| सरकारी कॉलेज | ₹15,000–₹30,000 |
+| INC-approved Private | ₹35,000–₹70,000 |
+
+### GNM के बाद करियर
+
+- सरकारी अस्पताल में Staff Nurse (₹20,000–₹45,000/माह)
+- AIIMS, PMCH, जिला अस्पताल में भर्ती
+- Army/Railway Nursing recruitment
+- विदेश में नर्सिंग (Canada, UK, Gulf)
+
+### BSCC Loan से GNM करें
+
+Bihar Student Credit Card से GNM की पूरी fees पर **₹4 लाख तक का loan** मिलता है। Arts stream के students भी eligible हैं।
+
+### Siksha Wallah से INC-approved Admission
+
+हम Bangalore, West Bengal और Bihar के INC-approved GNM colleges में direct admission दिलाते हैं। Hostel facility भी available है।
+
+📞 **6203138576** | College Chowk, Forbesganj, Araria`,
+  },
+  {
+    slug: "mbbs-neet-admission-bihar-2025",
+    title: "MBBS Admission Bihar 2025 — NEET Cutoff, Colleges & Fees",
+    titleHi: "MBBS एडमिशन बिहार 2025 — NEET Cutoff, कॉलेज और फीस गाइड",
+    excerpt: "Bihar में MBBS admission 2025: NEET cutoff, BCECE Medical counselling, top medical colleges, fees structure और BSCC loan की पूरी जानकारी।",
+    date: "2025-04-25",
+    readTime: "8 min",
+    category: "Medical",
+    content: `## MBBS Admission Bihar 2025 — Complete Guide
+
+**MBBS (Bachelor of Medicine and Bachelor of Surgery)** भारत का सबसे prestigious medical course है। बिहार में NEET qualify करके सरकारी और private medical colleges में admission मिलता है।
+
+### NEET 2025 — जरूरी जानकारी
+
+- **Exam Date:** मई 2025 (NTA द्वारा आयोजित)
+- **Eligibility:** 12वीं में Physics, Chemistry, Biology — न्यूनतम 50%
+- **Qualifying Marks:** General — 50th percentile; SC/ST/OBC — 40th percentile
+
+### Bihar में MBBS Admission Routes
+
+#### 1. सरकारी Medical Colleges (BCECE Counselling)
+- PMCH Patna, DMCH Darbhanga, ANMCH Gaya
+- NEET merit के आधार पर BCECE counselling
+- Fees: ₹25,000–₹50,000/वर्ष
+
+#### 2. Private Medical Colleges (Bihar)
+- Nalanda Medical College, Patna
+- Katihar Medical College, Katihar
+- Fees: ₹10–₹20 लाख/वर्ष
+
+#### 3. Outside Bihar (Private Colleges)
+- Karnataka, Madhya Pradesh, Maharashtra में
+- NRI/Management quota — direct admission
+- Fees: ₹8–₹15 लाख/वर्ष
+
+### Bihar NEET Cutoff 2024 (Approximate)
+
+| Category | Cutoff Score |
+|---|---|
+| General | 600–700 |
+| OBC | 550–620 |
+| SC/ST | 480–550 |
+
+### Siksha Wallah की MBBS Counselling
+
+हम NEET score के अनुसार best college suggest करते हैं। Management quota और NRI quota में direct admission में भी मदद।
+
+📞 **6203138576** | WhatsApp: wa.me/916203138576`,
+  },
+  {
+    slug: "bca-mca-it-career-bihar-2025",
+    title: "BCA & MCA — IT Career Guide for Bihar Students 2025",
+    titleHi: "BCA और MCA — बिहार के छात्रों के लिए IT Career Guide 2025",
+    excerpt: "BCA और MCA से IT sector में career कैसे बनाएं? Eligibility, top colleges, salary scope, BSCC loan और Siksha Wallah से admission guidance।",
+    date: "2025-05-28",
+    readTime: "6 min",
+    category: "Technical",
+    content: `## BCA & MCA — IT Career Guide Bihar 2025
+
+Technology के इस युग में **BCA (Bachelor of Computer Applications)** और **MCA (Master of Computer Applications)** बिहार के students के लिए सबसे बेहतरीन career options बन गए हैं।
+
+### BCA — Bachelor of Computer Applications
+
+- **अवधि:** 3 वर्ष
+- **पात्रता:** 12वीं पास (किसी भी stream) — 45%+
+- **Fees:** ₹30,000–₹80,000/वर्ष
+- **BSCC Eligible:** ✅ हां
+
+**BCA में क्या सीखेंगे:**
+- Programming (Python, Java, C++)
+- Web Development (HTML, CSS, JavaScript)
+- Database Management (SQL)
+- Software Engineering
+- Mobile App Development
+
+### MCA — Master of Computer Applications
+
+- **अवधि:** 2 वर्ष (नई NEP के अनुसार)
+- **पात्रता:** Graduation में Maths/Statistics — 50%+
+- **Fees:** ₹40,000–₹1,00,000/वर्ष
+- **Entrance:** NIMCET, MAH-MCA CET, या Direct
+
+### Salary & Career Scope
+
+| Job Role | Expected Salary |
+|---|---|
+| Software Developer | ₹3–₹8 LPA |
+| Web Developer | ₹2.5–₹6 LPA |
+| Data Analyst | ₹4–₹10 LPA |
+| App Developer | ₹3–₹9 LPA |
+| IT Manager (after exp.) | ₹8–₹20 LPA |
+
+**Top Recruiters:** TCS, Infosys, Wipro, Amazon, Jio, BSNL, State Govt IT dept.
+
+### Bihar के Top BCA/MCA Colleges
+
+- Patna University, Patna
+- BRA Bihar University, Muzaffarpur
+- Magadh University, Bodh Gaya
+- LNMU, Darbhanga
+- Private: Chandragupt Institute, Patna
+
+### Siksha Wallah से BCA/MCA Admission
+
+NAAC-accredited colleges में direct admission। BSCC loan से fees की चिंता नहीं।
+
+📞 **6203138576** | College Chowk, Forbesganj`,
+  },
+  {
+    slug: "iti-polytechnic-govt-job-bihar-2025",
+    title: "ITI & Polytechnic — Government Job Guide Bihar 2025",
+    titleHi: "ITI और Polytechnic — बिहार में सरकारी नौकरी गाइड 2025",
+    excerpt: "10वीं के बाद ITI या Polytechnic करके Railway, Army, Bihar Police और अन्य सरकारी नौकरियां कैसे पाएं? Trades, fees, duration और BSCC loan की जानकारी।",
+    date: "2025-06-05",
+    readTime: "7 min",
+    category: "Technical",
+    content: `## ITI & Polytechnic — Govt Job Guide Bihar 2025
+
+**10वीं पास** के बाद **ITI** और **Polytechnic** दो ऐसे course हैं जो बिहार के students को कम समय में सरकारी नौकरी दिला सकते हैं।
+
+### ITI — Industrial Training Institute
+
+- **अवधि:** 1–2 वर्ष (trade के अनुसार)
+- **पात्रता:** 8वीं या 10वीं पास
+- **Government ITI Fees:** ₹1,000–₹5,000/वर्ष
+- **Private ITI Fees:** ₹15,000–₹40,000/वर्ष
+
+**Popular Trades in Bihar:**
+- Electrician (Railway, BSPHCL में demand)
+- Fitter (Railways, Defence)
+- Welder (Steel plants, infrastructure)
+- COPA (Computer) — sarkari office jobs
+- Mechanic (Motor Vehicle)
+- Plumber (Smart City projects)
+
+### Polytechnic — Diploma in Engineering
+
+- **अवधि:** 3 वर्ष
+- **पात्रता:** 10वीं पास — 35%+
+- **Entrance:** Bihar Polytechnic (DCECE)
+- **Government College Fees:** ₹15,000–₹30,000/वर्ष
+
+**Branches:** Civil, Mechanical, Electrical, Electronics, Computer
+
+### Government Jobs After ITI/Polytechnic
+
+| भर्ती | योग्यता |
+|---|---|
+| Railway Apprentice/Group-D | ITI Certificate |
+| Bihar Police Technical | ITI/Polytechnic |
+| BSPHCL (Electricity) | Polytechnic/ITI Electrician |
+| BRO (Roads) | ITI Fitter/Welder |
+| SAIL/NTPC | ITI/Diploma |
+| Army Technical (Sol. Tech.) | 12वीं PCM + ITI |
+
+### Lateral Entry — B.Tech में Direct 2nd Year
+
+Polytechnic diploma के बाद **B.Tech 2nd year में lateral entry** मिलती है। BSCC loan से आगे पढ़ाई जारी रख सकते हैं।
+
+### Siksha Wallah से ITI/Polytechnic Admission
+
+NCVT-affiliated और AICTE-approved colleges में direct admission। BSCC loan guidance भी।
+
+📞 **6203138576** | Forbesganj, Araria`,
+  },
+  {
+    slug: "anm-nursing-course-bihar-2025",
+    title: "ANM Nursing Course Bihar 2025 — Career in Healthcare",
+    titleHi: "ANM नर्सिंग कोर्स बिहार 2025 — Healthcare में Career Guide",
+    excerpt: "ANM (Auxiliary Nursing and Midwifery) कोर्स क्या है? 10+2 के बाद ANM करके आंगनवाड़ी, सरकारी अस्पताल और PHC में नौकरी कैसे पाएं।",
+    date: "2025-06-08",
+    readTime: "5 min",
+    category: "Medical",
+    content: `## ANM Nursing Course Bihar 2025
+
+**ANM (Auxiliary Nursing and Midwifery)** एक 2-वर्षीय diploma course है जो महिलाओं को community health worker और nurse बनने का अवसर देता है। बिहार में आंगनवाड़ी, PHC और सरकारी अस्पतालों में ANM की भारी मांग है।
+
+### पात्रता (Eligibility)
+
+- **केवल महिला उम्मीदवार** (INC guideline)
+- 12वीं पास — **किसी भी stream** से
+- न्यूनतम **40% अंक**
+- आयु: 17–35 वर्ष
+- INC-recognized college से course करना अनिवार्य
+
+### फीस संरचना
+
+| कॉलेज प्रकार | कुल फीस (2 वर्ष) |
+|---|---|
+| Government ANM School | ₹10,000–₹25,000 |
+| INC-approved Private | ₹50,000–₹1,20,000 |
+
+### ANM के बाद करियर के अवसर
+
+- **PHC (Primary Health Centre)** में ANM — सरकारी नौकरी
+- **आंगनवाड़ी Supervisor** — Bihar Govt recruitment
+- **ASHA Worker Supervisor**
+- **Private Clinic/Nursing Home** में
+- **Community Health Worker**
+- Monthly Salary: ₹15,000–₹35,000 (Govt) | ₹12,000–₹25,000 (Private)
+
+### BSCC Loan Eligibility
+
+ANM course INC-recognized colleges में करने पर BSCC loan applicable है।
+
+### GNM vs ANM — Quick Comparison
+
+| | ANM | GNM |
+|---|---|---|
+| अवधि | 2 वर्ष | 3.5 वर्ष |
+| केवल महिला? | ✅ हां | ❌ दोनों |
+| Degree level | Diploma | Diploma |
+| Career growth | ANM → GNM upgrade | Higher scope |
+
+### Siksha Wallah से ANM Admission
+
+हम INC-approved colleges में ANM admission में मदद करते हैं। Bihar, Jharkhand और Bangalore में options उपलब्ध हैं।
+
+📞 **6203138576** | College Chowk, Forbesganj, Araria`,
+  },
+  {
+    slug: "mba-admission-bihar-2025",
+    title: "MBA Admission Bihar 2025 — CAT, MAT & Top B-Schools",
+    titleHi: "MBA एडमिशन बिहार 2025 — CAT, MAT और Top B-School Guide",
+    excerpt: "Bihar से MBA कैसे करें? CAT/MAT score, top B-Schools, specializations, fees और BSCC loan से MBA की पूरी जानकारी।",
+    date: "2025-06-12",
+    readTime: "6 min",
+    category: "Technical",
+    content: `## MBA Admission Bihar 2025 — Complete Guide
+
+**MBA (Master of Business Administration)** management और business field में career बनाने का सबसे popular postgraduate course है। बिहार के students के लिए CAT/MAT के जरिए top B-Schools में admission का मौका है।
+
+### MBA Entrance Exams
+
+| Exam | Conducting Body | Validity |
+|---|---|---|
+| **CAT** | IIMs | IIM, top B-Schools |
+| **MAT** | AIMA | 600+ B-Schools |
+| **XAT** | XLRI | Top private B-Schools |
+| **CMAT** | NTA | AICTE-approved colleges |
+| **Direct** | College Level | Private colleges |
+
+### Eligibility
+
+- किसी भी stream में **Graduation** — न्यूनतम 50% अंक
+- Final year students भी apply कर सकते हैं
+- Work experience: कुछ colleges prefer करते हैं
+
+### MBA Specializations in Demand
+
+- **Finance** — Banking, Investment
+- **Marketing** — Digital, Brand Management
+- **HR** — Talent Management
+- **Operations** — Supply Chain
+- **IT Management** — Tech + Management
+
+### Fees & ROI
+
+| College Type | Fees (2 Years) | Starting Salary |
+|---|---|---|
+| IIM (Top) | ₹20–₹30 LPA | ₹15–₹40 LPA |
+| State Govt MBA | ₹50,000–₹1.5 L | ₹4–₹10 LPA |
+| AICTE Private | ₹2–₹8 L | ₹3–₹8 LPA |
+
+### BSCC से MBA
+
+BSCC loan AICTE-approved MBA colleges के लिए applicable है। ₹4 लाख तक loan मिलता है।
+
+### Siksha Wallah से MBA Guidance
+
+CAT/MAT score के बिना भी AICTE-approved colleges में direct MBA admission available है। BSCC loan process में पूरी मदद।
+
+📞 **6203138576** | College Chowk, Forbesganj`,
+  },
+  {
+    slug: "med-education-career-bihar-2025",
+    title: "M.Ed Course Bihar 2025 — Education Research & College Lecturer Career",
+    titleHi: "M.Ed कोर्स बिहार 2025 — Education में Research और College Lecturer Career",
+    excerpt: "M.Ed करके college lecturer, education researcher या school principal कैसे बनें? Eligibility, UGC-NET, fees और career scope की पूरी जानकारी।",
+    date: "2025-06-15",
+    readTime: "5 min",
+    category: "Teaching",
+    content: `## M.Ed Course Bihar 2025 — Complete Guide
+
+**M.Ed (Master of Education)** teaching field की सबसे advanced degree है। B.Ed के बाद M.Ed करने पर college lecturer, researcher और education administrator बनने के दरवाजे खुलते हैं।
+
+### पात्रता (Eligibility)
+
+- **B.Ed** with minimum **55% marks**
+- UGC-recognized university से
+- NCTE-approved M.Ed program में admission
+
+### M.Ed Entrance & Admission
+
+- अधिकांश universities में **entrance test**
+- कुछ में direct merit-based admission
+- Duration: **2 वर्ष** (Full-time)
+
+### M.Ed के बाद करियर
+
+| करियर | योग्यता | Salary |
+|---|---|---|
+| College Lecturer | M.Ed + UGC-NET | ₹35,000–₹80,000/माह |
+| School Principal | M.Ed + Experience | ₹40,000–₹70,000/माह |
+| SCERT Trainer | M.Ed + State exam | ₹30,000–₹50,000/माह |
+| Education Researcher | M.Ed + PhD | ₹45,000–₹90,000/माह |
+| NCERT Content Developer | M.Ed + NET | ₹40,000–₹75,000/माह |
+
+### UGC-NET — College Lecturer के लिए जरूरी
+
+M.Ed के बाद **UGC-NET (Education)** qualify करने पर:
+- Government/Private College में Lecturer post
+- JRF मिलने पर Research Fellowship (₹37,000/माह)
+- PhD में admission priority
+
+### Bihar के Top M.Ed Colleges
+
+- Patna University, Patna
+- BRA Bihar University, Muzaffarpur
+- LNMU, Darbhanga
+- Magadh University, Bodh Gaya
+- VKS University, Ara
+
+### Siksha Wallah से M.Ed Guidance
+
+NCTE-approved colleges में M.Ed admission और UGC-NET preparation guidance।
+
+📞 **6203138576** | College Chowk, Forbesganj, Araria`,
+  },
+  {
     slug: "btech-admission-bihar-2025",
     title: "B.Tech Admission Bihar 2025 — JEE, BCECE & Top Colleges",
     titleHi: "B.Tech एडमिशन बिहार 2025 — JEE, BCECE और टॉप कॉलेज गाइड",
