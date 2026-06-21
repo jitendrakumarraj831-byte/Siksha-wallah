@@ -33,7 +33,7 @@ export default function Home() {
 
   // Multi-step form
   const [step, setStep] = useState(0);
-  const [formData, setFormData] = useState({ name: "", mobile: "", course: "", qualify: "" });
+  const [formData, setFormData] = useState({ name: "", mobile: "", course: "", district: "" });
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   const stream = streamTabs.find((s) => s.key === activeStream)!;
@@ -60,18 +60,18 @@ export default function Home() {
     if (step < STEPS.length - 1) setStep(step + 1);
     else {
       setFormSubmitted(true);
-      saveInquiry({ fullName: formData.name, mobile: formData.mobile, course: formData.course, qualification: formData.qualify, message: `Qualification: ${formData.qualify}` }).catch(() => {});
+      saveInquiry({ fullName: formData.name, mobile: formData.mobile, course: formData.course, qualification: formData.district, message: `District: ${formData.district}` }).catch(() => {});
       // Log inquiry activity
       saveActivity({
         type: "inquiry",
         title: "📋 New Inquiry Submitted",
-        description: `${formData.name} → ${formData.course} (${formData.qualify})`,
+        description: `${formData.name} → ${formData.course} (${formData.district})`,
         name: formData.name,
         mobile: formData.mobile,
         course: formData.course,
         page: "/",
       });
-      const msg = `नमस्ते! मेरा नाम ${encodeURIComponent(formData.name)} है।%0AMobile: ${formData.mobile}%0AमुझेAdmission चाहिए: ${encodeURIComponent(formData.course)}%0AYogyta: ${encodeURIComponent(formData.qualify)}%0AKripya guide karein.`;
+      const msg = `नमस्ते! मेरा नाम ${encodeURIComponent(formData.name)} है।%0AMobile: ${formData.mobile}%0AAdmission चाहिए: ${encodeURIComponent(formData.course)}%0AJila: ${encodeURIComponent(formData.district)}%0AKripya guide karein.`;
       // Log WhatsApp click
       saveActivity({
         type: "whatsapp",
@@ -91,199 +91,241 @@ export default function Home() {
       <SiteNavbar />
 
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#001f6b] via-[#003f9f] to-[#0060c7] text-white">
-        {/* Grid overlay */}
-        <div className="pointer-events-none absolute inset-0 opacity-10" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,.3) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.3) 1px,transparent 1px)", backgroundSize: "48px 48px" }} />
-        {/* Glow blobs */}
-        <div className="pointer-events-none absolute -top-32 -right-32 h-96 w-96 rounded-full bg-amber-400 opacity-20 blur-3xl" />
-        <div className="pointer-events-none absolute bottom-0 -left-24 h-64 w-64 rounded-full bg-blue-300 opacity-20 blur-3xl" />
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] text-white">
 
-        <div className="container-shell relative py-14 md:py-28">
-          {/*
-            Mobile layout (default flex-col):  text → form → stats
-            Desktop (lg grid):                 [text + stats]  |  [form spanning both rows]
-          */}
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.15fr_.85fr] lg:gap-12 lg:items-start">
+        {/* Subtle dot-grid background */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.07]"
+          style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
 
-            {/* ── LEFT: badge + heading + sub + CTAs ── */}
+        {/* Glow orbs */}
+        <div className="pointer-events-none absolute -top-40 -right-32 h-[480px] w-[480px] rounded-full bg-amber-400 opacity-[0.10] blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-blue-500 opacity-[0.13] blur-3xl" />
+        <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-96 w-96 rounded-full bg-indigo-700 opacity-[0.08] blur-3xl" />
+
+        <div className="container-shell relative">
+
+          {/* ── TOP TRUST BADGE STRIP ── */}
+          <div className="no-scrollbar flex items-center gap-3 overflow-x-auto border-b border-white/[0.08] py-4">
+            {[
+              { icon: ShieldCheck,   text: "NCTE / UGC मान्यता" },
+              { icon: CreditCard,    text: "BSCC Loan Support" },
+              { icon: Users,         text: "5000+ Students Guided" },
+              { icon: Building2,     text: "200+ Partner Colleges" },
+              { icon: Award,         text: "9+ Years Experience" },
+              { icon: CheckCircle2,  text: "No Hidden Charges" },
+            ].map(({ icon: Icon, text }) => (
+              <div key={text} className="flex flex-shrink-0 items-center gap-1.5 rounded-full border border-white/[0.12] bg-white/[0.06] px-4 py-2 text-xs font-semibold text-white/85 backdrop-blur-sm">
+                <Icon size={13} className="flex-shrink-0 text-amber-400" />
+                {text}
+              </div>
+            ))}
+          </div>
+
+          {/* ── MAIN GRID ── */}
+          <div className="grid grid-cols-1 gap-10 py-14 md:py-20 lg:grid-cols-[1.25fr_0.8fr] lg:gap-14 lg:items-start">
+
+            {/* ── LEFT: text + CTAs + floating cards ── */}
             <div className="order-1">
-              {/* Location + Trust badge row */}
-              <div className="mb-4 flex flex-wrap items-center gap-3">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold backdrop-blur">
-                  <MapPin size={14} className="text-amber-400" />
-                  कॉलेज चौक, फॉरबेसगंज, अररिया (बिहार)
-                </div>
-                <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-400/15 px-3 py-1.5 text-xs font-bold text-amber-300">
-                  <BadgeCheck size={13} className="text-amber-400" />
-                  9+ वर्षों का अनुभव
-                </div>
+
+              {/* Platform label pill */}
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/[0.1] px-4 py-2">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
+                <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Bihar&apos;s #1 Admission Guidance Platform</span>
               </div>
 
-              {/* H1 — Hinglish premium style */}
-              <h1 className="font-headline text-[2.4rem] leading-[1.12] tracking-tight md:text-6xl lg:text-[4rem] lg:leading-[1.06] font-black">
-                <span className="block text-white drop-shadow-[0_2px_12px_rgba(255,255,255,0.25)]">
-                  Your Dream College,
+              {/* H1 */}
+              <h1 className="font-headline text-[2.5rem] font-black leading-[1.08] tracking-tight md:text-6xl lg:text-[4.2rem] lg:leading-[1.04]">
+                <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">
+                  Bihar&apos;s Trusted
                 </span>
-                <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent drop-shadow-[0_4px_24px_rgba(251,191,36,0.45)]">
-                  Sahi Guidance के साथ!
+                <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent [filter:drop-shadow(0_4px_24px_rgba(251,191,36,0.45))]">
+                  Admission Guidance
                 </span>
-                {/* Decorative underline accent on line 2 */}
-                <span className="mt-2 block h-1 w-32 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 opacity-70 md:w-48" />
+                <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">
+                  Platform
+                </span>
               </h1>
 
-              {/* Sub-heading */}
-              <p className="mt-5 max-w-xl text-base md:text-[1.05rem] text-blue-100 leading-[1.75]">
-                B.Ed, D.El.Ed, MBBS से MBA तक —{" "}
-                <strong className="bg-gradient-to-r from-amber-300 to-yellow-200 bg-clip-text text-transparent font-extrabold">
-                  100% Transparent Guidance
-                </strong>{" "}
-                और Direct Admission Support,{" "}
-                <strong className="bg-gradient-to-r from-amber-300 to-orange-300 bg-clip-text text-transparent font-extrabold">
-                  बिना किसी Hidden Charge के!
-                </strong>
-              </p>
+              {/* Accent line */}
+              <div className="mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-40" />
 
-              {/* Feature pills — new addition */}
-              <div className="mt-5 flex flex-wrap gap-2">
-                {[
-                  { icon: GraduationCap, text: "19+ कोर्सेज" },
-                  { icon: CreditCard,    text: "BSCC लोन सहायता" },
-                  { icon: ShieldCheck,   text: "NCTE / INC मान्यता" },
-                  { icon: Clock,         text: "24 घंटे सहायता" },
-                ].map(({ icon: Icon, text }) => (
-                  <span key={text} className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold text-blue-100 backdrop-blur">
-                    <Icon size={12} className="text-amber-400" />
-                    {text}
-                  </span>
-                ))}
+              {/* Course highlight pill */}
+              <div className="mt-6 inline-flex flex-wrap items-center gap-2 rounded-2xl border border-amber-400/25 bg-amber-400/[0.08] px-5 py-3">
+                <GraduationCap size={16} className="flex-shrink-0 text-amber-400" />
+                <span className="text-sm font-semibold text-amber-100">
+                  B.Ed • D.El.Ed • Nursing • MBA • BCA • MCA
+                </span>
+                <span className="rounded-full bg-gradient-to-r from-amber-400 to-orange-400 px-2.5 py-0.5 text-[11px] font-extrabold text-gray-900">
+                  & 40+ Courses
+                </span>
               </div>
 
-              {/* CTA buttons */}
-              <div className="mt-7 flex flex-col sm:flex-row gap-3">
+              {/* Sub-heading */}
+              <p className="mt-5 max-w-lg text-[1rem] leading-[1.8] text-blue-100 md:text-[1.06rem]">
+                Expert admission guidance, college selection support,{" "}
+                <strong className="bg-gradient-to-r from-amber-300 to-yellow-200 bg-clip-text text-transparent font-extrabold">
+                  BSCC Loan assistance
+                </strong>
+                , and career counselling —{" "}
+                <strong className="font-extrabold text-white">all in one place.</strong>
+              </p>
+
+              {/* CTA Buttons */}
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <a
                   href="#inquiry"
-                  className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-amber-400 px-7 py-4 font-extrabold text-gray-900 shadow-lg shadow-amber-500/40 transition-all duration-200 ease-out hover:-translate-y-[3px] hover:bg-amber-300 hover:shadow-xl hover:shadow-amber-500/50 active:translate-y-0 active:scale-[0.97] active:shadow-md"
+                  className="group relative flex items-center justify-center gap-2.5 overflow-hidden rounded-2xl bg-gradient-to-r from-amber-400 to-orange-400 px-8 py-4 font-extrabold text-gray-900 shadow-xl shadow-amber-500/30 transition-all duration-200 hover:-translate-y-1 hover:shadow-2xl hover:shadow-amber-500/50 active:scale-[0.97]"
                 >
-                  {/* Shine sweep on hover */}
-                  <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
-                  निःशुल्क विशेषज्ञ सलाह लें
-                  <ArrowRight size={18} className="flex-shrink-0 transition-transform duration-200 group-hover:translate-x-1" />
+                  <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
+                  <Sparkles size={17} className="flex-shrink-0" />
+                  Free Counselling
+                  <ArrowRight size={16} className="flex-shrink-0 transition-transform duration-200 group-hover:translate-x-1" />
                 </a>
                 <a
                   href="https://wa.me/916203138576"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 rounded-xl border-2 border-white/40 bg-white/10 px-7 py-4 font-bold text-white backdrop-blur transition-all duration-200 ease-out hover:bg-white/20 hover:-translate-y-[2px] hover:border-white/60 active:scale-[0.97]"
+                  className="flex items-center justify-center gap-2.5 rounded-2xl border-2 border-white/25 bg-white/[0.08] px-8 py-4 font-bold text-white backdrop-blur transition-all duration-200 hover:bg-white/[0.15] hover:-translate-y-1 hover:border-white/40 active:scale-[0.97]"
                 >
-                  <MessageCircle size={18} /> WhatsApp करें
+                  <MessageCircle size={17} />
+                  WhatsApp Expert
                 </a>
+              </div>
+
+              {/* Trust line */}
+              <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2">
+                {[
+                  "200+ Partner Colleges",
+                  "5000+ Students Guided",
+                  "9+ Years Experience",
+                  "No Hidden Charges",
+                ].map((t, i, arr) => (
+                  <span key={t} className="flex items-center gap-1.5 text-xs font-medium text-blue-300">
+                    <Check size={11} className="text-amber-400" />
+                    {t}
+                    {i < arr.length - 1 && <span className="ml-1 text-white/15">|</span>}
+                  </span>
+                ))}
+              </div>
+
+              {/* Floating achievement cards — desktop only */}
+              <div className="mt-9 hidden gap-3 lg:flex">
+                <div className="flex items-center gap-3 rounded-2xl border border-white/[0.12] bg-white/[0.06] px-4 py-3 backdrop-blur-sm">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-green-500/20 ring-1 ring-green-500/30">
+                    <CheckCircle2 size={19} className="text-green-400" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-white">अभी-अभी Admitted ✓</p>
+                    <p className="mt-0.5 text-[11px] text-blue-300">Rahul K. — B.Ed, Patna University</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 rounded-2xl border border-white/[0.12] bg-white/[0.06] px-4 py-3 backdrop-blur-sm">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-amber-500/20 ring-1 ring-amber-500/30">
+                    <CreditCard size={19} className="text-amber-400" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-white">BSCC Loan Approved ✓</p>
+                    <p className="mt-0.5 text-[11px] text-blue-300">Priya S. — ₹4L Loan, GNM Nursing</p>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* ── RIGHT: glassmorphism quick inquiry (order-2 on mobile, spans 2 rows on lg) ── */}
-            <div
-              id="inquiry"
-              className="order-2 rounded-2xl border border-white/20 bg-white/10 p-6 md:p-7 backdrop-blur-xl shadow-2xl lg:row-span-2"
-            >
+            {/* ── RIGHT: Lead Form ── */}
+            <div id="inquiry" className="order-2 rounded-3xl border border-white/[0.15] bg-white/[0.08] p-6 shadow-2xl backdrop-blur-xl md:p-8">
+
+              {/* Form header */}
+              <div className="mb-6 text-center">
+                <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-amber-400/30 bg-amber-400/[0.1] px-3 py-1.5">
+                  <Sparkles size={11} className="text-amber-400" />
+                  <span className="text-[11px] font-bold text-amber-300">100% Free · No Hidden Charges</span>
+                </div>
+                <h3 className="font-headline text-[1.35rem] font-extrabold leading-tight text-white">
+                  निःशुल्क Admission Counselling
+                </h3>
+                <p className="mt-1.5 text-xs text-blue-300">
+                  1 मिनट में जानकारी भरें और Expert Guidance प्राप्त करें
+                </p>
+              </div>
+
               {formSubmitted ? (
-                <div className="flex flex-col items-center gap-4 py-10 text-center">
-                  <CheckCircle2 size={56} className="text-green-400" />
+                <div className="flex flex-col items-center gap-4 py-8 text-center">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-500/20 ring-2 ring-green-500/40">
+                    <CheckCircle2 size={36} className="text-green-400" />
+                  </div>
                   <h3 className="font-headline text-2xl font-extrabold">धन्यवाद! 🎉</h3>
-                  <p className="text-blue-100">हमारे काउंसलर जल्द ही आपसे WhatsApp पर संपर्क करेंगे।</p>
+                  <p className="text-sm text-blue-100">हमारे काउंसलर जल्द ही आपसे WhatsApp पर संपर्क करेंगे।</p>
                   <button
-                    onClick={() => { setFormSubmitted(false); setStep(0); setFormData({ name: "", mobile: "", course: "", qualify: "" }); }}
-                    className="rounded-xl bg-amber-400 px-6 py-3 font-bold text-gray-900 transition-all duration-200 hover:bg-amber-300 hover:-translate-y-0.5 active:scale-95"
+                    onClick={() => { setFormSubmitted(false); setStep(0); setFormData({ name: "", mobile: "", course: "", district: "" }); }}
+                    className="rounded-xl bg-gradient-to-r from-amber-400 to-orange-400 px-6 py-3 font-bold text-gray-900 transition-all hover:opacity-90 active:scale-95"
                   >
-                    नई जानकारी
+                    नई जानकारी भरें
                   </button>
                 </div>
               ) : (
                 <>
-                  <div className="mb-4 flex items-center justify-between">
-                    <div>
-                      <h3 className="font-headline text-xl font-extrabold">निःशुल्क परामर्श</h3>
-                      <p className="text-xs text-blue-300 mt-0.5">हमारे विशेषज्ञ जल्द संपर्क करेंगे</p>
-                    </div>
-                    <span className="rounded-full bg-amber-400/20 px-2.5 py-0.5 text-xs font-bold text-amber-300">
-                      चरण {step + 1} / {STEPS.length}
-                    </span>
+                  {/* Progress dots */}
+                  <div className="mb-6 flex items-center justify-center gap-2">
+                    {STEPS.map((_, i) => (
+                      <div key={i} className={`h-2 rounded-full transition-all duration-300 ease-out ${
+                        i === step ? "w-8 bg-amber-400" : i < step ? "w-3 bg-amber-400/50" : "w-3 bg-white/20"
+                      }`} />
+                    ))}
                   </div>
 
-                  {/* Progress bar — wider steps feel faster */}
-                  <div className="mb-5 h-1.5 w-full rounded-full bg-white/20">
-                    <div
-                      className="h-full rounded-full bg-amber-400 transition-all duration-500 ease-out"
-                      style={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
-                    />
-                  </div>
-
-                  {/* Step content */}
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {step === 0 && (
                       <>
                         <label className="block text-sm font-bold text-blue-100">
-                          आपका पूरा नाम <span className="text-amber-400">*</span>
+                          Student Name <span className="text-amber-400">*</span>
                         </label>
                         <input
                           value={formData.name}
                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          placeholder="जैसे: Rahul Kumar"
+                          placeholder="अपना पूरा नाम लिखें"
                           autoComplete="name"
-                          className="w-full rounded-xl border border-white/30 bg-white/20 px-4 py-3.5 text-white placeholder-blue-300 outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-400/30"
+                          className="w-full rounded-xl border border-white/20 bg-white/[0.12] px-4 py-3.5 text-white placeholder-blue-300/60 outline-none transition focus:border-amber-400 focus:bg-white/[0.18] focus:ring-2 focus:ring-amber-400/25"
                         />
                       </>
                     )}
                     {step === 1 && (
                       <>
                         <label className="block text-sm font-bold text-blue-100">
-                          मोबाइल नंबर <span className="text-amber-400">*</span>
+                          Mobile Number <span className="text-amber-400">*</span>
                         </label>
                         <input
                           value={formData.mobile}
                           onChange={(e) => setFormData({ ...formData, mobile: e.target.value.replace(/\D/g, "").slice(0, 10) })}
                           type="tel"
                           inputMode="numeric"
-                          placeholder="10-digit number दर्ज करें"
+                          placeholder="10-digit mobile number"
                           autoComplete="tel"
-                          className="w-full rounded-xl border border-white/30 bg-white/20 px-4 py-3.5 text-white placeholder-blue-300 outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-400/30"
+                          className="w-full rounded-xl border border-white/20 bg-white/[0.12] px-4 py-3.5 text-white placeholder-blue-300/60 outline-none transition focus:border-amber-400 focus:bg-white/[0.18] focus:ring-2 focus:ring-amber-400/25"
                         />
                       </>
                     )}
                     {step === 2 && (
                       <>
                         <label className="block text-sm font-bold text-blue-100">
-                          कौन सा Course चाहिए? <span className="text-amber-400">*</span>
+                          Course Interest <span className="text-amber-400">*</span>
                         </label>
                         <select
                           value={formData.course}
                           onChange={(e) => setFormData({ ...formData, course: e.target.value })}
-                          className="w-full rounded-xl border border-white/30 bg-[#003f9f] px-4 py-3.5 text-white outline-none transition focus:border-amber-400"
+                          className="w-full rounded-xl border border-white/20 bg-[#001e5a] px-4 py-3.5 text-white outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-400/25"
                         >
                           <option value="">-- कोर्स चुनें --</option>
                           <optgroup label="🎓 शिक्षण (Teaching)">
-                            <option>B.Ed</option>
-                            <option>D.El.Ed</option>
-                            <option>B.P.Ed</option>
-                            <option>M.Ed</option>
+                            <option>B.Ed</option><option>D.El.Ed</option><option>B.P.Ed</option><option>M.Ed</option>
                           </optgroup>
                           <optgroup label="🏥 चिकित्सा एवं नर्सिंग (Medical)">
-                            <option>MBBS</option>
-                            <option>BDS</option>
-                            <option>B.Sc Nursing</option>
-                            <option>GNM</option>
-                            <option>ANM</option>
-                            <option>B.Pharma</option>
-                            <option>D.Pharma</option>
-                            <option>BMLT</option>
+                            <option>MBBS</option><option>BDS</option><option>B.Sc Nursing</option>
+                            <option>GNM</option><option>ANM</option><option>B.Pharma</option>
+                            <option>D.Pharma</option><option>BMLT</option>
                           </optgroup>
                           <optgroup label="💻 तकनीकी एवं प्रबंधन (Technical)">
-                            <option>B.Tech</option>
-                            <option>Polytechnic</option>
-                            <option>ITI</option>
-                            <option>BCA</option>
-                            <option>MCA</option>
-                            <option>BBA</option>
-                            <option>MBA</option>
+                            <option>B.Tech</option><option>Polytechnic</option><option>ITI</option>
+                            <option>BCA</option><option>MCA</option><option>BBA</option><option>MBA</option>
                           </optgroup>
                           <option>अभी निर्णय नहीं किया</option>
                         </select>
@@ -292,20 +334,28 @@ export default function Home() {
                     {step === 3 && (
                       <>
                         <label className="block text-sm font-bold text-blue-100">
-                          आपकी शैक्षणिक योग्यता <span className="text-amber-400">*</span>
+                          आपका जिला (District) <span className="text-amber-400">*</span>
                         </label>
                         <select
-                          value={formData.qualify}
-                          onChange={(e) => setFormData({ ...formData, qualify: e.target.value })}
-                          className="w-full rounded-xl border border-white/30 bg-[#003f9f] px-4 py-3.5 text-white outline-none transition focus:border-amber-400"
+                          value={formData.district}
+                          onChange={(e) => setFormData({ ...formData, district: e.target.value })}
+                          className="w-full rounded-xl border border-white/20 bg-[#001e5a] px-4 py-3.5 text-white outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-400/25"
                         >
-                          <option value="">-- योग्यता चुनें --</option>
-                          <option>10वीं पास</option>
-                          <option>12वीं पास (कला)</option>
-                          <option>12वीं पास (विज्ञान)</option>
-                          <option>12वीं पास (वाणिज्य)</option>
-                          <option>स्नातक (Graduation)</option>
-                          <option>स्नातकोत्तर (Post Graduation)</option>
+                          <option value="">-- जिला चुनें --</option>
+                          <option>Araria</option><option>Arwal</option><option>Aurangabad</option>
+                          <option>Banka</option><option>Begusarai</option><option>Bhagalpur</option>
+                          <option>Bhojpur</option><option>Buxar</option><option>Darbhanga</option>
+                          <option>East Champaran</option><option>Gaya</option><option>Gopalganj</option>
+                          <option>Jamui</option><option>Jehanabad</option><option>Kaimur</option>
+                          <option>Katihar</option><option>Khagaria</option><option>Kishanganj</option>
+                          <option>Lakhisarai</option><option>Madhepura</option><option>Madhubani</option>
+                          <option>Munger</option><option>Muzaffarpur</option><option>Nalanda</option>
+                          <option>Nawada</option><option>Patna</option><option>Purnia</option>
+                          <option>Rohtas</option><option>Saharsa</option><option>Samastipur</option>
+                          <option>Saran</option><option>Sheikhpura</option><option>Sheohar</option>
+                          <option>Sitamarhi</option><option>Siwan</option><option>Supaul</option>
+                          <option>Vaishali</option><option>West Champaran</option>
+                          <option>Bihar के बाहर (Other State)</option>
                         </select>
                       </>
                     )}
@@ -314,53 +364,55 @@ export default function Home() {
                       {step > 0 && (
                         <button
                           onClick={() => setStep(step - 1)}
-                          className="flex-1 rounded-xl border border-white/40 py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-white/10 active:scale-[0.97]"
+                          className="flex-1 rounded-xl border border-white/25 py-3.5 text-sm font-semibold text-white transition hover:bg-white/10 active:scale-[0.97]"
                         >
                           ← वापस
                         </button>
                       )}
                       <button
                         onClick={nextStep}
-                        className="group relative flex flex-1 items-center justify-center gap-2 overflow-hidden rounded-xl bg-amber-400 py-3.5 font-extrabold text-gray-900 transition-all duration-200 ease-out hover:bg-amber-300 hover:-translate-y-[2px] hover:shadow-lg hover:shadow-amber-500/40 active:translate-y-0 active:scale-[0.97]"
+                        className="group relative flex flex-1 items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-amber-400 to-orange-400 py-3.5 font-extrabold text-gray-900 shadow-lg shadow-amber-500/25 transition-all hover:-translate-y-0.5 hover:shadow-amber-500/40 active:scale-[0.97]"
                       >
-                        <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
+                        <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
                         {step < STEPS.length - 1 ? (
-                          <>
-                            आगे बढ़ें
-                            <ArrowRight size={16} className="flex-shrink-0 transition-transform duration-200 group-hover:translate-x-1" />
-                          </>
+                          <>आगे बढ़ें <ArrowRight size={15} className="flex-shrink-0 transition-transform group-hover:translate-x-1" /></>
                         ) : (
-                          "जमा करें & WhatsApp करें 🚀"
+                          "Admission Guidance प्राप्त करें →"
                         )}
                       </button>
                     </div>
                   </div>
 
-                  <p className="mt-4 text-center text-xs text-blue-300">
+                  <p className="mt-5 text-center text-[11px] text-blue-300/70">
                     🔒 100% निःशुल्क · कोई Spam नहीं · आपकी जानकारी सुरक्षित है
                   </p>
                 </>
               )}
             </div>
-
-            {/* ── STATS — order-3 on mobile (below form), stays in left col on lg ── */}
-            <div className="order-3 grid grid-cols-4 gap-3 border-t border-white/20 pt-6 lg:border-t lg:pt-7">
-              {([
-                { target: 5000, suffix: "+", label: "छात्र मार्गदर्शित" },
-                { target: 200,  suffix: "+", label: "कॉलेज नेटवर्क" },
-                { target: 98,   suffix: "%", label: "सफलता दर" },
-                { target: 9,    suffix: "+", label: "वर्षों का अनुभव" },
-              ] as const).map(({ target, suffix, label }) => (
-                <div key={label} className="text-center">
-                  <p className="font-headline text-2xl font-black text-amber-400 md:text-3xl">
-                    <CountUp target={target} suffix={suffix} />
-                  </p>
-                  <p className="mt-0.5 text-xs text-blue-200 md:text-sm leading-tight">{label}</p>
-                </div>
-              ))}
-            </div>
-
           </div>
+
+          {/* ── STATS BAR ── */}
+          <div className="grid grid-cols-2 gap-6 border-t border-white/[0.08] py-10 md:grid-cols-4">
+            {([
+              { target: 5000, suffix: "+", label: "Students Guided",      icon: Users     },
+              { target: 200,  suffix: "+", label: "Partner Colleges",     icon: Building2 },
+              { target: 98,   suffix: "%", label: "Student Satisfaction", icon: Star      },
+              { target: 9,    suffix: "+", label: "Years Experience",     icon: Award     },
+            ] as const).map(({ target, suffix, label, icon: Icon }) => (
+              <div key={label} className="text-center">
+                <div className="mb-2 flex justify-center">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-400/10 ring-1 ring-amber-400/20">
+                    <Icon size={18} className="text-amber-400" />
+                  </div>
+                </div>
+                <p className="font-headline text-3xl font-black text-amber-400 md:text-4xl">
+                  <CountUp target={target} suffix={suffix} />
+                </p>
+                <p className="mt-1 text-xs text-blue-200 md:text-sm">{label}</p>
+              </div>
+            ))}
+          </div>
+
         </div>
       </section>
 
@@ -421,20 +473,19 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ── TRUST BAR ── */}
-      <div className="bg-gray-900 py-4">
+      {/* ── BOTTOM TRUST BAR ── */}
+      <div className="border-t border-white/[0.05] bg-gradient-to-r from-gray-950 via-gray-900 to-gray-950 py-5">
         <div className="container-shell">
-          <div className="flex flex-wrap items-center justify-center gap-6 text-sm font-semibold text-gray-300">
+          <div className="flex flex-wrap items-center justify-center gap-5 md:gap-8">
             {[
-              [ShieldCheck, "NCTE & UGC मान्यता प्राप्त"],
-              [Award, "9+ वर्षों का अनुभव"],
-              [Users, "5000+ छात्र लाभान्वित"],
-              [CheckCircle2, "कोई छुपा शुल्क नहीं"],
-            ].map(([Icon, text], i) => (
-              <span key={i} className="flex items-center gap-2">
-                {/* @ts-ignore */}
-                <Icon size={16} className="text-amber-400" />
-                {text as string}
+              { icon: ShieldCheck,  text: "100% Free Counselling",          color: "text-green-400"  },
+              { icon: GraduationCap, text: "NCTE / UGC Recognized Colleges", color: "text-blue-400"   },
+              { icon: CreditCard,   text: "BSCC Loan Assistance",           color: "text-amber-400"  },
+              { icon: Phone,        text: "Expert Admission Support",        color: "text-purple-400" },
+            ].map(({ icon: Icon, text, color }) => (
+              <span key={text} className="flex items-center gap-2 text-sm font-semibold text-gray-300">
+                <Icon size={15} className={color} />
+                {text}
               </span>
             ))}
           </div>
