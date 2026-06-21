@@ -117,19 +117,21 @@ export default function ContactPage() {
       <SiteNavbar />
       <main>
         {/* Hero */}
-        <section className="bg-gradient-to-br from-[#001f6b] to-[#003f9f] py-16 text-white text-center">
-          <div className="container-shell">
-            <p className="text-sm font-bold uppercase tracking-widest text-amber-400 mb-3">हमसे बात करें</p>
+        <section className="relative overflow-hidden bg-gradient-to-br from-[#881337] via-[#be123c] to-[#e11d48] py-16 text-white text-center">
+          {/* Abstract wave at bottom */}
+          <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-20 bg-gray-50" style={{ clipPath: "ellipse(120% 60% at 50% 100%)" }} />
+          <div className="container-shell relative">
+            <p className="text-sm font-bold uppercase tracking-widest text-rose-200 mb-3">हमसे बात करें</p>
             <h1 className="font-headline text-4xl md:text-5xl font-extrabold mb-4">
               <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">संपर्क करें</span> — हम यहाँ हैं
             </h1>
-            <p className="text-blue-100 max-w-xl mx-auto leading-relaxed">
+            <p className="text-rose-100 max-w-xl mx-auto leading-relaxed">
               Admission inquiry, BSCC loan guidance, या कोई भी सवाल हो — Call करें, WhatsApp करें, या नीचे form भरें। हमारे counsellor <strong className="text-white">30 मिनट में</strong> जवाब देंगे।
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <a
                 href="tel:+916203138576"
-                className="inline-flex items-center gap-2 rounded-xl bg-amber-400 px-6 py-3 text-sm font-extrabold text-gray-900 hover:bg-amber-300 transition shadow-lg"
+                className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-extrabold text-rose-700 hover:bg-rose-50 transition shadow-lg"
               >
                 <Phone size={16} /> अभी Call करें
               </a>
@@ -155,7 +157,7 @@ export default function ContactPage() {
                 {/* Office Address */}
                 <div className="rounded-2xl bg-white border-2 border-gray-100 p-6 shadow-sm">
                   <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-[#003f9f] text-white">
+                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-rose-700 text-white">
                       <MapPin size={22} />
                     </div>
                     <div>
@@ -166,7 +168,7 @@ export default function ContactPage() {
                         href="https://maps.google.com/?q=College+Chowk+Forbesganj+Araria+Bihar"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-2 inline-flex items-center gap-1.5 text-sm font-bold text-[#003f9f] hover:underline"
+                        className="mt-2 inline-flex items-center gap-1.5 text-sm font-bold text-rose-700 hover:underline"
                       >
                         Google Maps पर देखें <ArrowRight size={13} />
                       </a>
@@ -177,14 +179,14 @@ export default function ContactPage() {
                 {/* Office Hours */}
                 <div className="rounded-2xl bg-white border-2 border-gray-100 p-6 shadow-sm">
                   <div className="flex items-center gap-3 mb-4">
-                    <Clock size={20} className="text-[#003f9f]" />
+                    <Clock size={20} className="text-rose-700" />
                     <h3 className="font-headline text-lg font-extrabold text-gray-900">Office समय</h3>
                   </div>
                   <div className="space-y-2">
                     {officeHours.map(([day, time]) => (
                       <div key={day} className="flex items-center justify-between text-sm py-2 border-b border-gray-100 last:border-0">
                         <span className="font-semibold text-gray-700">{day}</span>
-                        <span className="text-[#003f9f] font-bold">{time}</span>
+                        <span className="text-rose-700 font-bold">{time}</span>
                       </div>
                     ))}
                   </div>
@@ -200,18 +202,18 @@ export default function ContactPage() {
                       <a
                         key={phone}
                         href={`tel:+91${phone}`}
-                        className="flex items-center gap-4 rounded-2xl bg-white border-2 border-gray-100 p-4 shadow-sm hover:border-[#003f9f] hover:shadow-md transition group"
+                        className="flex items-center gap-4 rounded-2xl bg-rose-50 border-2 border-rose-100 p-4 shadow-sm hover:border-rose-400 hover:shadow-md transition group"
                       >
                         <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#003f9f] to-[#0060c7] font-headline font-extrabold text-lg text-white">
                           {name[0]}
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="font-bold text-gray-900 truncate">{name}</p>
-                          <p className="text-xs text-[#003f9f] font-semibold">{role}</p>
+                          <p className="text-xs text-rose-700 font-semibold">{role}</p>
                           <p className="text-xs text-gray-400 mt-0.5 truncate">{expertise}</p>
                         </div>
                         <div className="text-right flex-shrink-0">
-                          <p className="font-bold text-gray-900 text-sm group-hover:text-[#003f9f] transition">+91 {phone}</p>
+                          <p className="font-bold text-gray-900 text-sm group-hover:text-rose-700 transition">+91 {phone}</p>
                           <span className="text-xs text-green-600 font-semibold">● Call करें</span>
                         </div>
                       </a>
@@ -249,7 +251,7 @@ export default function ContactPage() {
                     <div className="flex gap-3 mt-2">
                       <a
                         href="tel:+916203138576"
-                        className="inline-flex items-center gap-2 rounded-xl bg-[#003f9f] px-5 py-2.5 text-sm font-bold text-white hover:bg-blue-700 transition"
+                        className="inline-flex items-center gap-2 rounded-xl bg-rose-700 px-5 py-2.5 text-sm font-bold text-white hover:bg-blue-700 transition"
                       >
                         <Phone size={15} /> अभी Call करें
                       </a>
@@ -295,7 +297,7 @@ export default function ContactPage() {
                             value={form.fullName}
                             onChange={(e) => setForm({ ...form, fullName: e.target.value })}
                             placeholder="जैसे: Rahul Kumar"
-                            className="w-full rounded-xl border-2 border-gray-200 pl-10 pr-4 py-3.5 text-sm outline-none focus:border-[#003f9f] transition"
+                            className="w-full rounded-xl border-2 border-gray-200 pl-10 pr-4 py-3.5 text-sm outline-none focus:border-rose-500 transition"
                           />
                         </div>
                       </div>
@@ -314,7 +316,7 @@ export default function ContactPage() {
                             value={form.mobile}
                             onChange={(e) => setForm({ ...form, mobile: e.target.value.replace(/\D/g, "") })}
                             placeholder="10-अंकों का mobile number"
-                            className="w-full rounded-xl border-2 border-gray-200 pl-10 pr-4 py-3.5 text-sm outline-none focus:border-[#003f9f] transition"
+                            className="w-full rounded-xl border-2 border-gray-200 pl-10 pr-4 py-3.5 text-sm outline-none focus:border-rose-500 transition"
                           />
                         </div>
                       </div>
@@ -331,7 +333,7 @@ export default function ContactPage() {
                             value={form.email}
                             onChange={(e) => setForm({ ...form, email: e.target.value })}
                             placeholder="your@email.com"
-                            className="w-full rounded-xl border-2 border-gray-200 pl-10 pr-4 py-3.5 text-sm outline-none focus:border-[#003f9f] transition"
+                            className="w-full rounded-xl border-2 border-gray-200 pl-10 pr-4 py-3.5 text-sm outline-none focus:border-rose-500 transition"
                           />
                         </div>
                       </div>
@@ -344,7 +346,7 @@ export default function ContactPage() {
                           id="contact-course"
                           value={form.course}
                           onChange={(e) => setForm({ ...form, course: e.target.value })}
-                          className="w-full rounded-xl border-2 border-gray-200 px-4 py-3.5 text-sm text-gray-700 outline-none focus:border-[#003f9f] bg-white transition"
+                          className="w-full rounded-xl border-2 border-gray-200 px-4 py-3.5 text-sm text-gray-700 outline-none focus:border-rose-500 bg-white transition"
                         >
                           <option value="">-- Course चुनें --</option>
                           <optgroup label="🎓 Teaching">
@@ -373,14 +375,14 @@ export default function ContactPage() {
                           onChange={(e) => setForm({ ...form, message: e.target.value })}
                           rows={3}
                           placeholder="जैसे: मेरे 12th में 65% हैं, B.Ed के लिए eligible हूँ क्या?"
-                          className="w-full rounded-xl border-2 border-gray-200 px-4 py-3.5 text-sm outline-none focus:border-[#003f9f] transition resize-none"
+                          className="w-full rounded-xl border-2 border-gray-200 px-4 py-3.5 text-sm outline-none focus:border-rose-500 transition resize-none"
                         />
                       </div>
 
                       <button
                         type="submit"
                         disabled={loading}
-                        className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#003f9f] py-4 font-extrabold text-white hover:bg-blue-700 transition disabled:opacity-60 shadow-lg shadow-blue-200 active:scale-95"
+                        className="w-full flex items-center justify-center gap-2 rounded-xl bg-rose-700 py-4 font-extrabold text-white hover:bg-blue-700 transition disabled:opacity-60 shadow-lg shadow-blue-200 active:scale-95"
                       >
                         {loading ? (
                           <span className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
@@ -422,7 +424,7 @@ export default function ContactPage() {
                 href="https://maps.google.com/?q=College+Chowk+Forbesganj+Araria+Bihar"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl bg-[#003f9f] px-5 py-2.5 text-sm font-bold text-white hover:bg-blue-700 transition shadow"
+                className="inline-flex items-center gap-2 rounded-xl bg-rose-700 px-5 py-2.5 text-sm font-bold text-white hover:bg-blue-700 transition shadow"
               >
                 Google Maps पर खोलें <ArrowRight size={14} />
               </a>

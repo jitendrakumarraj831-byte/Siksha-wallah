@@ -59,8 +59,13 @@ export default function AboutPage() {
   return (
     <PortalShell>
       {/* Hero */}
-      <section className="bg-gradient-to-br from-[#001f6b] via-[#003f9f] to-[#0060c7] py-20 text-white">
-        <div className="container-shell text-center">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#2d1b69] via-[#6b21a8] to-[#9333ea] py-20 text-white">
+        {/* Decorative: large soft circle blur */}
+        <div className="pointer-events-none absolute -top-32 -right-32 h-[28rem] w-[28rem] rounded-full bg-pink-500 opacity-20 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-purple-300 opacity-20 blur-3xl" />
+        {/* Grid overlay */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,1) 1px,transparent 1px)", backgroundSize: "40px 40px" }} />
+        <div className="container-shell relative text-center">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold">
             <MapPin size={15} className="text-amber-400" /> College Chowk, Forbesganj, Araria — 2015 से
           </div>
@@ -70,7 +75,7 @@ export default function AboutPage() {
           <p className="mt-5 max-w-2xl mx-auto text-lg text-blue-100 leading-relaxed">
             Araria जिले का सबसे विश्वसनीय Admission Consultancy — जहाँ हर student को मिलती है सही guidance, सही college, और सुरक्षित career।
           </p>
-          <div className="mt-10 grid grid-cols-3 gap-8 max-w-lg mx-auto border-t border-white/20 pt-8">
+          <div className="mt-10 grid grid-cols-3 gap-8 max-w-lg mx-auto border-t border-purple-400/30 pt-8">
             {[
               ["5,000+", "Students Guided"],
               ["200+", "College Partners"],
@@ -90,7 +95,7 @@ export default function AboutPage() {
         <div className="container-shell">
           <div className="grid gap-12 lg:grid-cols-2 items-center">
             <div>
-              <p className="text-sm font-bold uppercase tracking-widest text-[#003f9f] mb-2">हमारी कहानी</p>
+              <p className="text-sm font-bold uppercase tracking-widest text-purple-700 mb-2">हमारी कहानी</p>
               <h2 className="font-headline text-4xl font-extrabold mb-6 bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
                 Siksha Wallah क्यों बना? असली वजह।
               </h2>
@@ -113,12 +118,12 @@ export default function AboutPage() {
 
             <div className="grid gap-4 sm:grid-cols-2">
               {[
-                { icon: Target, color: "bg-[#003f9f]", title: "हमारा Mission", desc: "Bihar के हर student को quality education का सही रास्ता दिखाना — बिना किसी hidden charge के, बिना किसी झूठे वादे के।" },
+                { icon: Target, color: "bg-purple-600", title: "हमारा Mission", desc: "Bihar के हर student को quality education का सही रास्ता दिखाना — बिना किसी hidden charge के, बिना किसी झूठे वादे के।" },
                 { icon: Heart, color: "bg-[#dc143c]", title: "हमारा Vision", desc: "Forbesganj को एक education hub बनाना जहाँ से students पूरे India के top colleges तक पहुँचें।" },
                 { icon: ShieldCheck, color: "bg-green-600", title: "हमारे मूल्य", desc: "पारदर्शिता, ईमानदारी और पूर्ण सहयोग — यही Siksha Wallah की असली पहचान है।" },
                 { icon: Award, color: "bg-amber-500", title: "हमारी विशेषज्ञता", desc: "B.Ed, Nursing, Engineering, Management — सभी streams में 9+ साल का सिद्ध अनुभव।" },
               ].map(({ icon: Icon, color, title, desc }) => (
-                <div key={title} className="rounded-2xl border-2 border-gray-100 p-5 hover:shadow-md transition">
+                <div key={title} className="rounded-2xl border-2 border-purple-100 bg-purple-50 p-5 hover:shadow-md transition">
                   <div className={`mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl ${color} text-white`}>
                     <Icon size={22} />
                   </div>
@@ -135,7 +140,7 @@ export default function AboutPage() {
       <section className="py-20 bg-gray-50">
         <div className="container-shell">
           <div className="text-center mb-12">
-            <p className="text-sm font-bold uppercase tracking-widest text-[#003f9f] mb-2">हमारी Expert Team</p>
+            <p className="text-sm font-bold uppercase tracking-widest text-purple-700 mb-2">हमारी Expert Team</p>
             <h2 className="font-headline text-4xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">जो लोग आपकी मदद करते हैं</h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto text-sm">
               हमारे counsellors real लोग हैं — certified, experienced, और हमेशा आपके लिए available।
@@ -144,19 +149,19 @@ export default function AboutPage() {
           <div className="grid gap-6 md:grid-cols-3">
             {team.map(({ name, role, phone, exp, specialization, bio }) => (
               <div key={name} className="rounded-2xl bg-white border-2 border-gray-100 p-7 text-center shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[#003f9f] to-[#0060c7] font-headline text-3xl font-extrabold text-white shadow-lg">
+                <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[#6b21a8] to-[#9333ea] font-headline text-3xl font-extrabold text-white shadow-lg">
                   {name[0]}
                 </div>
                 <h3 className="font-headline text-xl font-extrabold text-gray-900">{name}</h3>
-                <p className="text-[#003f9f] font-semibold text-sm mt-1">{role}</p>
+                <p className="text-purple-700 font-semibold text-sm mt-1">{role}</p>
                 <p className="mt-1 text-xs text-gray-400 font-semibold">{exp} का अनुभव</p>
-                <div className="mt-2 inline-block rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-[#003f9f]">
+                <div className="mt-2 inline-block rounded-full bg-purple-50 px-3 py-1 text-xs font-semibold text-purple-700">
                   {specialization}
                 </div>
                 <p className="mt-4 text-sm text-gray-600 leading-relaxed">{bio}</p>
                 <a
                   href={`tel:+91${phone}`}
-                  className="mt-5 flex items-center justify-center gap-2 rounded-xl bg-[#003f9f] px-4 py-3 text-sm font-bold text-white hover:bg-blue-700 transition"
+                  className="mt-5 flex items-center justify-center gap-2 rounded-xl bg-purple-700 px-4 py-3 text-sm font-bold text-white hover:bg-purple-800 transition"
                 >
                   <Phone size={15} /> +91 {phone} — अभी Call करें
                 </a>
@@ -171,8 +176,8 @@ export default function AboutPage() {
               </div>
             ))}
           </div>
-          <div className="mt-8 rounded-2xl bg-blue-50 border-2 border-blue-100 p-6 text-center">
-            <p className="text-sm text-blue-800 font-semibold">
+          <div className="mt-8 rounded-2xl bg-purple-50 border-2 border-purple-100 p-6 text-center">
+            <p className="text-sm text-purple-800 font-semibold">
               💡 <strong>नोट:</strong> हमारे सभी counsellors directly आपसे बात करते हैं — कोई IVR नहीं, कोई bot नहीं। Real इंसान, Real guidance।
             </p>
           </div>
@@ -191,7 +196,7 @@ export default function AboutPage() {
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {trustPoints.map(([title, desc]) => (
-              <div key={title as string} className="flex gap-3 rounded-2xl border-2 border-gray-100 bg-gray-50 p-5 hover:border-blue-200 hover:bg-blue-50 transition">
+              <div key={title as string} className="flex gap-3 rounded-2xl border-2 border-gray-100 bg-gray-50 p-5 hover:border-purple-200 hover:bg-purple-50 transition">
                 <CheckCircle2 size={20} className="mt-0.5 flex-shrink-0 text-green-500" />
                 <div>
                   <p className="font-bold text-gray-900">{title}</p>
@@ -215,7 +220,7 @@ export default function AboutPage() {
             <div className="space-y-8">
               {milestones.map(({ year, event }) => (
                 <div key={year} className="relative flex gap-6 pl-16">
-                  <div className="absolute left-0 flex h-12 w-12 items-center justify-center rounded-full bg-[#003f9f] font-headline font-extrabold text-sm text-white border-2 border-amber-400">
+                  <div className="absolute left-0 flex h-12 w-12 items-center justify-center rounded-full bg-purple-700 font-headline font-extrabold text-sm text-white border-2 border-amber-400">
                     {year.slice(2)}
                   </div>
                   <div className="flex-1 rounded-xl border border-white/10 bg-white/5 p-4">
@@ -230,18 +235,18 @@ export default function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 bg-amber-400">
+      <section className="py-16 bg-gradient-to-r from-purple-600 to-indigo-600">
         <div className="container-shell text-center">
-          <h2 className="font-headline text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent mb-3">
+          <h2 className="font-headline text-3xl md:text-4xl font-extrabold text-white mb-3">
             आज ही अपनी Free Counselling बुक करें
           </h2>
-          <p className="text-gray-800 mb-8 max-w-xl mx-auto text-sm leading-relaxed">
+          <p className="text-purple-100 mb-8 max-w-xl mx-auto text-sm leading-relaxed">
             Call करें, WhatsApp करें — हमारे expert आपके हर सवाल का जवाब देंगे। कोई fee नहीं, कोई झूठा वादा नहीं।
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a
               href="tel:+916203138576"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#003f9f] px-7 py-4 font-extrabold text-white hover:bg-blue-700 shadow-lg transition"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-4 font-extrabold text-purple-700 hover:bg-purple-50 shadow-lg transition"
             >
               <Phone size={18} /> अभी Call करें: 6203138576
             </a>
