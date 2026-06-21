@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { Inter, Space_Grotesk } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { AuthProvider } from "@/components/auth-provider";
@@ -6,6 +7,22 @@ import { FloatingContact } from "@/components/floating-contact";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 const BASE_URL = "https://sikshawallah.com";
+
+// Self-hosted via next/font: fonts are served from our own origin (no
+// render-blocking request to fonts.gstatic.com) and a metric-adjusted fallback
+// is generated automatically, so swapping the web font in causes ~zero layout
+// shift. Both are variable fonts, so the full weight axis is included.
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-space-grotesk",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -49,6 +66,15 @@ export const metadata: Metadata = {
   // page at the site root.
 };
 
+// Explicit, mobile-correct viewport. Ensures width=device-width so the page is
+// laid out at the device width on first paint (no desktop-width → rescale flash).
+// No maximum-scale / user-scalable=no — pinch-zoom must stay enabled for a11y.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#003f9f",
+};
+
 const localBusinessSchema = {
   "@context": "https://schema.org",
   "@type": "EducationalOrganization",
@@ -84,14 +110,8 @@ const localBusinessSchema = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} scroll-smooth`}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700&family=Space+Grotesk:wght@500;600;700;800&display=swap"
-          rel="stylesheet"
-        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
