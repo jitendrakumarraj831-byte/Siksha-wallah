@@ -80,7 +80,7 @@ export default function BlogPage() {
               Admission में मदद चाहिए?
             </h2>
             <p className="text-gray-500 mb-6">
-              हमारे expert counsellors से बात करें — बिल्कुल मुफ्त।
+              हमारे विशेषज्ञ काउंसलर से बात करें — बिल्कुल निःशुल्क।
             </p>
             <div className="flex justify-center gap-3 flex-wrap">
               <Link

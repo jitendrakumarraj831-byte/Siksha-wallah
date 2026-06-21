@@ -191,7 +191,7 @@ export default function StudentLoginPage() {
             </h1>
 
             <p className="text-emerald-100 leading-relaxed mb-8">
-              अपने admission status, documents, और counselling updates — सब एक जगह track करें।
+              अपने admission status, दस्तावेज़, और परामर्श अपडेट — सब एक जगह देखें।
             </p>
 
             <div className="space-y-3">
@@ -219,9 +219,9 @@ export default function StudentLoginPage() {
                 </Link>
               </p>
               <p className="text-sm text-emerald-200">
-                नया account बनाना है?{" "}
+                नया अकाउंट बनाना है?{" "}
                 <Link href="/auth/register" className="font-bold text-amber-400 hover:text-amber-300 underline">
-                  Register करें →
+                  रजिस्टर करें →
                 </Link>
               </p>
             </div>
@@ -288,7 +288,7 @@ export default function StudentLoginPage() {
                         />
                       </div>
                       <p className="mt-1.5 text-xs text-emerald-300">
-                        आपके number पर OTP SMS आएगा — बिल्कुल free।
+                        आपके नंबर पर OTP SMS आएगा — बिल्कुल निःशुल्क।
                       </p>
                     </div>
 
@@ -416,9 +416,9 @@ export default function StudentLoginPage() {
 
             <div className="mt-5 rounded-xl border border-white/20 bg-white/5 p-4 text-center">
               <p className="text-sm text-emerald-200">
-                नया account नहीं है?{" "}
+                नया अकाउंट नहीं है?{" "}
                 <Link href="/auth/register" className="font-bold text-amber-400 hover:text-amber-300 underline">
-                  <UserPlus size={13} className="inline mr-1" />Register करें
+                  <UserPlus size={13} className="inline mr-1" />रजिस्टर करें
                 </Link>
               </p>
             </div>

@@ -126,7 +126,7 @@ export default function Home() {
                 B.Ed, D.El.Ed, MBBS से MBA तक —{" "}
                 <strong className="text-white font-extrabold">100% Transparent Guidance</strong>{" "}
                 और Direct Admission Support,{" "}
-                <strong className="text-white font-extrabold">बिना किसी Hidden Charges के!</strong>
+                <strong className="text-white font-extrabold">बिना किसी छिपे शुल्क के!</strong>
               </p>
 
               {/* CTA buttons */}
@@ -137,7 +137,7 @@ export default function Home() {
                 >
                   {/* Shine sweep on hover */}
                   <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
-                  Free Expert सलाह लें
+                  निःशुल्क विशेषज्ञ सलाह लें
                   <ArrowRight size={18} className="flex-shrink-0 transition-transform duration-200 group-hover:translate-x-1" />
                 </a>
                 <a
@@ -160,7 +160,7 @@ export default function Home() {
                 <div className="flex flex-col items-center gap-4 py-10 text-center">
                   <CheckCircle2 size={56} className="text-green-400" />
                   <h3 className="font-headline text-2xl font-extrabold">धन्यवाद! 🎉</h3>
-                  <p className="text-blue-100">हमारा counsellor जल्द ही आपसे WhatsApp पर संपर्क करेगा।</p>
+                  <p className="text-blue-100">हमारे काउंसलर जल्द ही आपसे WhatsApp पर संपर्क करेंगे।</p>
                   <button
                     onClick={() => { setFormSubmitted(false); setStep(0); setFormData({ name: "", mobile: "", course: "", qualify: "" }); }}
                     className="rounded-xl bg-amber-400 px-6 py-3 font-bold text-gray-900 transition-all duration-200 hover:bg-amber-300 hover:-translate-y-0.5 active:scale-95"
@@ -204,7 +204,7 @@ export default function Home() {
                     {step === 1 && (
                       <>
                         <label className="block text-sm font-bold text-blue-100">
-                          Mobile Number <span className="text-amber-400">*</span>
+                          मोबाइल नंबर <span className="text-amber-400">*</span>
                         </label>
                         <input
                           value={formData.mobile}
@@ -284,14 +284,14 @@ export default function Home() {
                             <ArrowRight size={16} className="flex-shrink-0 transition-transform duration-200 group-hover:translate-x-1" />
                           </>
                         ) : (
-                          "Submit & WhatsApp करें 🚀"
+                          "जमा करें & WhatsApp करें 🚀"
                         )}
                       </button>
                     </div>
                   </div>
 
                   <p className="mt-4 text-center text-xs text-blue-300">
-                    🔒 100% Free · No Spam · आपकी जानकारी सुरक्षित है
+                    🔒 100% निःशुल्क · कोई Spam नहीं · आपकी जानकारी सुरक्षित है
                   </p>
                 </>
               )}
@@ -401,7 +401,7 @@ export default function Home() {
             <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">सभी स्ट्रीम्स उपलब्ध हैं (Streams Available)</p>
             <h2 className="font-headline text-4xl md:text-5xl font-extrabold">अपना Stream चुनें</h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto">
-              3 main streams — 40+ courses — सभी के लिए expert guidance available
+              3 मुख्य धाराएँ — 40+ कोर्सेज — सभी के लिए विशेषज्ञ मार्गदर्शन उपलब्ध
             </p>
           </AnimateIn>
 
@@ -831,7 +831,7 @@ export default function Home() {
             {/* Eligibility Checker */}
             <div className="rounded-2xl border border-white/20 bg-white/10 p-7 backdrop-blur-xl">
               <h3 className="font-headline text-xl font-extrabold mb-5">
-                Check BSCC Eligibility
+                BSCC पात्रता जाँचें
               </h3>
 
               {bsccEligible === null ? (
@@ -950,7 +950,7 @@ export default function Home() {
             <h3 className="font-headline text-3xl font-extrabold text-center mb-10">Admission कैसे मिलता है? Simple 4 Steps</h3>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {[
-                { step: "01", title: "Call या WhatsApp करें", desc: "हमसे contact करें — free में बात करें" },
+                { step: "01", title: "कॉल या WhatsApp करें", desc: "हमसे संपर्क करें — निःशुल्क बात करें" },
                 { step: "02", title: "प्रोफाइल और डॉक्यूमेंट शेयर करें", desc: "Marks, budget, documents, और goals बताएं" },
                 { step: "03", title: "सर्वश्रेष्ठ कॉलेज विकल्प चुनें", desc: "Top colleges और courses की verified list मिलेगी" },
                 { step: "04", title: "Admission Confirm", desc: "Documents से admission तक — हम साथ हैं" },
@@ -1236,7 +1236,7 @@ export default function Home() {
             <div>
               <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-3">FAQ</p>
               <h2 className="font-headline text-4xl font-extrabold">अक्सर पूछे जाने वाले सवाल</h2>
-              <p className="mt-4 text-gray-500">Direct बात करना चाहते हैं?</p>
+              <p className="mt-4 text-gray-500">सीधे बात करना चाहते हैं?</p>
               <div className="mt-6 space-y-3">
                 {[["6203138576", "Rajesh Kr. Sah"], ["7858062498", "Md. Naseem Ansari"], ["9162653235", "Gautam Kumar"]].map(([num, name]) => (
                   <a key={num} href={`tel:+91${num}`} className="flex items-center gap-3 rounded-xl border border-gray-200 p-4 font-semibold text-gray-700 transition hover:border-primary-blue hover:text-primary-blue">
@@ -1338,7 +1338,7 @@ export default function Home() {
             <AnimateIn type="fade-left" delay={100}>
             <div className="rounded-2xl bg-white p-8 text-gray-900 shadow-xl">
               <h3 className="font-headline text-2xl font-extrabold mb-2">Admission Plan बनाइए</h3>
-              <p className="text-gray-500 text-sm mb-6">Fill the form — हमारा counsellor 30 minutes में call करेगा।</p>
+              <p className="text-gray-500 text-sm mb-6">फॉर्म भरें — हमारे काउंसलर 30 मिनट में कॉल करेंगे।</p>
               <form
                 onSubmit={async (e) => {
                   e.preventDefault();
@@ -1379,10 +1379,10 @@ export default function Home() {
                   <option>Post Graduation</option>
                 </select>
                 <button type="submit" className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary-blue py-4 font-extrabold text-white transition hover:bg-blue-700 shadow-lg shadow-blue-200 active:scale-95">
-                  Free Counselling Book करें <ArrowRight size={18} />
+                  निःशुल्क परामर्श बुक करें <ArrowRight size={18} />
                 </button>
               </form>
-              <p className="mt-4 text-center text-xs text-gray-400">100% Free. No spam. No hidden charges.</p>
+              <p className="mt-4 text-center text-xs text-gray-400">100% निःशुल्क। कोई spam नहीं। कोई छिपे शुल्क नहीं।</p>
             </div>
             </AnimateIn>
           </div>

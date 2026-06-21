@@ -179,7 +179,7 @@ export default function ApplyPage() {
               </div>
             </div>
             <h1 className="font-headline text-3xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent mb-2">
-              Application Submit हो गई! 🎉
+              आवेदन सफलतापूर्वक जमा हो गया! 🎉
             </h1>
             <p className="text-gray-600 mb-4">
               आपकी application हमें मिल गई है। हमारा counsellor <strong>30 मिनट में</strong> आपको call या WhatsApp करेगा।
@@ -228,7 +228,7 @@ export default function ApplyPage() {
               Course के लिए <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Apply करें</span>
             </h1>
             <p className="mt-3 text-blue-100 max-w-xl mx-auto">
-              अपनी सारी details भरें। हमारा expert counsellor 30 मिनट में contact करेगा — Free Guidance।
+              अपनी सारी जानकारी भरें। हमारे विशेषज्ञ काउंसलर 30 मिनट में संपर्क करेंगे — निःशुल्क मार्गदर्शन।
             </p>
           </div>
         </section>
@@ -317,7 +317,7 @@ export default function ApplyPage() {
 
                       <div className="grid gap-4 sm:grid-cols-2">
                         <div>
-                          <label className="mb-1.5 block text-sm font-semibold text-gray-700">Mobile Number *</label>
+                          <label className="mb-1.5 block text-sm font-semibold text-gray-700">मोबाइल नंबर *</label>
                           <div className="relative">
                             <Phone size={15} className="absolute left-3.5 top-3.5 text-gray-400" />
                             <input
@@ -668,7 +668,7 @@ export default function ApplyPage() {
 
         {/* Help strip */}
         <section className="bg-[#001f6b] py-10 text-white text-center">
-          <p className="font-headline text-lg font-bold mb-3">सवाल है? हमें call करें — Free Guidance</p>
+          <p className="font-headline text-lg font-bold mb-3">सवाल है? हमें कॉल करें — निःशुल्क मार्गदर्शन</p>
           <div className="flex flex-wrap justify-center gap-3">
             <a href="tel:+916203138576" className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-extrabold text-[#003f9f] hover:bg-blue-50">
               <Phone size={16} /> +91 6203138576
