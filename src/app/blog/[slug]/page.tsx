@@ -160,7 +160,7 @@ export default async function BlogArticlePage({ params }: Props) {
                 <Clock size={11} /> {article.readTime} read
               </span>
             </div>
-            <h1 className="font-headline text-3xl md:text-4xl font-extrabold leading-tight mb-2">
+            <h1 className="font-headline text-3xl md:text-4xl font-extrabold leading-tight mb-2 bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
               {article.titleHi ?? article.title}
             </h1>
             <p className="text-blue-100 text-sm">{article.excerpt}</p>

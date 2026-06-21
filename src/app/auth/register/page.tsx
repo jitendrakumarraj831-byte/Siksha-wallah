@@ -82,7 +82,7 @@ export default function RegisterPage() {
       <section className="container-shell grid min-h-screen items-center gap-12 py-16 lg:grid-cols-2">
         <div>
           <p className="text-sm font-extrabold uppercase tracking-[.2em] text-[#1357e6]">Join Us</p>
-          <h1 className="mt-3 font-display text-4xl font-extrabold sm:text-5xl">
+          <h1 className="mt-3 font-display text-4xl font-extrabold sm:text-5xl bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
             Create your student account
           </h1>
           <p className="mt-5 max-w-xl text-lg leading-8 text-slate-600">

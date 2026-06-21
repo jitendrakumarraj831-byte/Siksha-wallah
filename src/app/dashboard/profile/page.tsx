@@ -113,7 +113,7 @@ export default function ProfilePage() {
         </Link>
 
         <div className="mt-8 max-w-2xl rounded-2xl border bg-white p-8">
-          <h1 className="text-3xl font-extrabold text-slate-900">Edit Profile</h1>
+          <h1 className="text-3xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Edit Profile</h1>
           <p className="mt-2 text-slate-600">Update your personal information</p>
 
           {error && (

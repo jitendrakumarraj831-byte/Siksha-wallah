@@ -22,7 +22,7 @@ export default function BlogPage() {
             <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-semibold mb-4">
               <BookOpen size={14} /> Education Blog
             </div>
-            <h1 className="font-headline text-4xl font-extrabold mb-3">Siksha Wallah Blog</h1>
+            <h1 className="font-headline text-4xl font-extrabold mb-3 bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Siksha Wallah Blog</h1>
             <p className="text-blue-100 max-w-xl mx-auto">
               Bihar admissions, BSCC loan guide, course comparisons — expert articles in Hindi &amp;
               English.

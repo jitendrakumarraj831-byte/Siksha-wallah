@@ -81,7 +81,7 @@ export default function DashboardPage() {
         <div className="mb-8 flex items-center justify-between rounded-2xl bg-gradient-to-r from-[#001f6b] to-[#003f9f] p-6 text-white">
           <div>
             <p className="text-blue-200 text-sm font-semibold mb-1">🎓 Student Dashboard</p>
-            <h1 className="text-2xl font-extrabold">नमस्ते, {name}!</h1>
+            <h1 className="text-2xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">नमस्ते, {name}!</h1>
             <p className="mt-1 text-blue-200 text-sm">{user?.email}</p>
           </div>
           <button

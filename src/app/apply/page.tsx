@@ -178,7 +178,7 @@ export default function ApplyPage() {
                 <CheckCircle2 size={56} className="text-green-500" />
               </div>
             </div>
-            <h1 className="font-headline text-3xl font-extrabold text-gray-900 mb-2">
+            <h1 className="font-headline text-3xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent mb-2">
               Application Submit हो गई! 🎉
             </h1>
             <p className="text-gray-600 mb-4">
@@ -223,7 +223,7 @@ export default function ApplyPage() {
               <FileText size={15} className="text-amber-400" /> Online Course Application Form
             </div>
             <h1 className="font-headline text-4xl md:text-5xl font-extrabold mt-3">
-              Course के लिए <span className="text-amber-400">Apply करें</span>
+              Course के लिए <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Apply करें</span>
             </h1>
             <p className="mt-3 text-blue-100 max-w-xl mx-auto">
               अपनी सारी details भरें। हमारा expert counsellor 30 मिनट में contact करेगा — Free Guidance।

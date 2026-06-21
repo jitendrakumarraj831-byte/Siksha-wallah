@@ -64,8 +64,8 @@ export default function AboutPage() {
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold">
             <MapPin size={15} className="text-amber-400" /> College Chowk, Forbesganj, Araria — 2015 से
           </div>
-          <h1 className="font-headline text-4xl md:text-6xl font-extrabold leading-tight mt-3">
-            हमारे बारे में — <span className="text-amber-400">Siksha Wallah</span>
+          <h1 className="font-headline text-4xl md:text-6xl font-extrabold leading-tight mt-3 bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
+            हमारे बारे में — Siksha Wallah
           </h1>
           <p className="mt-5 max-w-2xl mx-auto text-lg text-blue-100 leading-relaxed">
             Araria जिले का सबसे विश्वसनीय Admission Consultancy — जहाँ हर student को मिलती है सही guidance, सही college, और सुरक्षित career।
@@ -91,8 +91,8 @@ export default function AboutPage() {
           <div className="grid gap-12 lg:grid-cols-2 items-center">
             <div>
               <p className="text-sm font-bold uppercase tracking-widest text-[#003f9f] mb-2">हमारी कहानी</p>
-              <h2 className="font-headline text-4xl font-extrabold mb-6">
-                Siksha Wallah क्यों बना? <span className="text-[#dc143c]">असली वजह।</span>
+              <h2 className="font-headline text-4xl font-extrabold mb-6 bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
+                Siksha Wallah क्यों बना? असली वजह।
               </h2>
               <p className="text-gray-600 leading-relaxed mb-4">
                 2015 में, Forbesganj और आसपास के गाँवों के हजारों students के पास न सही information थी, न कोई trustworthy guide। महंगे private agents झूठे वादे करते थे, hidden charges लेते थे — और students का भविष्य अंधेरे में डूब जाता था।
@@ -136,7 +136,7 @@ export default function AboutPage() {
         <div className="container-shell">
           <div className="text-center mb-12">
             <p className="text-sm font-bold uppercase tracking-widest text-[#003f9f] mb-2">हमारी Expert Team</p>
-            <h2 className="font-headline text-4xl font-extrabold">जो लोग आपकी मदद करते हैं</h2>
+            <h2 className="font-headline text-4xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">जो लोग आपकी मदद करते हैं</h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto text-sm">
               हमारे counsellors real लोग हैं — certified, experienced, और हमेशा आपके लिए available।
             </p>
@@ -184,7 +184,7 @@ export default function AboutPage() {
         <div className="container-shell">
           <div className="text-center mb-12">
             <p className="text-sm font-bold uppercase tracking-widest text-[#dc143c] mb-2">हमारी खासियत</p>
-            <h2 className="font-headline text-4xl font-extrabold">Siksha Wallah को क्यों चुनें?</h2>
+            <h2 className="font-headline text-4xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Siksha Wallah को क्यों चुनें?</h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto text-sm">
               सिर्फ वादे नहीं — 5,000+ students के proven results।
             </p>
@@ -208,7 +208,7 @@ export default function AboutPage() {
         <div className="container-shell">
           <div className="text-center mb-12">
             <p className="text-sm font-bold uppercase tracking-widest text-amber-400 mb-2">हमारा सफर</p>
-            <h2 className="font-headline text-4xl font-extrabold">2015 से आज तक की यात्रा</h2>
+            <h2 className="font-headline text-4xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">2015 से आज तक की यात्रा</h2>
           </div>
           <div className="relative max-w-2xl mx-auto">
             <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-white/10" />
@@ -232,7 +232,7 @@ export default function AboutPage() {
       {/* CTA */}
       <section className="py-16 bg-amber-400">
         <div className="container-shell text-center">
-          <h2 className="font-headline text-3xl md:text-4xl font-extrabold text-gray-900 mb-3">
+          <h2 className="font-headline text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent mb-3">
             आज ही अपनी Free Counselling बुक करें
           </h2>
           <p className="text-gray-800 mb-8 max-w-xl mx-auto text-sm leading-relaxed">

@@ -121,7 +121,7 @@ export default function ContactPage() {
           <div className="container-shell">
             <p className="text-sm font-bold uppercase tracking-widest text-amber-400 mb-3">हमसे बात करें</p>
             <h1 className="font-headline text-4xl md:text-5xl font-extrabold mb-4">
-              <span className="text-amber-400">संपर्क करें</span> — हम यहाँ हैं
+              <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">संपर्क करें</span> — हम यहाँ हैं
             </h1>
             <p className="text-blue-100 max-w-xl mx-auto leading-relaxed">
               Admission inquiry, BSCC loan guidance, या कोई भी सवाल हो — Call करें, WhatsApp करें, या नीचे form भरें। हमारे counsellor <strong className="text-white">30 मिनट में</strong> जवाब देंगे।
@@ -267,7 +267,7 @@ export default function ContactPage() {
                 ) : (
                   <>
                     <div className="mb-6">
-                      <h2 className="font-headline text-2xl font-extrabold text-gray-900">
+                      <h2 className="font-headline text-2xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
                         Free Counselling के लिए Inquiry भेजें
                       </h2>
                       <p className="text-gray-500 text-sm mt-1">
