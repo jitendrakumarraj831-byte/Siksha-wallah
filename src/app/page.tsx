@@ -115,19 +115,20 @@ export default function Home() {
                 </div>
                 <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-400/15 px-3 py-1.5 text-xs font-bold text-amber-300">
                   <BadgeCheck size={13} className="text-amber-400" />
-                  ९+ वर्षों का अनुभव
+                  9+ वर्षों का अनुभव
                 </div>
               </div>
 
               {/* H1 — Hinglish premium style */}
-              <h1 className="font-headline text-[2.1rem] leading-[1.15] tracking-tight md:text-5xl lg:text-[3.6rem] lg:leading-[1.08] font-black">
-                <span className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
+              <h1 className="font-headline text-[2.4rem] leading-[1.12] tracking-tight md:text-6xl lg:text-[4rem] lg:leading-[1.06] font-black">
+                <span className="block text-white drop-shadow-[0_2px_12px_rgba(255,255,255,0.25)]">
                   Your Dream College,
                 </span>
-                <br />
-                <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
+                <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent drop-shadow-[0_4px_24px_rgba(251,191,36,0.45)]">
                   Sahi Guidance के साथ!
                 </span>
+                {/* Decorative underline accent on line 2 */}
+                <span className="mt-2 block h-1 w-32 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 opacity-70 md:w-48" />
               </h1>
 
               {/* Sub-heading */}
@@ -145,10 +146,10 @@ export default function Home() {
               {/* Feature pills — new addition */}
               <div className="mt-5 flex flex-wrap gap-2">
                 {[
-                  { icon: GraduationCap, text: "१९+ कोर्सेज" },
+                  { icon: GraduationCap, text: "19+ कोर्सेज" },
                   { icon: CreditCard,    text: "BSCC लोन सहायता" },
                   { icon: ShieldCheck,   text: "NCTE / INC मान्यता" },
-                  { icon: Clock,         text: "२४ घंटे सहायता" },
+                  { icon: Clock,         text: "24 घंटे सहायता" },
                 ].map(({ icon: Icon, text }) => (
                   <span key={text} className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold text-blue-100 backdrop-blur">
                     <Icon size={12} className="text-amber-400" />
@@ -299,10 +300,10 @@ export default function Home() {
                           className="w-full rounded-xl border border-white/30 bg-[#003f9f] px-4 py-3.5 text-white outline-none transition focus:border-amber-400"
                         >
                           <option value="">-- योग्यता चुनें --</option>
-                          <option>१०वीं पास</option>
-                          <option>१२वीं पास (कला)</option>
-                          <option>१२वीं पास (विज्ञान)</option>
-                          <option>१२वीं पास (वाणिज्य)</option>
+                          <option>10वीं पास</option>
+                          <option>12वीं पास (कला)</option>
+                          <option>12वीं पास (विज्ञान)</option>
+                          <option>12वीं पास (वाणिज्य)</option>
                           <option>स्नातक (Graduation)</option>
                           <option>स्नातकोत्तर (Post Graduation)</option>
                         </select>
@@ -426,8 +427,8 @@ export default function Home() {
           <div className="flex flex-wrap items-center justify-center gap-6 text-sm font-semibold text-gray-300">
             {[
               [ShieldCheck, "NCTE & UGC मान्यता प्राप्त"],
-              [Award, "९+ वर्षों का अनुभव"],
-              [Users, "५०००+ छात्र लाभान्वित"],
+              [Award, "9+ वर्षों का अनुभव"],
+              [Users, "5000+ छात्र लाभान्वित"],
               [CheckCircle2, "कोई छुपा शुल्क नहीं"],
             ].map(([Icon, text], i) => (
               <span key={i} className="flex items-center gap-2">
