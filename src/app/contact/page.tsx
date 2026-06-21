@@ -7,43 +7,87 @@ import { saveInquiry } from "@/services/inquiry-service";
 import { saveActivity } from "@/services/activity-service";
 import {
   Phone, MessageCircle, MapPin, Clock, CheckCircle2,
-  Send, ArrowRight, Mail, User,
+  Send, ArrowRight, Mail, User, AlertCircle,
 } from "lucide-react";
 
 const counsellors = [
-  { name: "Rajesh Kumar Sah", role: "Founder & Chief Counsellor", phone: "6203138576", expertise: "B.Ed, D.El.Ed, All Courses" },
-  { name: "Helpline 2", role: "Admission Helpline", phone: "7858062498", expertise: "BSCC, Nursing, Pharmacy" },
-  { name: "Helpline 3", role: "Medical & Nursing Helpline", phone: "9472813581", expertise: "Nursing, B.Pharma, MBBS — Pan-India" },
-  { name: "Gautam Kumar", role: "BSCC Enquiry & Branch Office", phone: "9162653235", expertise: "Bihar Student Credit Card — Kursakanta" },
+  {
+    name: "Rajesh Kumar Sah",
+    role: "Founder & Chief Counsellor",
+    phone: "6203138576",
+    expertise: "B.Ed, D.El.Ed, BSCC, सभी Courses",
+    available: "Mon–Sat: 9AM–6PM",
+  },
+  {
+    name: "Md. Naseem Ansari",
+    role: "Nursing & BSCC Specialist",
+    phone: "7858062498",
+    expertise: "BSCC Loan, Nursing, B.Pharma, GNM, ANM",
+    available: "Mon–Sat: 9AM–6PM",
+  },
+  {
+    name: "Medical Admission Helpline",
+    role: "Pan-India Medical Admissions",
+    phone: "9472813581",
+    expertise: "Nursing, B.Pharma, MBBS — पूरे India में",
+    available: "Mon–Sat: 9AM–5PM",
+  },
+  {
+    name: "Gautam Kumar",
+    role: "Kursakanta Branch — BSCC & Tech",
+    phone: "9162653235",
+    expertise: "BSCC, B.Tech, BBA, MBA — Kursakanta क्षेत्र",
+    available: "Mon–Sat: 9AM–6PM",
+  },
 ];
 
 const officeHours = [
-  ["Monday – Saturday", "9:00 AM – 6:00 PM"],
-  ["Sunday", "10:00 AM – 2:00 PM (Emergency only)"],
-  ["WhatsApp", "24/7 Available"],
+  ["सोमवार – शनिवार", "सुबह 9:00 – शाम 6:00 बजे"],
+  ["रविवार", "सुबह 10:00 – दोपहर 2:00 बजे (Emergency only)"],
+  ["WhatsApp", "24/7 — कभी भी message करें"],
 ];
 
 export default function ContactPage() {
   const [form, setForm] = useState({ fullName: "", mobile: "", email: "", course: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [emailSent, setEmailSent] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+
+    if (!form.fullName.trim() || form.fullName.trim().length < 2) {
+      setError("कृपया अपना पूरा नाम लिखें।");
+      return;
+    }
+    if (!form.mobile.trim() || !/^\d{10}$/.test(form.mobile.trim())) {
+      setError("कृपया सही 10-अंकों का mobile number लिखें।");
+      return;
+    }
+
     setLoading(true);
     try {
-      await saveInquiry({ fullName: form.fullName, mobile: form.mobile, course: form.course, message: form.message });
+      await saveInquiry({
+        fullName: form.fullName,
+        mobile: form.mobile,
+        course: form.course,
+        message: form.message,
+      });
 
-      // Send email via API
       try {
-        const res = await fetch("/api/contact", {
+        await fetch("/api/contact", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: form.fullName, phone: form.mobile, email: form.email, course: form.course, message: form.message }),
+          body: JSON.stringify({
+            name: form.fullName,
+            phone: form.mobile,
+            email: form.email,
+            course: form.course,
+            message: form.message,
+          }),
         });
-        if (res.ok) setEmailSent(true);
-      } catch (_) {
+      } catch {
         // Email failure is non-blocking
       }
 
@@ -57,12 +101,12 @@ export default function ContactPage() {
         course: form.course,
         page: "/contact",
       });
-      const msg = `New Inquiry from Contact Page!%0AName: ${form.fullName}%0AMobile: ${form.mobile}%0ACourse: ${form.course}%0AMessage: ${form.message}`;
-      saveActivity({ type: "whatsapp", title: "📱 WhatsApp Opened", description: `${form.fullName} — Contact page`, name: form.fullName, mobile: form.mobile, page: "/contact" });
-      window.open(`https://wa.me/916203138576?text=${msg}`, "_blank");
+
+      const waText = `नमस्ते! मेरा नाम ${encodeURIComponent(form.fullName)} है।%0AMobile: ${form.mobile}%0ACourse: ${encodeURIComponent(form.course || "जानकारी चाहिए")}%0A${form.message ? "Message: " + encodeURIComponent(form.message) : ""}`;
+      window.open(`https://wa.me/916203138576?text=${waText}`, "_blank");
       setSubmitted(true);
-    } catch (_) {
-      alert("Error submitting. Please call us directly.");
+    } catch {
+      setError("Submit नहीं हुआ। कृपया directly call करें: 6203138576");
     } finally {
       setLoading(false);
     }
@@ -75,22 +119,39 @@ export default function ContactPage() {
         {/* Hero */}
         <section className="bg-gradient-to-br from-[#001f6b] to-[#003f9f] py-16 text-white text-center">
           <div className="container-shell">
-            <p className="text-sm font-bold uppercase tracking-widest text-amber-400 mb-3">Get In Touch</p>
+            <p className="text-sm font-bold uppercase tracking-widest text-amber-400 mb-3">हमसे बात करें</p>
             <h1 className="font-headline text-4xl md:text-5xl font-extrabold mb-4">
-              हमसे <span className="text-amber-400">Contact</span> करें
+              <span className="text-amber-400">संपर्क करें</span> — हम यहाँ हैं
             </h1>
-            <p className="text-blue-100 max-w-xl mx-auto">
-              Admission inquiry, BSCC guidance, या कोई भी सवाल — हम यहाँ हैं। Call करें, WhatsApp करें, या form fill करें।
+            <p className="text-blue-100 max-w-xl mx-auto leading-relaxed">
+              Admission inquiry, BSCC loan guidance, या कोई भी सवाल हो — Call करें, WhatsApp करें, या नीचे form भरें। हमारे counsellor <strong className="text-white">30 मिनट में</strong> जवाब देंगे।
             </p>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <a
+                href="tel:+916203138576"
+                className="inline-flex items-center gap-2 rounded-xl bg-amber-400 px-6 py-3 text-sm font-extrabold text-gray-900 hover:bg-amber-300 transition shadow-lg"
+              >
+                <Phone size={16} /> अभी Call करें
+              </a>
+              <a
+                href="https://wa.me/916203138576?text=नमस्ते! मुझे Admission Counselling चाहिए।"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl border-2 border-white/40 bg-white/10 px-6 py-3 text-sm font-bold text-white hover:bg-white/20 transition backdrop-blur"
+              >
+                <MessageCircle size={16} /> WhatsApp करें
+              </a>
+            </div>
           </div>
         </section>
 
-        <section className="py-20 bg-gray-50">
+        <section className="py-16 bg-gray-50">
           <div className="container-shell">
             <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr]">
 
               {/* LEFT — Contact Info */}
-              <div className="space-y-6">
+              <div className="space-y-5">
+
                 {/* Office Address */}
                 <div className="rounded-2xl bg-white border-2 border-gray-100 p-6 shadow-sm">
                   <div className="flex items-start gap-4">
@@ -98,8 +159,8 @@ export default function ContactPage() {
                       <MapPin size={22} />
                     </div>
                     <div>
-                      <h3 className="font-headline text-lg font-extrabold text-gray-900">Office Address</h3>
-                      <p className="mt-1 text-gray-600">College Chowk, Near HP Petrol Pump</p>
+                      <h3 className="font-headline text-lg font-extrabold text-gray-900">हमारा Office</h3>
+                      <p className="mt-1 text-gray-600 font-medium">College Chowk, Near HP Petrol Pump</p>
                       <p className="text-gray-600">Forbesganj, Araria — Bihar 854318</p>
                       <a
                         href="https://maps.google.com/?q=College+Chowk+Forbesganj+Araria+Bihar"
@@ -107,7 +168,7 @@ export default function ContactPage() {
                         rel="noopener noreferrer"
                         className="mt-2 inline-flex items-center gap-1.5 text-sm font-bold text-[#003f9f] hover:underline"
                       >
-                        Open in Google Maps →
+                        Google Maps पर देखें <ArrowRight size={13} />
                       </a>
                     </div>
                   </div>
@@ -117,11 +178,11 @@ export default function ContactPage() {
                 <div className="rounded-2xl bg-white border-2 border-gray-100 p-6 shadow-sm">
                   <div className="flex items-center gap-3 mb-4">
                     <Clock size={20} className="text-[#003f9f]" />
-                    <h3 className="font-headline text-lg font-extrabold text-gray-900">Office Hours</h3>
+                    <h3 className="font-headline text-lg font-extrabold text-gray-900">Office समय</h3>
                   </div>
                   <div className="space-y-2">
                     {officeHours.map(([day, time]) => (
-                      <div key={day} className="flex items-center justify-between text-sm py-1.5 border-b border-gray-100 last:border-0">
+                      <div key={day} className="flex items-center justify-between text-sm py-2 border-b border-gray-100 last:border-0">
                         <span className="font-semibold text-gray-700">{day}</span>
                         <span className="text-[#003f9f] font-bold">{time}</span>
                       </div>
@@ -130,33 +191,37 @@ export default function ContactPage() {
                 </div>
 
                 {/* Counsellors */}
-                <div className="space-y-3">
-                  <h3 className="font-headline text-lg font-extrabold text-gray-900">Call Our Counsellors</h3>
-                  {counsellors.map(({ name, role, phone, expertise }) => (
-                    <a
-                      key={phone}
-                      href={`tel:+91${phone}`}
-                      className="flex items-center gap-4 rounded-2xl bg-white border-2 border-gray-100 p-4 shadow-sm hover:border-[#003f9f] hover:shadow-md transition"
-                    >
-                      <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-[#003f9f] font-headline font-extrabold text-lg text-white">
-                        {name[0]}
-                      </div>
-                      <div className="flex-1">
-                        <p className="font-bold text-gray-900">{name}</p>
-                        <p className="text-xs text-[#003f9f] font-semibold">{role}</p>
-                        <p className="text-xs text-gray-400 mt-0.5">{expertise}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-bold text-gray-900 text-sm">+91 {phone}</p>
-                        <span className="text-xs text-green-600 font-semibold">Call Now</span>
-                      </div>
-                    </a>
-                  ))}
+                <div>
+                  <h3 className="font-headline text-lg font-extrabold text-gray-900 mb-3">
+                    हमारे Counsellors से बात करें
+                  </h3>
+                  <div className="space-y-3">
+                    {counsellors.map(({ name, role, phone, expertise, available }) => (
+                      <a
+                        key={phone}
+                        href={`tel:+91${phone}`}
+                        className="flex items-center gap-4 rounded-2xl bg-white border-2 border-gray-100 p-4 shadow-sm hover:border-[#003f9f] hover:shadow-md transition group"
+                      >
+                        <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#003f9f] to-[#0060c7] font-headline font-extrabold text-lg text-white">
+                          {name[0]}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-bold text-gray-900 truncate">{name}</p>
+                          <p className="text-xs text-[#003f9f] font-semibold">{role}</p>
+                          <p className="text-xs text-gray-400 mt-0.5 truncate">{expertise}</p>
+                        </div>
+                        <div className="text-right flex-shrink-0">
+                          <p className="font-bold text-gray-900 text-sm group-hover:text-[#003f9f] transition">+91 {phone}</p>
+                          <span className="text-xs text-green-600 font-semibold">● Call करें</span>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
                 </div>
 
                 {/* WhatsApp */}
                 <a
-                  href="https://wa.me/916203138576?text=Hi! I need admission guidance from Siksha Wallah."
+                  href="https://wa.me/916203138576?text=नमस्ते! मुझे Siksha Wallah से Admission Counselling चाहिए। कृपया guide करें।"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-3 rounded-2xl bg-green-500 px-6 py-4 font-extrabold text-white hover:bg-green-600 transition shadow-lg shadow-green-500/20"
@@ -169,66 +234,99 @@ export default function ContactPage() {
               <div className="rounded-2xl bg-white border-2 border-gray-100 p-8 shadow-sm">
                 {submitted ? (
                   <div className="flex flex-col items-center gap-4 py-16 text-center">
-                    <CheckCircle2 size={64} className="text-green-500" />
-                    <h3 className="font-headline text-2xl font-extrabold text-gray-900">धन्यवाद! 🎉</h3>
-                    <p className="text-gray-500 max-w-xs">
-                      आपकी inquiry save हो गई है। हमारा counsellor 30 minutes में WhatsApp/Call करेगा।
-                      {emailSent && " Confirmation email भी भेजी गई है।"}
+                    <div className="flex h-24 w-24 items-center justify-center rounded-full bg-green-100">
+                      <CheckCircle2 size={56} className="text-green-500" />
+                    </div>
+                    <h3 className="font-headline text-2xl font-extrabold text-gray-900">
+                      आपकी Inquiry मिल गई! 🎉
+                    </h3>
+                    <p className="text-gray-500 max-w-xs leading-relaxed">
+                      हमारा counsellor <strong className="text-gray-800">30 मिनट में</strong> आपको WhatsApp या Call करेगा। साथ ही WhatsApp पर message भी भेज दिया गया है।
                     </p>
+                    <div className="rounded-xl bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700 font-semibold">
+                      ✅ Inquiry successfully save हो गई
+                    </div>
                     <div className="flex gap-3 mt-2">
-                      <a href="tel:+916203138576" className="inline-flex items-center gap-2 rounded-xl bg-[#003f9f] px-5 py-2.5 text-sm font-bold text-white hover:bg-blue-700">
-                        <Phone size={15} /> Call Now
+                      <a
+                        href="tel:+916203138576"
+                        className="inline-flex items-center gap-2 rounded-xl bg-[#003f9f] px-5 py-2.5 text-sm font-bold text-white hover:bg-blue-700 transition"
+                      >
+                        <Phone size={15} /> अभी Call करें
                       </a>
-                      <button onClick={() => { setSubmitted(false); setForm({ fullName: "", mobile: "", email: "", course: "", message: "" }); }} className="rounded-xl border-2 border-gray-200 px-5 py-2.5 text-sm font-bold text-gray-700 hover:border-gray-300">
-                        New Inquiry
+                      <button
+                        onClick={() => {
+                          setSubmitted(false);
+                          setForm({ fullName: "", mobile: "", email: "", course: "", message: "" });
+                        }}
+                        className="rounded-xl border-2 border-gray-200 px-5 py-2.5 text-sm font-bold text-gray-700 hover:border-gray-300 transition"
+                      >
+                        नई Inquiry भेजें
                       </button>
                     </div>
                   </div>
                 ) : (
                   <>
-                    <h2 className="font-headline text-2xl font-extrabold text-gray-900 mb-1">Send Inquiry</h2>
-                    <p className="text-gray-500 text-sm mb-6">
-                      Form fill करें — Inquiry WhatsApp पर भी जाएगी और email confirm होगा।
-                    </p>
+                    <div className="mb-6">
+                      <h2 className="font-headline text-2xl font-extrabold text-gray-900">
+                        Free Counselling के लिए Inquiry भेजें
+                      </h2>
+                      <p className="text-gray-500 text-sm mt-1">
+                        नीचे form fill करें — हमारा expert <strong className="text-gray-700">30 मिनट में</strong> contact करेगा।
+                      </p>
+                    </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                      {/* Name */}
+                    {error && (
+                      <div className="mb-5 flex gap-3 rounded-xl bg-red-50 border border-red-200 p-4 text-sm text-red-700">
+                        <AlertCircle size={18} className="flex-shrink-0 mt-0.5" />
+                        <p>{error}</p>
+                      </div>
+                    )}
+
+                    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                       <div>
-                        <label className="mb-1.5 block text-sm font-semibold text-gray-700">Full Name *</label>
+                        <label htmlFor="contact-name" className="mb-1.5 block text-sm font-semibold text-gray-700">
+                          आपका पूरा नाम *
+                        </label>
                         <div className="relative">
                           <User size={16} className="absolute left-3.5 top-3.5 text-gray-400" />
                           <input
+                            id="contact-name"
                             required
                             value={form.fullName}
                             onChange={(e) => setForm({ ...form, fullName: e.target.value })}
-                            placeholder="Your full name"
+                            placeholder="जैसे: Rahul Kumar"
                             className="w-full rounded-xl border-2 border-gray-200 pl-10 pr-4 py-3.5 text-sm outline-none focus:border-[#003f9f] transition"
                           />
                         </div>
                       </div>
 
-                      {/* Mobile */}
                       <div>
-                        <label className="mb-1.5 block text-sm font-semibold text-gray-700">Mobile Number *</label>
+                        <label htmlFor="contact-mobile" className="mb-1.5 block text-sm font-semibold text-gray-700">
+                          Mobile Number *
+                        </label>
                         <div className="relative">
                           <Phone size={16} className="absolute left-3.5 top-3.5 text-gray-400" />
                           <input
+                            id="contact-mobile"
                             required
                             type="tel"
+                            maxLength={10}
                             value={form.mobile}
-                            onChange={(e) => setForm({ ...form, mobile: e.target.value })}
-                            placeholder="10-digit mobile number"
+                            onChange={(e) => setForm({ ...form, mobile: e.target.value.replace(/\D/g, "") })}
+                            placeholder="10-अंकों का mobile number"
                             className="w-full rounded-xl border-2 border-gray-200 pl-10 pr-4 py-3.5 text-sm outline-none focus:border-[#003f9f] transition"
                           />
                         </div>
                       </div>
 
-                      {/* Email */}
                       <div>
-                        <label className="mb-1.5 block text-sm font-semibold text-gray-700">Email (Optional)</label>
+                        <label htmlFor="contact-email" className="mb-1.5 block text-sm font-semibold text-gray-700">
+                          Email (वैकल्पिक)
+                        </label>
                         <div className="relative">
                           <Mail size={16} className="absolute left-3.5 top-3.5 text-gray-400" />
                           <input
+                            id="contact-email"
                             type="email"
                             value={form.email}
                             onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -238,39 +336,43 @@ export default function ContactPage() {
                         </div>
                       </div>
 
-                      {/* Course */}
                       <div>
-                        <label className="mb-1.5 block text-sm font-semibold text-gray-700">Course Interested In</label>
+                        <label htmlFor="contact-course" className="mb-1.5 block text-sm font-semibold text-gray-700">
+                          किस Course में रुचि है?
+                        </label>
                         <select
+                          id="contact-course"
                           value={form.course}
                           onChange={(e) => setForm({ ...form, course: e.target.value })}
-                          className="w-full rounded-xl border-2 border-gray-200 px-4 py-3.5 text-sm text-gray-600 outline-none focus:border-[#003f9f] bg-white transition"
+                          className="w-full rounded-xl border-2 border-gray-200 px-4 py-3.5 text-sm text-gray-700 outline-none focus:border-[#003f9f] bg-white transition"
                         >
-                          <option value="">-- Select Course --</option>
-                          <optgroup label="Teaching">
+                          <option value="">-- Course चुनें --</option>
+                          <optgroup label="🎓 Teaching">
                             <option>B.Ed</option><option>D.El.Ed</option><option>M.Ed</option>
                           </optgroup>
-                          <optgroup label="Medical & Nursing">
+                          <optgroup label="🏥 Medical & Nursing">
                             <option>MBBS</option><option>BDS</option><option>B.Sc Nursing</option>
                             <option>GNM</option><option>ANM</option><option>B.Pharma</option>
                           </optgroup>
-                          <optgroup label="Technical & Management">
+                          <optgroup label="💻 Technical & Management">
                             <option>B.Tech</option><option>Polytechnic</option><option>ITI</option>
                             <option>BCA</option><option>MCA</option><option>BBA</option><option>MBA</option>
                           </optgroup>
-                          <option>BSCC Guidance</option>
-                          <option>Not decided yet</option>
+                          <option>BSCC Loan Guidance</option>
+                          <option>अभी decide नहीं किया — guidance चाहिए</option>
                         </select>
                       </div>
 
-                      {/* Message */}
                       <div>
-                        <label className="mb-1.5 block text-sm font-semibold text-gray-700">Message / Query (Optional)</label>
+                        <label htmlFor="contact-message" className="mb-1.5 block text-sm font-semibold text-gray-700">
+                          आपका सवाल या message (वैकल्पिक)
+                        </label>
                         <textarea
+                          id="contact-message"
                           value={form.message}
                           onChange={(e) => setForm({ ...form, message: e.target.value })}
-                          rows={4}
-                          placeholder="Apna question ya special requirement likhein..."
+                          rows={3}
+                          placeholder="जैसे: मेरे 12th में 65% हैं, B.Ed के लिए eligible हूँ क्या?"
                           className="w-full rounded-xl border-2 border-gray-200 px-4 py-3.5 text-sm outline-none focus:border-[#003f9f] transition resize-none"
                         />
                       </div>
@@ -283,11 +385,11 @@ export default function ContactPage() {
                         {loading ? (
                           <span className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
                         ) : (
-                          <><Send size={18} /> Submit Inquiry</>
+                          <><Send size={18} /> Inquiry भेजें</>
                         )}
                       </button>
                       <p className="text-center text-xs text-gray-400">
-                        100% Free. No spam. Inquiry will be saved + WhatsApp redirect.
+                        100% Free • कोई spam नहीं • आपकी जानकारी सुरक्षित है
                       </p>
                     </form>
                   </>
@@ -297,15 +399,15 @@ export default function ContactPage() {
           </div>
         </section>
 
-        {/* Real Google Maps Embed */}
-        <section className="bg-white pb-20">
+        {/* Google Maps */}
+        <section className="bg-white pb-16">
           <div className="container-shell">
             <h2 className="font-headline text-xl font-bold text-gray-800 mb-4 text-center">
               हमारा Location — College Chowk, Forbesganj
             </h2>
             <div className="rounded-2xl overflow-hidden border-2 border-gray-100 shadow-sm h-72">
               <iframe
-                title="Siksha Wallah Location"
+                title="Siksha Wallah — College Chowk Forbesganj Location"
                 src="https://maps.google.com/maps?q=College+Chowk+Forbesganj+Araria+Bihar&t=&z=15&ie=UTF8&iwloc=&output=embed"
                 width="100%"
                 height="100%"
@@ -320,9 +422,9 @@ export default function ContactPage() {
                 href="https://maps.google.com/?q=College+Chowk+Forbesganj+Araria+Bihar"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl bg-[#003f9f] px-5 py-2.5 text-sm font-bold text-white hover:bg-blue-700 transition"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#003f9f] px-5 py-2.5 text-sm font-bold text-white hover:bg-blue-700 transition shadow"
               >
-                Open in Google Maps <ArrowRight size={14} />
+                Google Maps पर खोलें <ArrowRight size={14} />
               </a>
             </div>
           </div>

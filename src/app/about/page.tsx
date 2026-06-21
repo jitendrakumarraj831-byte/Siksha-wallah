@@ -12,32 +12,47 @@ const team = [
     name: "Rajesh Kumar Sah",
     role: "Founder & Chief Counsellor",
     phone: "6203138576",
-    exp: "9+ Years",
-    bio: "Forbesganj ke sabse trusted education counsellor. 5,000+ students ki career guidance ki hai. B.Ed aur Nursing admissions mein specialist.",
+    exp: "9+ वर्ष",
+    specialization: "B.Ed • D.El.Ed • BSCC • All Courses",
+    bio: "Forbesganj के सबसे अनुभवी Admission Counsellor। 2015 से 5,000+ students को सही college और career की राह दिखाई है। Bihar Student Credit Card, B.Ed और Nursing admissions में विशेष expertise।",
   },
   {
-    name: "Counsellor 2",
-    role: "BSCC & Nursing Specialist",
+    name: "Md. Naseem Ansari",
+    role: "Senior Counsellor — Nursing & Medical",
     phone: "7858062498",
-    exp: "5+ Years",
-    bio: "Bihar Student Credit Card scheme aur Nursing admissions mein expert. Hundreds of students ko BSCC loan dilaya hai.",
+    exp: "5+ वर्ष",
+    specialization: "BSCC • B.Sc Nursing • GNM • ANM • B.Pharma",
+    bio: "Bihar Student Credit Card scheme और Nursing / Pharmacy admissions के specialist। सैकड़ों students को BSCC loan guide करके INC-approved nursing colleges में admission दिलाया है।",
   },
   {
     name: "Gautam Kumar",
-    role: "BSCC Enquiry & Branch Office — Kursakanta",
+    role: "Counsellor — Kursakanta Branch",
     phone: "9162653235",
-    exp: "4+ Years",
-    bio: "Bihar Student Credit Card aur B.Tech, BBA, MBA admissions ke specialist. Kursakanta branch se students ko complete guidance dete hain.",
+    exp: "4+ वर्ष",
+    specialization: "BSCC • B.Tech • BBA • MBA — Kursakanta & आसपास",
+    bio: "Kursakanta branch से Araria और आसपास के students को complete admission guidance देते हैं। B.Tech, BBA, MBA और BSCC applications में expert। पूरी application process free में guide करते हैं।",
   },
 ];
 
 const milestones = [
-  { year: "2015", event: "Siksha Wallah ki foundation, College Chowk, Forbesganj se shuruat" },
-  { year: "2017", event: "500+ students successfully admitted to top colleges" },
-  { year: "2019", event: "Bihar Student Credit Card (BSCC) guidance centre bane" },
-  { year: "2021", event: "1,000+ students mark crossed, Medical & Nursing division added" },
-  { year: "2023", event: "200+ college partnerships established across Bihar & Jharkhand" },
-  { year: "2026", event: "5,000+ students guided — Araria district ka #1 consultancy" },
+  { year: "2015", event: "College Chowk, Forbesganj से Siksha Wallah की शुरुआत — पहले साल में 50+ students की guidance" },
+  { year: "2017", event: "500+ students successfully top colleges में admitted, B.Ed & D.El.Ed में special focus" },
+  { year: "2019", event: "Bihar Student Credit Card (BSCC) Guidance Centre के रूप में certified — Araria जिले में पहले" },
+  { year: "2021", event: "1,000+ students milestone पार, Medical & Nursing division की शुरुआत" },
+  { year: "2023", event: "Bihar, Jharkhand और Pan-India 200+ approved college partnerships स्थापित" },
+  { year: "2026", event: "5,000+ students guided — Araria जिले का #1 Trusted Admission Consultancy" },
+];
+
+const trustPoints = [
+  ["100% पारदर्शी शुल्क", "हर charge पहले से बताया जाता है। कोई hidden fees नहीं, कोई surprise नहीं।"],
+  ["पहली Counselling बिल्कुल Free", "पहला session 100% free है। कोई obligation नहीं, बस honest guidance।"],
+  ["BSCC में विशेषज्ञता", "Document preparation से DRCC approval तक — Bihar Student Credit Card की पूरी guidance निःशुल्क।"],
+  ["200+ College Network", "Bihar, Jharkhand, UP और देश के top approved colleges में direct connection।"],
+  ["Regular & Distance दोनों", "Regular और Distance Mode दोनों में guidance उपलब्ध — आपकी सुविधा अनुसार।"],
+  ["Admission के बाद भी Support", "Hostel, uniform, documents — admission confirm होने के बाद भी हम साथ हैं।"],
+  ["9+ वर्ष का अनुभव", "2015 से Araria region के students को trusted और proven guidance।"],
+  ["सभी Streams उपलब्ध", "Teaching, Medical, Engineering, Management — एक ही जगह, सबके लिए।"],
+  ["WhatsApp पर 24/7 Support", "कभी भी WhatsApp करें — तुरंत जवाब मिलेगा।"],
 ];
 
 export default function AboutPage() {
@@ -47,16 +62,20 @@ export default function AboutPage() {
       <section className="bg-gradient-to-br from-[#001f6b] via-[#003f9f] to-[#0060c7] py-20 text-white">
         <div className="container-shell text-center">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold">
-            <MapPin size={15} className="text-amber-400" /> College Chowk, Forbesganj, Araria — Since 2015
+            <MapPin size={15} className="text-amber-400" /> College Chowk, Forbesganj, Araria — 2015 से
           </div>
-          <h1 className="font-headline text-4xl md:text-6xl font-extrabold leading-tight">
-            About <span className="text-amber-400">Siksha Wallah</span>
+          <h1 className="font-headline text-4xl md:text-6xl font-extrabold leading-tight mt-3">
+            हमारे बारे में — <span className="text-amber-400">Siksha Wallah</span>
           </h1>
           <p className="mt-5 max-w-2xl mx-auto text-lg text-blue-100 leading-relaxed">
-            Araria district का सबसे trusted admission consultancy — जहाँ हर student को मिलती है सही guidance, सही college, और सही career.
+            Araria जिले का सबसे विश्वसनीय Admission Consultancy — जहाँ हर student को मिलती है सही guidance, सही college, और सुरक्षित career।
           </p>
-          <div className="mt-8 grid grid-cols-3 gap-8 max-w-lg mx-auto border-t border-white/20 pt-8">
-            {[["5,000+", "Students Guided"], ["200+", "College Partners"], ["98%", "Success Rate"]].map(([n, l]) => (
+          <div className="mt-10 grid grid-cols-3 gap-8 max-w-lg mx-auto border-t border-white/20 pt-8">
+            {[
+              ["5,000+", "Students Guided"],
+              ["200+", "College Partners"],
+              ["9+ वर्ष", "का अनुभव"],
+            ].map(([n, l]) => (
               <div key={l}>
                 <p className="font-headline text-3xl font-extrabold text-amber-400">{n}</p>
                 <p className="text-sm text-blue-200 mt-1">{l}</p>
@@ -66,34 +85,40 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Mission & Vision */}
+      {/* हमारी कहानी */}
       <section className="py-20 bg-white">
         <div className="container-shell">
           <div className="grid gap-12 lg:grid-cols-2 items-center">
             <div>
-              <p className="text-sm font-bold uppercase tracking-widest text-[#003f9f] mb-2">Our Story</p>
+              <p className="text-sm font-bold uppercase tracking-widest text-[#003f9f] mb-2">हमारी कहानी</p>
               <h2 className="font-headline text-4xl font-extrabold mb-6">
-                क्यों बनाया <span className="text-[#dc143c]">Siksha Wallah?</span>
+                Siksha Wallah क्यों बना? <span className="text-[#dc143c]">असली वजह।</span>
               </h2>
               <p className="text-gray-600 leading-relaxed mb-4">
-                2015 में, Forbesganj और आसपास के गाँवों के हजारों students को सही guidance नहीं मिलती थी। वे expensive private agents के चक्कर में पड़ जाते थे जो fake promises देते और hidden charges लेते थे।
+                2015 में, Forbesganj और आसपास के गाँवों के हजारों students के पास न सही information थी, न कोई trustworthy guide। महंगे private agents झूठे वादे करते थे, hidden charges लेते थे — और students का भविष्य अंधेरे में डूब जाता था।
               </p>
               <p className="text-gray-600 leading-relaxed mb-4">
-                Siksha Wallah की शुरुआत एक simple mission के साथ हुई: <strong>"हर student को 100% honest, transparent, और free guidance देना।"</strong> आज हम Araria जिले का #1 education consultancy बन चुके हैं।
+                Rajesh Kumar Sah ने एक simple लेकिन powerful mission के साथ Siksha Wallah शुरू किया: <strong className="text-gray-900">"हर student को 100% honest, transparent और free guidance।"</strong> आज हम Araria जिले का #1 trusted education consultancy हैं।
               </p>
               <p className="text-gray-600 leading-relaxed">
-                हम सिर्फ admission नहीं दिलाते — हम students का <strong>career बनाते हैं।</strong> B.Ed से MBBS तक, D.El.Ed से MBA तक — हर course में expert guidance।
+                हम सिर्फ admission नहीं दिलाते — हम students का <strong className="text-gray-900">भविष्य बनाते हैं।</strong> B.Ed से MBBS तक, D.El.Ed से MBA तक — हर stream में expert guidance, बिना किसी hidden cost के।
               </p>
+              <div className="mt-6 rounded-xl bg-amber-50 border-2 border-amber-200 p-5">
+                <p className="text-sm font-bold text-amber-800">
+                  🏆 Araria जिले में हमारी पहचान:<br />
+                  <span className="font-extrabold text-amber-900">"जहाँ एक बार गए, वहीं से admission मिला।"</span>
+                </p>
+              </div>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
               {[
-                { icon: Target, color: "bg-blue-600", title: "Our Mission", desc: "हर Bihar के student को quality education का सही रास्ता दिखाना — बिना किसी hidden charge के।" },
-                { icon: Heart, color: "bg-red-500", title: "Our Vision", desc: "Forbesganj को education hub बनाना जहाँ से students पूरे India के top colleges में जाएं।" },
-                { icon: ShieldCheck, color: "bg-green-600", title: "Our Values", desc: "Transparency, Honesty, और Complete Support — यही हमारी पहचान है।" },
-                { icon: Award, color: "bg-amber-500", title: "Our Expertise", desc: "B.Ed, Nursing, Engineering, Management — सभी स्ट्रीम्स में 9+ साल का experience।" },
+                { icon: Target, color: "bg-[#003f9f]", title: "हमारा Mission", desc: "Bihar के हर student को quality education का सही रास्ता दिखाना — बिना किसी hidden charge के, बिना किसी झूठे वादे के।" },
+                { icon: Heart, color: "bg-[#dc143c]", title: "हमारा Vision", desc: "Forbesganj को एक education hub बनाना जहाँ से students पूरे India के top colleges तक पहुँचें।" },
+                { icon: ShieldCheck, color: "bg-green-600", title: "हमारे मूल्य", desc: "पारदर्शिता, ईमानदारी और पूर्ण सहयोग — यही Siksha Wallah की असली पहचान है।" },
+                { icon: Award, color: "bg-amber-500", title: "हमारी विशेषज्ञता", desc: "B.Ed, Nursing, Engineering, Management — सभी streams में 9+ साल का सिद्ध अनुभव।" },
               ].map(({ icon: Icon, color, title, desc }) => (
-                <div key={title} className="rounded-2xl border-2 border-gray-100 p-5">
+                <div key={title} className="rounded-2xl border-2 border-gray-100 p-5 hover:shadow-md transition">
                   <div className={`mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl ${color} text-white`}>
                     <Icon size={22} />
                   </div>
@@ -106,59 +131,71 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Our Team */}
+      {/* हमारी Team */}
       <section className="py-20 bg-gray-50">
         <div className="container-shell">
           <div className="text-center mb-12">
-            <p className="text-sm font-bold uppercase tracking-widest text-[#003f9f] mb-2">Meet The Team</p>
-            <h2 className="font-headline text-4xl font-extrabold">हमारे Expert Counsellors</h2>
+            <p className="text-sm font-bold uppercase tracking-widest text-[#003f9f] mb-2">हमारी Expert Team</p>
+            <h2 className="font-headline text-4xl font-extrabold">जो लोग आपकी मदद करते हैं</h2>
+            <p className="mt-3 text-gray-500 max-w-xl mx-auto text-sm">
+              हमारे counsellors real लोग हैं — certified, experienced, और हमेशा आपके लिए available।
+            </p>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
-            {team.map(({ name, role, phone, exp, bio }) => (
-              <div key={name} className="rounded-2xl bg-white border-2 border-gray-100 p-7 text-center shadow-sm hover:shadow-lg transition hover:-translate-y-1">
-                <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-[#003f9f] font-headline text-3xl font-extrabold text-white">
+            {team.map(({ name, role, phone, exp, specialization, bio }) => (
+              <div key={name} className="rounded-2xl bg-white border-2 border-gray-100 p-7 text-center shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[#003f9f] to-[#0060c7] font-headline text-3xl font-extrabold text-white shadow-lg">
                   {name[0]}
                 </div>
                 <h3 className="font-headline text-xl font-extrabold text-gray-900">{name}</h3>
                 <p className="text-[#003f9f] font-semibold text-sm mt-1">{role}</p>
-                <p className="mt-1 text-xs text-gray-400 font-semibold">{exp} Experience</p>
+                <p className="mt-1 text-xs text-gray-400 font-semibold">{exp} का अनुभव</p>
+                <div className="mt-2 inline-block rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-[#003f9f]">
+                  {specialization}
+                </div>
                 <p className="mt-4 text-sm text-gray-600 leading-relaxed">{bio}</p>
                 <a
                   href={`tel:+91${phone}`}
-                  className="mt-5 flex items-center justify-center gap-2 rounded-xl bg-[#003f9f] px-4 py-2.5 text-sm font-bold text-white hover:bg-blue-700 transition"
+                  className="mt-5 flex items-center justify-center gap-2 rounded-xl bg-[#003f9f] px-4 py-3 text-sm font-bold text-white hover:bg-blue-700 transition"
                 >
-                  <Phone size={15} /> +91 {phone}
+                  <Phone size={15} /> +91 {phone} — अभी Call करें
+                </a>
+                <a
+                  href={`https://wa.me/91${phone}?text=नमस्ते! मुझे admission के बारे में guidance चाहिए।`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 flex items-center justify-center gap-2 rounded-xl bg-green-500 px-4 py-2.5 text-sm font-bold text-white hover:bg-green-600 transition"
+                >
+                  <MessageCircle size={15} /> WhatsApp करें
                 </a>
               </div>
             ))}
           </div>
+          <div className="mt-8 rounded-2xl bg-blue-50 border-2 border-blue-100 p-6 text-center">
+            <p className="text-sm text-blue-800 font-semibold">
+              💡 <strong>नोट:</strong> हमारे सभी counsellors directly आपसे बात करते हैं — कोई IVR नहीं, कोई bot नहीं। Real इंसान, Real guidance।
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* Why Choose Us */}
+      {/* हम क्यों बेहतर हैं */}
       <section className="py-20 bg-white">
         <div className="container-shell">
           <div className="text-center mb-12">
-            <p className="text-sm font-bold uppercase tracking-widest text-[#dc143c] mb-2">Why Choose Us</p>
-            <h2 className="font-headline text-4xl font-extrabold">Siksha Wallah क्यों बेहतर है?</h2>
+            <p className="text-sm font-bold uppercase tracking-widest text-[#dc143c] mb-2">हमारी खासियत</p>
+            <h2 className="font-headline text-4xl font-extrabold">Siksha Wallah को क्यों चुनें?</h2>
+            <p className="mt-3 text-gray-500 max-w-xl mx-auto text-sm">
+              सिर्फ वादे नहीं — 5,000+ students के proven results।
+            </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              ["100% Transparent Fees", "हर charge upfront बताया जाता है। कोई hidden fees नहीं।"],
-              ["Free Counselling", "पहली counselling session 100% free। कोई obligation नहीं।"],
-              ["BSCC Specialist", "Bihar Student Credit Card के लिए complete guidance — document से DRCC तक।"],
-              ["200+ College Network", "Bihar, Jharkhand, UP, और बाहर के top approved colleges।"],
-              ["Regular & Distance Both", "Regular और distance दोनों modes में guidance available।"],
-              ["Post-Admission Support", "Admission के बाद hostel, uniform, और documents में भी help।"],
-              ["9+ Years Experience", "2015 से Araria region के students को trusted guidance।"],
-              ["All Streams Covered", "Teaching, Medical, Engineering, Management — सब कुछ।"],
-              ["WhatsApp Support", "24/7 WhatsApp पर instant support available।"],
-            ].map(([title, desc]) => (
-              <div key={title} className="flex gap-3 rounded-2xl border-2 border-gray-100 p-5 hover:border-blue-200 hover:bg-blue-50 transition">
+            {trustPoints.map(([title, desc]) => (
+              <div key={title as string} className="flex gap-3 rounded-2xl border-2 border-gray-100 bg-gray-50 p-5 hover:border-blue-200 hover:bg-blue-50 transition">
                 <CheckCircle2 size={20} className="mt-0.5 flex-shrink-0 text-green-500" />
                 <div>
                   <p className="font-bold text-gray-900">{title}</p>
-                  <p className="text-sm text-gray-500 mt-0.5">{desc}</p>
+                  <p className="text-sm text-gray-500 mt-0.5 leading-relaxed">{desc}</p>
                 </div>
               </div>
             ))}
@@ -166,12 +203,12 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Journey / Timeline */}
+      {/* Journey Timeline */}
       <section className="py-20 bg-gray-900 text-white">
         <div className="container-shell">
           <div className="text-center mb-12">
-            <p className="text-sm font-bold uppercase tracking-widest text-amber-400 mb-2">Our Journey</p>
-            <h2 className="font-headline text-4xl font-extrabold">2015 से अब तक का सफर</h2>
+            <p className="text-sm font-bold uppercase tracking-widest text-amber-400 mb-2">हमारा सफर</p>
+            <h2 className="font-headline text-4xl font-extrabold">2015 से आज तक की यात्रा</h2>
           </div>
           <div className="relative max-w-2xl mx-auto">
             <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-white/10" />
@@ -183,7 +220,7 @@ export default function AboutPage() {
                   </div>
                   <div className="flex-1 rounded-xl border border-white/10 bg-white/5 p-4">
                     <p className="text-xs font-bold text-amber-400 mb-1">{year}</p>
-                    <p className="text-sm text-gray-300">{event}</p>
+                    <p className="text-sm text-gray-300 leading-relaxed">{event}</p>
                   </div>
                 </div>
               ))}
@@ -195,21 +232,32 @@ export default function AboutPage() {
       {/* CTA */}
       <section className="py-16 bg-amber-400">
         <div className="container-shell text-center">
-          <h2 className="font-headline text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
-            अपना Admission Journey शुरू करें
+          <h2 className="font-headline text-3xl md:text-4xl font-extrabold text-gray-900 mb-3">
+            आज ही अपनी Free Counselling बुक करें
           </h2>
-          <p className="text-gray-800 mb-8 max-w-xl mx-auto">
-            Free counselling के लिए आज ही call करें या WhatsApp करें। हमारे experts आपकी हर सवाल का जवाब देंगे।
+          <p className="text-gray-800 mb-8 max-w-xl mx-auto text-sm leading-relaxed">
+            Call करें, WhatsApp करें — हमारे expert आपके हर सवाल का जवाब देंगे। कोई fee नहीं, कोई झूठा वादा नहीं।
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <a href="tel:+916203138576" className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#003f9f] px-7 py-4 font-extrabold text-white hover:bg-blue-700 transition">
-              <Phone size={18} /> Call: 6203138576
+            <a
+              href="tel:+916203138576"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#003f9f] px-7 py-4 font-extrabold text-white hover:bg-blue-700 shadow-lg transition"
+            >
+              <Phone size={18} /> अभी Call करें: 6203138576
             </a>
-            <a href="https://wa.me/916203138576" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-xl bg-green-600 px-7 py-4 font-extrabold text-white hover:bg-green-700 transition">
+            <a
+              href="https://wa.me/916203138576?text=नमस्ते! मुझे Admission Counselling चाहिए। कृपया guide करें।"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-green-600 px-7 py-4 font-extrabold text-white hover:bg-green-700 shadow-lg transition"
+            >
               <MessageCircle size={18} /> WhatsApp करें
             </a>
-            <Link href="/auth/register" className="inline-flex items-center justify-center gap-2 rounded-xl bg-gray-900 px-7 py-4 font-extrabold text-white hover:bg-gray-800 transition">
-              Apply Online →
+            <Link
+              href="/apply"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-gray-900 px-7 py-4 font-extrabold text-white hover:bg-gray-800 shadow-lg transition"
+            >
+              Online Apply करें →
             </Link>
           </div>
         </div>
