@@ -115,7 +115,7 @@ export default function Home() {
                 </div>
                 <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-400/15 px-3 py-1.5 text-xs font-bold text-amber-300">
                   <BadgeCheck size={13} className="text-amber-400" />
-                  ९+ वर्षों का अनुभव
+                  9+ वर्षों का अनुभव
                 </div>
               </div>
 
@@ -145,10 +145,10 @@ export default function Home() {
               {/* Feature pills — new addition */}
               <div className="mt-5 flex flex-wrap gap-2">
                 {[
-                  { icon: GraduationCap, text: "१९+ कोर्सेज" },
+                  { icon: GraduationCap, text: "19+ कोर्सेज" },
                   { icon: CreditCard,    text: "BSCC लोन सहायता" },
                   { icon: ShieldCheck,   text: "NCTE / INC मान्यता" },
-                  { icon: Clock,         text: "२४ घंटे सहायता" },
+                  { icon: Clock,         text: "24 घंटे सहायता" },
                 ].map(({ icon: Icon, text }) => (
                   <span key={text} className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold text-blue-100 backdrop-blur">
                     <Icon size={12} className="text-amber-400" />
@@ -299,10 +299,10 @@ export default function Home() {
                           className="w-full rounded-xl border border-white/30 bg-[#003f9f] px-4 py-3.5 text-white outline-none transition focus:border-amber-400"
                         >
                           <option value="">-- योग्यता चुनें --</option>
-                          <option>१०वीं पास</option>
-                          <option>१२वीं पास (कला)</option>
-                          <option>१२वीं पास (विज्ञान)</option>
-                          <option>१२वीं पास (वाणिज्य)</option>
+                          <option>10वीं पास</option>
+                          <option>12वीं पास (कला)</option>
+                          <option>12वीं पास (विज्ञान)</option>
+                          <option>12वीं पास (वाणिज्य)</option>
                           <option>स्नातक (Graduation)</option>
                           <option>स्नातकोत्तर (Post Graduation)</option>
                         </select>
@@ -426,8 +426,8 @@ export default function Home() {
           <div className="flex flex-wrap items-center justify-center gap-6 text-sm font-semibold text-gray-300">
             {[
               [ShieldCheck, "NCTE & UGC मान्यता प्राप्त"],
-              [Award, "९+ वर्षों का अनुभव"],
-              [Users, "५०००+ छात्र लाभान्वित"],
+              [Award, "9+ वर्षों का अनुभव"],
+              [Users, "5000+ छात्र लाभान्वित"],
               [CheckCircle2, "कोई छुपा शुल्क नहीं"],
             ].map(([Icon, text], i) => (
               <span key={i} className="flex items-center gap-2">
