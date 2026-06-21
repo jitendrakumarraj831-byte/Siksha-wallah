@@ -165,7 +165,7 @@ export default function Home() {
                     onClick={() => { setFormSubmitted(false); setStep(0); setFormData({ name: "", mobile: "", course: "", qualify: "" }); }}
                     className="rounded-xl bg-amber-400 px-6 py-3 font-bold text-gray-900 transition-all duration-200 hover:bg-amber-300 hover:-translate-y-0.5 active:scale-95"
                   >
-                    New Inquiry
+                    नई जानकारी
                   </button>
                 </div>
               ) : (
