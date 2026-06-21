@@ -88,7 +88,6 @@ export default function AdminLoginPage() {
               ].map(([Icon, text], i) => (
                 <div key={i} className="flex items-center gap-3 text-sm text-blue-100">
                   <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-white/10" aria-hidden="true">
-                    {/* @ts-expect-error dynamic icon */}
                     <Icon size={16} className="text-amber-400" />
                   </div>
                   {text as string}

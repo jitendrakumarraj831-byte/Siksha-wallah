@@ -132,7 +132,7 @@ export default function DocumentsPage() {
         name: user.displayName || undefined,
         email: user.email || undefined,
         userId: user.uid,
-        meta: { docType, docName: docName.trim(), fileSize: selectedFile.size },
+        meta: { docType, docName: docName.trim(), fileSize: String(selectedFile.size) },
         page: '/dashboard/documents',
       }).catch(() => {});
 
