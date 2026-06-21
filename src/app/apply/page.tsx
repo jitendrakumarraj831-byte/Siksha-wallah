@@ -710,14 +710,3 @@ export default function ApplyPage() {
   );
 }
 
-function Row({ label, value, highlight, span }: { label: string; value?: string | boolean; highlight?: boolean; span?: boolean }) {
-  if (!value) return null;
-  return (
-    <div className={`flex flex-col gap-0.5 ${span ? "sm:col-span-2" : ""}`}>
-      <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400">{label}</span>
-      <span className={`text-sm font-bold leading-snug ${highlight ? "text-[#003f9f]" : "text-gray-800"}`}>
-        {String(value)}
-      </span>
-    </div>
-  );
-}

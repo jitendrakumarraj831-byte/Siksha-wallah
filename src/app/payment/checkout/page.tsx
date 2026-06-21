@@ -35,7 +35,7 @@ export default function CheckoutPage() {
 function CheckoutContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, loading: authLoading } = useAuth();
   const courseId = searchParams.get('courseId');
 
   const [course, setCourse] = useState<any>(null);
@@ -45,6 +45,9 @@ function CheckoutContent() {
   const [paymentId, setPaymentId] = useState('');
 
   useEffect(() => {
+    // Wait for Firebase auth state to resolve before acting
+    if (authLoading) return;
+
     if (!isAuthenticated) {
       router.push('/auth/login');
       return;
@@ -72,7 +75,7 @@ function CheckoutContent() {
     };
 
     loadCourse();
-  }, [courseId, isAuthenticated, router]);
+  }, [courseId, isAuthenticated, authLoading, router]);
 
   // Load Razorpay script
   useEffect(() => {
@@ -132,6 +135,11 @@ function CheckoutContent() {
         name: 'Siksha Wallah',
         description: course.name,
         customer_notification: 1,
+        modal: {
+          ondismiss: () => {
+            setProcessing(false);
+          },
+        },
         handler: async (response: any) => {
           try {
             // Step 4: Verify payment on backend
@@ -180,7 +188,7 @@ function CheckoutContent() {
     }
   };
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <PortalShell>
         <div className="flex min-h-screen items-center justify-center">

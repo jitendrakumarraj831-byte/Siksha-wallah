@@ -65,10 +65,10 @@ export const authService = {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Update last login
-      await updateDoc(doc(db, 'users', user.uid), {
+      // Update last login — non-fatal if the Firestore doc doesn't exist yet
+      updateDoc(doc(db, 'users', user.uid), {
         lastLogin: Date.now(),
-      });
+      }).catch(() => {});
 
       return user;
     } catch (error: any) {
