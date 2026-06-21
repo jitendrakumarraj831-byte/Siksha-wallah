@@ -550,47 +550,84 @@ export default function ApplyPage() {
                 {/* ── STEP 3: Review & Submit ── */}
                 {step === 3 && (
                   <div className="space-y-4">
-                    <div className="rounded-2xl bg-white border-2 border-gray-100 p-7 shadow-sm">
-                      <h2 className="font-headline text-xl font-extrabold text-gray-900 mb-5">
-                        Application Review करें
-                      </h2>
 
-                      <div className="space-y-4">
-                        {/* Personal */}
-                        <div className="rounded-xl bg-gray-50 p-4">
-                          <h3 className="text-xs font-extrabold uppercase tracking-wider text-[#003f9f] mb-3">Personal Details</h3>
-                          <div className="grid gap-2 sm:grid-cols-2 text-sm">
-                            <Row label="नाम" value={form.fullName} />
-                            <Row label="पिता का नाम" value={form.fatherName} />
-                            <Row label="Mobile" value={form.mobile} />
-                            <Row label="Email" value={form.email} />
-                            <Row label="Gender" value={form.gender} />
-                            <Row label="DOB" value={form.dob} />
-                            <Row label="जिला" value={form.district} />
-                            <Row label="State" value={form.state} />
-                            {form.address && <Row label="पता" value={form.address} span />}
-                          </div>
-                        </div>
-
-                        {/* Academic */}
-                        <div className="rounded-xl bg-blue-50 p-4">
-                          <h3 className="text-xs font-extrabold uppercase tracking-wider text-[#003f9f] mb-3">Academic & Course</h3>
-                          <div className="grid gap-2 sm:grid-cols-2 text-sm">
-                            <Row label="Course" value={form.course} highlight />
-                            <Row label="Qualification" value={form.qualification} />
-                            <Row label="Passing Year" value={form.passingYear} />
-                            <Row label="Percentage" value={form.percentage} />
-                            <Row label="School/College" value={form.schoolCollege} />
-                            <Row label="Preferred College" value={form.preferredCollege} />
-                            <Row label="BSCC Required" value={form.bsccRequired ? "✅ हाँ चाहिए" : "नहीं"} />
-                          </div>
-                          {form.message && (
-                            <div className="mt-3 rounded-lg bg-white/60 px-3 py-2 text-xs text-gray-600">
-                              <span className="font-semibold">Message:</span> {form.message}
-                            </div>
-                          )}
-                        </div>
+                    {/* Personal Details card */}
+                    <div className="rounded-2xl bg-white border-2 border-gray-100 shadow-sm overflow-hidden">
+                      <div className="flex items-center gap-3 border-b border-gray-100 bg-gray-50 px-5 py-3">
+                        <User size={16} className="text-[#003f9f]" />
+                        <h2 className="font-headline text-sm font-extrabold uppercase tracking-wider text-[#003f9f]">
+                          Personal Details
+                        </h2>
                       </div>
+                      <div className="grid grid-cols-2 gap-px bg-gray-100">
+                        {[
+                          { label: "नाम", value: form.fullName },
+                          { label: "पिता का नाम", value: form.fatherName },
+                          { label: "Mobile", value: form.mobile },
+                          { label: "Email", value: form.email },
+                          { label: "Gender", value: form.gender },
+                          { label: "DOB", value: form.dob },
+                          { label: "जिला", value: form.district },
+                          { label: "State", value: form.state },
+                        ].filter(r => r.value).map(r => (
+                          <div key={r.label} className="bg-white px-4 py-3">
+                            <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">{r.label}</p>
+                            <p className="mt-0.5 text-sm font-bold text-gray-800 break-words">{r.value}</p>
+                          </div>
+                        ))}
+                        {form.address && (
+                          <div className="col-span-2 bg-white px-4 py-3">
+                            <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">पता</p>
+                            <p className="mt-0.5 text-sm font-bold text-gray-800">{form.address}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Academic & Course card */}
+                    <div className="rounded-2xl bg-white border-2 border-blue-100 shadow-sm overflow-hidden">
+                      <div className="flex items-center gap-3 border-b border-blue-100 bg-blue-50 px-5 py-3">
+                        <GraduationCap size={16} className="text-[#003f9f]" />
+                        <h2 className="font-headline text-sm font-extrabold uppercase tracking-wider text-[#003f9f]">
+                          Academic &amp; Course
+                        </h2>
+                      </div>
+                      {/* Course highlight */}
+                      <div className="border-b border-blue-100 bg-blue-50/50 px-5 py-4">
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Selected Course</p>
+                        <p className="mt-1 text-lg font-extrabold text-[#003f9f]">{form.course || "—"}</p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-px bg-gray-100">
+                        {[
+                          { label: "Qualification", value: form.qualification },
+                          { label: "Passing Year", value: form.passingYear },
+                          { label: "Percentage", value: form.percentage },
+                          { label: "BSCC Required", value: form.bsccRequired ? "✅ हाँ" : "नहीं" },
+                        ].filter(r => r.value).map(r => (
+                          <div key={r.label} className="bg-white px-4 py-3">
+                            <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">{r.label}</p>
+                            <p className="mt-0.5 text-sm font-bold text-gray-800">{r.value}</p>
+                          </div>
+                        ))}
+                        {form.schoolCollege && (
+                          <div className="col-span-2 bg-white px-4 py-3">
+                            <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">School / College</p>
+                            <p className="mt-0.5 text-sm font-bold text-gray-800">{form.schoolCollege}</p>
+                          </div>
+                        )}
+                        {form.preferredCollege && (
+                          <div className="col-span-2 bg-white px-4 py-3">
+                            <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Preferred College</p>
+                            <p className="mt-0.5 text-sm font-bold text-gray-800">{form.preferredCollege}</p>
+                          </div>
+                        )}
+                      </div>
+                      {form.message && (
+                        <div className="border-t border-blue-100 bg-blue-50/30 px-5 py-3">
+                          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Message</p>
+                          <p className="mt-0.5 text-sm text-gray-700">{form.message}</p>
+                        </div>
+                      )}
                     </div>
 
                     <div className="rounded-2xl bg-amber-50 border-2 border-amber-200 px-5 py-4 text-sm text-amber-800">
@@ -652,9 +689,9 @@ export default function ApplyPage() {
 function Row({ label, value, highlight, span }: { label: string; value?: string | boolean; highlight?: boolean; span?: boolean }) {
   if (!value) return null;
   return (
-    <div className={span ? "sm:col-span-2" : ""}>
-      <span className="text-xs text-gray-400 font-semibold">{label}:</span>{" "}
-      <span className={`font-bold ${highlight ? "text-[#003f9f]" : "text-gray-800"}`}>
+    <div className={`flex flex-col gap-0.5 ${span ? "sm:col-span-2" : ""}`}>
+      <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400">{label}</span>
+      <span className={`text-sm font-bold leading-snug ${highlight ? "text-[#003f9f]" : "text-gray-800"}`}>
         {String(value)}
       </span>
     </div>

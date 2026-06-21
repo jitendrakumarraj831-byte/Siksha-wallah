@@ -23,8 +23,12 @@ export default function CoursesPage() {
       <SiteNavbar />
 
       {/* ── PAGE HERO ── */}
-      <section className="bg-gradient-to-br from-[#001f6b] via-[#003f9f] to-[#0060c7] text-white py-16 md:py-24">
-        <div className="pointer-events-none absolute inset-0 opacity-10" />
+      <section className="relative bg-gradient-to-br from-[#064e3b] via-[#065f46] to-[#047857] text-white py-16 md:py-24 overflow-hidden">
+        {/* Hexagon/dot pattern overlay */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.07]" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,1) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
+        {/* Glow blobs */}
+        <div className="pointer-events-none absolute -top-24 right-0 h-80 w-80 rounded-full bg-teal-400 opacity-20 blur-3xl" />
+        <div className="pointer-events-none absolute bottom-0 -left-20 h-64 w-64 rounded-full bg-emerald-300 opacity-15 blur-3xl" />
         <div className="container-shell text-center">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold backdrop-blur">
             <BadgeCheck size={16} className="text-amber-400" /> NCTE • INC • PCI • AICTE Approved Colleges
@@ -32,7 +36,7 @@ export default function CoursesPage() {
           <h1 className="font-headline text-4xl md:text-5xl font-extrabold mt-4 leading-tight bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
             सभी कोर्सेज — एक जगह
           </h1>
-          <p className="mt-4 max-w-2xl mx-auto text-blue-100 text-lg">
+          <p className="mt-4 max-w-2xl mx-auto text-emerald-100 text-lg">
             Teaching, Medical &amp; Technical — तीनों streams में 40+ courses। हर course की पूरी जानकारी, fees, career scope, और Govt Jobs।
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
@@ -341,9 +345,9 @@ export default function CoursesPage() {
           </div>
 
           {/* Bottom CTA */}
-          <div className="mt-14 rounded-2xl bg-gradient-to-r from-primary-blue to-blue-700 p-8 text-white text-center">
+          <div className="mt-14 rounded-2xl bg-gradient-to-r from-emerald-700 to-teal-700 p-8 text-white text-center">
             <h3 className="font-headline text-2xl font-extrabold mb-2">सही Course चुनने में मदद चाहिए?</h3>
-            <p className="text-blue-100 mb-6">Our expert counsellors help you pick the best course based on your marks, budget, and career goals — 100% free.</p>
+            <p className="text-emerald-100 mb-6">Our expert counsellors help you pick the best course based on your marks, budget, and career goals — 100% free.</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <a
                 href="https://wa.me/916203138576?text=नमस्ते!%20मुझे%20सही%20course%20choose%20करने%20में%20guidance%20चाहिए।%20Please%20help%20karein।"

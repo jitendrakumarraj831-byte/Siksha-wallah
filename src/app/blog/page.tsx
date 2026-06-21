@@ -5,9 +5,9 @@ import { SiteFooter } from "@/components/site-footer";
 import { blogArticles } from "@/lib/blog-data";
 
 const CATEGORY_COLORS: Record<string, string> = {
-  Teaching: "bg-blue-100 text-blue-800",
-  Medical: "bg-green-100 text-green-800",
-  Technical: "bg-purple-100 text-purple-800",
+  Teaching: "bg-amber-100 text-amber-800",
+  Medical: "bg-amber-100 text-amber-800",
+  Technical: "bg-amber-100 text-amber-800",
   Finance: "bg-amber-100 text-amber-800",
 };
 
@@ -17,13 +17,17 @@ export default function BlogPage() {
       <SiteNavbar />
       <main>
         {/* Hero */}
-        <section className="bg-gradient-to-br from-primary-blue to-blue-800 text-white py-16">
-          <div className="container-shell text-center">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-semibold mb-4">
-              <BookOpen size={14} /> Education Blog
+        <section className="relative bg-gray-950 text-white py-16 overflow-hidden">
+          {/* Large decorative BLOG text behind heading */}
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <span className="text-[8rem] font-black text-white/5 select-none leading-none">BLOG</span>
+          </div>
+          <div className="container-shell text-center relative">
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/10 px-4 py-1.5 text-sm font-semibold mb-4">
+              <BookOpen size={14} className="text-amber-400" /> Education Blog
             </div>
-            <h1 className="font-headline text-4xl font-extrabold mb-3 bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Siksha Wallah Blog</h1>
-            <p className="text-blue-100 max-w-xl mx-auto">
+            <h1 className="font-headline text-4xl font-extrabold mb-3 text-white">Siksha Wallah Blog</h1>
+            <p className="text-gray-400 max-w-xl mx-auto">
               Bihar admissions, BSCC loan guide, course comparisons — expert articles in Hindi &amp;
               English.
             </p>
@@ -38,7 +42,7 @@ export default function BlogPage() {
                 <Link
                   key={article.slug}
                   href={`/blog/${article.slug}`}
-                  className="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col"
+                  className="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all overflow-hidden flex flex-col"
                 >
                   <div className="p-6 flex flex-col flex-1">
                     <div className="flex items-center gap-2 mb-3">
@@ -53,13 +57,13 @@ export default function BlogPage() {
                         <Clock size={11} /> {article.readTime}
                       </span>
                     </div>
-                    <h2 className="font-headline font-bold text-gray-900 text-lg leading-snug mb-2 group-hover:text-primary-blue transition-colors">
+                    <h2 className="font-headline font-bold text-gray-900 text-lg leading-snug mb-2 group-hover:text-amber-600 transition-colors">
                       {article.titleHi ?? article.title}
                     </h2>
                     <p className="text-sm text-gray-500 leading-relaxed flex-1">
                       {article.excerpt}
                     </p>
-                    <div className="flex items-center gap-1 mt-4 text-primary-blue text-sm font-semibold">
+                    <div className="flex items-center gap-1 mt-4 text-amber-600 text-sm font-semibold">
                       पढ़ें <ArrowRight size={14} />
                     </div>
                   </div>
@@ -70,7 +74,7 @@ export default function BlogPage() {
         </section>
 
         {/* CTA */}
-        <section className="py-12 bg-white border-t border-gray-100">
+        <section className="py-12 bg-white border-t border-gray-200">
           <div className="container-shell text-center">
             <h2 className="font-headline text-2xl font-bold text-gray-900 mb-2">
               Admission में मदद चाहिए?
@@ -81,7 +85,7 @@ export default function BlogPage() {
             <div className="flex justify-center gap-3 flex-wrap">
               <Link
                 href="/contact"
-                className="rounded-xl bg-primary-blue px-6 py-3 font-bold text-white hover:bg-blue-800 transition shadow-md"
+                className="rounded-xl bg-gray-900 px-6 py-3 font-bold text-white hover:bg-gray-800 transition shadow-md"
               >
                 Contact Us →
               </Link>
