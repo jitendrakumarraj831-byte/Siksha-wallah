@@ -59,27 +59,52 @@ export default function AboutPage() {
   return (
     <PortalShell>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#2d1b69] via-[#6b21a8] to-[#9333ea] py-20 text-white">
-        {/* Decorative: large soft circle blur */}
-        <div className="pointer-events-none absolute -top-32 -right-32 h-[28rem] w-[28rem] rounded-full bg-pink-500 opacity-20 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-purple-300 opacity-20 blur-3xl" />
-        {/* Grid overlay */}
-        <div className="pointer-events-none absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,1) 1px,transparent 1px)", backgroundSize: "40px 40px" }} />
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] py-20 text-white">
+        {/* Dot-grid */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.07]"
+          style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+        {/* Glow orbs */}
+        <div className="pointer-events-none absolute -top-40 -right-32 h-[480px] w-[480px] rounded-full bg-amber-400 opacity-[0.10] blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-blue-500 opacity-[0.13] blur-3xl" />
         <div className="container-shell relative text-center">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold">
-            <MapPin size={15} className="text-amber-400" /> College Chowk, Forbesganj, Araria — 2015 से
+          {/* Label pill */}
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/[0.1] px-4 py-2">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
+            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">हमारे बारे में</span>
           </div>
-          <h1 className="font-headline text-4xl md:text-6xl font-extrabold leading-tight mt-3 bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
-            हमारे बारे में — Siksha Wallah
+          {/* H1 */}
+          <h1 className="font-headline text-[2.5rem] font-black leading-[1.08] tracking-tight md:text-6xl lg:text-[4rem]">
+            <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">Siksha Wallah —</span>
+            <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">आपका विश्वसनीय मार्गदर्शक</span>
           </h1>
-          <p className="mt-5 max-w-2xl mx-auto text-lg text-blue-100 leading-relaxed">
-            Araria जिले का सबसे विश्वसनीय Admission Consultancy — जहाँ हर student को मिलती है सही guidance, सही college, और सुरक्षित career।
+          <div className="mx-auto mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-40" />
+          <p className="mt-6 max-w-2xl mx-auto text-lg text-blue-100 leading-relaxed">
+            9+ वर्षों से Bihar के students को सही कॉलेज और सही course चुनने में मदद कर रहे हैं।
           </p>
-          <div className="mt-10 grid grid-cols-3 gap-8 max-w-lg mx-auto border-t border-purple-400/30 pt-8">
+          {/* CTAs */}
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="#team"
+              className="group relative flex items-center justify-center gap-2.5 overflow-hidden rounded-2xl bg-gradient-to-r from-amber-400 to-orange-400 px-8 py-4 font-extrabold text-gray-900 shadow-xl shadow-amber-500/30 transition-all hover:-translate-y-1 hover:shadow-2xl active:scale-[0.97]"
+            >
+              <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
+              Team से मिलें
+            </a>
+            <a
+              href="https://wa.me/916203138576?text=नमस्ते! मुझे Admission Counselling चाहिए। कृपया guide करें।"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2.5 rounded-2xl border-2 border-white/25 bg-white/[0.08] px-8 py-4 font-bold text-white backdrop-blur transition-all hover:bg-white/[0.15] hover:-translate-y-1 active:scale-[0.97]"
+            >
+              <MessageCircle size={18} /> WhatsApp करें
+            </a>
+          </div>
+          {/* Stats */}
+          <div className="mt-10 grid grid-cols-3 gap-6 border-t border-white/[0.08] pt-8 max-w-lg mx-auto">
             {[
-              ["5,000+", "Students Guided"],
-              ["200+", "College Partners"],
-              ["9+ वर्ष", "का अनुभव"],
+              ["9+", "Years"],
+              ["5000+", "Students"],
+              ["200+", "Colleges"],
             ].map(([n, l]) => (
               <div key={l}>
                 <p className="font-headline text-3xl font-extrabold text-amber-400">{n}</p>
@@ -137,7 +162,7 @@ export default function AboutPage() {
       </section>
 
       {/* हमारी Team */}
-      <section className="py-20 bg-gray-50">
+      <section id="team" className="py-20 bg-gray-50">
         <div className="container-shell">
           <div className="text-center mb-12">
             <p className="text-sm font-bold uppercase tracking-widest text-purple-700 mb-2">हमारी Expert Team</p>

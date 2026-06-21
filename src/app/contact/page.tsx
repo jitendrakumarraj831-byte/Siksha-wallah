@@ -117,32 +117,57 @@ export default function ContactPage() {
       <SiteNavbar />
       <main>
         {/* Hero */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-[#881337] via-[#be123c] to-[#e11d48] py-16 text-white text-center">
-          {/* Abstract wave at bottom */}
-          <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-20 bg-gray-50" style={{ clipPath: "ellipse(120% 60% at 50% 100%)" }} />
+        <section className="relative overflow-hidden bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] py-16 text-white text-center">
+          {/* Dot-grid */}
+          <div className="pointer-events-none absolute inset-0 opacity-[0.07]"
+            style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+          {/* Glow orbs */}
+          <div className="pointer-events-none absolute -top-40 -right-32 h-[480px] w-[480px] rounded-full bg-amber-400 opacity-[0.10] blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-blue-500 opacity-[0.13] blur-3xl" />
           <div className="container-shell relative">
-            <p className="text-sm font-bold uppercase tracking-widest text-rose-200 mb-3">हमसे बात करें</p>
-            <h1 className="font-headline text-4xl md:text-5xl font-extrabold mb-4">
-              <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">संपर्क करें</span> — हम यहाँ हैं
+            {/* Label pill */}
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/[0.1] px-4 py-2">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
+              <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">संपर्क करें</span>
+            </div>
+            {/* H1 */}
+            <h1 className="font-headline text-[2.5rem] font-black leading-[1.08] tracking-tight md:text-6xl lg:text-[4rem]">
+              <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">हम यहाँ हैं —</span>
+              <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">हर सवाल के लिए!</span>
             </h1>
-            <p className="text-rose-100 max-w-xl mx-auto leading-relaxed">
-              Admission inquiry, BSCC loan guidance, या कोई भी सवाल हो — कॉल करें, WhatsApp करें, या नीचे फॉर्म भरें। हमारे काउंसलर <strong className="text-white">30 मिनट में</strong> जवाब देंगे।
+            <div className="mx-auto mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-40" />
+            <p className="mt-6 max-w-2xl mx-auto text-blue-100 leading-relaxed">
+              Admission guidance से लेकर BSCC loan तक — हमसे सोमवार से शनिवार, सुबह 9 बजे से शाम 6 बजे तक संपर्क करें।
             </p>
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
+            {/* CTAs */}
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
               <a
                 href="tel:+916203138576"
-                className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-extrabold text-rose-700 hover:bg-rose-50 transition shadow-lg"
+                className="group relative flex items-center justify-center gap-2.5 overflow-hidden rounded-2xl bg-gradient-to-r from-amber-400 to-orange-400 px-8 py-4 font-extrabold text-gray-900 shadow-xl shadow-amber-500/30 transition-all hover:-translate-y-1 hover:shadow-2xl active:scale-[0.97]"
               >
-                <Phone size={16} /> अभी Call करें
+                <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
+                <Phone size={18} /> Call करें
               </a>
               <a
                 href="https://wa.me/916203138576?text=नमस्ते! मुझे Admission Counselling चाहिए।"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl border-2 border-white/40 bg-white/10 px-6 py-3 text-sm font-bold text-white hover:bg-white/20 transition backdrop-blur"
+                className="flex items-center justify-center gap-2.5 rounded-2xl border-2 border-white/25 bg-white/[0.08] px-8 py-4 font-bold text-white backdrop-blur transition-all hover:bg-white/[0.15] hover:-translate-y-1 active:scale-[0.97]"
               >
-                <MessageCircle size={16} /> WhatsApp करें
+                <MessageCircle size={18} /> WhatsApp करें
               </a>
+            </div>
+            {/* Info pills */}
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              {[
+                "Mon–Sat 9AM–6PM",
+                "Forbesganj, Araria",
+                "Response in 1 Hour",
+              ].map((pill) => (
+                <span key={pill} className="rounded-full border border-white/20 bg-white/[0.07] px-4 py-2 text-xs font-semibold text-blue-100">
+                  {pill}
+                </span>
+              ))}
             </div>
           </div>
         </section>

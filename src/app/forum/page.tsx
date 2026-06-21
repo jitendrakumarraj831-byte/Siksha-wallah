@@ -51,15 +51,46 @@ export default function ForumPage() {
   return (
     <div className="min-h-screen bg-orange-50">
       {/* Hero header */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-[#7c2d12] via-[#c2410c] to-[#ea580c] text-white py-14">
-        {/* Decorative glow blobs */}
-        <div className="pointer-events-none absolute -top-16 right-0 h-64 w-64 rounded-full bg-orange-300 opacity-20 blur-3xl" />
-        <div className="pointer-events-none absolute bottom-0 -left-16 h-48 w-48 rounded-full bg-yellow-400 opacity-15 blur-3xl" />
-        {/* Large speech bubble decoration */}
-        <div className="pointer-events-none absolute right-8 top-6 text-[5rem] leading-none select-none opacity-10">💬</div>
-        <div className="container mx-auto px-4 relative">
-          <h1 className="text-4xl font-bold text-white mb-2">Community Forum</h1>
-          <p className="text-orange-200">सवाल पूछें, जानकारी साझा करें, और साथी छात्रों की मदद करें</p>
+      <div className="relative overflow-hidden bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] text-white py-16">
+        {/* Dot-grid */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.07]"
+          style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+        {/* Glow orbs */}
+        <div className="pointer-events-none absolute -top-40 -right-32 h-[480px] w-[480px] rounded-full bg-amber-400 opacity-[0.10] blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-blue-500 opacity-[0.13] blur-3xl" />
+        <div className="container mx-auto px-4 relative text-center">
+          {/* Label pill */}
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/[0.1] px-4 py-2">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
+            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Community Forum</span>
+          </div>
+          {/* H1 */}
+          <h1 className="font-headline text-[2.5rem] font-black leading-[1.08] tracking-tight md:text-6xl lg:text-[4rem]">
+            <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">Students का</span>
+            <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">सवाल-जवाब Forum</span>
+          </h1>
+          <div className="mx-auto mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-40" />
+          <p className="mt-6 max-w-2xl mx-auto text-blue-100 leading-relaxed">
+            Admission, courses, BSCC loan, और career के बारे में सवाल पूछें — हमारा expert team और community जवाब देगी।
+          </p>
+          {/* CTAs */}
+          <div className="mt-8 flex flex-wrap justify-center gap-4">
+            <Link
+              href="/forum/new"
+              className="group relative flex items-center justify-center gap-2.5 overflow-hidden rounded-2xl bg-gradient-to-r from-amber-400 to-orange-400 px-8 py-4 font-extrabold text-gray-900 shadow-xl shadow-amber-500/30 transition-all hover:-translate-y-1 hover:shadow-2xl active:scale-[0.97]"
+            >
+              <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
+              सवाल पूछें
+            </Link>
+            <a
+              href="https://wa.me/916203138576?text=नमस्ते! मुझे Admission के बारे में सवाल पूछना है।"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2.5 rounded-2xl border-2 border-white/25 bg-white/[0.08] px-8 py-4 font-bold text-white backdrop-blur transition-all hover:bg-white/[0.15] hover:-translate-y-1 active:scale-[0.97]"
+            >
+              WhatsApp Expert
+            </a>
+          </div>
         </div>
       </div>
 
