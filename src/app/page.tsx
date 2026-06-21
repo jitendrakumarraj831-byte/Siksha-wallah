@@ -112,24 +112,21 @@ export default function Home() {
                 College Chowk, Near HP Petrol Pump, Forbesganj, Araria
               </div>
 
-              {/* H1 — updated copy, tighter tracking, commanding weight */}
+              {/* H1 — bilingual, premium gradient on second line */}
               <h1 className="font-headline text-[2.1rem] leading-[1.15] tracking-tight md:text-5xl lg:text-[3.6rem] lg:leading-[1.08] font-black">
-                सही कॉलेज, सही गाइडेंस —{" "}
-                <span className="relative inline-block">
-                  {/* Subtle underline glow behind accent text */}
-                  <span className="pointer-events-none absolute -bottom-1 left-0 h-[6px] w-full rounded-full bg-amber-400/30 blur-sm" />
-                  <span className="relative text-amber-400">
-                    अब एडमिशन की नो टेंशन!
-                  </span>
+                Right College, Sahi Guidance!
+                <br />
+                <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
+                  अब Admission Ki No Tension!
                 </span>
               </h1>
 
-              {/* Sub-heading — updated copy */}
+              {/* Sub-heading */}
               <p className="mt-5 max-w-xl text-base md:text-[1.05rem] text-blue-100 leading-[1.75]">
                 B.Ed, D.El.Ed, MBBS से MBA तक —{" "}
-                <strong className="text-white font-extrabold">बिना किसी हिडन चार्ज के</strong>{" "}
-                पाएं 100% भरोसेमंद और पारदर्शी{" "}
-                <strong className="text-white font-extrabold">डायरेक्ट एडमिशन सपोर्ट।</strong>
+                <strong className="text-white font-extrabold">100% Transparent Guidance</strong>{" "}
+                और Direct Admission Support,{" "}
+                <strong className="text-white font-extrabold">बिना किसी Hidden Charges के!</strong>
               </p>
 
               {/* CTA buttons */}
@@ -283,7 +280,7 @@ export default function Home() {
                         <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
                         {step < STEPS.length - 1 ? (
                           <>
-                            आगे बढ़ें
+                            Next
                             <ArrowRight size={16} className="flex-shrink-0 transition-transform duration-200 group-hover:translate-x-1" />
                           </>
                         ) : (
@@ -319,6 +316,28 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ── COURSE MARQUEE ── */}
+      <div className="relative overflow-hidden bg-gradient-to-r from-[#001f6b] via-[#002f8a] to-[#001f6b] py-4 border-t border-white/10">
+        {/* Edge fades */}
+        <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-16 bg-gradient-to-r from-[#001f6b] to-transparent" />
+        <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-16 bg-gradient-to-l from-[#001f6b] to-transparent" />
+        <div className="flex w-max marquee">
+          {[
+            "B.Ed", "D.El.Ed", "MBBS", "BDS", "B.Tech", "MBA", "BCA", "BBA",
+            "Nursing", "B.Pharma", "GNM", "ANM", "MCA", "Polytechnic", "ITI", "M.Ed",
+            "B.Ed", "D.El.Ed", "MBBS", "BDS", "B.Tech", "MBA", "BCA", "BBA",
+            "Nursing", "B.Pharma", "GNM", "ANM", "MCA", "Polytechnic", "ITI", "M.Ed",
+          ].map((course, i) => (
+            <span
+              key={i}
+              className="mx-2 inline-block whitespace-nowrap rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm font-medium text-white/90 backdrop-blur-sm"
+            >
+              {course}
+            </span>
+          ))}
+        </div>
+      </div>
 
       {/* ── TRUST BAR ── */}
       <div className="bg-gray-900 py-4">
