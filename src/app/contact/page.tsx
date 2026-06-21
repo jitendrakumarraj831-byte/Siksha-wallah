@@ -233,7 +233,7 @@ export default function ContactPage() {
               </div>
 
               {/* RIGHT — Contact Form */}
-              <div className="rounded-2xl bg-white border-2 border-gray-100 p-8 shadow-sm">
+              <div className="rounded-2xl bg-white border-t-4 border-rose-500 border-x-2 border-b-2 border-x-gray-100 border-b-gray-100 p-8 shadow-sm">
                 {submitted ? (
                   <div className="flex flex-col items-center gap-4 py-16 text-center">
                     <div className="flex h-24 w-24 items-center justify-center rounded-full bg-green-100">
@@ -251,7 +251,7 @@ export default function ContactPage() {
                     <div className="flex gap-3 mt-2">
                       <a
                         href="tel:+916203138576"
-                        className="inline-flex items-center gap-2 rounded-xl bg-rose-700 px-5 py-2.5 text-sm font-bold text-white hover:bg-blue-700 transition"
+                        className="inline-flex items-center gap-2 rounded-xl bg-rose-700 px-5 py-2.5 text-sm font-bold text-white hover:bg-rose-800 transition"
                       >
                         <Phone size={15} /> अभी Call करें
                       </a>
@@ -382,7 +382,7 @@ export default function ContactPage() {
                       <button
                         type="submit"
                         disabled={loading}
-                        className="w-full flex items-center justify-center gap-2 rounded-xl bg-rose-700 py-4 font-extrabold text-white hover:bg-blue-700 transition disabled:opacity-60 shadow-lg shadow-blue-200 active:scale-95"
+                        className="w-full flex items-center justify-center gap-2 rounded-xl bg-rose-700 py-4 font-extrabold text-white hover:bg-rose-800 transition disabled:opacity-60 shadow-lg shadow-rose-200 active:scale-95"
                       >
                         {loading ? (
                           <span className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
@@ -424,7 +424,7 @@ export default function ContactPage() {
                 href="https://maps.google.com/?q=College+Chowk+Forbesganj+Araria+Bihar"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl bg-rose-700 px-5 py-2.5 text-sm font-bold text-white hover:bg-blue-700 transition shadow"
+                className="inline-flex items-center gap-2 rounded-xl bg-rose-700 px-5 py-2.5 text-sm font-bold text-white hover:bg-rose-800 transition shadow"
               >
                 Google Maps पर खोलें <ArrowRight size={14} />
               </a>

@@ -217,8 +217,10 @@ export default function ApplyPage() {
       <SiteNavbar />
       <main>
         {/* Hero */}
-        <section className="bg-gradient-to-br from-[#001f6b] to-[#003f9f] py-14 text-white text-center">
-          <div className="container-shell">
+        <section className="relative overflow-hidden bg-gradient-to-br from-[#001f6b] to-[#003f9f] py-14 text-white text-center">
+          {/* Golden diagonal stripe accent */}
+          <div className="pointer-events-none absolute -right-20 top-0 h-full w-64 rotate-12 bg-amber-400/10 blur-2xl" />
+          <div className="container-shell relative">
             <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold">
               <FileText size={15} className="text-amber-400" /> Online Course Application Form
             </div>
@@ -251,13 +253,13 @@ export default function ApplyPage() {
             <div className="flex items-center gap-2 max-w-lg mx-auto">
               {[1, 2, 3].map(s => (
                 <div key={s} className="flex items-center gap-2 flex-1">
-                  <div className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm font-extrabold transition ${step >= s ? "bg-[#003f9f] text-white" : "bg-gray-100 text-gray-400"}`}>
+                  <div className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm font-extrabold transition ${step >= s ? "bg-amber-400 text-gray-900" : "bg-gray-100 text-gray-400"}`}>
                     {step > s ? "✓" : s}
                   </div>
-                  <span className={`text-xs font-semibold hidden sm:block ${step >= s ? "text-[#003f9f]" : "text-gray-400"}`}>
+                  <span className={`text-xs font-semibold hidden sm:block ${step >= s ? "text-amber-600" : "text-gray-400"}`}>
                     {s === 1 ? "Personal Details" : s === 2 ? "Academic & Course" : "Review & Submit"}
                   </span>
-                  {s < 3 && <div className={`flex-1 h-0.5 ${step > s ? "bg-[#003f9f]" : "bg-gray-200"}`} />}
+                  {s < 3 && <div className={`flex-1 h-0.5 ${step > s ? "bg-amber-400" : "bg-gray-200"}`} />}
                 </div>
               ))}
             </div>
@@ -277,7 +279,7 @@ export default function ApplyPage() {
               <form onSubmit={handleSubmit}>
                 {/* ── STEP 1: Personal ── */}
                 {step === 1 && (
-                  <div className="rounded-2xl bg-white border-2 border-gray-100 p-7 shadow-sm">
+                  <div className="rounded-2xl bg-white border-t-4 border-[#003f9f] border-x-2 border-b-2 border-x-gray-100 border-b-gray-100 p-7 shadow-sm">
                     <div className="flex items-center gap-3 mb-6">
                       <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#003f9f] text-white">
                         <User size={20} />
@@ -411,7 +413,7 @@ export default function ApplyPage() {
 
                 {/* ── STEP 2: Academic & Course ── */}
                 {step === 2 && (
-                  <div className="rounded-2xl bg-white border-2 border-gray-100 p-7 shadow-sm">
+                  <div className="rounded-2xl bg-white border-t-4 border-[#003f9f] border-x-2 border-b-2 border-x-gray-100 border-b-gray-100 p-7 shadow-sm">
                     <div className="flex items-center gap-3 mb-6">
                       <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#003f9f] text-white">
                         <BookOpen size={20} />
@@ -665,7 +667,7 @@ export default function ApplyPage() {
         </section>
 
         {/* Help strip */}
-        <section className="bg-[#003f9f] py-10 text-white text-center">
+        <section className="bg-[#001f6b] py-10 text-white text-center">
           <p className="font-headline text-lg font-bold mb-3">सवाल है? हमें call करें — Free Guidance</p>
           <div className="flex flex-wrap justify-center gap-3">
             <a href="tel:+916203138576" className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-extrabold text-[#003f9f] hover:bg-blue-50">

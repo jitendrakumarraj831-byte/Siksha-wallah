@@ -188,7 +188,7 @@ export default function AboutPage() {
       <section className="py-20 bg-white">
         <div className="container-shell">
           <div className="text-center mb-12">
-            <p className="text-sm font-bold uppercase tracking-widest text-[#dc143c] mb-2">हमारी खासियत</p>
+            <p className="text-sm font-bold uppercase tracking-widest text-purple-700 mb-2">हमारी खासियत</p>
             <h2 className="font-headline text-4xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Siksha Wallah को क्यों चुनें?</h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto text-sm">
               सिर्फ वादे नहीं — 5,000+ students के proven results।
