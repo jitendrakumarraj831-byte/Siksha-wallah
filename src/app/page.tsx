@@ -120,14 +120,15 @@ export default function Home() {
               </div>
 
               {/* H1 — Hinglish premium style */}
-              <h1 className="font-headline text-[2.1rem] leading-[1.15] tracking-tight md:text-5xl lg:text-[3.6rem] lg:leading-[1.08] font-black">
-                <span className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
+              <h1 className="font-headline text-[2.4rem] leading-[1.12] tracking-tight md:text-6xl lg:text-[4rem] lg:leading-[1.06] font-black">
+                <span className="block text-white drop-shadow-[0_2px_12px_rgba(255,255,255,0.25)]">
                   Your Dream College,
                 </span>
-                <br />
-                <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
+                <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent drop-shadow-[0_4px_24px_rgba(251,191,36,0.45)]">
                   Sahi Guidance के साथ!
                 </span>
+                {/* Decorative underline accent on line 2 */}
+                <span className="mt-2 block h-1 w-32 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 opacity-70 md:w-48" />
               </h1>
 
               {/* Sub-heading */}
