@@ -471,8 +471,8 @@ function CoursesInner() {
               {/* Section bottom CTA */}
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border-2 border-dashed border-gray-200 bg-white px-6 py-5">
                 <div>
-                  <p className="font-bold text-gray-800">{tab.label} me admission chahiye?</p>
-                  <p className="text-sm text-gray-500">Our expert counsellor aapko best college guide karenge — 100% free.</p>
+                  <p className="font-bold text-gray-800">{tab.label} में admission चाहिए?</p>
+                  <p className="text-sm text-gray-500">हमारे विशेषज्ञ काउंसलर आपको सही कॉलेज चुनने में मदद करेंगे — 100% निःशुल्क।</p>
                 </div>
                 <a
                   href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(tab.label)}%20के%20लिए%20admission%20guidance%20चाहिए।%20Please%20help%20karein।`}
@@ -495,7 +495,7 @@ function CoursesInner() {
             सही Course चुनने में मदद चाहिए?
           </h2>
           <p className="text-emerald-100 mb-7 max-w-xl mx-auto">
-            Our expert counsellors help you pick the best course based on your marks, budget, and career goals — 100% free.
+            हमारे विशेषज्ञ काउंसलर आपके अंक, बजट, और करियर लक्ष्य के अनुसार सही कोर्स चुनने में मदद करेंगे — 100% निःशुल्क।
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a

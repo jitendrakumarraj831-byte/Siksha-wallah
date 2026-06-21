@@ -106,7 +106,7 @@ export default function ContactPage() {
       window.open(`https://wa.me/916203138576?text=${waText}`, "_blank");
       setSubmitted(true);
     } catch {
-      setError("Submit नहीं हुआ। कृपया directly call करें: 6203138576");
+      setError("जमा नहीं हुआ। कृपया सीधे कॉल करें: 6203138576");
     } finally {
       setLoading(false);
     }
@@ -126,7 +126,7 @@ export default function ContactPage() {
               <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">संपर्क करें</span> — हम यहाँ हैं
             </h1>
             <p className="text-rose-100 max-w-xl mx-auto leading-relaxed">
-              Admission inquiry, BSCC loan guidance, या कोई भी सवाल हो — Call करें, WhatsApp करें, या नीचे form भरें। हमारे counsellor <strong className="text-white">30 मिनट में</strong> जवाब देंगे।
+              Admission inquiry, BSCC loan guidance, या कोई भी सवाल हो — कॉल करें, WhatsApp करें, या नीचे फॉर्म भरें। हमारे काउंसलर <strong className="text-white">30 मिनट में</strong> जवाब देंगे।
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <a
@@ -243,10 +243,10 @@ export default function ContactPage() {
                       आपकी Inquiry मिल गई! 🎉
                     </h3>
                     <p className="text-gray-500 max-w-xs leading-relaxed">
-                      हमारा counsellor <strong className="text-gray-800">30 मिनट में</strong> आपको WhatsApp या Call करेगा। साथ ही WhatsApp पर message भी भेज दिया गया है।
+                      हमारे काउंसलर <strong className="text-gray-800">30 मिनट में</strong> आपको WhatsApp या कॉल करेंगे। साथ ही WhatsApp पर message भी भेज दिया गया है।
                     </p>
                     <div className="rounded-xl bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700 font-semibold">
-                      ✅ Inquiry successfully save हो गई
+                      ✅ आवेदन सफलतापूर्वक सुरक्षित हो गया
                     </div>
                     <div className="flex gap-3 mt-2">
                       <a
@@ -270,10 +270,10 @@ export default function ContactPage() {
                   <>
                     <div className="mb-6">
                       <h2 className="font-headline text-2xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
-                        Free Counselling के लिए Inquiry भेजें
+                        निःशुल्क परामर्श के लिए संदेश भेजें
                       </h2>
                       <p className="text-gray-500 text-sm mt-1">
-                        नीचे form fill करें — हमारा expert <strong className="text-gray-700">30 मिनट में</strong> contact करेगा।
+                        नीचे फॉर्म भरें — हमारे विशेषज्ञ <strong className="text-gray-700">30 मिनट में</strong> संपर्क करेंगे।
                       </p>
                     </div>
 
@@ -304,7 +304,7 @@ export default function ContactPage() {
 
                       <div>
                         <label htmlFor="contact-mobile" className="mb-1.5 block text-sm font-semibold text-gray-700">
-                          Mobile Number *
+                          मोबाइल नंबर *
                         </label>
                         <div className="relative">
                           <Phone size={16} className="absolute left-3.5 top-3.5 text-gray-400" />
@@ -387,7 +387,7 @@ export default function ContactPage() {
                         {loading ? (
                           <span className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
                         ) : (
-                          <><Send size={18} /> Inquiry भेजें</>
+                          <><Send size={18} /> संदेश भेजें</>
                         )}
                       </button>
                       <p className="text-center text-xs text-gray-400">

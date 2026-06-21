@@ -188,7 +188,7 @@ export default function DashboardPage() {
         {/* Help & Contact */}
         <div className="rounded-2xl bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-100 p-6">
           <h3 className="font-headline text-lg font-extrabold text-gray-900 mb-1">सहायता चाहिए?</h3>
-          <p className="text-sm text-gray-600 mb-4">हमारे counsellor से directly बात करें — Free guidance</p>
+          <p className="text-sm text-gray-600 mb-4">हमारे काउंसलर से सीधे बात करें — निःशुल्क मार्गदर्शन</p>
           <div className="flex flex-wrap gap-3">
             <a href="tel:+916203138576" className="inline-flex items-center gap-2 rounded-xl bg-[#003f9f] px-5 py-2.5 text-sm font-bold text-white hover:bg-blue-700">
               <Phone size={15} /> +91 6203138576

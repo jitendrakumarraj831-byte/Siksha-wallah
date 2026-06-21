@@ -59,7 +59,7 @@ export default function ForumPage() {
         <div className="pointer-events-none absolute right-8 top-6 text-[5rem] leading-none select-none opacity-10">💬</div>
         <div className="container mx-auto px-4 relative">
           <h1 className="text-4xl font-bold text-white mb-2">Community Forum</h1>
-          <p className="text-orange-200">Ask questions, share knowledge, and help fellow students</p>
+          <p className="text-orange-200">सवाल पूछें, जानकारी साझा करें, और साथी छात्रों की मदद करें</p>
         </div>
       </div>
 
@@ -131,7 +131,7 @@ export default function ForumPage() {
             ))
           ) : (
             <div className="text-center py-12 bg-white rounded-lg">
-              <p className="text-gray-600">No posts found. Be the first to create one!</p>
+              <p className="text-gray-600">कोई पोस्ट नहीं मिली। पहला पोस्ट आप बनाएं!</p>
             </div>
           )}
         </div>

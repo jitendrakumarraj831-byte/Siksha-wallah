@@ -143,7 +143,7 @@ export default function AboutPage() {
             <p className="text-sm font-bold uppercase tracking-widest text-purple-700 mb-2">हमारी Expert Team</p>
             <h2 className="font-headline text-4xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">जो लोग आपकी मदद करते हैं</h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto text-sm">
-              हमारे counsellors real लोग हैं — certified, experienced, और हमेशा आपके लिए available।
+              हमारे काउंसलर असली लोग हैं — प्रमाणित, अनुभवी, और हमेशा आपके लिए उपलब्ध।
             </p>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
@@ -178,7 +178,7 @@ export default function AboutPage() {
           </div>
           <div className="mt-8 rounded-2xl bg-purple-50 border-2 border-purple-100 p-6 text-center">
             <p className="text-sm text-purple-800 font-semibold">
-              💡 <strong>नोट:</strong> हमारे सभी counsellors directly आपसे बात करते हैं — कोई IVR नहीं, कोई bot नहीं। Real इंसान, Real guidance।
+              💡 <strong>नोट:</strong> हमारे सभी काउंसलर सीधे आपसे बात करते हैं — कोई IVR नहीं, कोई bot नहीं। असली इंसान, असली मार्गदर्शन।
             </p>
           </div>
         </div>
@@ -238,10 +238,10 @@ export default function AboutPage() {
       <section className="py-16 bg-gradient-to-r from-purple-600 to-indigo-600">
         <div className="container-shell text-center">
           <h2 className="font-headline text-3xl md:text-4xl font-extrabold text-white mb-3">
-            आज ही अपनी Free Counselling बुक करें
+            आज ही निःशुल्क परामर्श बुक करें
           </h2>
           <p className="text-purple-100 mb-8 max-w-xl mx-auto text-sm leading-relaxed">
-            Call करें, WhatsApp करें — हमारे expert आपके हर सवाल का जवाब देंगे। कोई fee नहीं, कोई झूठा वादा नहीं।
+            कॉल करें, WhatsApp करें — हमारे विशेषज्ञ आपके हर सवाल का जवाब देंगे। कोई शुल्क नहीं, कोई झूठा वादा नहीं।
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a

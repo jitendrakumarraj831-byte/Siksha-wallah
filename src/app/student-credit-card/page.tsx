@@ -181,7 +181,7 @@ export default function StudentCreditCardPage() {
 
             {/* Eligibility Checker */}
             <div id="eligibility-checker" className="rounded-2xl border border-teal-200 bg-teal-50/10 p-7 backdrop-blur-xl">
-              <h3 className="font-headline text-xl font-extrabold mb-5">Check BSCC Eligibility</h3>
+              <h3 className="font-headline text-xl font-extrabold mb-5">BSCC पात्रता जाँचें</h3>
 
               {bsccEligible === null ? (
                 <form onSubmit={handleBsccCheck} className="space-y-4">
