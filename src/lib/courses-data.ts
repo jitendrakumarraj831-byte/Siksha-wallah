@@ -366,28 +366,81 @@ export const colorMap: Record<string, { tab: string; active: string; badge: stri
 };
 
 export const faqs = [
+  // ── परामर्श व सेवा ──────────────────────────────────────────
   {
-    q: "Is distance learning available?",
-    a: "Yes! We provide guidance for both regular and distance learning modes. Many courses like B.Ed, BBA, MBA are available through distance education from NAAC-accredited universities.",
+    q: "क्या Siksha Wallah की काउंसलिंग बिल्कुल निःशुल्क है?",
+    a: "हाँ, 100% निःशुल्क! पहली काउंसलिंग, प्रोफाइल समीक्षा, कोर्स सुझाव — सब कुछ मुफ्त है। कोई छिपा हुआ शुल्क नहीं, कोई दबाव नहीं। हमारा विश्वास है कि हर छात्र को सही मार्गदर्शन मिलनी चाहिए।",
   },
   {
-    q: "What documents are required for Bihar Student Credit Card (BSCC)?",
-    a: "You need: Aadhar Card, 12th Marksheet, Income Certificate (below ₹4.5L/year), Bank Account Details, Domicile Certificate (Bihar), and college admission letter. We help you prepare all documents.",
+    q: "Siksha Wallah से कैसे संपर्क करें?",
+    a: "आप तीन तरीकों से संपर्क कर सकते हैं: (1) WhatsApp: +91 6203138576 पर मैसेज करें, (2) कॉल: +91 6203138576 पर फोन करें, (3) ऑफिस विजिट: College Chowk, Near HP Petrol Pump, Forbesganj, Araria, Bihar। सोमवार–शनिवार सुबह 9 बजे से शाम 7 बजे तक।",
   },
   {
-    q: "कौन से colleges के साथ काम करते हैं?",
-    a: "We work with 200+ NAAC/NCTE/INC/AICTE approved colleges across Bihar, Jharkhand, UP, and other states. We guide you to the best college matching your budget and eligibility.",
+    q: "Siksha Wallah 2015 से कार्यरत है — क्या यह भरोसेमंद है?",
+    a: "बिल्कुल! 9+ साल के अनुभव में हमने 5000+ छात्रों को सफलतापूर्वक admission दिलाई है। हम NCTE, INC, PCI, AICTE approved कॉलेजों के साथ काम करते हैं। हमारी 98% success rate और शून्य छिपे शुल्क की नीति ही हमारी पहचान है।",
   },
   {
-    q: "क्या career counselling free है?",
-    a: "Yes, 100%! Your first counselling session and profile review are completely free. No hidden fees, no obligation. We believe every student deserves the right guidance.",
+    q: "Admission के बाद भी मदद मिलेगी?",
+    a: "हाँ! हम पहली जानकारी से लेकर admission पूरा होने तक साथ हैं — दस्तावेज़ सत्यापन, हॉस्टल मार्गदर्शन, कॉलेज विजिट, और admission के बाद की समस्याएँ भी। Siksha Wallah सिर्फ admission नहीं, पूरा सफर है।",
+  },
+
+  // ── कोर्स चुनाव ─────────────────────────────────────────────
+  {
+    q: "12वीं के बाद कौन सा कोर्स करें — B.Ed, Nursing, या B.Tech?",
+    a: "यह आपकी stream और लक्ष्य पर निर्भर करता है: • Arts/Science 12th → B.Ed / D.El.Ed (Teaching career के लिए) • Science (PCB) → MBBS, B.Sc Nursing, GNM, B.Pharma (Medical के लिए) • Science (PCM) → B.Tech, Polytechnic (Engineering के लिए) • Commerce/Arts → BBA, BCA, MBA (Management के लिए)। हमसे बात करें — हम आपकी marks और बजट के हिसाब से बेस्ट कोर्स सुझाएंगे।",
   },
   {
-    q: "Admission के बाद भी support मिलेगा?",
-    a: "Absolutely! We support you from the first inquiry until you complete your admission — document verification, hostel guidance, college visits, and post-admission queries.",
+    q: "Bihar में सरकारी नौकरी के लिए कौन सा कोर्स सबसे अच्छा है?",
+    a: "Bihar में सरकारी नौकरी के लिए शीर्ष कोर्स: (1) B.Ed / D.El.Ed → Bihar STET/BTET पास करके Primary/Secondary Teacher (₹25,000–55,000/माह), (2) MBBS → BPSC Medical Officer (₹1 लाख+/माह), (3) B.Sc Nursing / GNM → NHM/AIIMS Staff Nurse, (4) B.Tech → BPSC/SSC JE Engineer, (5) B.Pharma → Govt Pharmacist। सभी courses के लिए हम BSCC loan guidance भी देते हैं।",
   },
   {
-    q: "क्या BSCC से Nursing/B.Tech के लिए भी loan मिलता है?",
-    a: "Yes! Bihar Student Credit Card provides up to ₹4 Lakh loan covering tuition fees, hostel, food, and study materials for courses like B.Ed, Nursing, B.Tech, BBA, and 40+ more.",
+    q: "क्या Distance Mode (दूरस्थ शिक्षा) से B.Ed या BBA करना मान्य है?",
+    a: "हाँ! NCTE / UGC-DEB approved universities से Distance B.Ed और Distance BBA/MBA पूरी तरह मान्य है। कई सरकारी नौकरियों में Distance degree स्वीकार की जाती है। IGNOU, Nalanda Open University, और अन्य मान्यताप्राप्त विश्वविद्यालयों से हम गाइड करते हैं।",
+  },
+  {
+    q: "क्या बिना NEET के Medical कोर्स हो सकता है?",
+    a: "हाँ! NEET सिर्फ MBBS और BDS के लिए अनिवार्य है। इन कोर्सों के लिए NEET की जरूरत नहीं: B.Sc Nursing, GNM, ANM, B.Pharma, D.Pharma, BMLT। ये सभी 12th Science (PCB) के बाद सीधे admission से हो जाते हैं और सरकारी नौकरी के रास्ते भी खुलते हैं।",
+  },
+  {
+    q: "Polytechnic / ITI करने के बाद क्या B.Tech कर सकते हैं?",
+    a: "हाँ! Polytechnic (Diploma in Engineering) के बाद B.Tech के 2nd year में सीधे Lateral Entry मिलती है। यानी 3 साल Polytechnic + 3 साल B.Tech = 6 साल में B.Tech degree। ITI के बाद भी Polytechnic में Lateral Entry संभव है। यह कम खर्च में Engineering degree का सबसे अच्छा रास्ता है।",
+  },
+
+  // ── दाखिला प्रक्रिया ─────────────────────────────────────────
+  {
+    q: "Admission के लिए कौन से दस्तावेज़ चाहिए?",
+    a: "आमतौर पर ये दस्तावेज़ चाहिए: ✅ 10वीं मार्कशीट व प्रमाणपत्र, ✅ 12वीं मार्कशीट व प्रमाणपत्र, ✅ Transfer Certificate (TC), ✅ आधार कार्ड, ✅ पासपोर्ट साइज फोटो (6–8), ✅ जाति प्रमाणपत्र (SC/ST/OBC के लिए), ✅ निवास प्रमाणपत्र (Bihar Domicile), ✅ आय प्रमाणपत्र (BSCC के लिए)। MBBS/NEET courses के लिए NEET Scorecard भी चाहिए।",
+  },
+  {
+    q: "Siksha Wallah कौन से राज्यों में Admission करवाता है?",
+    a: "हम मुख्यतः Bihar के छात्रों को इन राज्यों के colleges में admission दिलाते हैं: Bihar (Patna, Purnea, Katihar, Araria), West Bengal (Nursing colleges), Madhya Pradesh (Pharmacy colleges), Jharkhand, Uttar Pradesh, और अन्य राज्य। Teaching courses के लिए NCTE Approved, Medical के लिए INC/PCI Approved, Technical के लिए AICTE Approved colleges।",
+  },
+  {
+    q: "क्या Hostel की सुविधा मिलती है?",
+    a: "हाँ! हमारे partner colleges में Boys और Girls दोनों के लिए Hostel उपलब्ध है। Hostel fees BSCC loan में cover होती है। हम hostel allocation, mess facility, और hostel नियमों के बारे में पूरी जानकारी admission से पहले देते हैं।",
+  },
+
+  // ── BSCC लोन ─────────────────────────────────────────────────
+  {
+    q: "Bihar Student Credit Card (BSCC) क्या है और कितना loan मिलता है?",
+    a: "BSCC बिहार सरकार की योजना है जिसमें 12वीं पास छात्रों को उच्च शिक्षा के लिए ₹4 लाख तक का loan मात्र 4% ब्याज दर पर मिलता है। Loan में Tuition fees, Hostel fees, खाना, किताबें, Laptop सब cover होता है। 25 साल तक की उम्र के Bihar के छात्र जिनके परिवार की वार्षिक आय ₹4.5 लाख से कम है, वे eligible हैं।",
+  },
+  {
+    q: "BSCC Loan के लिए कौन से documents चाहिए?",
+    a: "BSCC के लिए ये दस्तावेज़ जरूरी हैं: ✅ आधार कार्ड, ✅ 12वीं मार्कशीट, ✅ आय प्रमाणपत्र (₹4.5 लाख से कम), ✅ बैंक खाता विवरण, ✅ Bihar Domicile Certificate, ✅ College Admission Letter, ✅ पासपोर्ट साइज फोटो। Siksha Wallah BSCC application की पूरी प्रक्रिया में मदद करता है — बिल्कुल निःशुल्क।",
+  },
+  {
+    q: "क्या सभी कोर्सों पर BSCC Loan मिलता है?",
+    a: "नहीं, सभी पर नहीं। BSCC Loan इन कोर्सों पर मिलता है: B.Ed, D.El.Ed, B.P.Ed, B.Sc Nursing, GNM, ANM, B.Pharma, D.Pharma, BMLT, B.Tech, Polytechnic, ITI, BCA, BBA, और अन्य 40+ courses। MBBS, BDS, MBA, MCA पर BSCC loan नहीं मिलता। हमसे confirm करें — हम सही जानकारी देंगे।",
+  },
+
+  // ── फीस व खर्च ──────────────────────────────────────────────
+  {
+    q: "B.Ed की fees कितनी है और BSCC से कैसे cover होगी?",
+    a: "B.Ed की fees लगभग ₹50,000/वर्ष है। 2 साल में कुल ₹1,00,000। BSCC से ₹4 लाख तक loan मिलता है जो fees के साथ-साथ hostel, खाना, और किताबों के खर्च को भी cover करता है। यानी B.Ed पूरी तरह BSCC से संभव है। Siksha Wallah BSCC application में पूरी मदद करता है।",
+  },
+  {
+    q: "Siksha Wallah की service लेने का कोई charge है?",
+    a: "नहीं! Siksha Wallah की काउंसलिंग, course guidance, BSCC application सहायता, और college selection — सब बिल्कुल निःशुल्क है। हम सीधे colleges के साथ काम करते हैं। कोई बिचौलिया नहीं, कोई छिपा हुआ शुल्क नहीं। अगर कोई हमारे नाम पर पैसे मांगे तो तुरंत हमसे संपर्क करें।",
   },
 ];

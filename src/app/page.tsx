@@ -1231,40 +1231,81 @@ export default function Home() {
       {/* ── FAQ ACCORDION ── */}
       <section id="faq" className="py-24 bg-gray-50">
         <div className="container-shell">
-          <div className="grid gap-12 lg:grid-cols-[1fr_1.6fr] items-start">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <span className="inline-block rounded-full bg-blue-100 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-[#003f9f] mb-3">अक्सर पूछे जाने वाले सवाल</span>
+            <h2 className="font-headline text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
+              आपके मन में जो भी सवाल हो
+            </h2>
+            <p className="mt-3 text-gray-500 max-w-xl mx-auto">परामर्श से लेकर admission तक — हर जरूरी सवाल का जवाब यहाँ है।</p>
+          </div>
+
+          <div className="grid gap-12 lg:grid-cols-[1fr_1.8fr] items-start">
+            {/* Left — contact strip */}
             <AnimateIn type="fade-right">
-            <div>
-              <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-3">FAQ</p>
-              <h2 className="font-headline text-4xl font-extrabold">अक्सर पूछे जाने वाले सवाल</h2>
-              <p className="mt-4 text-gray-500">सीधे बात करना चाहते हैं?</p>
-              <div className="mt-6 space-y-3">
-                {[["6203138576", "Rajesh Kr. Sah"], ["7858062498", "Md. Naseem Ansari"], ["9162653235", "Gautam Kumar"]].map(([num, name]) => (
-                  <a key={num} href={`tel:+91${num}`} className="flex items-center gap-3 rounded-xl border border-gray-200 p-4 font-semibold text-gray-700 transition hover:border-primary-blue hover:text-primary-blue">
-                    <Phone size={18} className="text-primary-blue" />
-                    <div>
-                      <div className="font-bold">+91 {num}</div>
-                      <div className="text-xs text-gray-400">{name}</div>
+            <div className="sticky top-24">
+              <div className="rounded-2xl bg-[#003f9f] p-6 text-white mb-6">
+                <p className="font-headline text-lg font-extrabold mb-1">सीधे बात करें</p>
+                <p className="text-blue-200 text-sm mb-5">जवाब नहीं मिला? हमारे विशेषज्ञ से अभी बात करें — निःशुल्क।</p>
+                <div className="space-y-3">
+                  {[
+                    { num: "6203138576", name: "Rajesh Kr. Sah", role: "Senior Counsellor" },
+                    { num: "7858062498", name: "Md. Naseem Ansari", role: "Admission Head" },
+                    { num: "9162653235", name: "Gautam Kumar", role: "BSCC Specialist" },
+                  ].map(({ num, name, role }) => (
+                    <a key={num} href={`tel:+91${num}`} className="flex items-center gap-3 rounded-xl bg-white/10 border border-white/20 p-3 transition hover:bg-white/20">
+                      <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-amber-400 text-gray-900">
+                        <Phone size={15} />
+                      </div>
+                      <div>
+                        <div className="font-bold text-sm">+91 {num}</div>
+                        <div className="text-xs text-blue-200">{name} · {role}</div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+              {/* Category quick links */}
+              <div className="rounded-2xl border border-gray-200 bg-white p-5">
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">विषय के अनुसार देखें</p>
+                <div className="space-y-2">
+                  {[
+                    { label: "परामर्श व सेवा", color: "bg-blue-100 text-blue-700", range: "1–4" },
+                    { label: "कोर्स चुनाव", color: "bg-green-100 text-green-700", range: "5–9" },
+                    { label: "दाखिला प्रक्रिया", color: "bg-purple-100 text-purple-700", range: "10–12" },
+                    { label: "BSCC लोन", color: "bg-amber-100 text-amber-700", range: "13–15" },
+                    { label: "फीस व खर्च", color: "bg-rose-100 text-rose-700", range: "16–17" },
+                  ].map(({ label, color, range }) => (
+                    <div key={label} className={`flex items-center justify-between rounded-lg px-3 py-2 text-xs font-semibold ${color}`}>
+                      <span>{label}</span>
+                      <span className="opacity-60">Q {range}</span>
                     </div>
-                  </a>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
             </AnimateIn>
 
+            {/* Right — accordion */}
             <AnimateIn type="fade-left" delay={100}>
-            <div className="divide-y divide-gray-200 rounded-2xl border border-gray-200 overflow-hidden">
+            <div className="space-y-3">
               {faqs.map(({ q, a }, i) => (
-                <div key={q}>
+                <div key={i} className={`rounded-2xl border-2 overflow-hidden transition-all ${openFaq === i ? "border-[#003f9f] shadow-md" : "border-gray-200 bg-white"}`}>
                   <button
                     onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                    className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left font-headline font-bold text-lg text-gray-900 hover:bg-gray-50 transition"
+                    className="flex w-full items-start justify-between gap-4 px-6 py-5 text-left transition hover:bg-blue-50/50"
                   >
-                    <span>{q}</span>
-                    <ChevronDown size={22} className={`flex-shrink-0 text-primary-blue transition-transform ${openFaq === i ? "rotate-180" : ""}`} />
+                    <div className="flex items-start gap-3">
+                      <span className={`mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-[10px] font-extrabold ${openFaq === i ? "bg-[#003f9f] text-white" : "bg-gray-100 text-gray-500"}`}>
+                        {i + 1}
+                      </span>
+                      <span className="font-headline font-bold text-base text-gray-900 leading-snug">{q}</span>
+                    </div>
+                    <ChevronDown size={20} className={`flex-shrink-0 mt-0.5 text-[#003f9f] transition-transform duration-200 ${openFaq === i ? "rotate-180" : ""}`} />
                   </button>
                   {openFaq === i && (
-                    <div className="px-6 pb-5 text-gray-600 text-sm leading-relaxed border-t border-gray-100 pt-4">
-                      {a}
+                    <div className="px-6 pb-5 pt-0 text-gray-600 text-sm leading-relaxed border-t border-blue-100 bg-blue-50/30">
+                      <div className="pt-4 whitespace-pre-line">{a}</div>
                     </div>
                   )}
                 </div>
