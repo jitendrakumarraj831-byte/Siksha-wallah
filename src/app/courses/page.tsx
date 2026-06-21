@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   Award, BadgeCheck, BookMarked, Briefcase, Building2, CheckCircle2,
   ChevronDown, ChevronUp, Clock, CreditCard, FileText, MessageCircle,
@@ -11,9 +12,20 @@ import { SiteNavbar } from "@/components/site-navbar";
 import { SiteFooter } from "@/components/site-footer";
 import { streamTabs, colorMap, type StreamKey } from "@/lib/courses-data";
 
-export default function CoursesPage() {
+function CoursesInner() {
+  const searchParams = useSearchParams();
   const [activeStream, setActiveStream] = useState<StreamKey>("teaching");
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
+
+  useEffect(() => {
+    const s = searchParams.get("stream") as StreamKey | null;
+    if (s && ["teaching", "medical", "technical"].includes(s)) {
+      setActiveStream(s);
+      setTimeout(() => {
+        document.getElementById("streams")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+    }
+  }, [searchParams]);
 
   const stream = streamTabs.find((s) => s.key === activeStream)!;
   const colors = colorMap[stream.color];
@@ -72,7 +84,7 @@ export default function CoursesPage() {
           </div>
 
           {/* Stream Tabs */}
-          <div className="mb-10 flex flex-wrap justify-center gap-3">
+          <div id="streams" className="mb-10 flex flex-wrap justify-center gap-3">
             {streamTabs.map(({ key, label, icon: Icon, color }) => {
               const c = colorMap[color];
               const isActive = activeStream === key;
@@ -381,5 +393,13 @@ export default function CoursesPage() {
         <MessageCircle size={26} />
       </a>
     </main>
+  );
+}
+
+export default function CoursesPage() {
+  return (
+    <Suspense fallback={null}>
+      <CoursesInner />
+    </Suspense>
   );
 }

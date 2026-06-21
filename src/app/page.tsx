@@ -323,18 +323,47 @@ export default function Home() {
         <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-16 bg-gradient-to-r from-[#001f6b] to-transparent" />
         <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-16 bg-gradient-to-l from-[#001f6b] to-transparent" />
         <div className="flex w-max marquee">
-          {[
-            "B.Ed", "D.El.Ed", "MBBS", "BDS", "B.Tech", "MBA", "BCA", "BBA",
-            "Nursing", "B.Pharma", "GNM", "ANM", "MCA", "Polytechnic", "ITI", "M.Ed",
-            "B.Ed", "D.El.Ed", "MBBS", "BDS", "B.Tech", "MBA", "BCA", "BBA",
-            "Nursing", "B.Pharma", "GNM", "ANM", "MCA", "Polytechnic", "ITI", "M.Ed",
-          ].map((course, i) => (
-            <span
+          {([
+            { name: "B.Ed",        stream: "teaching"  },
+            { name: "D.El.Ed",     stream: "teaching"  },
+            { name: "MBBS",        stream: "medical"   },
+            { name: "BDS",         stream: "medical"   },
+            { name: "B.Tech",      stream: "technical" },
+            { name: "MBA",         stream: "technical" },
+            { name: "BCA",         stream: "technical" },
+            { name: "BBA",         stream: "technical" },
+            { name: "B.Sc Nursing",stream: "medical"   },
+            { name: "B.Pharma",    stream: "medical"   },
+            { name: "GNM",         stream: "medical"   },
+            { name: "ANM",         stream: "medical"   },
+            { name: "MCA",         stream: "technical" },
+            { name: "Polytechnic", stream: "technical" },
+            { name: "ITI",         stream: "technical" },
+            { name: "M.Ed",        stream: "teaching"  },
+            { name: "B.Ed",        stream: "teaching"  },
+            { name: "D.El.Ed",     stream: "teaching"  },
+            { name: "MBBS",        stream: "medical"   },
+            { name: "BDS",         stream: "medical"   },
+            { name: "B.Tech",      stream: "technical" },
+            { name: "MBA",         stream: "technical" },
+            { name: "BCA",         stream: "technical" },
+            { name: "BBA",         stream: "technical" },
+            { name: "B.Sc Nursing",stream: "medical"   },
+            { name: "B.Pharma",    stream: "medical"   },
+            { name: "GNM",         stream: "medical"   },
+            { name: "ANM",         stream: "medical"   },
+            { name: "MCA",         stream: "technical" },
+            { name: "Polytechnic", stream: "technical" },
+            { name: "ITI",         stream: "technical" },
+            { name: "M.Ed",        stream: "teaching"  },
+          ] as { name: string; stream: string }[]).map((c, i) => (
+            <a
               key={i}
-              className="mx-2 inline-block whitespace-nowrap rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm font-medium text-white/90 backdrop-blur-sm"
+              href={`/courses?stream=${c.stream}`}
+              className="mx-2 inline-block whitespace-nowrap rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm font-medium text-white/90 backdrop-blur-sm transition-colors hover:bg-white/25 hover:border-white/40"
             >
-              {course}
-            </span>
+              {c.name}
+            </a>
           ))}
         </div>
       </div>
