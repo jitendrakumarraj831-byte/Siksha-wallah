@@ -119,14 +119,14 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* H1 — दोनों lines पर gradient */}
+              {/* H1 — Hinglish premium style */}
               <h1 className="font-headline text-[2.1rem] leading-[1.15] tracking-tight md:text-5xl lg:text-[3.6rem] lg:leading-[1.08] font-black">
                 <span className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
-                  सही कॉलेज, सही मार्गदर्शन —
+                  Your Dream College,
                 </span>
                 <br />
                 <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
-                  प्रवेश की अब कोई चिंता नहीं!
+                  Sahi Guidance के साथ!
                 </span>
               </h1>
 
@@ -134,11 +134,11 @@ export default function Home() {
               <p className="mt-5 max-w-xl text-base md:text-[1.05rem] text-blue-100 leading-[1.75]">
                 B.Ed, D.El.Ed, MBBS से MBA तक —{" "}
                 <strong className="bg-gradient-to-r from-amber-300 to-yellow-200 bg-clip-text text-transparent font-extrabold">
-                  १००% पारदर्शी मार्गदर्शन
+                  100% Transparent Guidance
                 </strong>{" "}
-                और सीधा प्रवेश सहयोग,{" "}
+                और Direct Admission Support,{" "}
                 <strong className="bg-gradient-to-r from-amber-300 to-orange-300 bg-clip-text text-transparent font-extrabold">
-                  बिना किसी छुपे शुल्क के!
+                  बिना किसी Hidden Charge के!
                 </strong>
               </p>
 
