@@ -17,19 +17,27 @@ export default function BlogPage() {
       <SiteNavbar />
       <main>
         {/* Hero */}
-        <section className="relative bg-gray-950 text-white py-16 overflow-hidden">
-          {/* Large decorative BLOG text behind heading */}
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-            <span className="text-[8rem] font-black text-white/5 select-none leading-none">BLOG</span>
-          </div>
+        <section className="relative overflow-hidden bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] text-white py-16">
+          {/* Dot-grid */}
+          <div className="pointer-events-none absolute inset-0 opacity-[0.07]"
+            style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+          {/* Glow orbs */}
+          <div className="pointer-events-none absolute -top-40 -right-32 h-[480px] w-[480px] rounded-full bg-amber-400 opacity-[0.10] blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-blue-500 opacity-[0.13] blur-3xl" />
           <div className="container-shell text-center relative">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/10 px-4 py-1.5 text-sm font-semibold mb-4">
-              <BookOpen size={14} className="text-amber-400" /> Education Blog
+            {/* Label pill */}
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/[0.1] px-4 py-2">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
+              <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Education Blog</span>
             </div>
-            <h1 className="font-headline text-4xl font-extrabold mb-3 text-white">Siksha Wallah Blog</h1>
-            <p className="text-gray-400 max-w-xl mx-auto">
-              Bihar admissions, BSCC loan guide, course comparisons — expert articles in Hindi &amp;
-              English.
+            {/* H1 */}
+            <h1 className="font-headline text-[2.5rem] font-black leading-[1.08] tracking-tight md:text-6xl lg:text-[4rem]">
+              <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">Admission Tips &amp;</span>
+              <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Career Guidance Blog</span>
+            </h1>
+            <div className="mx-auto mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-40" />
+            <p className="mt-6 max-w-xl mx-auto text-blue-100 leading-relaxed">
+              B.Ed, Nursing, BSCC loan, और career guidance के बारे में expert articles — Bihar students के लिए।
             </p>
           </div>
         </section>

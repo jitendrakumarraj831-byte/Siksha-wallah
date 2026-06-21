@@ -34,37 +34,53 @@ export default function StudentCreditCardPage() {
       <SiteNavbar />
 
       {/* ── PAGE HERO ── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#134e4a] via-[#0f766e] to-[#0d9488] text-white py-20 md:py-28">
-        {/* Diagonal stripe pattern */}
-        <div className="pointer-events-none absolute inset-0" style={{ backgroundImage: "repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.03) 10px, rgba(255,255,255,0.03) 20px)" }} />
-        <div className="pointer-events-none absolute -top-24 right-0 h-96 w-96 rounded-full bg-teal-300 opacity-10 blur-3xl" />
-        <div className="pointer-events-none absolute bottom-0 -left-24 h-64 w-64 rounded-full bg-cyan-300 opacity-15 blur-3xl" />
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] text-white py-20 md:py-28">
+        {/* Dot-grid */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.07]"
+          style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+        {/* Glow orbs */}
+        <div className="pointer-events-none absolute -top-40 -right-32 h-[480px] w-[480px] rounded-full bg-amber-400 opacity-[0.10] blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-blue-500 opacity-[0.13] blur-3xl" />
         <div className="container-shell relative text-center">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 px-4 py-2 text-sm font-bold text-amber-300">
-            <CreditCard size={16} /> Bihar Government Scheme
+          {/* Label pill */}
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/[0.1] px-4 py-2">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
+            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Bihar Student Credit Card</span>
           </div>
-          <h1 className="font-headline text-4xl md:text-5xl lg:text-6xl font-extrabold mt-4 leading-tight bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
-            Bihar Student Credit Card (BSCC)
+          {/* H1 */}
+          <h1 className="font-headline text-[2.5rem] font-black leading-[1.08] tracking-tight md:text-6xl lg:text-[4rem]">
+            <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">BSCC — Bihar Student</span>
+            <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Credit Card Guide</span>
           </h1>
-          <p className="mt-5 max-w-2xl mx-auto text-blue-100 text-lg leading-relaxed">
-            सरकारी योजना के तहत <strong className="text-white">Free Education, Fooding, और Lodging</strong> पाएं।
-            BSCC से ₹4 Lakh तक का education loan — <strong className="text-amber-400">4% सालाना ब्याज</strong> पर।
+          <div className="mx-auto mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-40" />
+          <p className="mt-6 max-w-2xl mx-auto text-blue-100 text-lg leading-relaxed">
+            ₹4 लाख तक का education loan, 0% interest — Bihar सरकार की इस scheme से अपना admission सपना पूरा करें।
           </p>
-          <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+          {/* CTAs */}
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="#eligibility-checker"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-400 px-7 py-4 font-extrabold text-gray-900 shadow-lg transition hover:-translate-y-0.5 hover:bg-amber-300"
+              className="group relative flex items-center justify-center gap-2.5 overflow-hidden rounded-2xl bg-gradient-to-r from-amber-400 to-orange-400 px-8 py-4 font-extrabold text-gray-900 shadow-xl shadow-amber-500/30 transition-all hover:-translate-y-1 hover:shadow-2xl active:scale-[0.97]"
             >
+              <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
               Eligibility Check करें <ArrowRight size={18} />
             </a>
             <a
               href="https://wa.me/916203138576?text=नमस्ते!%20मुझे%20Bihar%20Student%20Credit%20Card%20(BSCC)%20के%20लिए%20guidance%20चाहिए।%20Kripya%20help%20karein।"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white/40 bg-white/10 px-7 py-4 font-bold text-white backdrop-blur transition hover:bg-white/20"
+              className="flex items-center justify-center gap-2.5 rounded-2xl border-2 border-white/25 bg-white/[0.08] px-8 py-4 font-bold text-white backdrop-blur transition-all hover:bg-white/[0.15] hover:-translate-y-1 active:scale-[0.97]"
             >
-              <MessageCircle size={18} /> WhatsApp करें
+              <MessageCircle size={18} /> Apply करें
             </a>
+          </div>
+          {/* Stat pills */}
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            {["₹4L Loan", "0% Interest", "All Courses Eligible"].map((pill) => (
+              <span key={pill} className="rounded-full border border-white/20 bg-white/[0.07] px-4 py-2 text-xs font-semibold text-blue-100">
+                {pill}
+              </span>
+            ))}
           </div>
         </div>
       </section>
