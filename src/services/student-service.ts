@@ -1,4 +1,4 @@
-import { db } from '@/lib/firebase';
+import { db, storage } from '@/lib/firebase';
 import {
   doc,
   collection,
@@ -10,6 +10,7 @@ import {
   getDoc,
   deleteDoc,
 } from 'firebase/firestore';
+import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
 
 export interface StudentProfile {
   uid: string;
@@ -44,6 +45,9 @@ export interface Document {
   name: string;
   type: string;
   url: string;
+  storagePath?: string;
+  fileSize?: number;
+  mimeType?: string;
   uploadedAt: number;
 }
 
@@ -113,7 +117,7 @@ export const studentService = {
     }
   },
 
-  // Upload document
+  // Upload document metadata only (no file)
   async uploadDocument(uid: string, document: Omit<Document, 'id' | 'uploadedAt'>): Promise<string> {
     try {
       const docRef = await addDoc(collection(db, 'documents'), {
@@ -125,6 +129,54 @@ export const studentService = {
     } catch (error: any) {
       throw new Error(`Failed to upload document: ${error.message}`);
     }
+  },
+
+  // Upload actual file to Firebase Storage and save metadata to Firestore
+  uploadDocumentFile(
+    uid: string,
+    file: File,
+    docName: string,
+    docType: string,
+    onProgress?: (percent: number) => void,
+  ): Promise<string> {
+    return new Promise((resolve, reject) => {
+      if (!storage) {
+        reject(new Error('Firebase Storage is not initialized'));
+        return;
+      }
+
+      const ext = file.name.split('.').pop() ?? 'bin';
+      const storagePath = `documents/${uid}/${Date.now()}_${docType}.${ext}`;
+      const storageRef = ref(storage, storagePath);
+      const task = uploadBytesResumable(storageRef, file, { contentType: file.type });
+
+      task.on(
+        'state_changed',
+        (snapshot) => {
+          const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+          onProgress?.(pct);
+        },
+        (error) => reject(new Error(error.message)),
+        async () => {
+          try {
+            const url = await getDownloadURL(task.snapshot.ref);
+            const docRef = await addDoc(collection(db, 'documents'), {
+              uid,
+              name: docName,
+              type: docType,
+              url,
+              storagePath,
+              fileSize: file.size,
+              mimeType: file.type,
+              uploadedAt: Date.now(),
+            } satisfies Omit<Document, 'id'>);
+            resolve(docRef.id);
+          } catch (err: any) {
+            reject(new Error(err.message));
+          }
+        },
+      );
+    });
   },
 
   // Get student documents
@@ -141,10 +193,15 @@ export const studentService = {
     }
   },
 
-  // Delete document
-  async deleteDocument(docId: string): Promise<void> {
+  // Delete document — removes from Firestore and Storage
+  async deleteDocument(docId: string, storagePath?: string): Promise<void> {
     try {
       await deleteDoc(doc(db, 'documents', docId));
+      if (storagePath && storage) {
+        await deleteObject(ref(storage, storagePath)).catch(() => {
+          // Storage file may already be gone — non-fatal
+        });
+      }
     } catch (error: any) {
       throw new Error(`Failed to delete document: ${error.message}`);
     }

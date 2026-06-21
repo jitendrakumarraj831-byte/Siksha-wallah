@@ -2,6 +2,7 @@
 import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
 import { getFirestore, Firestore } from "firebase/firestore";
 import { getAuth, Auth } from "firebase/auth";
+import { getStorage, FirebaseStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -15,8 +16,8 @@ const firebaseConfig = {
 let app!: FirebaseApp;
 let db!: Firestore;
 let auth: Auth | null = null;
+let storage: FirebaseStorage | null = null;
 
-// Only initialize if we have an API key to avoid "invalid-api-key" crash
 if (typeof window !== "undefined" && !process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
   console.warn("Firebase API Key is missing. Check your .env file.");
 }
@@ -24,12 +25,12 @@ if (typeof window !== "undefined" && !process.env.NEXT_PUBLIC_FIREBASE_API_KEY) 
 try {
   app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
   db = getFirestore(app);
-  // Only initialize Auth if the API key is present
   if (firebaseConfig.apiKey) {
     auth = getAuth(app);
+    storage = getStorage(app);
   }
 } catch (error) {
   console.error("Firebase initialization error:", error);
 }
 
-export { db, auth };
+export { db, auth, storage };
