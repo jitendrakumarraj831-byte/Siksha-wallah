@@ -98,118 +98,137 @@ export default function Home() {
         <div className="pointer-events-none absolute -top-32 -right-32 h-96 w-96 rounded-full bg-amber-400 opacity-20 blur-3xl" />
         <div className="pointer-events-none absolute bottom-0 -left-24 h-64 w-64 rounded-full bg-blue-300 opacity-20 blur-3xl" />
 
-        <div className="container-shell relative py-20 md:py-32">
-          <div className="grid gap-12 lg:grid-cols-[1.15fr_.85fr] items-center">
-            {/* Left */}
-            <div>
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold backdrop-blur">
+        <div className="container-shell relative py-14 md:py-28">
+          {/*
+            Mobile layout (default flex-col):  text → form → stats
+            Desktop (lg grid):                 [text + stats]  |  [form spanning both rows]
+          */}
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.15fr_.85fr] lg:gap-12 lg:items-start">
+
+            {/* ── LEFT: badge + heading + sub + CTAs ── */}
+            <div className="order-1">
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold backdrop-blur">
                 <BadgeCheck size={16} className="text-amber-400" />
                 College Chowk, Near HP Petrol Pump, Forbesganj, Araria
               </div>
 
-              <h1 className="font-headline text-4xl md:text-5xl lg:text-[64px] font-extrabold leading-[1.1]">
-                आपका करियर,{" "}
-                <span className="relative">
-                  <span className="text-amber-400">हमारी जिम्मेदारी</span>
-                </span>
-                <br />
-                <span className="text-white/80 text-2xl md:text-3xl lg:text-4xl font-bold mt-2 block">
-                  Right Admission, Right Guidance
+              {/* H1 — updated copy, tighter tracking, commanding weight */}
+              <h1 className="font-headline text-[2.1rem] leading-[1.15] tracking-tight md:text-5xl lg:text-[3.6rem] lg:leading-[1.08] font-black">
+                सही कॉलेज, सही गाइडेंस —{" "}
+                <span className="relative inline-block">
+                  {/* Subtle underline glow behind accent text */}
+                  <span className="pointer-events-none absolute -bottom-1 left-0 h-[6px] w-full rounded-full bg-amber-400/30 blur-sm" />
+                  <span className="relative text-amber-400">
+                    अब एडमिशन की नो टेंशन!
+                  </span>
                 </span>
               </h1>
 
-              <p className="mt-6 max-w-xl text-base md:text-lg text-blue-100 leading-relaxed">
-                B.Ed से MBBS, D.El.Ed से MBA — हर course के लिए <strong className="text-white">100% Transparent</strong> guidance, Zero hidden charges, और Complete support जब तक Admission नहीं मिलता।
+              {/* Sub-heading — updated copy */}
+              <p className="mt-5 max-w-xl text-base md:text-[1.05rem] text-blue-100 leading-[1.75]">
+                B.Ed, D.El.Ed, MBBS से MBA तक —{" "}
+                <strong className="text-white font-extrabold">बिना किसी हिडन चार्ज के</strong>{" "}
+                पाएं 100% भरोसेमंद और पारदर्शी{" "}
+                <strong className="text-white font-extrabold">डायरेक्ट एडमिशन सपोर्ट।</strong>
               </p>
 
-              <div className="mt-8 flex flex-col sm:flex-row gap-3">
+              {/* CTA buttons */}
+              <div className="mt-7 flex flex-col sm:flex-row gap-3">
                 <a
                   href="#inquiry"
-                  className="group flex items-center justify-center gap-2 rounded-xl bg-amber-400 px-7 py-4 font-extrabold text-gray-900 shadow-lg shadow-amber-500/30 transition hover:-translate-y-0.5 hover:bg-amber-300 active:scale-95"
+                  className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-amber-400 px-7 py-4 font-extrabold text-gray-900 shadow-lg shadow-amber-500/40 transition-all duration-200 ease-out hover:-translate-y-[3px] hover:bg-amber-300 hover:shadow-xl hover:shadow-amber-500/50 active:translate-y-0 active:scale-[0.97] active:shadow-md"
                 >
-                  Free Counselling Book करें <ArrowRight size={18} className="transition group-hover:translate-x-1" />
+                  {/* Shine sweep on hover */}
+                  <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
+                  Free Expert सलाह लें
+                  <ArrowRight size={18} className="flex-shrink-0 transition-transform duration-200 group-hover:translate-x-1" />
                 </a>
                 <a
                   href="https://wa.me/916203138576"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 rounded-xl border-2 border-white/40 bg-white/10 px-7 py-4 font-bold text-white backdrop-blur transition hover:bg-white/20"
+                  className="flex items-center justify-center gap-2 rounded-xl border-2 border-white/40 bg-white/10 px-7 py-4 font-bold text-white backdrop-blur transition-all duration-200 ease-out hover:bg-white/20 hover:-translate-y-[2px] hover:border-white/60 active:scale-[0.97]"
                 >
                   <MessageCircle size={18} /> WhatsApp करें
                 </a>
               </div>
-
-              <div className="mt-10 grid grid-cols-3 gap-4 border-t border-white/20 pt-8">
-                {([
-                  { target: 5000, suffix: "+", label: "Students Guided" },
-                  { target: 200, suffix: "+", label: "Colleges Partnered" },
-                  { target: 98, suffix: "%", label: "Success Rate" },
-                ] as const).map(({ target, suffix, label }) => (
-                  <div key={label}>
-                    <p className="font-headline text-3xl font-extrabold text-amber-400">
-                      <CountUp target={target} suffix={suffix} />
-                    </p>
-                    <p className="mt-1 text-sm text-blue-100">{label}</p>
-                  </div>
-                ))}
-              </div>
             </div>
 
-            {/* Right — glassmorphism quick inquiry */}
-            <div id="inquiry" className="rounded-2xl border border-white/20 bg-white/10 p-7 backdrop-blur-xl shadow-2xl">
+            {/* ── RIGHT: glassmorphism quick inquiry (order-2 on mobile, spans 2 rows on lg) ── */}
+            <div
+              id="inquiry"
+              className="order-2 rounded-2xl border border-white/20 bg-white/10 p-6 md:p-7 backdrop-blur-xl shadow-2xl lg:row-span-2"
+            >
               {formSubmitted ? (
                 <div className="flex flex-col items-center gap-4 py-10 text-center">
                   <CheckCircle2 size={56} className="text-green-400" />
                   <h3 className="font-headline text-2xl font-extrabold">धन्यवाद! 🎉</h3>
                   <p className="text-blue-100">हमारा counsellor जल्द ही आपसे WhatsApp पर संपर्क करेगा।</p>
-                  <button onClick={() => { setFormSubmitted(false); setStep(0); setFormData({ name: "", mobile: "", course: "", qualify: "" }); }} className="rounded-xl bg-amber-400 px-6 py-3 font-bold text-gray-900">
+                  <button
+                    onClick={() => { setFormSubmitted(false); setStep(0); setFormData({ name: "", mobile: "", course: "", qualify: "" }); }}
+                    className="rounded-xl bg-amber-400 px-6 py-3 font-bold text-gray-900 transition-all duration-200 hover:bg-amber-300 hover:-translate-y-0.5 active:scale-95"
+                  >
                     New Inquiry
                   </button>
                 </div>
               ) : (
                 <>
-                  <div className="mb-5 flex items-center justify-between">
-                    <h3 className="font-headline text-xl font-extrabold">Quick Inquiry</h3>
-                    <span className="text-sm text-blue-200">Step {step + 1} / {STEPS.length}</span>
+                  <div className="mb-4 flex items-center justify-between">
+                    <h3 className="font-headline text-xl font-extrabold">Free Consultation</h3>
+                    <span className="rounded-full bg-amber-400/20 px-2.5 py-0.5 text-xs font-bold text-amber-300">
+                      {step + 1} / {STEPS.length}
+                    </span>
                   </div>
 
-                  {/* Progress bar */}
-                  <div className="mb-6 h-1.5 w-full rounded-full bg-white/20">
-                    <div className="h-full rounded-full bg-amber-400 transition-all" style={{ width: `${((step + 1) / STEPS.length) * 100}%` }} />
+                  {/* Progress bar — wider steps feel faster */}
+                  <div className="mb-5 h-1.5 w-full rounded-full bg-white/20">
+                    <div
+                      className="h-full rounded-full bg-amber-400 transition-all duration-500 ease-out"
+                      style={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
+                    />
                   </div>
 
                   {/* Step content */}
                   <div className="space-y-3">
                     {step === 0 && (
                       <>
-                        <label className="block text-sm font-semibold text-blue-100">आपका पूरा नाम</label>
+                        <label className="block text-sm font-bold text-blue-100">
+                          आपका पूरा नाम <span className="text-amber-400">*</span>
+                        </label>
                         <input
                           value={formData.name}
                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          placeholder="Full Name (पूरा नाम)"
-                          className="w-full rounded-xl border border-white/30 bg-white/20 px-4 py-3.5 text-white placeholder-blue-200 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/30"
+                          placeholder="जैसे: Rahul Kumar"
+                          autoComplete="name"
+                          className="w-full rounded-xl border border-white/30 bg-white/20 px-4 py-3.5 text-white placeholder-blue-300 outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-400/30"
                         />
                       </>
                     )}
                     {step === 1 && (
                       <>
-                        <label className="block text-sm font-semibold text-blue-100">Mobile Number</label>
+                        <label className="block text-sm font-bold text-blue-100">
+                          Mobile Number <span className="text-amber-400">*</span>
+                        </label>
                         <input
                           value={formData.mobile}
-                          onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
+                          onChange={(e) => setFormData({ ...formData, mobile: e.target.value.replace(/\D/g, "").slice(0, 10) })}
                           type="tel"
-                          placeholder="10-digit Mobile Number"
-                          className="w-full rounded-xl border border-white/30 bg-white/20 px-4 py-3.5 text-white placeholder-blue-200 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/30"
+                          inputMode="numeric"
+                          placeholder="10-digit number दर्ज करें"
+                          autoComplete="tel"
+                          className="w-full rounded-xl border border-white/30 bg-white/20 px-4 py-3.5 text-white placeholder-blue-300 outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-400/30"
                         />
                       </>
                     )}
                     {step === 2 && (
                       <>
-                        <label className="block text-sm font-semibold text-blue-100">Desired Course</label>
+                        <label className="block text-sm font-bold text-blue-100">
+                          कौन सा Course चाहिए? <span className="text-amber-400">*</span>
+                        </label>
                         <select
                           value={formData.course}
                           onChange={(e) => setFormData({ ...formData, course: e.target.value })}
-                          className="w-full rounded-xl border border-white/30 bg-[#003f9f] px-4 py-3.5 text-white outline-none focus:border-amber-400"
+                          className="w-full rounded-xl border border-white/30 bg-[#003f9f] px-4 py-3.5 text-white outline-none transition focus:border-amber-400"
                         >
                           <option value="">-- Course Select करें --</option>
                           <optgroup label="Teaching">
@@ -229,13 +248,15 @@ export default function Home() {
                     )}
                     {step === 3 && (
                       <>
-                        <label className="block text-sm font-semibold text-blue-100">Current Qualification</label>
+                        <label className="block text-sm font-bold text-blue-100">
+                          आपकी Qualification <span className="text-amber-400">*</span>
+                        </label>
                         <select
                           value={formData.qualify}
                           onChange={(e) => setFormData({ ...formData, qualify: e.target.value })}
-                          className="w-full rounded-xl border border-white/30 bg-[#003f9f] px-4 py-3.5 text-white outline-none focus:border-amber-400"
+                          className="w-full rounded-xl border border-white/30 bg-[#003f9f] px-4 py-3.5 text-white outline-none transition focus:border-amber-400"
                         >
-                          <option value="">-- Select Qualification --</option>
+                          <option value="">-- Qualification Select करें --</option>
                           <option>10th Pass</option>
                           <option>12th Pass (Arts)</option>
                           <option>12th Pass (Science)</option>
@@ -248,22 +269,53 @@ export default function Home() {
 
                     <div className="flex gap-2 pt-1">
                       {step > 0 && (
-                        <button onClick={() => setStep(step - 1)} className="flex-1 rounded-xl border border-white/40 py-3.5 font-semibold text-white transition hover:bg-white/10">
-                          Back
+                        <button
+                          onClick={() => setStep(step - 1)}
+                          className="flex-1 rounded-xl border border-white/40 py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-white/10 active:scale-[0.97]"
+                        >
+                          ← Back
                         </button>
                       )}
                       <button
                         onClick={nextStep}
-                        className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-amber-400 py-3.5 font-extrabold text-gray-900 transition hover:bg-amber-300 active:scale-95"
+                        className="group relative flex flex-1 items-center justify-center gap-2 overflow-hidden rounded-xl bg-amber-400 py-3.5 font-extrabold text-gray-900 transition-all duration-200 ease-out hover:bg-amber-300 hover:-translate-y-[2px] hover:shadow-lg hover:shadow-amber-500/40 active:translate-y-0 active:scale-[0.97]"
                       >
-                        {step < STEPS.length - 1 ? <>Next <ArrowRight size={16} /></> : "Submit & WhatsApp करें 🚀"}
+                        <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
+                        {step < STEPS.length - 1 ? (
+                          <>
+                            आगे बढ़ें
+                            <ArrowRight size={16} className="flex-shrink-0 transition-transform duration-200 group-hover:translate-x-1" />
+                          </>
+                        ) : (
+                          "Submit & WhatsApp करें 🚀"
+                        )}
                       </button>
                     </div>
                   </div>
-                  <p className="mt-4 text-center text-xs text-blue-200">100% Free | No spam | Privacy protected</p>
+
+                  <p className="mt-4 text-center text-xs text-blue-300">
+                    🔒 100% Free · No Spam · आपकी जानकारी सुरक्षित है
+                  </p>
                 </>
               )}
             </div>
+
+            {/* ── STATS — order-3 on mobile (below form), stays in left col on lg ── */}
+            <div className="order-3 grid grid-cols-3 gap-3 border-t border-white/20 pt-6 lg:border-t lg:pt-7">
+              {([
+                { target: 5000, suffix: "+", label: "Students Guided" },
+                { target: 200,  suffix: "+", label: "Colleges Network" },
+                { target: 98,   suffix: "%", label: "Success Rate" },
+              ] as const).map(({ target, suffix, label }) => (
+                <div key={label} className="text-center sm:text-left">
+                  <p className="font-headline text-2xl font-black text-amber-400 md:text-3xl">
+                    <CountUp target={target} suffix={suffix} />
+                  </p>
+                  <p className="mt-0.5 text-xs text-blue-200 md:text-sm">{label}</p>
+                </div>
+              ))}
+            </div>
+
           </div>
         </div>
       </section>
