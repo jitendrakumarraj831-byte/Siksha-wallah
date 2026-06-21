@@ -88,7 +88,7 @@ export default function Home() {
   return (
     <main className="overflow-hidden bg-white text-gray-900">
 
-      <SiteNavbar transparent />
+      <SiteNavbar />
 
       {/* ── HERO ── */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] text-white">
