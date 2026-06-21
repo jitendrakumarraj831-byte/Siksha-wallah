@@ -5,14 +5,13 @@ import {
   query,
   where,
   getDocs,
+  getDoc,
   updateDoc,
   doc,
   Timestamp,
   orderBy,
   limit,
   increment,
-  arrayUnion,
-  arrayRemove,
 } from 'firebase/firestore';
 
 export interface ForumPost {
@@ -101,13 +100,10 @@ export const forumService = {
   async getPost(postId: string): Promise<ForumPost | null> {
     try {
       const docRef = doc(db, 'forum_posts', postId);
-      const snapshot = await getDocs(query(collection(db, 'forum_posts')));
-      const post = snapshot.docs.find((d) => d.id === postId);
-      if (post) {
-        await updateDoc(docRef, {
-          views: increment(1),
-        });
-        return { id: post.id, ...post.data() } as ForumPost;
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        updateDoc(docRef, { views: increment(1) }).catch(() => {});
+        return { id: docSnap.id, ...docSnap.data() } as ForumPost;
       }
       return null;
     } catch (error) {

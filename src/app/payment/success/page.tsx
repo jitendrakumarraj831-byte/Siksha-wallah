@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { paymentService, Payment } from '@/services/payment-service';
 import { Button } from '@/components/ui/button';
 import { PortalShell } from '@/components/portal-shell';
-import { CheckCircle2, Download, Loader, Home } from 'lucide-react';
+import { CheckCircle2, Loader } from 'lucide-react';
 import Link from 'next/link';
 
 export default function PaymentSuccessPage() {
