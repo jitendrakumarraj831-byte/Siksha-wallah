@@ -14,7 +14,7 @@ const NAV_LINKS = [
   { href: "/contact", label: "Contact" },
 ];
 
-export function SiteNavbar() {
+export function SiteNavbar({ transparent = false }: { transparent?: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
@@ -28,11 +28,16 @@ export function SiteNavbar() {
   // Close menu on route change
   useEffect(() => { setMenuOpen(false); }, [pathname]);
 
+  // Transparent only when: prop is true, not scrolled, and mobile menu not open
+  const isTransparent = transparent && !scrolled && !menuOpen;
+
   return (
     <header
       className={`sticky top-0 z-50 border-b transition-all duration-300 ${
         scrolled
           ? "border-gray-200 bg-white/98 shadow-md backdrop-blur-md"
+          : isTransparent
+          ? "border-white/10 bg-transparent"
           : "border-gray-100 bg-white/95 backdrop-blur shadow-sm"
       }`}
     >
@@ -42,7 +47,9 @@ export function SiteNavbar() {
           <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary-blue text-white shadow-md">
             <GraduationCap size={20} aria-hidden="true" />
           </span>
-          <span className="font-headline text-lg font-extrabold tracking-tight leading-none">
+          <span className={`font-headline text-lg font-extrabold tracking-tight leading-none transition-colors duration-300 ${
+            isTransparent ? "text-white" : "text-gray-900"
+          }`}>
             SIKSHA<span className="text-primary-red">WALLAH</span>
           </span>
         </Link>
@@ -55,7 +62,11 @@ export function SiteNavbar() {
               href={href}
               className={`rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${
                 pathname === href
-                  ? "bg-blue-50 text-primary-blue"
+                  ? isTransparent
+                    ? "bg-white/20 text-white"
+                    : "bg-blue-50 text-primary-blue"
+                  : isTransparent
+                  ? "text-white/85 hover:bg-white/10 hover:text-white"
                   : "text-gray-700 hover:bg-gray-50 hover:text-primary-blue"
               }`}
             >
@@ -68,20 +79,32 @@ export function SiteNavbar() {
         <div className="hidden items-center gap-2 lg:flex">
           <a
             href="tel:+916203138576"
-            className="flex items-center gap-1.5 rounded-lg border border-gray-200 px-3 py-2 text-sm font-bold text-gray-700 transition hover:border-primary-blue hover:text-primary-blue"
+            className={`flex items-center gap-1.5 rounded-lg border px-3 py-2 text-sm font-bold transition ${
+              isTransparent
+                ? "border-white/30 text-white hover:border-white hover:text-white"
+                : "border-gray-200 text-gray-700 hover:border-primary-blue hover:text-primary-blue"
+            }`}
             aria-label="Call us at 6203138576"
           >
             <Phone size={13} aria-hidden="true" /> 6203138576
           </a>
           <Link
             href="/admin/login"
-            className="rounded-lg border-2 border-gray-200 px-3.5 py-2 text-sm font-bold text-gray-600 transition hover:border-gray-400 hover:text-gray-900"
+            className={`rounded-lg border-2 px-3.5 py-2 text-sm font-bold transition ${
+              isTransparent
+                ? "border-white/30 text-white/90 hover:border-white hover:text-white"
+                : "border-gray-200 text-gray-600 hover:border-gray-400 hover:text-gray-900"
+            }`}
           >
             Office Login
           </Link>
           <Link
             href="/auth/login"
-            className="rounded-lg border-2 border-primary-blue px-3.5 py-2 text-sm font-bold text-primary-blue transition hover:bg-primary-blue hover:text-white"
+            className={`rounded-lg border-2 px-3.5 py-2 text-sm font-bold transition ${
+              isTransparent
+                ? "border-white/40 bg-white/10 text-white hover:bg-white/20 hover:border-white/60"
+                : "border-primary-blue text-primary-blue hover:bg-primary-blue hover:text-white"
+            }`}
           >
             Student Login
           </Link>
@@ -98,14 +121,18 @@ export function SiteNavbar() {
           aria-label={menuOpen ? "Close menu" : "Open navigation menu"}
           aria-expanded={menuOpen}
           aria-controls="mobile-menu"
-          className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 text-gray-700 transition hover:bg-gray-50 lg:hidden"
+          className={`flex h-10 w-10 items-center justify-center rounded-xl border transition lg:hidden ${
+            isTransparent
+              ? "border-white/30 text-white hover:bg-white/10"
+              : "border-gray-200 text-gray-700 hover:bg-gray-50"
+          }`}
           onClick={() => setMenuOpen(!menuOpen)}
         >
           {menuOpen ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
         </button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu — always white background for readability */}
       <div
         id="mobile-menu"
         className={`overflow-hidden border-t border-gray-100 bg-white transition-all duration-300 lg:hidden ${
