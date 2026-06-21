@@ -86,7 +86,7 @@ export default function Home() {
   }
 
   return (
-    <main className="overflow-x-hidden bg-white text-gray-900">
+    <main className="bg-white text-gray-900">
 
       <SiteNavbar />
 
