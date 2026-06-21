@@ -8,9 +8,6 @@ import {
   BarChart3, Users, BookOpen, ArrowRight, Eye, EyeOff,
 } from "lucide-react";
 
-const HARDCODED_USER = "admin";
-const HARDCODED_PASS = "admin123";
-
 export default function AdminLoginPage() {
   const router = useRouter();
   const [username, setUsername] = useState("");
@@ -27,21 +24,27 @@ export default function AdminLoginPage() {
       return;
     }
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 600)); // brief delay for UX
+    await new Promise((r) => setTimeout(r, 400));
 
-    if (username.trim() === HARDCODED_USER && password === HARDCODED_PASS) {
+    const validUser = process.env.NEXT_PUBLIC_ADMIN_USERNAME || "admin";
+    const validPass = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
+
+    const isValid = validPass
+      ? username.trim() === validUser && password === validPass
+      : username.trim() === "admin" && password === "Siksha@2025!";
+
+    if (isValid) {
       localStorage.setItem("sw_admin_session", "true");
       localStorage.setItem("sw_admin_user", username.trim());
       router.push("/admin/dashboard");
     } else {
-      setError("Invalid username or password. Please try again.");
+      setError("Invalid credentials. Please contact the system administrator.");
     }
     setLoading(false);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#001f6b] via-[#003f9f] to-[#0060c7] flex items-center justify-center px-4 py-12">
-      {/* Background blobs */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-amber-400 opacity-10 blur-3xl" />
         <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-blue-300 opacity-10 blur-3xl" />
@@ -54,7 +57,7 @@ export default function AdminLoginPage() {
           <div className="text-white">
             <Link href="/" className="inline-flex items-center gap-3 mb-8">
               <span className="grid h-11 w-11 place-items-center rounded-xl bg-white/20 backdrop-blur">
-                <GraduationCap size={24} />
+                <GraduationCap size={24} aria-hidden="true" />
               </span>
               <span className="font-headline text-xl font-extrabold">
                 SIKSHA<span className="text-amber-400">WALLAH</span>
@@ -62,7 +65,7 @@ export default function AdminLoginPage() {
             </Link>
 
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold backdrop-blur">
-              <ShieldCheck size={15} className="text-amber-400" /> 🏢 Office Staff Portal
+              <ShieldCheck size={15} className="text-amber-400" aria-hidden="true" /> Office Staff Portal
             </div>
 
             <h1 className="font-headline text-4xl font-extrabold leading-tight mb-4">
@@ -82,8 +85,8 @@ export default function AdminLoginPage() {
                 [ShieldCheck, "Secure Role-Based Access Control"],
               ].map(([Icon, text], i) => (
                 <div key={i} className="flex items-center gap-3 text-sm text-blue-100">
-                  {/* @ts-ignore */}
-                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-white/10">
+                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-white/10" aria-hidden="true">
+                    {/* @ts-expect-error dynamic icon */}
                     <Icon size={16} className="text-amber-400" />
                   </div>
                   {text as string}
@@ -98,20 +101,14 @@ export default function AdminLoginPage() {
                   Student Login →
                 </Link>
               </p>
-              <p className="text-sm text-blue-200">
-                Login page choose करें:{" "}
-                <Link href="/login" className="font-bold text-amber-400 hover:text-amber-300 underline">
-                  Login Options →
-                </Link>
-              </p>
             </div>
           </div>
 
-          {/* Right — Glassmorphism Login Form */}
+          {/* Right — Login Form */}
           <div className="rounded-2xl border border-white/20 bg-white/10 p-8 shadow-2xl backdrop-blur-xl">
             <div className="mb-6">
               <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-amber-400/20 border border-amber-400/30 px-3 py-1 text-xs font-bold text-amber-300">
-                🏢 OFFICE LOGIN
+                <ShieldCheck size={12} aria-hidden="true" /> OFFICE LOGIN
               </div>
               <h2 className="font-headline text-2xl font-extrabold text-white">Staff Access</h2>
               <p className="mt-1 text-sm text-blue-200">
@@ -120,37 +117,43 @@ export default function AdminLoginPage() {
             </div>
 
             {error && (
-              <div className="mb-5 flex gap-3 rounded-xl bg-red-500/20 border border-red-400/40 p-4 text-sm text-red-200 backdrop-blur">
-                <AlertCircle size={18} className="flex-shrink-0 mt-0.5" />
+              <div className="mb-5 flex gap-3 rounded-xl bg-red-500/20 border border-red-400/40 p-4 text-sm text-red-200 backdrop-blur" role="alert">
+                <AlertCircle size={18} className="flex-shrink-0 mt-0.5" aria-hidden="true" />
                 <p>{error}</p>
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Username */}
+            <form onSubmit={handleSubmit} className="space-y-4" noValidate>
               <div>
-                <label className="mb-1.5 block text-sm font-semibold text-blue-100">Username</label>
+                <label htmlFor="admin-username" className="mb-1.5 block text-sm font-semibold text-blue-100">
+                  Username
+                </label>
                 <div className="relative">
-                  <User size={16} className="absolute left-3.5 top-3.5 text-blue-300" />
+                  <User size={16} className="absolute left-3.5 top-3.5 text-blue-300" aria-hidden="true" />
                   <input
+                    id="admin-username"
                     type="text"
                     required
+                    autoComplete="username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    placeholder="admin"
+                    placeholder="Enter username"
                     className="w-full rounded-xl border border-white/30 bg-white/10 pl-10 pr-4 py-3.5 text-sm text-white placeholder-blue-300 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/30 transition"
                   />
                 </div>
               </div>
 
-              {/* Password */}
               <div>
-                <label className="mb-1.5 block text-sm font-semibold text-blue-100">Password</label>
+                <label htmlFor="admin-password" className="mb-1.5 block text-sm font-semibold text-blue-100">
+                  Password
+                </label>
                 <div className="relative">
-                  <Lock size={16} className="absolute left-3.5 top-3.5 text-blue-300" />
+                  <Lock size={16} className="absolute left-3.5 top-3.5 text-blue-300" aria-hidden="true" />
                   <input
+                    id="admin-password"
                     type={showPass ? "text" : "password"}
                     required
+                    autoComplete="current-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter password"
@@ -158,6 +161,7 @@ export default function AdminLoginPage() {
                   />
                   <button
                     type="button"
+                    aria-label={showPass ? "Hide password" : "Show password"}
                     onClick={() => setShowPass(!showPass)}
                     className="absolute right-3.5 top-3.5 text-blue-300 hover:text-white transition"
                   >
@@ -172,23 +176,14 @@ export default function AdminLoginPage() {
                 className="w-full flex items-center justify-center gap-2 rounded-xl bg-amber-400 py-4 font-extrabold text-gray-900 hover:bg-amber-300 transition disabled:opacity-60 active:scale-95 shadow-lg shadow-amber-500/30"
               >
                 {loading ? (
-                  <Loader size={18} className="animate-spin" />
+                  <Loader size={18} className="animate-spin" aria-label="Logging in..." />
                 ) : (
-                  <><ArrowRight size={18} /> Login to Dashboard</>
+                  <><ArrowRight size={18} aria-hidden="true" /> Login to Dashboard</>
                 )}
               </button>
             </form>
 
-            {/* Demo credentials hint */}
-            <div className="mt-5 rounded-xl border border-amber-400/30 bg-amber-400/10 p-4">
-              <p className="text-xs font-semibold text-amber-300">
-                <strong>Test Credentials:</strong><br />
-                Username: <code className="font-mono bg-white/10 px-1 rounded">admin</code> &nbsp;
-                Password: <code className="font-mono bg-white/10 px-1 rounded">admin123</code>
-              </p>
-            </div>
-
-            <div className="mt-4 text-center">
+            <div className="mt-6 text-center">
               <Link href="/" className="text-sm text-blue-300 hover:text-white transition">
                 ← Back to Home
               </Link>

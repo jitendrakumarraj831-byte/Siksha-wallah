@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  /* Primary Brand Colors - Bold Indian Education Theme */
+  /* Primary Brand Colors */
   --primary-blue: #003f9f;
   --primary-red: #dc143c;
   --primary-green: #2d5016;
   --primary-yellow: #ffc107;
   --primary-orange: #ff8c00;
-  
+
   /* Neutrals */
   --white: #ffffff;
   --gray-50: #f9fafb;
@@ -18,36 +18,99 @@
   --gray-300: #d1d5db;
   --gray-700: #374151;
   --gray-900: #111827;
-  
-  /* Legacy support */
-  --ink: #111827;
-  --blue: #003f9f;
-  --sky: #0ea5e9;
-  --cream: #f9fafb;
+
+  /* Shadcn / Radix UI CSS vars */
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 217 100% 31%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 217 100% 31%;
+  --radius: 0.75rem;
+
+  /* Sidebar */
+  --sidebar-background: 0 0% 98%;
+  --sidebar-foreground: 240 5.3% 26.1%;
+  --sidebar-primary: 240 5.9% 10%;
+  --sidebar-primary-foreground: 0 0% 98%;
+  --sidebar-accent: 240 4.8% 95.9%;
+  --sidebar-accent-foreground: 240 5.9% 10%;
+  --sidebar-border: 220 13% 91%;
+  --sidebar-ring: 217.2 91.2% 59.8%;
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
   color: var(--gray-900);
   background: var(--white);
-  font-family: "Inter", sans-serif;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
-h1, h2, h3, h4, h5, h6, .font-display {
-  font-family: "Space Grotesk", sans-serif;
+
+h1, h2, h3, h4, h5, h6, .font-headline, .font-display {
+  font-family: "Space Grotesk", system-ui, sans-serif;
   letter-spacing: -0.02em;
   font-weight: 700;
 }
-::selection { background: var(--primary-blue); color: white; }
 
-/* Container */
+::selection {
+  background: var(--primary-blue);
+  color: white;
+}
+
+/* Remove blue outline on mobile tap */
+button, a, input, select, textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Focus styles for accessibility */
+:focus-visible {
+  outline: 2px solid var(--primary-blue);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Container ─────────────────────────────────────── */
 .container-shell {
   width: min(1280px, calc(100% - 32px));
   margin-inline: auto;
 }
 
-/* Hero Grid Background */
+@media (max-width: 480px) {
+  .container-shell {
+    width: calc(100% - 24px);
+  }
+}
+
+/* ── Typography ─────────────────────────────────────── */
+@media (max-width: 768px) {
+  h1 { font-size: clamp(1.75rem, 5vw, 3rem); }
+  h2 { font-size: clamp(1.375rem, 4vw, 2.25rem); }
+}
+
+/* ── Hero background grid ───────────────────────────── */
 .hero-grid {
   background-image:
     linear-gradient(rgba(0,63,159,.05) 1px, transparent 1px),
@@ -55,43 +118,43 @@ h1, h2, h3, h4, h5, h6, .font-display {
   background-size: 44px 44px;
 }
 
-/* Cards and Components */
-.course-badge {
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  font-size: 0.875rem;
-  transition: all 0.3s ease;
-}
-
-.course-badge:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-}
-
+/* ── Card effects ───────────────────────────────────── */
 .soft-shadow { box-shadow: 0 10px 30px rgba(0, 63, 159, 0.1); }
-.card-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
-.card-lift:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0, 63, 159, 0.15); }
 
+.card-lift {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0, 63, 159, 0.14);
+}
+
+@keyframes border-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0,63,159,0.0); }
+  50%       { box-shadow: 0 0 0 4px rgba(0,63,159,0.12); }
+}
+.card-glow:hover { animation: border-glow 2s ease infinite; }
+
+/* ── Marquee ────────────────────────────────────────── */
 .marquee { animation: marquee 24s linear infinite; }
 @keyframes marquee { to { transform: translateX(-50%); } }
 
-.reveal { animation: reveal 0.8s ease both; }
-.reveal-delay { animation: reveal 0.8s 0.15s ease both; }
+/* ── Reveal animations ──────────────────────────────── */
+.reveal { animation: reveal 0.7s ease both; }
+.reveal-delay { animation: reveal 0.7s 0.15s ease both; }
 @keyframes reveal {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Floating pulse for CTA badges ─────────────────── */
+/* ── Float animation ────────────────────────────────── */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50%       { transform: translateY(-8px); }
 }
 .animate-float { animation: float 3.5s ease-in-out infinite; }
 
-/* ── Shimmer on hero badge ──────────────────────────── */
+/* ── Shimmer ────────────────────────────────────────── */
 @keyframes shimmer {
   0%   { background-position: -200% center; }
   100% { background-position: 200% center; }
@@ -105,7 +168,7 @@ h1, h2, h3, h4, h5, h6, .font-display {
   animation: shimmer 3s linear infinite;
 }
 
-/* ── Gentle pulse ring on WhatsApp button ───────────── */
+/* ── WhatsApp ping ──────────────────────────────────── */
 @keyframes ping-slow {
   0%   { transform: scale(1);   opacity: 0.6; }
   80%  { transform: scale(1.6); opacity: 0; }
@@ -113,30 +176,64 @@ h1, h2, h3, h4, h5, h6, .font-display {
 }
 .animate-ping-slow { animation: ping-slow 2.2s cubic-bezier(0,0,0.2,1) infinite; }
 
-/* ── Staggered card entrance ────────────────────────── */
-.stagger-child > *:nth-child(1) { transition-delay: 0ms  !important; }
-.stagger-child > *:nth-child(2) { transition-delay: 80ms !important; }
-.stagger-child > *:nth-child(3) { transition-delay: 160ms !important; }
-.stagger-child > *:nth-child(4) { transition-delay: 240ms !important; }
-.stagger-child > *:nth-child(5) { transition-delay: 320ms !important; }
-.stagger-child > *:nth-child(6) { transition-delay: 400ms !important; }
-.stagger-child > *:nth-child(7) { transition-delay: 480ms !important; }
-.stagger-child > *:nth-child(8) { transition-delay: 560ms !important; }
-.stagger-child > *:nth-child(9) { transition-delay: 640ms !important; }
-.stagger-child > *:nth-child(10){ transition-delay: 720ms !important; }
-.stagger-child > *:nth-child(11){ transition-delay: 800ms !important; }
-.stagger-child > *:nth-child(12){ transition-delay: 880ms !important; }
+/* ── Staggered entrance ─────────────────────────────── */
+.stagger-child > *:nth-child(1)  { transition-delay: 0ms !important; }
+.stagger-child > *:nth-child(2)  { transition-delay: 80ms !important; }
+.stagger-child > *:nth-child(3)  { transition-delay: 160ms !important; }
+.stagger-child > *:nth-child(4)  { transition-delay: 240ms !important; }
+.stagger-child > *:nth-child(5)  { transition-delay: 320ms !important; }
+.stagger-child > *:nth-child(6)  { transition-delay: 400ms !important; }
+.stagger-child > *:nth-child(7)  { transition-delay: 480ms !important; }
+.stagger-child > *:nth-child(8)  { transition-delay: 560ms !important; }
+.stagger-child > *:nth-child(9)  { transition-delay: 640ms !important; }
+.stagger-child > *:nth-child(10) { transition-delay: 720ms !important; }
+.stagger-child > *:nth-child(11) { transition-delay: 800ms !important; }
+.stagger-child > *:nth-child(12) { transition-delay: 880ms !important; }
 
-/* ── Gradient border pulse on featured cards ────────── */
-@keyframes border-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(0,63,159,0.0); }
-  50%       { box-shadow: 0 0 0 4px rgba(0,63,159,0.15); }
+/* ── Glassmorphism utility ──────────────────────────── */
+.glass {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.2);
 }
-.card-glow:hover { animation: border-glow 2s ease infinite; }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .container-shell { width: min(100% - 24px, 1280px); }
-  h1 { font-size: 1.875rem; }
-  h2 { font-size: 1.5rem; }
+/* ── Gradient text ──────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, #003f9f, #0060c7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Scroll bar styling ─────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* ── Accordion (Radix) ──────────────────────────────── */
+@keyframes accordion-down {
+  from { height: 0; }
+  to   { height: var(--radix-accordion-content-height); }
+}
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to   { height: 0; }
+}
+.animate-accordion-down { animation: accordion-down 0.2s ease-out; }
+.animate-accordion-up   { animation: accordion-up   0.2s ease-out; }
+
+/* ── Course badge hover ─────────────────────────────── */
+.course-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+.course-badge:hover {
+  transform: scale(1.04);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
 }

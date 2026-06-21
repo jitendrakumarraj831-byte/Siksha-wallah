@@ -2,50 +2,40 @@ import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { paymentService } from '@/services/payment-service';
 import { db } from '@/lib/firebase';
-import { doc, updateDoc, addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection } from 'firebase/firestore';
 
 export async function POST(request: NextRequest) {
+  const keySecret = process.env.RAZORPAY_KEY_SECRET;
+  if (!keySecret) {
+    return NextResponse.json({ error: 'Payment gateway not configured' }, { status: 503 });
+  }
+
   try {
     const body = await request.json();
     const { paymentId, razorpayOrderId, razorpayPaymentId, razorpaySignature, uid, courseId } = body;
 
     if (!paymentId || !razorpayOrderId || !razorpayPaymentId || !razorpaySignature) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Verify signature
+    // Verify Razorpay signature
     const expectedSignature = crypto
-      .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET || '')
+      .createHmac('sha256', keySecret)
       .update(`${razorpayOrderId}|${razorpayPaymentId}`)
       .digest('hex');
 
     if (expectedSignature !== razorpaySignature) {
       await paymentService.updatePaymentFailed(paymentId, 'Invalid signature');
-      return NextResponse.json(
-        { error: 'Payment verification failed' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Payment verification failed — invalid signature' }, { status: 400 });
     }
 
-    // Update payment status
-    await paymentService.updatePaymentSuccess(
-      paymentId,
-      razorpayPaymentId,
-      razorpayOrderId,
-      'online'
-    );
+    await paymentService.updatePaymentSuccess(paymentId, razorpayPaymentId, razorpayOrderId, 'online');
 
-    // Create enrollment record automatically
     if (uid && courseId) {
       try {
-        const enrollmentData = await paymentService.getUserPayments(uid);
-        const paymentRecord = enrollmentData.find((p) => p.id === paymentId);
-
+        const userPayments = await paymentService.getUserPayments(uid);
+        const paymentRecord = userPayments.find((p) => p.id === paymentId);
         if (paymentRecord) {
-          // Create enrollment
           await addDoc(collection(db, 'enrollments'), {
             uid,
             courseId,
@@ -54,10 +44,8 @@ export async function POST(request: NextRequest) {
             status: 'active',
             progressPercentage: 0,
             paidAmount: paymentRecord.amount,
-            paymentId: paymentId,
+            paymentId,
           });
-
-          // Send notification
           await addDoc(collection(db, 'notifications'), {
             uid,
             title: 'Payment Successful',
@@ -67,20 +55,15 @@ export async function POST(request: NextRequest) {
             createdAt: Date.now(),
           });
         }
-      } catch (error) {
-        console.error('Error creating enrollment:', error);
+      } catch (enrollErr) {
+        console.error('Enrollment creation error (non-fatal):', enrollErr);
       }
     }
 
-    return NextResponse.json({
-      success: true,
-      message: 'Payment verified successfully',
-    });
-  } catch (error: any) {
-    console.error('Payment verification error:', error);
-    return NextResponse.json(
-      { error: error.message || 'Payment verification failed' },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: true, message: 'Payment verified successfully' });
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : 'Payment verification failed';
+    console.error('Payment verification error:', msg);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
