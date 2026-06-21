@@ -217,19 +217,41 @@ export default function ApplyPage() {
       <SiteNavbar />
       <main>
         {/* Hero */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-[#001f6b] to-[#003f9f] py-14 text-white text-center">
-          {/* Golden diagonal stripe accent */}
-          <div className="pointer-events-none absolute -right-20 top-0 h-full w-64 rotate-12 bg-amber-400/10 blur-2xl" />
+        <section className="relative overflow-hidden bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] py-14 text-white text-center">
+          {/* Dot-grid */}
+          <div className="pointer-events-none absolute inset-0 opacity-[0.07]"
+            style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+          {/* Glow orbs */}
+          <div className="pointer-events-none absolute -top-40 -right-32 h-[480px] w-[480px] rounded-full bg-amber-400 opacity-[0.10] blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-blue-500 opacity-[0.13] blur-3xl" />
           <div className="container-shell relative">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold">
-              <FileText size={15} className="text-amber-400" /> Online Course Application Form
+            {/* Label pill */}
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/[0.1] px-4 py-2">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
+              <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Admission Apply करें</span>
             </div>
-            <h1 className="font-headline text-4xl md:text-5xl font-extrabold mt-3">
-              Course के लिए <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Apply करें</span>
+            {/* H1 */}
+            <h1 className="font-headline text-[2.5rem] font-black leading-[1.08] tracking-tight md:text-6xl lg:text-[4rem]">
+              <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">Online Apply करें —</span>
+              <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">सिर्फ 3 आसान Steps में!</span>
             </h1>
-            <p className="mt-3 text-blue-100 max-w-xl mx-auto">
-              अपनी सारी जानकारी भरें। हमारे विशेषज्ञ काउंसलर 30 मिनट में संपर्क करेंगे — निःशुल्क मार्गदर्शन।
+            <div className="mx-auto mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-40" />
+            <p className="mt-6 max-w-xl mx-auto text-blue-100 leading-relaxed">
+              अपनी details भरें, documents upload करें, और हमारा team आपको guide करेगा।
             </p>
+            {/* Step pills */}
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              {[
+                "Step 1: Details",
+                "Step 2: Documents",
+                "Step 3: Review & Submit",
+              ].map((pill, i) => (
+                <span key={pill} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.07] px-4 py-2 text-xs font-semibold text-blue-100">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-400 text-[10px] font-extrabold text-gray-900">{i + 1}</span>
+                  {pill.replace(/^Step \d+: /, "")}
+                </span>
+              ))}
+            </div>
           </div>
         </section>
 
