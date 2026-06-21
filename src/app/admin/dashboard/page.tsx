@@ -13,7 +13,8 @@ import {
   getAllInquiries, updateInquiryStatus, updateInquiryNote,
   type Inquiry, type InquiryStatus,
 } from "@/services/inquiry-service";
-import { subscribeActivities, type Activity, type ActivityType } from "@/services/activity-service";
+import { getAllActivities, type Activity, type ActivityType } from "@/services/activity-service";
+import { adminFetchData, adminUpdate } from "@/lib/admin-api";
 
 /* ── helpers ─────────────────────────────────────────── */
 const STATUS_META: Record<InquiryStatus, { label: string; color: string }> = {
@@ -59,7 +60,7 @@ function NoteCell({ inq, onSaved }: { inq: Inquiry; onSaved: (id: string, note: 
     if (!inq.id) return;
     setSaving(true);
     try {
-      await updateInquiryNote(inq.id, draft);
+      await adminUpdate("inquiries", inq.id, { note: draft }, () => updateInquiryNote(inq.id!, draft));
       onSaved(inq.id, draft);
       setOpen(false);
     } catch { /* noop */ }
@@ -152,15 +153,14 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     if (!authorized) return;
     loadInquiries();
-    // Real-time activity feed
-    const unsub = subscribeActivities(30, setActivities);
-    return () => unsub();
+    // Activity feed (via cookie-gated admin API, with client fallback)
+    adminFetchData("activities", () => getAllActivities(30)).then(setActivities).catch(() => {});
   }, [authorized]);
 
   async function loadInquiries() {
     setLoading(true);
     try {
-      setInquiries(await getAllInquiries());
+      setInquiries(await adminFetchData("inquiries", getAllInquiries));
       setError("");
     } catch {
       setError("Could not load inquiries. Check Firebase connection.");
@@ -171,7 +171,7 @@ export default function AdminDashboardPage() {
 
   async function handleStatusChange(id: string, status: InquiryStatus) {
     try {
-      await updateInquiryStatus(id, status);
+      await adminUpdate("inquiries", id, { status }, () => updateInquiryStatus(id, status));
       setInquiries(prev => prev.map(i => i.id === id ? { ...i, status } : i));
     } catch { alert("Status update failed. Please try again."); }
   }

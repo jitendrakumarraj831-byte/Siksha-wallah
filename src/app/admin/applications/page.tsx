@@ -9,12 +9,13 @@ import {
   Filter, Search, MessageCircle, ChevronDown, ChevronUp,
 } from "lucide-react";
 import {
-  subscribeApplications,
+  getAllApplications,
   updateApplicationStatus,
   updateApplicationNote,
   type CourseApplication,
   type ApplicationStatus,
 } from "@/services/application-service";
+import { adminFetchData, adminUpdate } from "@/lib/admin-api";
 
 const STATUS_META: Record<ApplicationStatus, { label: string; color: string; icon: string }> = {
   new:               { label: "New",               color: "bg-blue-100 text-blue-800 border-blue-200",    icon: "🆕" },
@@ -42,7 +43,7 @@ function NoteCell({ app, onSaved }: { app: CourseApplication; onSaved: (id: stri
   async function save() {
     if (!app.id) return;
     setSaving(true);
-    await updateApplicationNote(app.id, draft);
+    await adminUpdate("course_applications", app.id, { note: draft }, () => updateApplicationNote(app.id!, draft));
     onSaved(app.id, draft);
     setSaving(false);
     setOpen(false);
@@ -226,11 +227,11 @@ export default function AdminApplicationsPage() {
 
   useEffect(() => {
     if (!authorized) return;
-    const unsub = subscribeApplications(data => {
-      setApplications(data);
-      setLoading(false);
-    });
-    return () => unsub();
+    setLoading(true);
+    adminFetchData("applications", getAllApplications)
+      .then((data) => setApplications(data))
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, [authorized]);
 
   async function handleLogout() {
@@ -241,7 +242,7 @@ export default function AdminApplicationsPage() {
   }
 
   function handleStatusChange(id: string, status: ApplicationStatus) {
-    updateApplicationStatus(id, status).catch(() => {});
+    adminUpdate("course_applications", id, { status }, () => updateApplicationStatus(id, status)).catch(() => {});
     setApplications(prev => prev.map(a => a.id === id ? { ...a, status } : a));
   }
 
