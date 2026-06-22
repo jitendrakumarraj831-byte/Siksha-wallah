@@ -32,12 +32,11 @@ const PHONES = [
 export function SiteFooter() {
   return (
     <footer className="bg-gray-950 text-gray-400" aria-label="Site footer">
-      {/* Top CTA Banner */}
-      <div className="bg-gradient-to-r from-primary-blue to-blue-700 py-8">
+      <div className="bg-gradient-to-r from-primary-blue via-blue-700 to-cyan-700 py-8">
         <div className="container-shell flex flex-col items-center gap-4 text-center sm:flex-row sm:justify-between sm:text-left">
           <div>
-            <p className="font-headline text-xl font-extrabold text-white">Free Counselling के लिए आज ही Contact करें</p>
-            <p className="mt-1 text-sm text-blue-200">No fees. No obligation. 100% transparent guidance.</p>
+            <p className="font-headline text-xl font-extrabold text-white">Admission guidance chahiye? Aaj hi team se baat kariye.</p>
+            <p className="mt-1 text-sm text-blue-100">Free counselling, verified college options, and BSCC support from one trusted team.</p>
           </div>
           <div className="flex flex-wrap justify-center gap-3 sm:justify-end">
             <a
@@ -58,11 +57,8 @@ export function SiteFooter() {
         </div>
       </div>
 
-      {/* Main Footer */}
       <div className="container-shell py-14">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-
-          {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
             <Link href="/" aria-label="Siksha Wallah — Home">
               <div className="mb-4 flex items-center gap-2.5 text-white">
@@ -74,32 +70,39 @@ export function SiteFooter() {
                 </span>
               </div>
             </Link>
-            <p className="text-sm leading-relaxed mb-5">
-              Forbesganj&apos;s most trusted admission consultancy since 2015. 5,000+ students guided across Bihar and beyond.
+            <p className="mb-5 text-sm leading-relaxed">
+              Forbesganj&apos;s trusted admission consultancy for students who want clear guidance, transparent support, and the right next step.
             </p>
             <div className="space-y-2 text-sm">
               <div className="flex items-start gap-2">
                 <MapPin size={14} className="mt-0.5 shrink-0 text-amber-400" aria-hidden="true" />
-                <span>College Chowk, Near HP Petrol Pump, Forbesganj, Araria — Bihar 854318</span>
+                <span>College Chowk, Near HP Petrol Pump, Forbesganj, Araria, Bihar 854318</span>
               </div>
               <div className="flex items-center gap-2">
                 <Clock size={14} className="shrink-0 text-amber-400" aria-hidden="true" />
-                <span>Mon–Sat: 9:00 AM – 6:00 PM</span>
+                <span>Mon-Sat: 9:00 AM - 7:00 PM</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail size={14} className="shrink-0 text-amber-400" aria-hidden="true" />
                 <span>sikshawallah.info@gmail.com</span>
               </div>
+              <a
+                href="https://maps.google.com/?q=College+Chowk+Forbesganj+Araria+Bihar"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 pt-1 text-sm font-semibold text-amber-400 transition hover:text-amber-300"
+              >
+                <MapPin size={14} aria-hidden="true" /> Open in Google Maps
+              </a>
             </div>
           </div>
 
-          {/* Quick Links */}
           <div>
             <h3 className="mb-4 font-headline font-bold text-white">Quick Links</h3>
             <ul className="space-y-2 text-sm" role="list">
               {QUICK_LINKS.map(({ href, label }) => (
                 <li key={href}>
-                  <Link href={href} className="transition hover:text-white hover:pl-1 duration-200">
+                  <Link href={href} className="transition duration-200 hover:pl-1 hover:text-white">
                     {label}
                   </Link>
                 </li>
@@ -107,34 +110,32 @@ export function SiteFooter() {
             </ul>
           </div>
 
-          {/* Courses */}
           <div>
-            <h3 className="mb-4 font-headline font-bold text-white">Our Courses</h3>
+            <h3 className="mb-4 font-headline font-bold text-white">Popular Courses</h3>
             <ul className="space-y-2 text-sm" role="list">
-              {COURSES.map((c) => (
-                <li key={c}>
-                  <Link href="/courses" className="transition hover:text-white hover:pl-1 duration-200">
-                    {c}
+              {COURSES.map((course) => (
+                <li key={course}>
+                  <Link href="/courses" className="transition duration-200 hover:pl-1 hover:text-white">
+                    {course}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Contact */}
           <div>
-            <h3 className="mb-4 font-headline font-bold text-white">Contact Us</h3>
+            <h3 className="mb-4 font-headline font-bold text-white">Talk To Us</h3>
             <ul className="space-y-3 text-sm" role="list">
               {PHONES.map(({ num, label }) => (
                 <li key={num}>
                   <a
                     href={`tel:+91${num}`}
-                    className="group flex items-start gap-2 transition hover:text-white"
+                    className="group flex items-start gap-2 rounded-xl border border-gray-800 bg-gray-900/60 p-3 transition hover:border-gray-700 hover:text-white"
                     aria-label={`Call ${label} at ${num}`}
                   >
-                    <Phone size={13} className="mt-0.5 shrink-0 text-amber-400 group-hover:scale-110 transition-transform" aria-hidden="true" />
+                    <Phone size={13} className="mt-0.5 shrink-0 text-amber-400 transition-transform group-hover:scale-110" aria-hidden="true" />
                     <div>
-                      <span className="block font-semibold text-gray-300 group-hover:text-white">+91 {num}</span>
+                      <span className="block font-semibold text-gray-200 group-hover:text-white">+91 {num}</span>
                       <span className="text-xs text-gray-500">{label}</span>
                     </div>
                   </a>
@@ -157,14 +158,13 @@ export function SiteFooter() {
                 href="/apply"
                 className="inline-flex items-center gap-2 rounded-xl bg-primary-red px-5 py-2.5 text-sm font-bold text-white shadow transition hover:bg-red-700"
               >
-                Apply Now →
+                Book Free Counselling →
               </Link>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom bar */}
       <div className="border-t border-gray-800 py-5">
         <div className="container-shell flex flex-col items-center gap-2 text-center text-xs sm:flex-row sm:justify-between sm:text-left">
           <p>© {new Date().getFullYear()} Siksha Wallah. All rights reserved. | College Chowk, Forbesganj, Araria, Bihar</p>
