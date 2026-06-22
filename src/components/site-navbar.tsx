@@ -34,7 +34,7 @@ export function SiteNavbar({ transparent = false }: { transparent?: boolean }) {
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-300 ${
+        className={`fixed inset-x-0 top-0 z-50 border-b transition-all md:duration-300 duration-200 ${
           scrolled
             ? "border-gray-200 bg-white/96 shadow-md backdrop-blur-md"
             : isTransparent
@@ -140,7 +140,7 @@ export function SiteNavbar({ transparent = false }: { transparent?: boolean }) {
 
         <div
           id="mobile-menu"
-          className={`overflow-hidden border-t border-gray-100 bg-white transition-all duration-300 lg:hidden ${
+          className={`overflow-hidden border-t border-gray-100 bg-white transition-all duration-200 lg:hidden ${
             menuOpen ? "max-h-[720px] opacity-100" : "max-h-0 opacity-0"
           }`}
           aria-hidden={!menuOpen}
