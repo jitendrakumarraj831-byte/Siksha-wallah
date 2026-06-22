@@ -8,9 +8,9 @@ import { GraduationCap, Phone, Menu, X, ChevronRight, MessageCircle } from "luci
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/courses", label: "Courses" },
-  { href: "/student-credit-card", label: "BSCC Guide" },
-  { href: "/blog", label: "Blog" },
-  { href: "/about", label: "About" },
+  { href: "/student-credit-card", label: "BSCC Loan" },
+  { href: "/blog", label: "Career Guidance" },
+  { href: "/about", label: "About Us" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -56,7 +56,7 @@ export function SiteNavbar({ transparent = false }: { transparent?: boolean }) {
                 SIKSHA<span className="text-primary-red">WALLAH</span>
               </span>
               <span className={`text-[11px] font-semibold ${isTransparent ? "text-blue-100" : "text-gray-500"}`}>
-                Admission & BSCC Guidance
+                Trusted Admission & BSCC Guidance
               </span>
             </div>
           </Link>
@@ -89,7 +89,7 @@ export function SiteNavbar({ transparent = false }: { transparent?: boolean }) {
                   ? "border-white/30 text-white hover:border-white hover:bg-white/10"
                   : "border-gray-200 text-gray-700 hover:border-primary-blue hover:text-primary-blue"
               }`}
-              aria-label="Call us at 6203138576"
+              aria-label="Call our counsellor at 6203138576"
             >
               <Phone size={13} aria-hidden="true" /> 6203138576
             </a>
@@ -103,7 +103,7 @@ export function SiteNavbar({ transparent = false }: { transparent?: boolean }) {
                   : "border-gray-200 text-gray-700 hover:border-green-500 hover:text-green-600"
               }`}
             >
-              <MessageCircle size={13} aria-hidden="true" /> WhatsApp
+              <MessageCircle size={13} aria-hidden="true" /> Chat on WhatsApp
             </a>
             <Link
               href="/auth/login"
@@ -119,7 +119,7 @@ export function SiteNavbar({ transparent = false }: { transparent?: boolean }) {
               href="/apply"
               className="rounded-lg bg-primary-red px-4 py-2 text-sm font-bold text-white shadow-sm shadow-red-200 transition hover:bg-red-700 hover:shadow-red-300"
             >
-              Free Counselling
+              Book Free Counselling
             </Link>
           </div>
 
@@ -166,14 +166,14 @@ export function SiteNavbar({ transparent = false }: { transparent?: boolean }) {
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 rounded-xl border-2 border-green-200 bg-green-50 py-2.5 text-sm font-bold text-green-700 transition hover:bg-green-100"
               >
-                <MessageCircle size={14} aria-hidden="true" /> WhatsApp Expert
+                <MessageCircle size={14} aria-hidden="true" /> Chat with a Counsellor on WhatsApp
               </a>
               <div className="grid grid-cols-2 gap-2">
                 <Link
                   href="/admin/login"
                   className="flex items-center justify-center rounded-xl border-2 border-gray-200 py-2.5 text-sm font-bold text-gray-700 transition hover:border-gray-400"
                 >
-                  Office Login
+                  Counsellor Portal
                 </Link>
                 <Link
                   href="/auth/login"
@@ -186,13 +186,13 @@ export function SiteNavbar({ transparent = false }: { transparent?: boolean }) {
                 href="/apply"
                 className="flex items-center justify-center rounded-xl bg-primary-red py-3 text-sm font-bold text-white transition hover:bg-red-700"
               >
-                Free Counselling →
+                Book Free Counselling →
               </Link>
               <a
                 href="tel:+916203138576"
                 className="flex items-center justify-center gap-2 rounded-xl bg-gray-50 py-2.5 text-sm font-semibold text-gray-700"
               >
-                <Phone size={14} aria-hidden="true" /> Call: 6203138576
+                <Phone size={14} aria-hidden="true" /> Speak to a Counsellor: 6203138576
               </a>
             </div>
           </nav>

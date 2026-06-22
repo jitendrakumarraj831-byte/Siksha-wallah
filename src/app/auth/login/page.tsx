@@ -74,7 +74,7 @@ export default function StudentLoginPage() {
     setError("");
     const digits = phone.replace(/\D/g, "");
     if (digits.length !== 10) {
-      setError("10 अंकों का valid mobile number दर्ज करें");
+      setError("कृपया एक सही 10-अंकों का mobile number दर्ज करें।");
       return;
     }
     setLoading(true);
@@ -89,7 +89,7 @@ export default function StudentLoginPage() {
       // Reset reCAPTCHA on error so user can retry
       recaptchaVerifierRef.current?.clear();
       recaptchaVerifierRef.current = null;
-      setError(err.message || "OTP भेजने में error आई। Please दोबारा कोशिश करें।");
+      setError(err.message || "OTP भेजने में कोई समस्या आई। कृपया एक बार और प्रयास करें।");
     } finally {
       setLoading(false);
     }
@@ -98,11 +98,11 @@ export default function StudentLoginPage() {
   async function handleVerifyOTP() {
     setError("");
     if (otp.replace(/\D/g, "").length !== 6) {
-      setError("6 अंकों का OTP दर्ज करें");
+      setError("कृपया 6-अंकों का OTP दर्ज करें।");
       return;
     }
     if (!confirmationResult) {
-      setError("Session expired. Please resend OTP.");
+      setError("Your session has expired. Please request a new OTP.");
       return;
     }
     setLoading(true);
@@ -116,7 +116,7 @@ export default function StudentLoginPage() {
       });
       router.push("/dashboard");
     } catch (err: any) {
-      setError(err.message || "OTP गलत है। Please दोबारा check करें।");
+      setError(err.message || "The OTP you entered is incorrect. Please verify and try again.");
     } finally {
       setLoading(false);
     }
@@ -136,7 +136,7 @@ export default function StudentLoginPage() {
     e.preventDefault();
     setError("");
     if (!email.trim() || !password.trim()) {
-      setError("Email और password जरूरी हैं");
+      setError("Please enter both your email and password to continue.");
       return;
     }
     setLoading(true);
@@ -151,7 +151,7 @@ export default function StudentLoginPage() {
       });
       router.push("/dashboard");
     } catch (err: any) {
-      setError(err.message || "Login failed. Please check your credentials.");
+      setError(err.message || "Login was unsuccessful. Please check your email and password and try again.");
     } finally {
       setLoading(false);
     }
@@ -182,24 +182,24 @@ export default function StudentLoginPage() {
             </Link>
 
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold backdrop-blur">
-              🎓 Student Portal
+              Student Portal
             </div>
 
             <h1 className="font-headline text-4xl font-extrabold leading-tight mb-4">
-              Student Login<br />
-              <span className="text-amber-400">Your Dashboard</span>
+              Welcome to Your<br />
+              <span className="text-amber-400">Student Dashboard</span>
             </h1>
 
             <p className="text-emerald-100 leading-relaxed mb-8">
-              अपने admission status, दस्तावेज़, और परामर्श अपडेट — सब एक जगह देखें।
+              अपनी admission application, documents और counsellor के साथ हुई हर बातचीत — सब एक सुरक्षित जगह पर देखें और track करें।
             </p>
 
             <div className="space-y-3">
               {[
-                [BookOpen,   "Live Application Tracking — status real-time देखें"],
-                [FileCheck2, "Document Upload — सभी जरूरी documents manage करें"],
-                [CreditCard, "BSCC & Payment Records — receipts और loan status"],
-                [Bell,       "Notifications — college updates और deadlines"],
+                [BookOpen,   "Track your admission application in real time"],
+                [FileCheck2, "Upload and manage your important documents securely"],
+                [CreditCard, "View BSCC loan status, fee receipts and payments"],
+                [Bell,       "Receive timely alerts on college deadlines and updates"],
               ].map(([Icon, text], i) => (
                 <div key={i} className="flex items-center gap-3 text-sm text-emerald-100">
                   {/* @ts-ignore */}
@@ -213,15 +213,15 @@ export default function StudentLoginPage() {
 
             <div className="mt-8 pt-6 border-t border-white/20 space-y-2">
               <p className="text-sm text-emerald-200">
-                Office staff हैं?{" "}
+                Are you a counsellor or office staff member?{" "}
                 <Link href="/admin/login" className="font-bold text-amber-400 hover:text-amber-300 underline">
-                  Office Login →
+                  Counsellor Portal →
                 </Link>
               </p>
               <p className="text-sm text-emerald-200">
-                नया अकाउंट बनाना है?{" "}
+                Don&apos;t have an account yet?{" "}
                 <Link href="/auth/register" className="font-bold text-amber-400 hover:text-amber-300 underline">
-                  रजिस्टर करें →
+                  Create a free account →
                 </Link>
               </p>
             </div>
@@ -231,7 +231,7 @@ export default function StudentLoginPage() {
           <div className="rounded-2xl border border-white/20 bg-white/10 p-8 shadow-2xl backdrop-blur-xl">
             <div className="mb-5">
               <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-amber-400/20 border border-amber-400/30 px-3 py-1 text-xs font-bold text-amber-300">
-                🎓 STUDENT LOGIN
+                STUDENT LOGIN
               </div>
               <h2 className="font-headline text-2xl font-extrabold text-white">Welcome Back</h2>
             </div>
@@ -288,7 +288,7 @@ export default function StudentLoginPage() {
                         />
                       </div>
                       <p className="mt-1.5 text-xs text-emerald-300">
-                        आपके नंबर पर OTP SMS आएगा — बिल्कुल निःशुल्क।
+                        We&apos;ll send a free, one-time verification code (OTP) to this mobile number.
                       </p>
                     </div>
 
@@ -299,7 +299,7 @@ export default function StudentLoginPage() {
                     >
                       {loading
                         ? <Loader size={18} className="animate-spin" />
-                        : <><ShieldCheck size={18} /> OTP भेजें</>
+                        : <><ShieldCheck size={18} /> Send OTP</>
                       }
                     </button>
                   </>
@@ -308,14 +308,14 @@ export default function StudentLoginPage() {
                     <div className="rounded-xl border border-green-400/40 bg-green-500/10 p-4 text-sm text-green-200 flex items-start gap-3">
                       <CheckCircle2 size={18} className="flex-shrink-0 mt-0.5 text-green-400" />
                       <div>
-                        <p className="font-bold text-green-300">OTP भेज दिया गया!</p>
-                        <p>+91 {phone} पर 6-digit OTP SMS आया है।</p>
+                        <p className="font-bold text-green-300">OTP sent successfully</p>
+                        <p>A 6-digit verification code has been sent to +91 {phone}.</p>
                       </div>
                     </div>
 
                     <div>
                       <label htmlFor="otp-input" className="mb-1.5 block text-sm font-semibold text-emerald-100">
-                        6-digit OTP
+                        Enter the 6-digit OTP
                       </label>
                       <input
                         id="otp-input"
@@ -336,14 +336,14 @@ export default function StudentLoginPage() {
                     >
                       {loading
                         ? <Loader size={18} className="animate-spin" />
-                        : <><CheckCircle2 size={18} /> OTP Verify करें</>
+                        : <><CheckCircle2 size={18} /> Verify & Sign In</>
                       }
                     </button>
 
                     <div className="text-center text-sm text-emerald-300">
-                      OTP नहीं आया?{" "}
+                      Didn&apos;t receive the OTP?{" "}
                       {resendCooldown > 0 ? (
-                        <span className="font-semibold text-emerald-200">{resendCooldown}s में Resend होगा</span>
+                        <span className="font-semibold text-emerald-200">You can request a new OTP in {resendCooldown}s</span>
                       ) : (
                         <button onClick={handleResendOTP} className="font-bold text-amber-400 hover:underline">
                           Resend OTP
@@ -400,7 +400,7 @@ export default function StudentLoginPage() {
 
                 <div className="text-right">
                   <Link href="/auth/forgot-password" className="text-sm font-semibold text-amber-300 hover:text-amber-200 hover:underline transition">
-                    Password भूल गए?
+                    Forgot Password?
                   </Link>
                 </div>
 
@@ -409,16 +409,16 @@ export default function StudentLoginPage() {
                   disabled={loading}
                   className="w-full flex items-center justify-center gap-2 rounded-xl bg-amber-400 py-4 font-extrabold text-gray-900 hover:bg-amber-300 transition disabled:opacity-60 active:scale-95 shadow-lg shadow-amber-500/30"
                 >
-                  {loading ? <Loader size={18} className="animate-spin" /> : <><ArrowRight size={18} /> Login करें</>}
+                  {loading ? <Loader size={18} className="animate-spin" /> : <><ArrowRight size={18} /> Sign In</>}
                 </button>
               </form>
             )}
 
             <div className="mt-5 rounded-xl border border-white/20 bg-white/5 p-4 text-center">
               <p className="text-sm text-emerald-200">
-                नया अकाउंट नहीं है?{" "}
+                New to Siksha Wallah?{" "}
                 <Link href="/auth/register" className="font-bold text-amber-400 hover:text-amber-300 underline">
-                  <UserPlus size={13} className="inline mr-1" />रजिस्टर करें
+                  <UserPlus size={13} className="inline mr-1" />Create a free account
                 </Link>
               </p>
             </div>

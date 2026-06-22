@@ -72,7 +72,7 @@ export default function CourseDetailPage() {
         user.email || '',
         course?.name || ''
       );
-      setSuccess('Enrollment request submitted! Our team will review and contact you soon.');
+      setSuccess('Thank you — your enrolment request has been received. A counsellor will reach out to you within 30 minutes to confirm the next steps.');
       setIsEnrolled(true);
     } catch (err: any) {
       setError(err.message);
@@ -97,9 +97,9 @@ export default function CourseDetailPage() {
         <div className="flex min-h-screen items-center justify-center">
           <div className="text-center">
             <AlertCircle className="mx-auto text-red-500" size={48} />
-            <p className="mt-4 text-slate-600">Course not found</p>
+            <p className="mt-4 text-slate-600">We couldn&apos;t find this course. It may have been moved or is no longer available.</p>
             <Link href="/courses">
-              <Button className="mt-4">Back to Courses</Button>
+              <Button className="mt-4">Explore All Courses</Button>
             </Link>
           </div>
         </div>
@@ -112,7 +112,7 @@ export default function CourseDetailPage() {
       <div className="container-shell py-8">
         <Link href="/courses" className="inline-flex items-center gap-2 text-blue-600 hover:underline">
           <ArrowLeft size={18} />
-          Back to Courses
+          Back to All Courses
         </Link>
 
         <div className="mt-8 grid gap-8 lg:grid-cols-3">
@@ -148,7 +148,7 @@ export default function CourseDetailPage() {
                   <div className="flex items-center gap-3">
                     <Clock size={24} className="text-blue-600" />
                     <div>
-                      <p className="text-sm text-slate-600">Duration</p>
+                      <p className="text-sm text-slate-600">Course Duration</p>
                       <p className="font-bold text-slate-900">{course.duration}</p>
                     </div>
                   </div>
@@ -158,7 +158,7 @@ export default function CourseDetailPage() {
                   <div className="flex items-center gap-3">
                     <DollarSign size={24} className="text-green-600" />
                     <div>
-                      <p className="text-sm text-slate-600">Course Fee</p>
+                      <p className="text-sm text-slate-600">Indicative Fee</p>
                       <p className="font-bold text-slate-900">₹{course.fees.toLocaleString()}</p>
                     </div>
                   </div>
@@ -168,9 +168,9 @@ export default function CourseDetailPage() {
                   <div className="flex items-center gap-3">
                     <Users size={24} className="text-purple-600" />
                     <div>
-                      <p className="text-sm text-slate-600">Enrollment</p>
+                      <p className="text-sm text-slate-600">Seats Filled</p>
                       <p className="font-bold text-slate-900">
-                        {course.enrolledStudents}/{course.enrollmentLimit}
+                        {course.enrolledStudents} of {course.enrollmentLimit}
                       </p>
                     </div>
                   </div>
@@ -180,7 +180,7 @@ export default function CourseDetailPage() {
                   <div className="flex items-center gap-3">
                     <Award size={24} className="text-yellow-600" />
                     <div>
-                      <p className="text-sm text-slate-600">Category</p>
+                      <p className="text-sm text-slate-600">Stream</p>
                       <p className="font-bold text-slate-900 capitalize">{course.category}</p>
                     </div>
                   </div>
@@ -189,13 +189,13 @@ export default function CourseDetailPage() {
 
               {/* Eligibility */}
               <div className="mb-8">
-                <h2 className="text-xl font-bold text-slate-900">Eligibility Criteria</h2>
+                <h2 className="text-xl font-bold text-slate-900">Who Can Apply</h2>
                 <p className="mt-3 text-slate-600">{course.eligibility}</p>
               </div>
 
               {/* Features */}
               <div className="mb-8">
-                <h2 className="text-xl font-bold text-slate-900">What You&apos;ll Get</h2>
+                <h2 className="text-xl font-bold text-slate-900">What Your Admission Includes</h2>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
                   {course.features.map((feature) => (
                     <div key={feature} className="flex gap-3">
@@ -208,7 +208,7 @@ export default function CourseDetailPage() {
 
               {/* Instructors */}
               <div>
-                <h2 className="text-xl font-bold text-slate-900">Instructors</h2>
+                <h2 className="text-xl font-bold text-slate-900">Faculty Highlights</h2>
                 <div className="mt-4 space-y-2">
                   {course.instructors.map((instructor) => (
                     <div key={instructor} className="flex gap-3">
@@ -225,13 +225,14 @@ export default function CourseDetailPage() {
           <div>
             <div className="sticky top-8 rounded-xl border bg-white p-6 shadow-lg">
               <div className="mb-6">
-                <p className="text-sm text-slate-600">Course Fee</p>
+                <p className="text-sm text-slate-600">Indicative Course Fee</p>
                 <p className="text-3xl font-extrabold text-slate-900">₹{course.fees.toLocaleString()}</p>
+                <p className="text-xs text-slate-500 mt-1">Final fee depends on the college you choose. Our counsellor will help you understand all options.</p>
               </div>
 
               <div className="mb-6 space-y-3">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-slate-600">Seats Available</span>
+                  <span className="text-slate-600">Seats Still Available</span>
                   <span className="font-bold text-slate-900">
                     {course.enrollmentLimit - course.enrolledStudents}
                   </span>
@@ -249,7 +250,7 @@ export default function CourseDetailPage() {
               {isEnrolled ? (
                 <Button disabled className="w-full py-3" variant="outline">
                   <CheckCircle2 size={18} className="mr-2" />
-                  Already Enrolled
+                  Counsellor Will Contact You
                 </Button>
               ) : (
                 <Button
@@ -260,26 +261,27 @@ export default function CourseDetailPage() {
                   {enrolling ? (
                     <>
                       <Loader size={18} className="mr-2 animate-spin" />
-                      Submitting...
+                      Reserving your seat…
                     </>
                   ) : (
-                    'Enroll Now'
+                    'Request Counselling for This Course'
                   )}
                 </Button>
               )}
 
               {course.enrolledStudents >= course.enrollmentLimit && (
                 <p className="mt-3 text-center text-xs text-yellow-600">
-                  This course is full. Join waitlist to be notified when seats open.
+                  All seats for this batch are filled. Join the waitlist and we&apos;ll notify you the moment a seat opens up.
                 </p>
               )}
 
               {!isAuthenticated && (
                 <p className="mt-4 text-center text-xs text-slate-600">
+                  Please{' '}
                   <Link href="/auth/login" className="font-bold text-blue-600 hover:underline">
-                    Login
+                    sign in
                   </Link>{' '}
-                  to enroll in this course
+                  to request counselling for this course.
                 </p>
               )}
             </div>

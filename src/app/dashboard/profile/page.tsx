@@ -81,7 +81,7 @@ export default function ProfilePage() {
         userId: user.uid,
         page: "/dashboard/profile",
       }).catch(() => {});
-      setSuccess('Profile updated successfully!');
+      setSuccess('Your profile has been updated successfully. This helps our counsellor guide you better.');
       setProfile(formData as StudentProfile);
     } catch (err: any) {
       setError(err.message);
@@ -109,12 +109,12 @@ export default function ProfilePage() {
       <div className="container-shell py-8">
         <Link href="/dashboard" className="inline-flex items-center gap-2 text-blue-600 hover:underline">
           <ArrowLeft size={18} />
-          Back to Dashboard
+          Back to My Dashboard
         </Link>
 
         <div className="mt-8 max-w-2xl rounded-2xl border bg-white p-8">
-          <h1 className="text-3xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Edit Profile</h1>
-          <p className="mt-2 text-slate-600">Update your personal information</p>
+          <h1 className="text-3xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">My Profile Details</h1>
+          <p className="mt-2 text-slate-600">Keep your information up to date — it helps your counsellor recommend the best colleges and courses for you.</p>
 
           {error && (
             <div className="mt-6 flex gap-3 rounded-xl bg-red-50 p-4 text-red-700">
@@ -255,10 +255,10 @@ export default function ProfilePage() {
                 {saving ? (
                   <>
                     <Loader size={18} className="mr-2 animate-spin" />
-                    Saving...
+                    Saving your details…
                   </>
                 ) : (
-                  'Save Changes'
+                  'Save My Details'
                 )}
               </Button>
               <Link href="/dashboard" className="flex-1">

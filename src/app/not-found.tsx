@@ -17,26 +17,26 @@ export default function NotFound() {
             Page Not Found
           </h2>
           <p className="text-gray-500 mb-8">
-            यह पेज उपलब्ध नहीं है। हमारे होमपेज पर वापस जाएं और सही जानकारी प्राप्त करें।
+            We couldn&apos;t find the page you were looking for. Don&apos;t worry — our team is just one click away to help you find the right course or college.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/"
               className="rounded-xl bg-primary-blue px-6 py-3 font-bold text-white shadow-md hover:bg-blue-800 transition"
             >
-              होमपेज पर जाएं
+              Back to Home
             </Link>
             <Link
               href="/courses"
               className="rounded-xl border-2 border-primary-blue px-6 py-3 font-bold text-primary-blue hover:bg-blue-50 transition"
             >
-              कोर्सेज देखें
+              Explore Courses
             </Link>
             <Link
               href="/contact"
               className="rounded-xl border-2 border-gray-300 px-6 py-3 font-bold text-gray-700 hover:border-gray-400 transition"
             >
-              Contact Us
+              Talk to a Counsellor
             </Link>
           </div>
         </div>

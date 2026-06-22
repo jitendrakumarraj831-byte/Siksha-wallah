@@ -69,7 +69,7 @@ export default function ForumPostPage() {
     setError('');
     if (!user) return;
     if (replyText.trim().length < 2) {
-      setError('जवाब थोड़ा और विस्तार से लिखें।');
+      setError('Please share a slightly more detailed answer so others can benefit too.');
       return;
     }
     setSubmitting(true);
@@ -80,7 +80,7 @@ export default function ForumPostPage() {
       await loadReplies();
       setPost((prev) => (prev ? { ...prev, replies: prev.replies + 1 } : prev));
     } catch {
-      setError('जवाब post नहीं हुआ। कृपया दोबारा कोशिश करें।');
+      setError('Your reply could not be posted just now. Please try again in a moment.');
     } finally {
       setSubmitting(false);
     }
@@ -112,12 +112,12 @@ export default function ForumPostPage() {
         <main className="min-h-screen bg-orange-50 flex items-center justify-center px-4 py-16">
           <div className="text-center">
             <AlertCircle size={44} className="mx-auto text-orange-400" />
-            <p className="mt-4 font-semibold text-gray-700">यह पोस्ट नहीं मिली।</p>
+            <p className="mt-4 font-semibold text-gray-700">We couldn&apos;t find this question. It may have been removed.</p>
             <Link
               href="/forum"
               className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#003f9f] px-6 py-3 font-bold text-white transition hover:bg-blue-700"
             >
-              <ArrowLeft size={16} /> Forum पर वापस जाएं
+              <ArrowLeft size={16} /> Back to Community
             </Link>
           </div>
         </main>
@@ -135,7 +135,7 @@ export default function ForumPostPage() {
             href="/forum"
             className="inline-flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-[#003f9f]"
           >
-            <ArrowLeft size={16} /> Forum पर वापस
+            <ArrowLeft size={16} /> Back to Community
           </Link>
 
           {/* Post */}
@@ -165,13 +165,13 @@ export default function ForumPostPage() {
           {/* Replies */}
           <section className="mt-8">
             <h2 className="font-headline text-lg font-extrabold text-gray-900">
-              {replies.length} जवाब
+              {replies.length} {replies.length === 1 ? 'Reply' : 'Replies'}
             </h2>
 
             <div className="mt-4 space-y-3">
               {replies.length === 0 ? (
                 <div className="rounded-2xl border border-dashed border-gray-200 bg-white py-10 text-center text-sm text-gray-500">
-                  अभी तक कोई जवाब नहीं — पहला जवाब आप दें!
+                  No replies yet — be the first to share your knowledge and help a fellow student.
                 </div>
               ) : (
                 replies.map((reply) => (
@@ -195,7 +195,7 @@ export default function ForumPostPage() {
                         onClick={() => handleUpvote(reply.id)}
                         disabled={!user}
                         className="inline-flex items-center gap-1 rounded-lg border border-gray-200 px-2.5 py-1 text-xs font-bold text-gray-600 transition hover:border-[#003f9f] hover:text-[#003f9f] disabled:opacity-50"
-                        title={user ? 'Upvote' : 'Upvote करने के लिए login करें'}
+                        title={user ? 'Upvote this answer' : 'Sign in to upvote this answer'}
                       >
                         <ChevronUp size={14} /> {reply.upvotes}
                       </button>
@@ -210,7 +210,7 @@ export default function ForumPostPage() {
               {user ? (
                 <form onSubmit={handleReply}>
                   <h3 className="mb-3 flex items-center gap-2 font-bold text-gray-900">
-                    <MessageCircle size={16} className="text-[#003f9f]" /> अपना जवाब दें
+                    <MessageCircle size={16} className="text-[#003f9f]" /> Share Your Answer
                   </h3>
                   {error && (
                     <div className="mb-3 flex gap-2 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
@@ -222,7 +222,7 @@ export default function ForumPostPage() {
                     value={replyText}
                     onChange={(e) => setReplyText(e.target.value)}
                     rows={4}
-                    placeholder="अपना जवाब यहाँ लिखें..."
+                    placeholder="Share your answer or experience here…"
                     className="w-full resize-none rounded-xl border-2 border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#003f9f]"
                   />
                   <button
@@ -230,17 +230,17 @@ export default function ForumPostPage() {
                     disabled={submitting}
                     className="mt-3 flex items-center justify-center gap-2 rounded-xl bg-[#003f9f] px-6 py-3 font-bold text-white transition hover:bg-blue-700 disabled:opacity-60"
                   >
-                    {submitting ? <Loader2 size={16} className="animate-spin" /> : 'जवाब Post करें'}
+                    {submitting ? <Loader2 size={16} className="animate-spin" /> : 'Post My Answer'}
                   </button>
                 </form>
               ) : (
                 <div className="text-center">
-                  <p className="text-sm text-gray-600">जवाब देने के लिए login करें।</p>
+                  <p className="text-sm text-gray-600">Please sign in to share an answer with the community.</p>
                   <Link
                     href="/auth/login"
                     className="mt-3 inline-block rounded-xl bg-[#003f9f] px-6 py-2.5 font-bold text-white transition hover:bg-blue-700"
                   >
-                    Student Login →
+                    Sign in to Reply →
                   </Link>
                 </div>
               )}

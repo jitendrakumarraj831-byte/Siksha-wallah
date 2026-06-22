@@ -3,13 +3,13 @@ import { GraduationCap, Phone, MessageCircle, MapPin, Mail, Clock } from "lucide
 
 const QUICK_LINKS = [
   { href: "/", label: "Home" },
-  { href: "/courses", label: "All Courses" },
-  { href: "/student-credit-card", label: "BSCC Guide" },
-  { href: "/blog", label: "Blog" },
+  { href: "/courses", label: "Explore Courses" },
+  { href: "/student-credit-card", label: "BSCC Loan Assistance" },
+  { href: "/blog", label: "Career Guidance Blog" },
   { href: "/about", label: "About Us" },
-  { href: "/contact", label: "Contact" },
+  { href: "/contact", label: "Contact Our Team" },
   { href: "/auth/login", label: "Student Login" },
-  { href: "/apply", label: "Apply Now" },
+  { href: "/apply", label: "Book Free Counselling" },
 ];
 
 const COURSES = [
@@ -24,9 +24,9 @@ const COURSES = [
 ];
 
 const PHONES = [
-  { num: "6203138576", label: "Rajesh Kr. Sah (Primary)" },
-  { num: "7858062498", label: "Md. Naseem Ansari" },
-  { num: "9162653235", label: "Gautam Kumar" },
+  { num: "6203138576", label: "Rajesh Kr. Sah — Senior Admission Counsellor" },
+  { num: "7858062498", label: "Md. Naseem Ansari — Nursing & BSCC Counsellor" },
+  { num: "9162653235", label: "Gautam Kumar — Technical & Management Counsellor" },
 ];
 
 export function SiteFooter() {
@@ -35,15 +35,15 @@ export function SiteFooter() {
       <div className="bg-gradient-to-r from-primary-blue via-blue-700 to-cyan-700 py-8">
         <div className="container-shell flex flex-col items-center gap-4 text-center sm:flex-row sm:justify-between sm:text-left">
           <div>
-            <p className="font-headline text-xl font-extrabold text-white">Admission guidance chahiye? Aaj hi team se baat kariye.</p>
-            <p className="mt-1 text-sm text-blue-100">Free counselling, verified college options, and BSCC support from one trusted team.</p>
+            <p className="font-headline text-xl font-extrabold text-white">Free Career Counselling — Speak to an Admission Expert Today</p>
+            <p className="mt-1 text-sm text-blue-100">No consultation fees. No obligation. Honest, personalised guidance for every student and family.</p>
           </div>
           <div className="flex flex-wrap justify-center gap-3 sm:justify-end">
             <a
               href="tel:+916203138576"
               className="flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-bold text-primary-blue transition hover:bg-blue-50"
             >
-              <Phone size={15} aria-hidden="true" /> Call Now
+              <Phone size={15} aria-hidden="true" /> Speak to a Counsellor
             </a>
             <a
               href="https://wa.me/916203138576?text=नमस्ते!%20मुझे%20Free%20Admission%20Counselling%20चाहिए।%20Please%20guide%20karein।"
@@ -51,7 +51,7 @@ export function SiteFooter() {
               rel="noopener noreferrer"
               className="flex items-center gap-2 rounded-xl border-2 border-white/40 bg-white/10 px-5 py-2.5 text-sm font-bold text-white backdrop-blur transition hover:bg-white/20"
             >
-              <MessageCircle size={15} aria-hidden="true" /> WhatsApp
+              <MessageCircle size={15} aria-hidden="true" /> Chat on WhatsApp
             </a>
           </div>
         </div>
@@ -71,7 +71,7 @@ export function SiteFooter() {
               </div>
             </Link>
             <p className="mb-5 text-sm leading-relaxed">
-              Forbesganj&apos;s trusted admission consultancy for students who want clear guidance, transparent support, and the right next step.
+              Forbesganj&apos;s most trusted education consultancy since 2015. Over 5,000 students personally guided into the right course, the right college and a secure career — across Bihar and beyond.
             </p>
             <div className="space-y-2 text-sm">
               <div className="flex items-start gap-2">
@@ -98,7 +98,7 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h3 className="mb-4 font-headline font-bold text-white">Quick Links</h3>
+            <h3 className="mb-4 font-headline font-bold text-white">Helpful Links</h3>
             <ul className="space-y-2 text-sm" role="list">
               {QUICK_LINKS.map(({ href, label }) => (
                 <li key={href}>
@@ -111,7 +111,7 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h3 className="mb-4 font-headline font-bold text-white">Popular Courses</h3>
+            <h3 className="mb-4 font-headline font-bold text-white">Courses We Guide For</h3>
             <ul className="space-y-2 text-sm" role="list">
               {COURSES.map((course) => (
                 <li key={course}>
@@ -124,7 +124,7 @@ export function SiteFooter() {
           </div>
 
           <div>
-            <h3 className="mb-4 font-headline font-bold text-white">Talk To Us</h3>
+            <h3 className="mb-4 font-headline font-bold text-white">Talk to Our Counsellors</h3>
             <ul className="space-y-3 text-sm" role="list">
               {PHONES.map(({ num, label }) => (
                 <li key={num}>
@@ -148,7 +148,7 @@ export function SiteFooter() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 font-semibold text-green-400 transition hover:text-green-300"
                 >
-                  <MessageCircle size={13} aria-hidden="true" /> WhatsApp Chat
+                  <MessageCircle size={13} aria-hidden="true" /> WhatsApp Our Counsellors
                 </a>
               </li>
             </ul>
@@ -167,8 +167,8 @@ export function SiteFooter() {
 
       <div className="border-t border-gray-800 py-5">
         <div className="container-shell flex flex-col items-center gap-2 text-center text-xs sm:flex-row sm:justify-between sm:text-left">
-          <p>© {new Date().getFullYear()} Siksha Wallah. All rights reserved. | College Chowk, Forbesganj, Araria, Bihar</p>
-          <p className="text-gray-500">B.Ed • D.El.Ed • Nursing • Pharmacy • Engineering • Management</p>
+          <p>© {new Date().getFullYear()} Siksha Wallah Education Consultancy. All rights reserved. | College Chowk, Forbesganj, Araria, Bihar — 854318</p>
+          <p className="text-gray-500">Trusted guidance for B.Ed • D.El.Ed • Nursing • Pharmacy • Engineering • Management</p>
         </div>
       </div>
     </footer>

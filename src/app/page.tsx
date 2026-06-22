@@ -107,12 +107,12 @@ export default function Home() {
           {/* ── TOP TRUST BADGE STRIP ── */}
           <div className="no-scrollbar flex items-center gap-3 overflow-x-auto border-b border-white/[0.08] py-4">
             {[
-              { icon: ShieldCheck,   text: "NCTE / UGC मान्यता" },
-              { icon: CreditCard,    text: "BSCC Loan Support" },
-              { icon: Users,         text: "5000+ Students Guided" },
+              { icon: ShieldCheck,   text: "NCTE / UGC Recognised Colleges" },
+              { icon: CreditCard,    text: "Complete BSCC Loan Support" },
+              { icon: Users,         text: "5,000+ Students Guided" },
               { icon: Building2,     text: "200+ Partner Colleges" },
-              { icon: Award,         text: "9+ Years Experience" },
-              { icon: CheckCircle2,  text: "No Hidden Charges" },
+              { icon: Award,         text: "9+ Years of Trusted Counselling" },
+              { icon: CheckCircle2,  text: "100% Transparent. No Hidden Fees." },
             ].map(({ icon: Icon, text }) => (
               <div key={text} className="flex flex-shrink-0 items-center gap-1.5 rounded-full border border-white/[0.12] bg-white/[0.06] px-4 py-2 text-xs font-semibold text-white/85 backdrop-blur-sm">
                 <Icon size={13} className="flex-shrink-0 text-amber-400" />
@@ -130,19 +130,19 @@ export default function Home() {
               {/* Platform label pill */}
               <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/[0.1] px-4 py-2">
                 <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
-                <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Bihar&apos;s #1 Admission Guidance Platform</span>
+                <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Bihar&apos;s Most Trusted Education Consultancy</span>
               </div>
 
               {/* H1 */}
               <h1 className="font-headline text-[2.5rem] font-black leading-[1.08] tracking-tight md:text-6xl lg:text-[4.2rem] lg:leading-[1.04]">
                 <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">
-                  Bihar&apos;s Trusted
+                  The Right Course.
                 </span>
                 <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent [filter:drop-shadow(0_4px_24px_rgba(251,191,36,0.45))]">
-                  Admission Guidance
+                  The Right College.
                 </span>
                 <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">
-                  Platform
+                  The Right Future.
                 </span>
               </h1>
 
@@ -156,18 +156,18 @@ export default function Home() {
                   B.Ed • D.El.Ed • Nursing • MBA • BCA • MCA
                 </span>
                 <span className="rounded-full bg-gradient-to-r from-amber-400 to-orange-400 px-2.5 py-0.5 text-[11px] font-extrabold text-gray-900">
-                  & 40+ Courses
+                  + 40 more courses
                 </span>
               </div>
 
               {/* Sub-heading */}
               <p className="mt-5 max-w-lg text-[1rem] leading-[1.8] text-blue-100 md:text-[1.06rem]">
-                Expert admission guidance, college selection support,{" "}
+                Personalised admission counselling, smart college selection,{" "}
                 <strong className="bg-gradient-to-r from-amber-300 to-yellow-200 bg-clip-text text-transparent font-extrabold">
-                  BSCC Loan assistance
-                </strong>
-                , and career counselling —{" "}
-                <strong className="font-extrabold text-white">all in one place.</strong>
+                  complete BSCC loan assistance
+                </strong>{" "}
+                and dedicated career mentorship —{" "}
+                <strong className="font-extrabold text-white">all under one trusted roof.</strong>
               </p>
 
               {/* CTA Buttons */}
@@ -178,7 +178,7 @@ export default function Home() {
                 >
                   <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
                   <Sparkles size={17} className="flex-shrink-0" />
-                  Free Counselling
+                  Book Free Counselling
                   <ArrowRight size={16} className="flex-shrink-0 transition-transform duration-200 group-hover:translate-x-1" />
                 </a>
                 <a
@@ -188,7 +188,7 @@ export default function Home() {
                   className="flex items-center justify-center gap-2.5 rounded-2xl border-2 border-white/25 bg-white/[0.08] px-8 py-4 font-bold text-white backdrop-blur transition-all duration-200 hover:bg-white/[0.15] hover:-translate-y-1 hover:border-white/40 active:scale-[0.97]"
                 >
                   <MessageCircle size={17} />
-                  WhatsApp Expert
+                  Chat on WhatsApp
                 </a>
               </div>
 
@@ -196,9 +196,9 @@ export default function Home() {
               <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2">
                 {[
                   "200+ Partner Colleges",
-                  "5000+ Students Guided",
-                  "9+ Years Experience",
-                  "No Hidden Charges",
+                  "5,000+ Successful Admissions",
+                  "9+ Years of Experience",
+                  "100% Transparent Counselling",
                 ].map((t, i, arr) => (
                   <span key={t} className="flex items-center gap-1.5 text-xs font-medium text-blue-300">
                     <Check size={11} className="text-amber-400" />
@@ -215,7 +215,7 @@ export default function Home() {
                     <CheckCircle2 size={19} className="text-green-400" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-white">अभी-अभी Admitted ✓</p>
+                    <p className="text-xs font-bold text-white">Recently Admitted</p>
                     <p className="mt-0.5 text-[11px] text-blue-300">Rahul K. — B.Ed, Patna University</p>
                   </div>
                 </div>
@@ -224,8 +224,8 @@ export default function Home() {
                     <CreditCard size={19} className="text-amber-400" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-white">BSCC Loan Approved ✓</p>
-                    <p className="mt-0.5 text-[11px] text-blue-300">Priya S. — ₹4L Loan, GNM Nursing</p>
+                    <p className="text-xs font-bold text-white">BSCC Loan Approved</p>
+                    <p className="mt-0.5 text-[11px] text-blue-300">Priya S. — ₹4 Lakh loan for GNM Nursing</p>
                   </div>
                 </div>
               </div>
@@ -238,13 +238,13 @@ export default function Home() {
               <div className="mb-6 text-center">
                 <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-amber-400/30 bg-amber-400/[0.1] px-3 py-1.5">
                   <Sparkles size={11} className="text-amber-400" />
-                  <span className="text-[11px] font-bold text-amber-300">100% Free · No Hidden Charges</span>
+                  <span className="text-[11px] font-bold text-amber-300">100% Free • No Hidden Charges</span>
                 </div>
                 <h3 className="font-headline text-[1.35rem] font-extrabold leading-tight text-white">
-                  निःशुल्क Admission Counselling
+                  Free Admission Counselling
                 </h3>
                 <p className="mt-1.5 text-xs text-blue-300">
-                  1 मिनट में जानकारी भरें और Expert Guidance प्राप्त करें
+                  Share a few details and receive personalised guidance within minutes.
                 </p>
               </div>
 
@@ -253,13 +253,13 @@ export default function Home() {
                   <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-500/20 ring-2 ring-green-500/40">
                     <CheckCircle2 size={36} className="text-green-400" />
                   </div>
-                  <h3 className="font-headline text-2xl font-extrabold">धन्यवाद! 🎉</h3>
-                  <p className="text-sm text-blue-100">हमारे काउंसलर जल्द ही आपसे WhatsApp पर संपर्क करेंगे।</p>
+                  <h3 className="font-headline text-2xl font-extrabold">Thank You</h3>
+                  <p className="text-sm text-blue-100">हमारी counselling team जल्द ही WhatsApp पर आपसे संपर्क करेगी।</p>
                   <button
                     onClick={() => { setFormSubmitted(false); setStep(0); setFormData({ name: "", mobile: "", course: "", district: "" }); }}
                     className="rounded-xl bg-gradient-to-r from-amber-400 to-orange-400 px-6 py-3 font-bold text-gray-900 transition-all hover:opacity-90 active:scale-95"
                   >
-                    नई जानकारी भरें
+                    Send Another Enquiry
                   </button>
                 </div>
               ) : (
@@ -277,12 +277,12 @@ export default function Home() {
                     {step === 0 && (
                       <>
                         <label className="block text-sm font-bold text-blue-100">
-                          Student Name <span className="text-amber-400">*</span>
+                          Student&apos;s Full Name <span className="text-amber-400">*</span>
                         </label>
                         <input
                           value={formData.name}
                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          placeholder="अपना पूरा नाम लिखें"
+                          placeholder="अपना पूरा नाम दर्ज करें"
                           autoComplete="name"
                           className="w-full rounded-xl border border-white/20 bg-white/[0.12] px-4 py-3.5 text-white placeholder-blue-300/60 outline-none transition focus:border-amber-400 focus:bg-white/[0.18] focus:ring-2 focus:ring-amber-400/25"
                         />
@@ -298,7 +298,7 @@ export default function Home() {
                           onChange={(e) => setFormData({ ...formData, mobile: e.target.value.replace(/\D/g, "").slice(0, 10) })}
                           type="tel"
                           inputMode="numeric"
-                          placeholder="10-digit mobile number"
+                          placeholder="Your 10-digit mobile number"
                           autoComplete="tel"
                           className="w-full rounded-xl border border-white/20 bg-white/[0.12] px-4 py-3.5 text-white placeholder-blue-300/60 outline-none transition focus:border-amber-400 focus:bg-white/[0.18] focus:ring-2 focus:ring-amber-400/25"
                         />
@@ -307,41 +307,41 @@ export default function Home() {
                     {step === 2 && (
                       <>
                         <label className="block text-sm font-bold text-blue-100">
-                          Course Interest <span className="text-amber-400">*</span>
+                          Course of Interest <span className="text-amber-400">*</span>
                         </label>
                         <select
                           value={formData.course}
                           onChange={(e) => setFormData({ ...formData, course: e.target.value })}
                           className="w-full rounded-xl border border-white/20 bg-[#001e5a] px-4 py-3.5 text-white outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-400/25"
                         >
-                          <option value="">-- कोर्स चुनें --</option>
-                          <optgroup label="🎓 शिक्षण (Teaching)">
+                          <option value="">-- Select a course --</option>
+                          <optgroup label="Teaching (शिक्षण)">
                             <option>B.Ed</option><option>D.El.Ed</option><option>B.P.Ed</option><option>M.Ed</option>
                           </optgroup>
-                          <optgroup label="🏥 चिकित्सा एवं नर्सिंग (Medical)">
+                          <optgroup label="Medical & Nursing (चिकित्सा)">
                             <option>MBBS</option><option>BDS</option><option>B.Sc Nursing</option>
                             <option>GNM</option><option>ANM</option><option>B.Pharma</option>
                             <option>D.Pharma</option><option>BMLT</option>
                           </optgroup>
-                          <optgroup label="💻 तकनीकी एवं प्रबंधन (Technical)">
+                          <optgroup label="Engineering, IT & Management">
                             <option>B.Tech</option><option>Polytechnic</option><option>ITI</option>
                             <option>BCA</option><option>MCA</option><option>BBA</option><option>MBA</option>
                           </optgroup>
-                          <option>अभी निर्णय नहीं किया</option>
+                          <option>Not yet decided — I want guidance</option>
                         </select>
                       </>
                     )}
                     {step === 3 && (
                       <>
                         <label className="block text-sm font-bold text-blue-100">
-                          आपका जिला (District) <span className="text-amber-400">*</span>
+                          Your District <span className="text-amber-400">*</span>
                         </label>
                         <select
                           value={formData.district}
                           onChange={(e) => setFormData({ ...formData, district: e.target.value })}
                           className="w-full rounded-xl border border-white/20 bg-[#001e5a] px-4 py-3.5 text-white outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-400/25"
                         >
-                          <option value="">-- जिला चुनें --</option>
+                          <option value="">-- Select your district --</option>
                           <option>Araria</option><option>Arwal</option><option>Aurangabad</option>
                           <option>Banka</option><option>Begusarai</option><option>Bhagalpur</option>
                           <option>Bhojpur</option><option>Buxar</option><option>Darbhanga</option>
@@ -355,7 +355,7 @@ export default function Home() {
                           <option>Saran</option><option>Sheikhpura</option><option>Sheohar</option>
                           <option>Sitamarhi</option><option>Siwan</option><option>Supaul</option>
                           <option>Vaishali</option><option>West Champaran</option>
-                          <option>Bihar के बाहर (Other State)</option>
+                          <option>I&apos;m from outside Bihar</option>
                         </select>
                       </>
                     )}
@@ -366,7 +366,7 @@ export default function Home() {
                           onClick={() => setStep(step - 1)}
                           className="flex-1 rounded-xl border border-white/25 py-3.5 text-sm font-semibold text-white transition hover:bg-white/10 active:scale-[0.97]"
                         >
-                          ← वापस
+                          ← Back
                         </button>
                       )}
                       <button
@@ -375,16 +375,16 @@ export default function Home() {
                       >
                         <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
                         {step < STEPS.length - 1 ? (
-                          <>आगे बढ़ें <ArrowRight size={15} className="flex-shrink-0 transition-transform group-hover:translate-x-1" /></>
+                          <>Continue <ArrowRight size={15} className="flex-shrink-0 transition-transform group-hover:translate-x-1" /></>
                         ) : (
-                          "Admission Guidance प्राप्त करें →"
+                          "Get My Free Counselling →"
                         )}
                       </button>
                     </div>
                   </div>
 
                   <p className="mt-5 text-center text-[11px] text-blue-300/70">
-                    🔒 100% निःशुल्क · कोई Spam नहीं · आपकी जानकारी सुरक्षित है
+                    100% free • No spam, ever • Your information stays private
                   </p>
                 </>
               )}
@@ -394,10 +394,10 @@ export default function Home() {
           {/* ── STATS BAR ── */}
           <div className="grid grid-cols-2 gap-6 border-t border-white/[0.08] py-10 md:grid-cols-4">
             {([
-              { target: 5000, suffix: "+", label: "Students Guided",      icon: Users     },
-              { target: 200,  suffix: "+", label: "Partner Colleges",     icon: Building2 },
-              { target: 98,   suffix: "%", label: "Student Satisfaction", icon: Star      },
-              { target: 9,    suffix: "+", label: "Years Experience",     icon: Award     },
+              { target: 5000, suffix: "+", label: "Students Successfully Guided", icon: Users     },
+              { target: 200,  suffix: "+", label: "Approved Partner Colleges",    icon: Building2 },
+              { target: 98,   suffix: "%", label: "Parent Satisfaction Rating",   icon: Star      },
+              { target: 9,    suffix: "+", label: "Years of Trusted Counselling", icon: Award     },
             ] as const).map(({ target, suffix, label, icon: Icon }) => (
               <div key={label} className="text-center">
                 <div className="mb-2 flex justify-center">
@@ -478,10 +478,10 @@ export default function Home() {
         <div className="container-shell">
           <div className="flex flex-wrap items-center justify-center gap-5 md:gap-8">
             {[
-              { icon: ShieldCheck,  text: "100% Free Counselling",          color: "text-green-400"  },
-              { icon: GraduationCap, text: "NCTE / UGC Recognized Colleges", color: "text-blue-400"   },
-              { icon: CreditCard,   text: "BSCC Loan Assistance",           color: "text-amber-400"  },
-              { icon: Phone,        text: "Expert Admission Support",        color: "text-purple-400" },
+              { icon: ShieldCheck,  text: "100% Free Initial Counselling",   color: "text-green-400"  },
+              { icon: GraduationCap, text: "NCTE / UGC Recognised Colleges",  color: "text-blue-400"   },
+              { icon: CreditCard,   text: "End-to-End BSCC Loan Support",     color: "text-amber-400"  },
+              { icon: Phone,        text: "Personal Counsellor for Every Student", color: "text-purple-400" },
             ].map(({ icon: Icon, text, color }) => (
               <span key={text} className="flex items-center gap-2 text-sm font-semibold text-gray-300">
                 <Icon size={15} className={color} />
@@ -496,10 +496,10 @@ export default function Home() {
       <section id="courses" className="py-24 bg-gray-50">
         <div className="container-shell">
           <AnimateIn type="fade-up" className="text-center mb-12">
-            <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">सभी स्ट्रीम्स उपलब्ध हैं (Streams Available)</p>
-            <h2 className="font-headline text-4xl md:text-5xl font-extrabold">अपना Stream चुनें</h2>
+            <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">All Major Streams Covered</p>
+            <h2 className="font-headline text-4xl md:text-5xl font-extrabold">Choose Your Stream</h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto">
-              3 मुख्य धाराएँ — 40+ कोर्सेज — सभी के लिए विशेषज्ञ मार्गदर्शन उपलब्ध
+              तीन प्रमुख streams — 40+ recognised courses — हर field में अनुभवी काउंसलर की निःशुल्क सहायता उपलब्ध।
             </p>
           </AnimateIn>
 
@@ -534,18 +534,18 @@ export default function Home() {
                 </div>
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <h3 className="font-headline text-lg font-extrabold text-blue-900">हमारे Partnered & Approved Colleges</h3>
+                    <h3 className="font-headline text-lg font-extrabold text-blue-900">Our Approved Teaching Partner Colleges</h3>
                     <span className="inline-flex items-center gap-1 rounded-full bg-blue-600 px-2.5 py-0.5 text-xs font-bold text-white"><BadgeCheck size={11} /> NCTE Approved</span>
                   </div>
                   <p className="text-sm text-blue-800 leading-relaxed mb-3">
-                    हम केवल <strong>NCTE (National Council for Teacher Education) Approved</strong> colleges के साथ partner हैं — Bihar (Patna, Purnea, Katihar) और अन्य राज्यों में।
+                    हम केवल <strong>NCTE (National Council for Teacher Education)-approved</strong> teacher training colleges के साथ काम करते हैं — Bihar (Patna, Purnea, Katihar) सहित अन्य राज्यों में।
                   </p>
                   <div className="grid gap-2 sm:grid-cols-2">
                     {[
-                      "NCTE Approved B.Ed/D.El.Ed in Patna, Purnea & Katihar (Bihar)",
-                      "NCTE Recognized institutions across other states",
-                      "100% Bihar Student Credit Card (BSCC) facility support",
-                      "Regular & Distance mode — both options guided",
+                      "NCTE-approved B.Ed and D.El.Ed colleges in Patna, Purnea and Katihar",
+                      "NCTE-recognised teacher training institutions in other states",
+                      "Complete Bihar Student Credit Card (BSCC) loan support",
+                      "Guidance for both Regular and Distance Mode programmes",
                     ].map((point, i) => (
                       <div key={i} className="flex items-start gap-2 rounded-lg bg-white/70 border border-blue-100 px-3 py-2 text-xs text-blue-800 font-medium">
                         <CheckCircle2 size={13} className="mt-0.5 flex-shrink-0 text-blue-500" /> {point}
@@ -564,18 +564,18 @@ export default function Home() {
                 </div>
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <h3 className="font-headline text-lg font-extrabold text-red-900">हमारे Partnered & Approved Colleges</h3>
+                    <h3 className="font-headline text-lg font-extrabold text-red-900">Our Approved Medical & Nursing Partner Colleges</h3>
                     <span className="inline-flex items-center gap-1 rounded-full bg-red-600 px-2.5 py-0.5 text-xs font-bold text-white"><BadgeCheck size={11} /> INC & PCI Approved</span>
                   </div>
                   <p className="text-sm text-red-800 leading-relaxed mb-3">
-                    हम <strong>INC (Indian Nursing Council) & PCI (Pharmacy Council of India) Approved</strong> premier institutes के साथ partner हैं — Bangalore, Madhya Pradesh, West Bengal और all states में।
+                    हम <strong>INC (Indian Nursing Council) और PCI (Pharmacy Council of India) approved</strong> premier institutes के साथ काम करते हैं — Bangalore, Madhya Pradesh, West Bengal और अन्य राज्यों में।
                   </p>
                   <div className="grid gap-2 sm:grid-cols-2">
                     {[
-                      "INC Approved Nursing colleges in Bangalore & West Bengal",
-                      "PCI Approved Pharmacy institutes in Madhya Pradesh & all other states",
-                      "Premier private medical institutes with hostel facilities",
-                      "NEET counselling & direct admission both available",
+                      "INC-approved Nursing colleges in Bangalore and West Bengal",
+                      "PCI-approved Pharmacy institutes in Madhya Pradesh and other states",
+                      "Trusted private medical colleges with hostel facilities",
+                      "Full support for NEET counselling as well as direct admission",
                     ].map((point, i) => (
                       <div key={i} className="flex items-start gap-2 rounded-lg bg-white/70 border border-red-100 px-3 py-2 text-xs text-red-800 font-medium">
                         <CheckCircle2 size={13} className="mt-0.5 flex-shrink-0 text-red-500" /> {point}
@@ -594,18 +594,18 @@ export default function Home() {
                 </div>
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <h3 className="font-headline text-lg font-extrabold text-orange-900">हमारे Partnered & Approved Colleges</h3>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-orange-600 px-2.5 py-0.5 text-xs font-bold text-white"><BadgeCheck size={11} /> AICTE & UGC Recognized</span>
+                    <h3 className="font-headline text-lg font-extrabold text-orange-900">Our Approved Engineering & Management Partner Colleges</h3>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-orange-600 px-2.5 py-0.5 text-xs font-bold text-white"><BadgeCheck size={11} /> AICTE & UGC Recognised</span>
                   </div>
                   <p className="text-sm text-orange-800 leading-relaxed mb-3">
-                    हम <strong>AICTE (All India Council for Technical Education) & UGC Recognized</strong> top universities के साथ partner हैं — engineering, management, और computer courses के लिए।
+                    हम <strong>AICTE (All India Council for Technical Education) और UGC-recognised</strong> top universities के साथ काम करते हैं — Engineering, Management और Computer Applications courses के लिए।
                   </p>
                   <div className="grid gap-2 sm:grid-cols-2">
                     {[
-                      "AICTE Approved B.Tech & Polytechnic colleges across India",
-                      "UGC Recognized universities for BCA, MCA, BBA & MBA",
-                      "JEE / DCECE counselling guidance included",
-                      "Distance mode also available for UGC-DEB approved courses",
+                      "AICTE-approved B.Tech and Polytechnic colleges across India",
+                      "UGC-recognised universities for BCA, MCA, BBA and MBA",
+                      "Complete JEE / DCECE counselling guidance included",
+                      "UGC-DEB approved Distance Mode options also available",
                     ].map((point, i) => (
                       <div key={i} className="flex items-start gap-2 rounded-lg bg-white/70 border border-orange-100 px-3 py-2 text-xs text-orange-800 font-medium">
                         <CheckCircle2 size={13} className="mt-0.5 flex-shrink-0 text-orange-500" /> {point}
@@ -748,7 +748,7 @@ export default function Home() {
                         {course.bscc && (
                           <div className="rounded-xl bg-green-50 border border-green-200 p-3 flex items-start gap-2">
                             <CreditCard size={15} className="mt-0.5 flex-shrink-0 text-green-600" />
-                            <p className="text-xs text-green-700 font-semibold">Bihar Student Credit Card (BSCC) eligible — get up to ₹4 Lakh loan for this course at only 4% interest. Siksha Wallah guides for complete BSCC application.</p>
+                            <p className="text-xs text-green-700 font-semibold">Eligible for the Bihar Student Credit Card (BSCC) — secure up to ₹4 Lakh education loan at just 4% interest. Our team provides complete, step-by-step BSCC application support.</p>
                           </div>
                         )}
                       </div>
@@ -761,9 +761,9 @@ export default function Home() {
                         className="flex w-full items-center justify-center gap-1.5 rounded-xl border-2 border-gray-200 py-2.5 text-sm font-bold text-gray-700 transition hover:border-gray-300 hover:bg-gray-50"
                       >
                         {isExpanded ? (
-                          <><ChevronUp size={15} /> Hide Details</>
+                          <><ChevronUp size={15} /> Show Less</>
                         ) : (
-                          <><ChevronDown size={15} /> View Career Scope & Mode</>
+                          <><ChevronDown size={15} /> View Career Scope & Study Mode</>
                         )}
                       </button>
                       <a
@@ -772,7 +772,7 @@ export default function Home() {
                         rel="noopener noreferrer"
                         className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold text-white transition ${colors.btn}`}
                       >
-                        <MessageCircle size={15} /> Inquire Fee & Admission
+                        <MessageCircle size={15} /> Enquire About Fees & Admission
                       </a>
                     </div>
                   </div>
@@ -787,7 +787,7 @@ export default function Home() {
               href="/courses"
               className="inline-flex items-center gap-2 rounded-xl bg-primary-blue px-8 py-4 font-extrabold text-white shadow-lg shadow-blue-200 transition hover:-translate-y-0.5 hover:bg-blue-700"
             >
-              सभी कोर्सेज देखें <ArrowRight size={18} />
+              Explore All Courses <ArrowRight size={18} />
             </Link>
           </div>
         </div>
@@ -804,18 +804,17 @@ export default function Home() {
             </div>
             <h2 className="font-headline text-4xl md:text-5xl font-extrabold">
               Bihar Student Credit Card{" "}
-              <span className="text-amber-400">(BSCC)</span>
+              <span className="text-amber-400">(BSCC) Loan Support</span>
             </h2>
             <p className="mt-4 max-w-2xl mx-auto text-blue-100 text-lg">
-              सरकारी योजना के तहत <strong className="text-white">Free Education, Fooding, और Lodging</strong> पाएं।
-              BSCC से ₹4 Lakh तक का education loan — <strong className="text-amber-400">4% सालाना ब्याज</strong> पर।
+              इस सरकारी योजना के माध्यम से अपनी <strong className="text-white">पढ़ाई, हॉस्टल और भोजन</strong> का खर्च आसानी से संभालें। BSCC के तहत ₹4 लाख तक का education loan — <strong className="text-amber-400">केवल 4% वार्षिक ब्याज</strong> पर। हम पूरी आवेदन प्रक्रिया में निःशुल्क मार्गदर्शन देते हैं।
             </p>
             <div className="mt-6">
               <Link
                 href="/student-credit-card"
                 className="inline-flex items-center gap-2 rounded-xl bg-amber-400 px-7 py-3.5 font-extrabold text-gray-900 transition hover:bg-amber-300 shadow-lg shadow-amber-400/30"
               >
-                पूरा प्रोसेस जानें <ArrowRight size={17} />
+                Learn the Full BSCC Process <ArrowRight size={17} />
               </Link>
             </div>
           </AnimateIn>
@@ -823,11 +822,11 @@ export default function Home() {
           {/* BSCC Benefits Row */}
           <div className="mb-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {[
-              ["₹4 Lakh Loan", "Tuition, hostel, food, books — all covered"],
-              ["4% Interest", "1% for women & differently-abled"],
-              ["40+ Courses", "B.Ed, Nursing, B.Tech, MBBS & more"],
-              ["No Collateral", "No guarantor, no property mortgage"],
-              ["Pay After Job", "Repay only after you start earning"],
+              ["Up to ₹4 Lakh Loan", "Covers tuition, hostel, food and study material"],
+              ["Only 4% Interest", "Just 1% for women and differently-abled students"],
+              ["40+ Eligible Courses", "B.Ed, Nursing, B.Tech, MBBS, Pharmacy and many more"],
+              ["No Collateral Needed", "No guarantor, no property mortgage required"],
+              ["Repay After Job", "EMIs begin only after you complete your course and start earning"],
             ].map(([title, desc]) => (
               <div key={title as string} className="flex gap-3 rounded-xl border border-white/10 bg-white/5 p-4">
                 <div className="mt-0.5 flex-shrink-0 rounded-full bg-green-500 p-1">
@@ -847,32 +846,32 @@ export default function Home() {
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-400">
                 <ListChecks size={18} className="text-gray-900" />
               </div>
-              <h3 className="font-headline text-2xl font-extrabold text-amber-400">BSCC Application Process — Step by Step</h3>
+              <h3 className="font-headline text-2xl font-extrabold text-amber-400">How Your BSCC Loan Gets Approved — Step by Step</h3>
             </div>
 
             <div className="grid gap-5 md:grid-cols-3">
               {[
                 {
                   num: "01",
-                  title: "Document Verification at Siksha Wallah",
-                  location: "College Chowk, Forbesganj (Our Office)",
-                  desc: "Visit our office with your original documents. Our expert team verifies your eligibility, checks all certificates, and prepares a complete document file for BSCC application. We ensure nothing is missing before proceeding.",
+                  title: "Document Review at Siksha Wallah",
+                  location: "Our Office — College Chowk, Forbesganj",
+                  desc: "Bring your original documents to our office. Our counselling team carefully checks your eligibility, verifies every certificate and prepares a complete, error-free file for your BSCC application — ensuring nothing gets rejected later.",
                   icon: FileCheck2,
                   color: "text-blue-300",
                 },
                 {
                   num: "02",
                   title: "College Selection & Bonafide Certificate",
-                  location: "Selected BSCC-Approved College",
-                  desc: "We help you select the right BSCC-approved college based on your course and location preference. After securing admission, the college provides a Bonafide Certificate confirming your enrollment — required for BSCC loan application.",
+                  location: "Your Chosen BSCC-Approved College",
+                  desc: "We help you shortlist the most suitable BSCC-approved college based on your course, fees and location. Once admission is confirmed, the college issues a Bonafide Certificate — an essential document for your BSCC application.",
                   icon: GraduationCap,
                   color: "text-green-300",
                 },
                 {
                   num: "03",
-                  title: "DRCC Office Registration & Approval",
+                  title: "DRCC Registration & Loan Approval",
                   location: "District Registration & Counselling Centre (DRCC)",
-                  desc: "Your complete application is submitted at the DRCC office (District Headquarter). The loan is processed through your bank account directly. Siksha Wallah team accompanies and guides you through the entire DRCC process.",
+                  desc: "Your final application is submitted at the DRCC office in your district. The approved loan is credited directly into your bank account. Our team accompanies and supports you through every step of the DRCC process.",
                   icon: BadgeCheck,
                   color: "text-amber-300",
                 },
@@ -887,7 +886,7 @@ export default function Home() {
                       </div>
                     </div>
                     <h4 className="font-headline font-extrabold text-white text-base mb-1">{title}</h4>
-                    <p className={`text-xs font-semibold mb-3 ${color}`}>📍 {location}</p>
+                    <p className={`text-xs font-semibold mb-3 ${color}`}>Location: {location}</p>
                     <p className="text-sm text-blue-100 leading-relaxed">{desc}</p>
                   </div>
                 </div>
@@ -897,7 +896,7 @@ export default function Home() {
             <div className="mt-6 flex items-start gap-3 rounded-xl border border-green-500/30 bg-green-500/10 p-4">
               <CheckCircle2 size={20} className="mt-0.5 flex-shrink-0 text-green-400" />
               <p className="text-sm font-semibold text-green-200">
-                <strong className="text-green-300">100% Free Guidance:</strong> हमारी team पूरे BSCC application process में आपकी निःशुल्क (free) सहायता करती है — document preparation से DRCC approval तक। कोई extra charge नहीं।
+                <strong className="text-green-300">100% Free Assistance:</strong> document preparation से लेकर DRCC approval तक — हमारी team पूरे BSCC application process में आपकी निःशुल्क सहायता करती है। कोई processing fee, कोई hidden charges नहीं।
               </p>
             </div>
           </div>
@@ -905,16 +904,16 @@ export default function Home() {
           <div className="grid gap-10 lg:grid-cols-2 items-start">
             {/* Documents required for BSCC */}
             <div className="space-y-4">
-              <h3 className="font-headline text-xl font-extrabold text-amber-400">BSCC के लिए Required Documents</h3>
+              <h3 className="font-headline text-xl font-extrabold text-amber-400">Documents Required for BSCC Loan</h3>
               {[
-                ["Aadhaar Card", "Student's original Aadhaar linked to mobile"],
-                ["10th & 12th Marksheet + Certificate", "Original & photocopy both required"],
-                ["Domicile Certificate", "Bihar state residence proof"],
-                ["Income Certificate", "Family annual income below ₹4.5 Lakh"],
-                ["Bank Account Details", "Student's own savings account (SBI/BOI preferred)"],
-                ["College Bonafide Certificate", "Issued by BSCC-approved enrolled college"],
-                ["Passport Size Photos", "4 recent color photographs on white background"],
-                ["PAN Card (if available)", "Student's or parent's PAN for verification"],
+                ["Aadhaar Card", "Student's original Aadhaar, linked with an active mobile number"],
+                ["10th & 12th Marksheet + Passing Certificate", "Originals along with two clear photocopies of each"],
+                ["Domicile Certificate", "Proof of Bihar state residence, issued by SDO/Circle Office"],
+                ["Family Income Certificate", "Annual family income should be below ₹4.5 Lakh"],
+                ["Bank Account Details", "Student's own savings account (SBI / BOI preferred)"],
+                ["College Bonafide Certificate", "Issued by your BSCC-approved enrolled college"],
+                ["Passport-Size Photographs", "4 recent colour photos on a white background"],
+                ["PAN Card (if available)", "Student's or parent's PAN for KYC verification"],
               ].map(([doc, detail]) => (
                 <div key={doc as string} className="flex gap-3 rounded-xl border border-white/10 bg-white/5 p-3.5">
                   <Check size={15} className="mt-0.5 flex-shrink-0 text-green-400" />
@@ -929,39 +928,39 @@ export default function Home() {
             {/* Eligibility Checker */}
             <div className="rounded-2xl border border-white/20 bg-white/10 p-7 backdrop-blur-xl">
               <h3 className="font-headline text-xl font-extrabold mb-5">
-                BSCC पात्रता जाँचें
+                Quick BSCC Eligibility Check
               </h3>
 
               {bsccEligible === null ? (
                 <form onSubmit={handleBsccCheck} className="space-y-4">
                   <div>
-                    <label className="mb-1.5 block text-sm font-semibold text-blue-100">क्या आप Bihar के निवासी हैं?</label>
+                    <label className="mb-1.5 block text-sm font-semibold text-blue-100">Are you a permanent resident of Bihar?</label>
                     <div className="flex gap-3">
                       {["yes", "no"].map((val) => (
                         <label key={val} className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl border border-white/30 bg-white/10 py-3 text-sm font-bold transition hover:bg-white/20">
                           <input type="radio" name="bihar" value={val} onChange={(e) => setBsccBihar(e.target.value)} className="accent-amber-400" required />
-                          {val === "yes" ? "हाँ (Yes)" : "नहीं (No)"}
+                          {val === "yes" ? "Yes" : "No"}
                         </label>
                       ))}
                     </div>
                   </div>
 
                   <div>
-                    <label className="mb-1.5 block text-sm font-semibold text-blue-100">परिवार की वार्षिक आय?</label>
+                    <label className="mb-1.5 block text-sm font-semibold text-blue-100">What is your family&apos;s annual income?</label>
                     <select
                       value={bsccIncome}
                       onChange={(e) => setBsccIncome(e.target.value)}
                       required
                       className="w-full rounded-xl border border-white/30 bg-[#003f9f] px-4 py-3 text-white outline-none"
                     >
-                      <option value="">Select Income</option>
-                      <option value="below">₹4.5 Lakh से कम</option>
-                      <option value="above">₹4.5 Lakh से अधिक</option>
+                      <option value="">Select annual family income</option>
+                      <option value="below">Below ₹4.5 Lakh</option>
+                      <option value="above">Above ₹4.5 Lakh</option>
                     </select>
                   </div>
 
                   <div>
-                    <label className="mb-1.5 block text-sm font-semibold text-blue-100">आपकी उम्र (Age)</label>
+                    <label className="mb-1.5 block text-sm font-semibold text-blue-100">Student&apos;s Age</label>
                     <input
                       type="number"
                       value={bsccAge}
@@ -975,24 +974,24 @@ export default function Home() {
                   </div>
 
                   <button type="submit" className="w-full rounded-xl bg-amber-400 py-3.5 font-extrabold text-gray-900 transition hover:bg-amber-300 active:scale-95">
-                    Check Eligibility Now →
+                    Check My Eligibility →
                   </button>
                 </form>
               ) : bsccEligible ? (
                 <div className="py-4 text-center space-y-4">
                   <CheckCircle2 size={52} className="mx-auto text-green-400" />
-                  <h4 className="font-headline text-2xl font-extrabold text-green-300">🎉 आप Eligible हैं!</h4>
-                  <p className="text-blue-100">आप Bihar Student Credit Card के लिए apply कर सकते हैं। हमारे experts आपको पूरा process guide करेंगे।</p>
+                  <h4 className="font-headline text-2xl font-extrabold text-green-300">Good news — you are eligible!</h4>
+                  <p className="text-blue-100">आप Bihar Student Credit Card के लिए apply कर सकते हैं। हमारे BSCC विशेषज्ञ document preparation से लेकर DRCC approval तक पूरी प्रक्रिया में आपका मार्गदर्शन करेंगे।</p>
                   <a
                     href="https://wa.me/916203138576?text=नमस्ते!%20मैंने%20आपकी%20website%20पर%20BSCC%20eligibility%20check%20की%20और%20मैं%20eligible%20हूँ।%20कृपया%20application%20process%20के%20बारे%20में%20guide%20करें।"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 rounded-xl bg-green-500 px-6 py-3 font-bold text-white hover:bg-green-600"
                   >
-                    <MessageCircle size={18} /> BSCC Apply करें
+                    <MessageCircle size={18} /> Start My BSCC Application
                   </a>
                   <button onClick={() => { setBsccEligible(null); setBsccBihar(""); setBsccIncome(""); setBsccAge(""); }} className="block w-full text-center text-sm text-blue-300 underline mt-2">
-                    फिर से Check करें
+                    Check Again
                   </button>
                 </div>
               ) : (
@@ -1000,13 +999,13 @@ export default function Home() {
                   <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-orange-500/20">
                     <X size={28} className="text-orange-400" />
                   </div>
-                  <h4 className="font-headline text-xl font-extrabold text-orange-300">Currently Not Eligible</h4>
-                  <p className="text-blue-100 text-sm">BSCC के लिए Bihar domicile, age ≤ 25, और family income ≤ ₹4.5L जरूरी है। लेकिन हम आपके लिए education loan के अन्य options खोज सकते हैं।</p>
+                  <h4 className="font-headline text-xl font-extrabold text-orange-300">You may not qualify for BSCC</h4>
+                  <p className="text-blue-100 text-sm">BSCC scheme के लिए Bihar का स्थायी निवासी होना, age 25 वर्ष या उससे कम, और family income ₹4.5 लाख से कम होना आवश्यक है। चिंता न करें — हम आपके लिए अन्य education loan विकल्प भी सुझा सकते हैं।</p>
                   <a href="tel:+916203138576" className="inline-flex items-center gap-2 rounded-xl bg-white/20 px-6 py-3 font-bold text-white hover:bg-white/30">
-                    <Phone size={16} /> Call for Other Options
+                    <Phone size={16} /> Call to Discuss Other Options
                   </a>
                   <button onClick={() => { setBsccEligible(null); setBsccBihar(""); setBsccIncome(""); setBsccAge(""); }} className="block w-full text-center text-sm text-blue-300 underline">
-                    फिर से Check करें
+                    Check Again
                   </button>
                 </div>
               )}
@@ -1019,16 +1018,16 @@ export default function Home() {
       <section id="why-us" className="py-24 bg-white">
         <div className="container-shell">
           <AnimateIn type="fade-up" className="text-center mb-14">
-            <p className="text-sm font-bold uppercase tracking-widest text-primary-red mb-2">हमारी विशेषता</p>
-            <h2 className="font-headline text-4xl md:text-5xl font-extrabold">सिर्फ Admission नहीं, सही Career</h2>
+            <p className="text-sm font-bold uppercase tracking-widest text-primary-red mb-2">Why Families Trust Us</p>
+            <h2 className="font-headline text-4xl md:text-5xl font-extrabold">More Than Admission — A Career You Can Be Proud Of</h2>
           </AnimateIn>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 stagger-child">
             {[
-              { icon: ShieldCheck, color: "bg-blue-600", title: "100% Transparent", desc: "No hidden charges. Every fee clearly explained upfront." },
-              { icon: Users, color: "bg-primary-red", title: "Dedicated Counsellor", desc: "One personal expert with you from inquiry to admission." },
-              { icon: BadgeCheck, color: "bg-green-600", title: "Document Assistance", desc: "We handle all paperwork, forms, and verifications." },
-              { icon: Sparkles, color: "bg-amber-500", title: "BSCC Specialist", desc: "Complete guidance for Bihar Student Credit Card scheme." },
+              { icon: ShieldCheck, color: "bg-blue-600", title: "100% Transparent Counselling", desc: "Every fee, every step is explained upfront. No hidden charges, no last-minute surprises." },
+              { icon: Users, color: "bg-primary-red", title: "Your Personal Counsellor", desc: "A dedicated admission expert stays with you from the first call until your seat is confirmed." },
+              { icon: BadgeCheck, color: "bg-green-600", title: "Full Documentation Support", desc: "We help with every form, certificate and verification so the process stays simple and stress-free." },
+              { icon: Sparkles, color: "bg-amber-500", title: "BSCC Loan Specialists", desc: "Complete, end-to-end guidance for the Bihar Student Credit Card — the family doesn't have to navigate it alone." },
             ].map(({ icon: Icon, color, title, desc }, i) => (
               <AnimateIn key={title} type="zoom-in" delay={i * 80}>
               <div className="group rounded-2xl border-2 border-gray-100 bg-gray-50 p-6 text-center transition hover:border-blue-200 hover:bg-white hover:shadow-lg card-lift card-glow">
@@ -1045,13 +1044,13 @@ export default function Home() {
           {/* Process Steps */}
           <AnimateIn type="fade-up" delay={100}>
           <div className="mt-20 rounded-2xl bg-gradient-to-r from-primary-green to-green-600 p-8 md:p-12 text-white">
-            <h3 className="font-headline text-3xl font-extrabold text-center mb-10">Admission कैसे मिलता है? Simple 4 Steps</h3>
+            <h3 className="font-headline text-3xl font-extrabold text-center mb-10">How We Secure Your Admission — A Simple 4-Step Journey</h3>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {[
-                { step: "01", title: "कॉल या WhatsApp करें", desc: "हमसे संपर्क करें — निःशुल्क बात करें" },
-                { step: "02", title: "प्रोफाइल और डॉक्यूमेंट शेयर करें", desc: "Marks, budget, documents, और goals बताएं" },
-                { step: "03", title: "सर्वश्रेष्ठ कॉलेज विकल्प चुनें", desc: "Top colleges और courses की verified list मिलेगी" },
-                { step: "04", title: "Admission Confirm", desc: "Documents से admission तक — हम साथ हैं" },
+                { step: "01", title: "Reach Out — Call or WhatsApp", desc: "हमसे संपर्क करें — पहली बातचीत बिल्कुल निःशुल्क।" },
+                { step: "02", title: "Share Your Profile", desc: "अपने marks, बजट, documents और career goals के बारे में बताएँ।" },
+                { step: "03", title: "Receive Personalised College Options", desc: "हमारे approved colleges की एक verified shortlist पाएँ।" },
+                { step: "04", title: "Confirm Your Admission", desc: "Documentation से लेकर admission तक — हर कदम पर हम साथ हैं।" },
               ].map(({ step, title, desc }, i) => (
                 <div key={step} className="relative">
                   {i < 3 && <div className="absolute hidden lg:block -right-3 top-7 text-white/30 text-2xl font-bold">→</div>}
@@ -1072,23 +1071,23 @@ export default function Home() {
       <section className="py-24 bg-gray-50">
         <div className="container-shell">
           <AnimateIn type="fade-up" className="text-center mb-14">
-            <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">Success Stories</p>
-            <h2 className="font-headline text-4xl md:text-5xl font-extrabold">हमारे Students की Achievements</h2>
+            <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">Real Stories. Real Results.</p>
+            <h2 className="font-headline text-4xl md:text-5xl font-extrabold">Trusted by Students &amp; Their Families</h2>
           </AnimateIn>
           <div className="grid gap-6 md:grid-cols-3">
             {[
-              { name: "Priya Kumari", course: "B.Ed (2024)", place: "Forbesganj", text: "Counsellor ने बहुत अच्छे से guide किया। BSCC loan में भी help मिली। Admission एकदम tension-free था।" },
-              { name: "Aman Raj", course: "B.Pharma (2023)", place: "Araria", text: "शुरू से आखिर तक सब transparent रहा। Documents से लेकर hostel तक — perfect support मिला।" },
-              { name: "Sakshi Jha", course: "B.Sc Nursing (2024)", place: "Kishanganj", text: "Nursing में career के लिए confused था। यहाँ की guidance से सही college मिला और BSCC भी apply हुआ।" },
-              { name: "Ravi Shankar", course: "B.Tech (2023)", place: "Forbesganj", text: "Engineering के लिए कौन सा college सही रहेगा — पता नहीं था। Siksha Wallah ने सब sort कर दिया। AICTE approved college मिला।" },
-              { name: "Anjali Devi", course: "GNM (2024)", place: "Purnea", text: "GNM admission का पूरा process यहाँ बहुत आसान था। BSCC loan भी मिला। Staff बहुत helpful है।" },
-              { name: "Vikash Kumar", course: "D.El.Ed (2023)", place: "Araria", text: "Primary teacher बनना था। D.El.Ed के लिए सही college ढूंढने में Siksha Wallah ने बहुत मदद की। अब मैं govt school में पढ़ा रहा हूँ।" },
-              { name: "Neha Bharti", course: "BBA (2024)", place: "Forbesganj", text: "BBA admission पहली बार में ही confirm हो गई। बिना किसी extra charge के पूरा process हुआ। बहुत trust है इन पर।" },
-              { name: "Sonu Kumar", course: "B.Pharma (2024)", place: "Supaul", text: "Pharmacy में interest था लेकिन कोई proper guidance नहीं थी। यहाँ आकर सब clear हो गया। College भी अच्छा मिला।" },
-              { name: "Puja Kumari", course: "ANM (2023)", place: "Kishanganj", text: "ANM course के लिए सब documents की list और process यहाँ से मिली। बहुत आसान था। 10 में से 10 दूँगी।" },
-              { name: "Rahul Paswan", course: "ITI (2024)", place: "Forbesganj", text: "ITI में admission के लिए घर वाले confused थे। Siksha Wallah के counsellor ने सब explain किया और सही trade choose करने में help की।" },
-              { name: "Komal Singh", course: "M.Ed (2024)", place: "Araria", text: "M.Ed admission के लिए Bihar से बाहर जाना पड़ा। Siksha Wallah ने out-of-state college में भी admission दिलाया। Great experience!" },
-              { name: "Deepak Jha", course: "MBA (2023)", place: "Purnea", text: "MBA के लिए BSCC loan apply किया। पूरी file Siksha Wallah team ने prepare की। बिना tension के loan approve हो गया।" },
+              { name: "Priya Kumari", course: "B.Ed (2024)", place: "Forbesganj", text: "Counsellor ने हर कदम पर बहुत अच्छे से मार्गदर्शन किया। BSCC loan की पूरी प्रक्रिया में भी मदद मिली। पूरा admission बिल्कुल tension-free रहा।" },
+              { name: "Aman Raj", course: "B.Pharma (2023)", place: "Araria", text: "शुरू से लेकर अंत तक हर बात पारदर्शी रही। Document verification से लेकर hostel selection तक — हर मोड़ पर सही guidance मिली।" },
+              { name: "Sakshi Jha", course: "B.Sc Nursing (2024)", place: "Kishanganj", text: "Nursing career को लेकर बहुत confusion थी। Siksha Wallah की counselling के बाद सही college मिला और BSCC loan भी आसानी से approve हो गया।" },
+              { name: "Ravi Shankar", course: "B.Tech (2023)", place: "Forbesganj", text: "Engineering के लिए कौन-सा college सही रहेगा — समझ नहीं आ रहा था। Siksha Wallah की मदद से एक AICTE-approved college में आसानी से admission मिल गया।" },
+              { name: "Anjali Devi", course: "GNM (2024)", place: "Purnea", text: "GNM admission की पूरी प्रक्रिया यहाँ बहुत सरल थी। BSCC loan भी मिला, और staff हर सवाल का जवाब बहुत धैर्य से देते हैं।" },
+              { name: "Vikash Kumar", course: "D.El.Ed (2023)", place: "Araria", text: "Primary teacher बनना मेरा सपना था। D.El.Ed के लिए सही college चुनने में Siksha Wallah की भूमिका बहुत बड़ी रही। आज मैं एक सरकारी विद्यालय में पढ़ा रहा हूँ।" },
+              { name: "Neha Bharti", course: "BBA (2024)", place: "Forbesganj", text: "BBA admission पहली ही कोशिश में confirm हो गया — और कोई extra charge भी नहीं। पूरी प्रक्रिया पर पूरा भरोसा बना रहा।" },
+              { name: "Sonu Kumar", course: "B.Pharma (2024)", place: "Supaul", text: "Pharmacy में मेरी रुचि थी, लेकिन सही जानकारी नहीं थी। यहाँ आकर सब कुछ स्पष्ट हो गया और एक अच्छे college में admission मिला।" },
+              { name: "Puja Kumari", course: "ANM (2023)", place: "Kishanganj", text: "ANM course के लिए सभी documents की पूरी list और प्रक्रिया यहाँ से मिली। बहुत ही आसान अनुभव — मैं इन्हें पूरे 10 में 10 दूँगी।" },
+              { name: "Rahul Paswan", course: "ITI (2024)", place: "Forbesganj", text: "ITI में admission को लेकर परिवार में काफी असमंजस था। Siksha Wallah के counsellor ने हर पहलू समझाया और सही trade चुनने में मदद की।" },
+              { name: "Komal Singh", course: "M.Ed (2024)", place: "Araria", text: "M.Ed के लिए Bihar से बाहर जाना पड़ा। Siksha Wallah ने out-of-state college में भी सहज admission दिलाया। शानदार अनुभव रहा।" },
+              { name: "Deepak Jha", course: "MBA (2023)", place: "Purnea", text: "MBA के लिए BSCC loan apply किया। पूरी file Siksha Wallah team ने तैयार की और loan बिना किसी परेशानी के approve हो गया।" },
             ].map(({ name, course, place, text }, i) => (
               <AnimateIn
                 key={name}
@@ -1120,10 +1119,10 @@ export default function Home() {
       <section id="documents" className="py-24 bg-white">
         <div className="container-shell">
           <AnimateIn type="fade-up" className="text-center mb-12">
-            <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">Admission Preparation</p>
-            <h2 className="font-headline text-4xl md:text-5xl font-extrabold">Required Documents Checklist</h2>
+            <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">Be Admission-Ready</p>
+            <h2 className="font-headline text-4xl md:text-5xl font-extrabold">Your Personal Admission Documents Checklist</h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto">
-              Tick off each document as you gather it. Bring all originals + 2 photocopies to the Siksha Wallah office.
+              इस checklist में हर document को tick करते जाएँ। जब आप हमारे Forbesganj office आएँ, तो सभी original certificates के साथ 2 photocopies ज़रूर लाएँ।
             </p>
           </AnimateIn>
 
@@ -1134,13 +1133,13 @@ export default function Home() {
               <div className="flex items-center justify-between bg-primary-blue px-6 py-4">
                 <div className="flex items-center gap-2 text-white">
                   <ListChecks size={20} />
-                  <span className="font-headline font-extrabold text-lg">Document Checklist</span>
+                  <span className="font-headline font-extrabold text-lg">My Document Checklist</span>
                 </div>
                 <span className="rounded-full bg-white/20 px-3 py-1 text-sm font-bold text-white">
-                  {Object.values(checkedDocs).filter(Boolean).length} / {[
+                  {Object.values(checkedDocs).filter(Boolean).length} of {[
                     "10th-marksheet", "12th-marksheet", "graduation", "aadhaar",
                     "residential", "income", "caste", "photos", "tc", "migration"
-                  ].length} Done
+                  ].length} Ready
                 </span>
               </div>
 
@@ -1161,28 +1160,28 @@ export default function Home() {
                     group: "Academic Documents",
                     color: "bg-blue-100 text-blue-700",
                     docs: [
-                      { id: "10th-marksheet", label: "10th Marksheet & Passing Certificate", note: "Original board certificate required", required: true },
-                      { id: "12th-marksheet", label: "12th Marksheet & Passing Certificate", note: "All subjects marksheet + passing/migration cert.", required: true },
-                      { id: "graduation", label: "Graduation Degree & All Year Marksheets", note: "Required for B.Ed, M.Ed, MBA, MCA, and all PG courses", required: false },
+                      { id: "10th-marksheet", label: "Class 10 Marksheet & Passing Certificate", note: "Original board certificate is required for verification.", required: true },
+                      { id: "12th-marksheet", label: "Class 12 Marksheet & Passing Certificate", note: "All-subject marksheet plus passing/migration certificate.", required: true },
+                      { id: "graduation", label: "Graduation Degree & Marksheets (All Years)", note: "Needed for B.Ed, M.Ed, MBA, MCA and all postgraduate courses.", required: false },
                     ],
                   },
                   {
                     group: "Identity & Residence Documents",
                     color: "bg-green-100 text-green-700",
                     docs: [
-                      { id: "aadhaar", label: "Aadhaar Card (Student)", note: "Must be linked to active mobile number", required: true },
-                      { id: "residential", label: "Residential / Domicile Certificate", note: "Bihar domicile certificate from SDO/Circle Office", required: true },
-                      { id: "income", label: "Income Certificate", note: "Annual family income certificate from CO/SDO (₹4.5L limit for BSCC)", required: true },
-                      { id: "caste", label: "Caste Certificate (SC/ST/OBC if applicable)", note: "Required for reserved category seats & scholarships", required: false },
+                      { id: "aadhaar", label: "Student's Aadhaar Card", note: "Should be linked with an active mobile number.", required: true },
+                      { id: "residential", label: "Residential / Domicile Certificate", note: "Bihar domicile certificate from SDO or Circle Office.", required: true },
+                      { id: "income", label: "Family Income Certificate", note: "Issued by the local CO/SDO. Annual income should be below ₹4.5 Lakh for BSCC eligibility.", required: true },
+                      { id: "caste", label: "Caste Certificate (SC / ST / OBC, if applicable)", note: "Required for reserved-category seats and scholarship benefits.", required: false },
                     ],
                   },
                   {
                     group: "Other Essential Documents",
                     color: "bg-amber-100 text-amber-700",
                     docs: [
-                      { id: "photos", label: "Passport Size Photographs", note: "6–8 recent color photos on white background", required: true },
-                      { id: "tc", label: "Transfer Certificate (TC)", note: "From your last attended school/college", required: true },
-                      { id: "migration", label: "Migration Certificate (if from another board)", note: "Required if 12th was from CBSE/ISC for state university admission", required: false },
+                      { id: "photos", label: "Passport-Size Photographs", note: "6–8 recent colour photographs on a white background.", required: true },
+                      { id: "tc", label: "Transfer Certificate (TC)", note: "From the last school or college you attended.", required: true },
+                      { id: "migration", label: "Migration Certificate (if from another board)", note: "Required when admitting to a state university after CBSE/ISC.", required: false },
                     ],
                   },
                 ].map(({ group, color, docs }) => (
@@ -1221,7 +1220,7 @@ export default function Home() {
                                 {label}
                               </span>
                               {required && (
-                                <span className="rounded bg-red-100 px-1.5 py-0.5 text-[10px] font-bold text-red-600">REQUIRED</span>
+                                <span className="rounded bg-red-100 px-1.5 py-0.5 text-[10px] font-bold text-red-600">MUST HAVE</span>
                               )}
                             </div>
                             <p className="mt-0.5 text-xs text-gray-500">{note}</p>
@@ -1235,8 +1234,8 @@ export default function Home() {
                 {/* CTA after checklist */}
                 <div className="rounded-xl bg-primary-blue p-4 text-white flex items-center justify-between gap-4 flex-wrap">
                   <div>
-                    <p className="font-bold text-sm">Documents ready? Visit us or call!</p>
-                    <p className="text-xs text-blue-200">We verify all documents for FREE at our Forbesganj office.</p>
+                    <p className="font-bold text-sm">All documents ready? Let&apos;s take the next step together.</p>
+                    <p className="text-xs text-blue-200">Visit our Forbesganj office for a free, no-obligation document verification.</p>
                   </div>
                   <a
                     href="https://wa.me/916203138576?text=नमस्ते!%20मैंने%20अपने%20admission%20documents%20collect%20कर%20लिए%20हैं।%20आगे%20का%20process%20बताएं।"
@@ -1244,7 +1243,7 @@ export default function Home() {
                     rel="noopener noreferrer"
                     className="flex-shrink-0 flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-primary-blue hover:bg-blue-50 transition"
                   >
-                    <MessageCircle size={15} /> WhatsApp Now
+                    <MessageCircle size={15} /> Share on WhatsApp
                   </a>
                 </div>
               </div>
@@ -1252,7 +1251,7 @@ export default function Home() {
 
             {/* Right panel — course-wise special docs */}
             <div className="space-y-5">
-              <h3 className="font-headline text-2xl font-extrabold text-gray-900">Course-Specific Additional Requirements</h3>
+              <h3 className="font-headline text-2xl font-extrabold text-gray-900">Additional Documents by Course</h3>
               {[
                 {
                   course: "B.Ed / M.Ed",
@@ -1315,10 +1314,10 @@ export default function Home() {
               ))}
 
               <div className="rounded-xl border-2 border-dashed border-amber-300 bg-amber-50 p-5">
-                <p className="font-bold text-amber-800 text-sm mb-1">Not sure what to bring?</p>
-                <p className="text-xs text-amber-700 mb-3">Call us and our team will give you a complete custom document list for your specific course in 2 minutes.</p>
+                <p className="font-bold text-amber-800 text-sm mb-1">Not sure which documents you need?</p>
+                <p className="text-xs text-amber-700 mb-3">Give us a quick call — our counsellor will share a personalised document list for your chosen course in under 2 minutes.</p>
                 <a href="tel:+916203138576" className="inline-flex items-center gap-2 rounded-xl bg-amber-500 px-4 py-2.5 text-sm font-bold text-white hover:bg-amber-600 transition">
-                  <Phone size={14} /> Call: 6203138576
+                  <Phone size={14} /> Call +91 6203138576
                 </a>
               </div>
             </div>
@@ -1337,25 +1336,25 @@ export default function Home() {
             {/* Badge */}
             <div className="relative mb-5 inline-flex items-center gap-2 rounded-full border border-orange-400/40 bg-orange-400/15 px-5 py-2">
               <span className="h-2 w-2 rounded-full bg-orange-400 animate-pulse" />
-              <span className="text-xs font-extrabold uppercase tracking-[0.2em] text-orange-300">अक्सर पूछे जाने वाले सवाल</span>
+              <span className="text-xs font-extrabold uppercase tracking-[0.2em] text-orange-300">Frequently Asked Questions</span>
             </div>
             {/* Heading */}
             <h2 className="relative font-headline text-3xl md:text-5xl font-black text-white leading-tight">
-              आपके हर सवाल का{" "}
+              Every Question, Answered{" "}
               <span className="bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-300 bg-clip-text text-transparent">
-                जवाब यहाँ है
+                Honestly
               </span>
             </h2>
             <p className="relative mt-4 text-blue-200 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-              कोर्स चुनाव से लेकर BSCC लोन तक, दाखिला प्रक्रिया से लेकर सरकारी नौकरी तक —<br className="hidden md:block" />
-              <strong className="text-white">Siksha Wallah</strong> के विशेषज्ञ आपकी हर जिज्ञासा का समाधान करते हैं।
+              Course selection से लेकर BSCC loan तक, admission प्रक्रिया से लेकर सरकारी नौकरी तक —<br className="hidden md:block" />
+              <strong className="text-white">Siksha Wallah</strong> के विशेषज्ञ आपके हर सवाल का स्पष्ट और ईमानदार जवाब देते हैं।
             </p>
             {/* Stats row */}
             <div className="relative mt-8 flex flex-wrap justify-center gap-6">
               {[
-                { num: "17+", label: "सवाल & जवाब" },
-                { num: "5", label: "विषय श्रेणियाँ" },
-                { num: "100%", label: "निःशुल्क परामर्श" },
+                { num: "17+", label: "Common Questions" },
+                { num: "5", label: "Topic Categories" },
+                { num: "100%", label: "Free Counselling" },
               ].map(({ num, label }) => (
                 <div key={label} className="flex flex-col items-center">
                   <span className="font-headline text-2xl font-black text-orange-400">{num}</span>
@@ -1370,8 +1369,8 @@ export default function Home() {
             <AnimateIn type="fade-right">
             <div className="sticky top-24">
               <div className="rounded-2xl bg-[#003f9f] p-6 text-white mb-6">
-                <p className="font-headline text-lg font-extrabold mb-1">सीधे बात करें</p>
-                <p className="text-blue-200 text-sm mb-5">जवाब नहीं मिला? हमारे विशेषज्ञ से अभी बात करें — निःशुल्क।</p>
+                <p className="font-headline text-lg font-extrabold mb-1">Prefer to speak in person?</p>
+                <p className="text-blue-200 text-sm mb-5">Didn&apos;t find your answer here? Our counsellors are just one call away — free, friendly and honest.</p>
                 <div className="space-y-3">
                   {[
                     { num: "6203138576", name: "Rajesh Kr. Sah", role: "Senior Counsellor" },
@@ -1392,14 +1391,14 @@ export default function Home() {
               </div>
               {/* Category quick links */}
               <div className="rounded-2xl border border-gray-200 bg-white p-5">
-                <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">विषय के अनुसार देखें</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Browse by Topic</p>
                 <div className="space-y-2">
                   {[
-                    { label: "परामर्श व सेवा", color: "bg-blue-100 text-blue-700", range: "1–4" },
-                    { label: "कोर्स चुनाव", color: "bg-green-100 text-green-700", range: "5–9" },
-                    { label: "दाखिला प्रक्रिया", color: "bg-purple-100 text-purple-700", range: "10–12" },
-                    { label: "BSCC लोन", color: "bg-amber-100 text-amber-700", range: "13–15" },
-                    { label: "फीस व खर्च", color: "bg-rose-100 text-rose-700", range: "16–17" },
+                    { label: "Counselling & Services", color: "bg-blue-100 text-blue-700", range: "1–4" },
+                    { label: "Choosing the Right Course", color: "bg-green-100 text-green-700", range: "5–9" },
+                    { label: "Admission Process", color: "bg-purple-100 text-purple-700", range: "10–12" },
+                    { label: "BSCC Loan Support", color: "bg-amber-100 text-amber-700", range: "13–15" },
+                    { label: "Fees & Expenses", color: "bg-rose-100 text-rose-700", range: "16–17" },
                   ].map(({ label, color, range }) => (
                     <div key={label} className={`flex items-center justify-between rounded-lg px-3 py-2 text-xs font-semibold ${color}`}>
                       <span>{label}</span>
@@ -1448,9 +1447,9 @@ export default function Home() {
             {/* Left — contact info */}
             <AnimateIn type="fade-right">
             <div>
-              <p className="text-sm font-bold uppercase tracking-widest mb-3 text-amber-400">हमसे मिलें</p>
+              <p className="text-sm font-bold uppercase tracking-widest mb-3 text-amber-400">Visit Our Counselling Centre</p>
               <h2 className="font-headline text-4xl md:text-5xl font-extrabold mb-6">
-                Visit Us or Call Now
+                Meet Our Counsellors Face-to-Face
               </h2>
 
               {/* Location card */}
@@ -1460,23 +1459,23 @@ export default function Home() {
                     <MapPin size={22} />
                   </div>
                   <div>
-                    <h3 className="font-headline text-lg font-extrabold text-white">Office Address</h3>
+                    <h3 className="font-headline text-lg font-extrabold text-white">Our Office Address</h3>
                     <p className="mt-1 text-gray-300">College Chowk, Near HP Petrol Pump</p>
-                    <p className="text-gray-300">Forbesganj, Araria — Bihar</p>
+                    <p className="text-gray-300">Forbesganj, Araria — Bihar 854318</p>
                     <a
                       href="https://maps.google.com/?q=College+Chowk+Forbesganj+Araria+Bihar"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="mt-2 inline-flex items-center gap-1 text-sm font-bold text-amber-400 hover:text-amber-300"
                     >
-                      Open in Google Maps →
+                      Get Directions on Google Maps →
                     </a>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-3 mb-8">
-                {[["6203138576", "Rajesh Kr. Sah — Head Counsellor"], ["7858062498", "Md. Naseem Ansari — Nursing & BSCC"], ["9162653235", "Gautam Kumar — Technical & Management"]].map(([num, label]) => (
+                {[["6203138576", "Rajesh Kr. Sah — Chief Admission Counsellor"], ["7858062498", "Md. Naseem Ansari — Nursing & BSCC Specialist"], ["9162653235", "Gautam Kumar — Technical & Management Counsellor"]].map(([num, label]) => (
                   <a key={num} href={`tel:+91${num}`} className="flex items-center gap-4 rounded-xl border border-white/10 bg-white/5 p-4 transition hover:bg-white/10 hover:border-amber-400/40">
                     <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-blue">
                       <Phone size={18} />
@@ -1495,7 +1494,7 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-3 rounded-xl bg-green-500 px-6 py-3.5 font-bold text-white shadow-lg shadow-green-500/20 transition hover:bg-green-400"
               >
-                <MessageCircle size={20} /> WhatsApp पर Chat करें
+                <MessageCircle size={20} /> Chat on WhatsApp
               </a>
             </div>
             </AnimateIn>
@@ -1503,8 +1502,8 @@ export default function Home() {
             {/* Right — Contact form with Firestore save */}
             <AnimateIn type="fade-left" delay={100}>
             <div className="rounded-2xl bg-white p-8 text-gray-900 shadow-xl">
-              <h3 className="font-headline text-2xl font-extrabold mb-2">Admission Plan बनाइए</h3>
-              <p className="text-gray-500 text-sm mb-6">फॉर्म भरें — हमारे काउंसलर 30 मिनट में कॉल करेंगे।</p>
+              <h3 className="font-headline text-2xl font-extrabold mb-2">Plan Your Admission with Us</h3>
+              <p className="text-gray-500 text-sm mb-6">Share a few quick details — our counsellor will personally call you back within 30 minutes.</p>
               <form
                 onSubmit={async (e) => {
                   e.preventDefault();
@@ -1522,10 +1521,10 @@ export default function Home() {
                 }}
                 className="space-y-4"
               >
-                <input name="cname" required placeholder="पूरा नाम (Full Name)" className="w-full rounded-xl border-2 border-gray-200 px-4 py-3.5 outline-none focus:border-primary-blue transition" />
-                <input name="cmobile" required type="tel" placeholder="Mobile Number" className="w-full rounded-xl border-2 border-gray-200 px-4 py-3.5 outline-none focus:border-primary-blue transition" />
+                <input name="cname" required placeholder="Student's Full Name" className="w-full rounded-xl border-2 border-gray-200 px-4 py-3.5 outline-none focus:border-primary-blue transition" />
+                <input name="cmobile" required type="tel" placeholder="Your Mobile Number" className="w-full rounded-xl border-2 border-gray-200 px-4 py-3.5 outline-none focus:border-primary-blue transition" />
                 <select name="ccourse" className="w-full rounded-xl border-2 border-gray-200 px-4 py-3.5 text-gray-600 outline-none focus:border-primary-blue bg-white transition">
-                  <option value="">-- Course Select करें --</option>
+                  <option value="">-- Select a Course --</option>
                   <option>B.Ed / D.El.Ed</option>
                   <option>B.Sc Nursing / GNM / ANM</option>
                   <option>B.Pharma / D.Pharma</option>
@@ -1533,10 +1532,10 @@ export default function Home() {
                   <option>BBA / MBA</option>
                   <option>B.Tech / Polytechnic / ITI</option>
                   <option>BCA / MCA</option>
-                  <option>अभी decide नहीं किया</option>
+                  <option>Not yet decided — I want guidance</option>
                 </select>
                 <select name="cqualify" className="w-full rounded-xl border-2 border-gray-200 px-4 py-3.5 text-gray-600 outline-none focus:border-primary-blue bg-white transition">
-                  <option value="">-- Current Qualification --</option>
+                  <option value="">-- Highest Qualification --</option>
                   <option>10th Pass</option>
                   <option>12th Pass (Arts)</option>
                   <option>12th Pass (Science)</option>
@@ -1545,10 +1544,10 @@ export default function Home() {
                   <option>Post Graduation</option>
                 </select>
                 <button type="submit" className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary-blue py-4 font-extrabold text-white transition hover:bg-blue-700 shadow-lg shadow-blue-200 active:scale-95">
-                  निःशुल्क परामर्श बुक करें <ArrowRight size={18} />
+                  Book My Free Counselling <ArrowRight size={18} />
                 </button>
               </form>
-              <p className="mt-4 text-center text-xs text-gray-400">100% निःशुल्क। कोई spam नहीं। कोई छिपे शुल्क नहीं।</p>
+              <p className="mt-4 text-center text-xs text-gray-400">100% Free • No Spam • No Hidden Charges • Your details stay confidential</p>
             </div>
             </AnimateIn>
           </div>

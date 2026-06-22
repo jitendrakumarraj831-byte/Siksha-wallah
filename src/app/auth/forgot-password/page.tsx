@@ -19,7 +19,7 @@ export default function ForgotPasswordPage() {
     setSent(false);
 
     if (!email.trim()) {
-      setError('Email is required');
+      setError('Please enter the email address you used while registering.');
       return;
     }
 
@@ -29,7 +29,7 @@ export default function ForgotPasswordPage() {
       setSent(true);
       setEmail('');
     } catch (err: any) {
-      setError(err.message || 'Failed to send reset email');
+      setError(err.message || 'We could not send the password reset link. Please try again or contact our office.');
     } finally {
       setLoading(false);
     }
@@ -39,18 +39,17 @@ export default function ForgotPasswordPage() {
     <PortalShell>
       <section className="container-shell grid min-h-screen items-center gap-12 py-16 lg:grid-cols-2">
         <div>
-          <p className="text-sm font-extrabold uppercase tracking-[.2em] text-[#1357e6]">Password recovery</p>
+          <p className="text-sm font-extrabold uppercase tracking-[.2em] text-[#1357e6]">Account Recovery</p>
           <h1 className="mt-3 font-display text-4xl font-extrabold sm:text-5xl bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
-            Reset your password
+            Reset Your Password
           </h1>
           <p className="mt-5 max-w-xl text-lg leading-8 text-slate-600">
-            Enter your email address and we&apos;ll send you a link to reset your password. Check your email inbox
-            (and spam folder) for the reset link.
+            अपना registered email address दर्ज करें — हम आपको password reset link भेजेंगे। कृपया अपने email का inbox (और spam folder) देखें।
           </p>
           <div className="mt-8">
             <Link href="/auth/login" className="inline-flex items-center gap-2 text-sm font-bold text-blue-600 hover:underline">
               <ArrowLeft size={18} />
-              Back to login
+              Back to Sign In
             </Link>
           </div>
         </div>
@@ -59,8 +58,8 @@ export default function ForgotPasswordPage() {
           onSubmit={handleSubmit}
           className="rounded-3xl border bg-white p-7 shadow-xl shadow-slate-200/60 sm:p-9"
         >
-          <h2 className="font-display text-2xl font-extrabold">Forgot your password?</h2>
-          <p className="mt-2 text-sm text-slate-600">No worries, we&apos;ll help you reset it</p>
+          <h2 className="font-display text-2xl font-extrabold">Forgot Your Password?</h2>
+          <p className="mt-2 text-sm text-slate-600">No problem. We&apos;ll help you regain access to your account in just a few steps.</p>
 
           {error && (
             <div className="mt-4 flex gap-3 rounded-xl bg-red-50 p-3 text-sm text-red-700">
@@ -72,7 +71,7 @@ export default function ForgotPasswordPage() {
           {sent && (
             <div className="mt-4 flex gap-3 rounded-xl bg-green-50 p-3 text-sm text-green-700">
               <CheckCircle2 size={18} className="mt-0.5 flex-shrink-0" />
-              <p>Password reset email sent! Check your inbox within 2-3 minutes.</p>
+              <p>Password reset link sent successfully. Please check your email within the next 2–3 minutes.</p>
             </div>
           )}
 
@@ -82,7 +81,7 @@ export default function ForgotPasswordPage() {
                 <Mail className="absolute left-4 top-4 text-slate-400" size={18} />
                 <input
                   type="email"
-                  placeholder="Enter your email address"
+                  placeholder="Your registered email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -98,10 +97,10 @@ export default function ForgotPasswordPage() {
                 {loading ? (
                   <>
                     <Loader size={18} className="mr-2 animate-spin" />
-                    Sending...
+                    Sending reset link…
                   </>
                 ) : (
-                  'Send Reset Link'
+                  'Email Me a Reset Link'
                 )}
               </Button>
             </div>
@@ -113,15 +112,15 @@ export default function ForgotPasswordPage() {
                 variant="outline"
                 className="w-full py-3.5 font-bold"
               >
-                Send another email
+                Send Another Reset Link
               </Button>
             </div>
           )}
 
           <p className="mt-4 text-center text-xs text-slate-500">
-            Remember your password?{' '}
+            Already remember your password?{' '}
             <Link href="/auth/login" className="font-bold text-blue-600 hover:underline">
-              Login here
+              Sign in here
             </Link>
           </p>
         </form>

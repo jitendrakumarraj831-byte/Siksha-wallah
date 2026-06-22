@@ -35,15 +35,15 @@ const SECTION_META: Record<StreamKey, {
   teaching: {
     id: "teaching",
     icon: <GraduationCap size={20} />,
-    tagline: "Become a Govt Teacher — Bihar STET / BTET qualified",
+    tagline: "Build a respected teaching career — qualify for Bihar STET / BTET and government school roles.",
     approval: "NCTE Approved",
     approvalBadge: "bg-blue-600",
-    partnerNote: "हम केवल NCTE Approved colleges के साथ partner हैं — Bihar, Purnea, Katihar, Patna, और West Bengal में।",
+    partnerNote: "हम केवल NCTE-Approved teacher training colleges के साथ काम करते हैं — Bihar (Patna, Purnea, Katihar) और West Bengal में।",
     partnerPoints: [
-      "NCTE Approved colleges in Patna, Purnea & Katihar (Bihar)",
-      "NCTE Recognized institutions in West Bengal",
-      "100% BSCC (Bihar Student Credit Card) facility available",
-      "Regular & Distance mode — both options guided",
+      "NCTE-approved B.Ed and D.El.Ed colleges across Patna, Purnea and Katihar",
+      "NCTE-recognised institutions in West Bengal for wider choice",
+      "100% support for Bihar Student Credit Card (BSCC) loan application",
+      "Regular and Distance mode — guidance for whichever suits your situation",
     ],
     sectionBg: "bg-blue-50/40",
     headerBg: "bg-gradient-to-r from-blue-700 to-indigo-700",
@@ -59,15 +59,15 @@ const SECTION_META: Record<StreamKey, {
   medical: {
     id: "medical",
     icon: <Stethoscope size={20} />,
-    tagline: "Doctor, Nurse, Pharmacist — Healthcare ka safar shuru karo",
+    tagline: "Begin your healthcare career — secure admission as a doctor, nurse or pharmacist.",
     approval: "INC & PCI Approved",
     approvalBadge: "bg-red-600",
-    partnerNote: "हम INC & PCI Approved premier institutes के साथ partner हैं — Bangalore, Madhya Pradesh, और West Bengal में।",
+    partnerNote: "हम INC- और PCI-approved premier institutes के साथ partner हैं — Bangalore, Madhya Pradesh और West Bengal में।",
     partnerPoints: [
-      "INC Approved Nursing colleges in Bangalore & West Bengal",
-      "PCI Approved Pharmacy institutes in Madhya Pradesh",
-      "Premier private medical institutes with hostel facility",
-      "NEET counselling & direct admission both available",
+      "INC-approved Nursing colleges in Bangalore and West Bengal",
+      "PCI-approved Pharmacy institutes in Madhya Pradesh",
+      "Trusted private medical institutes with hostel and mess facility",
+      "Full guidance for NEET counselling as well as direct admission routes",
     ],
     sectionBg: "bg-red-50/40",
     headerBg: "bg-gradient-to-r from-red-700 to-rose-700",
@@ -83,15 +83,15 @@ const SECTION_META: Record<StreamKey, {
   technical: {
     id: "technical",
     icon: <Cpu size={20} />,
-    tagline: "Engineer, Manager, IT Professional — Technical career banao",
+    tagline: "Shape a future as an engineer, manager or IT professional — choose the right technical pathway.",
     approval: "AICTE & UGC Approved",
     approvalBadge: "bg-orange-600",
-    partnerNote: "हम AICTE & UGC Recognized top universities के साथ partner हैं — engineering, management, और computer courses के लिए।",
+    partnerNote: "हम AICTE और UGC recognised top universities के साथ partner हैं — Engineering, Management और Computer Applications के लिए।",
     partnerPoints: [
-      "AICTE Approved B.Tech & Polytechnic colleges across India",
-      "UGC Recognized universities for BCA, MCA, BBA & MBA",
-      "JEE / DCECE counselling guidance included",
-      "Distance mode also available for UGC-DEB approved courses",
+      "AICTE-approved B.Tech and Polytechnic colleges across India",
+      "UGC-recognised universities for BCA, MCA, BBA and MBA",
+      "Complete JEE / DCECE counselling guidance included",
+      "Distance mode also available through UGC-DEB approved programmes",
     ],
     sectionBg: "bg-orange-50/40",
     headerBg: "bg-gradient-to-r from-orange-600 to-amber-600",
@@ -242,7 +242,7 @@ function CourseCard({
               <div className="rounded-xl bg-green-50 border border-green-200 p-3 flex items-start gap-2">
                 <CreditCard size={15} className="mt-0.5 flex-shrink-0 text-green-600" />
                 <p className="text-xs text-green-700 font-semibold">
-                  Bihar Student Credit Card (BSCC) eligible — get up to ₹4 Lakh loan for this course at only 4% interest. Siksha Wallah guides for complete BSCC application.
+                  Eligible for the Bihar Student Credit Card (BSCC) — secure up to ₹4 Lakh education loan at just 4% interest. Our team guides you through the complete BSCC application, end to end.
                 </p>
               </div>
             )}
@@ -263,14 +263,14 @@ function CourseCard({
             rel="noopener noreferrer"
             className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold text-white transition ${colors.btn}`}
           >
-            <MessageCircle size={15} /> Inquire Fee & Admission
+            <MessageCircle size={15} /> Enquire About Fees & Admission
           </a>
           {course.bscc && (
             <Link
               href="/student-credit-card"
               className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-green-500 py-2.5 text-sm font-bold text-green-700 transition hover:bg-green-500 hover:text-white"
             >
-              <CreditCard size={15} /> Apply via BSCC →
+              <CreditCard size={15} /> Check BSCC Loan Eligibility →
             </Link>
           )}
         </div>
@@ -342,16 +342,16 @@ function CoursesInner() {
           {/* Label pill */}
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/[0.1] px-4 py-2">
             <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
-            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">सभी Courses</span>
+            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Explore Courses</span>
           </div>
           {/* H1 */}
           <h1 className="font-headline text-[2.5rem] font-black leading-[1.08] tracking-tight md:text-6xl lg:text-[4rem]">
-            <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">Bihar के Top Courses —</span>
-            <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Expert Guidance के साथ</span>
+            <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">Choose the Right Course</span>
+            <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">for a Confident Career</span>
           </h1>
           <div className="mx-auto mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-40" />
           <p className="mt-6 max-w-2xl mx-auto text-blue-100 text-lg">
-            Teaching, Medical, और Technical — तीनों streams के 19+ courses में expert admission guidance।
+            Teaching, Medical, Nursing, Pharmacy, Engineering और Management — हर stream में 19+ verified courses, अनुभवी काउंसलर के साथ।
           </p>
           {/* Quick jump */}
           <div className="mt-8 flex flex-wrap justify-center gap-3">
@@ -435,7 +435,7 @@ function CoursesInner() {
                   </div>
                   <div className="flex flex-col items-start sm:items-end gap-1 shrink-0">
                     <span className="text-4xl font-black">{tab.courses.length}</span>
-                    <span className="text-xs font-semibold opacity-80">Courses Available</span>
+                    <span className="text-xs font-semibold opacity-80">Verified Courses</span>
                   </div>
                 </div>
               </div>
@@ -479,8 +479,8 @@ function CoursesInner() {
               {/* Section bottom CTA */}
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border-2 border-dashed border-gray-200 bg-white px-6 py-5">
                 <div>
-                  <p className="font-bold text-gray-800">{tab.label} में admission चाहिए?</p>
-                  <p className="text-sm text-gray-500">हमारे विशेषज्ञ काउंसलर आपको सही कॉलेज चुनने में मदद करेंगे — 100% निःशुल्क।</p>
+                  <p className="font-bold text-gray-800">Looking for admission in {tab.label}?</p>
+                  <p className="text-sm text-gray-500">हमारे अनुभवी counsellors आपके अंक, बजट और लक्ष्य के अनुसार सही college चुनने में मदद करेंगे — पूरी प्रक्रिया 100% निःशुल्क।</p>
                 </div>
                 <a
                   href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(tab.label)}%20के%20लिए%20admission%20guidance%20चाहिए।%20Please%20help%20karein।`}
@@ -488,7 +488,7 @@ function CoursesInner() {
                   rel="noopener noreferrer"
                   className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-green-500 px-6 py-3 text-sm font-extrabold text-white transition hover:bg-green-600"
                 >
-                  <MessageCircle size={16} /> WhatsApp Expert
+                  <MessageCircle size={16} /> Speak to a Counsellor
                 </a>
               </div>
             </div>
@@ -500,10 +500,10 @@ function CoursesInner() {
       <section className="bg-gradient-to-r from-emerald-700 to-teal-700 py-14 text-white text-center">
         <div className="container-shell">
           <h2 className="font-headline text-3xl font-extrabold mb-3">
-            सही Course चुनने में मदद चाहिए?
+            Still confused about which course is right for you?
           </h2>
           <p className="text-emerald-100 mb-7 max-w-xl mx-auto">
-            हमारे विशेषज्ञ काउंसलर आपके अंक, बजट, और करियर लक्ष्य के अनुसार सही कोर्स चुनने में मदद करेंगे — 100% निःशुल्क।
+            हमारे अनुभवी काउंसलर आपके अंक, बजट और career लक्ष्यों को समझकर सबसे उपयुक्त course और college की सलाह देंगे — पूरी प्रक्रिया 100% निःशुल्क।
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a
@@ -512,13 +512,13 @@ function CoursesInner() {
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-400 px-7 py-4 font-extrabold text-gray-900 transition hover:bg-amber-300"
             >
-              <MessageCircle size={18} /> WhatsApp Expert
+              <MessageCircle size={18} /> Get Free Course Counselling
             </a>
             <Link
               href="/contact"
               className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white/40 bg-white/10 px-7 py-4 font-bold text-white transition hover:bg-white/20"
             >
-              हमसे मिलें →
+              Visit Our Office →
             </Link>
           </div>
         </div>

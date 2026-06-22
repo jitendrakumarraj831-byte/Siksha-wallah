@@ -62,16 +62,16 @@ export default function ForumPage() {
           {/* Label pill */}
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/[0.1] px-4 py-2">
             <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
-            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Community Forum</span>
+            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Student Community</span>
           </div>
           {/* H1 */}
           <h1 className="font-headline text-[2.5rem] font-black leading-[1.08] tracking-tight md:text-6xl lg:text-[4rem]">
-            <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">Students का</span>
-            <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">सवाल-जवाब Forum</span>
+            <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">Ask Questions.</span>
+            <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Get Real Answers.</span>
           </h1>
           <div className="mx-auto mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-40" />
           <p className="mt-6 max-w-2xl mx-auto text-blue-100 leading-relaxed">
-            Admission, courses, BSCC loan, और career के बारे में सवाल पूछें — हमारा expert team और community जवाब देगी।
+            Admission, course selection, BSCC loan या career — कोई भी सवाल यहाँ बेझिझक पूछें। हमारी counselling team और साथी students आपका मार्गदर्शन करेंगे।
           </p>
           {/* CTAs */}
           <div className="mt-8 flex flex-wrap justify-center gap-4">
@@ -80,7 +80,7 @@ export default function ForumPage() {
               className="group relative flex items-center justify-center gap-2.5 overflow-hidden rounded-2xl bg-gradient-to-r from-amber-400 to-orange-400 px-8 py-4 font-extrabold text-gray-900 shadow-xl shadow-amber-500/30 transition-all hover:-translate-y-1 hover:shadow-2xl active:scale-[0.97]"
             >
               <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
-              सवाल पूछें
+              Ask Your Question
             </Link>
             <a
               href="https://wa.me/916203138576?text=नमस्ते! मुझे Admission के बारे में सवाल पूछना है।"
@@ -88,7 +88,7 @@ export default function ForumPage() {
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2.5 rounded-2xl border-2 border-white/25 bg-white/[0.08] px-8 py-4 font-bold text-white backdrop-blur transition-all hover:bg-white/[0.15] hover:-translate-y-1 active:scale-[0.97]"
             >
-              WhatsApp Expert
+              Speak to a Counsellor
             </a>
           </div>
         </div>
@@ -98,14 +98,14 @@ export default function ForumPage() {
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <div className="flex flex-col md:flex-row gap-4 mb-6">
             <Input
-              placeholder="Search posts..."
+              placeholder="Search questions and discussions…"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="flex-1"
             />
             {user && (
               <Link href="/forum/new">
-                <Button>+ Create Post</Button>
+                <Button>+ Ask a Question</Button>
               </Link>
             )}
           </div>
@@ -115,7 +115,7 @@ export default function ForumPage() {
               variant={selectedCategory === '' ? 'default' : 'outline'}
               onClick={() => setSelectedCategory('')}
             >
-              All
+              All Topics
             </Button>
             {CATEGORIES.map((category) => (
               <Button
@@ -162,7 +162,7 @@ export default function ForumPage() {
             ))
           ) : (
             <div className="text-center py-12 bg-white rounded-lg">
-              <p className="text-gray-600">कोई पोस्ट नहीं मिली। पहला पोस्ट आप बनाएं!</p>
+              <p className="text-gray-600">No questions in this category yet. Be the first to ask — your question may help many other students.</p>
             </div>
           )}
         </div>
