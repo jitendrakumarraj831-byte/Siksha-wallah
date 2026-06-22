@@ -5,7 +5,6 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  sendPasswordResetEmail,
   confirmPasswordReset,
   sendEmailVerification,
   User,
@@ -110,17 +109,16 @@ export const authService = {
     }
   },
 
-  // Send password reset email — link opens in-app reset form
+  // Send password reset email via server API (Gmail SMTP — fast delivery)
   async sendPasswordReset(email: string): Promise<void> {
-    if (!auth) throw new Error('Firebase Auth not initialized');
-    const origin = typeof window !== 'undefined' ? window.location.origin : '';
-    try {
-      await sendPasswordResetEmail(auth, email, {
-        url: `${origin}/auth/login`,
-        handleCodeInApp: true,
-      });
-    } catch (error: any) {
-      throw new Error(friendlyAuthError(error.code));
+    const res = await fetch('/api/auth/send-reset', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error || 'Could not send reset email. Please try again.');
     }
   },
 

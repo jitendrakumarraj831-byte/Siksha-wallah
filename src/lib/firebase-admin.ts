@@ -1,5 +1,6 @@
 import { initializeApp, getApps, getApp, cert, applicationDefault, type App } from "firebase-admin/app";
 import { getFirestore, type Firestore } from "firebase-admin/firestore";
+import { getAuth, type Auth } from "firebase-admin/auth";
 
 // Server-only Firebase Admin SDK. Used by cookie-gated admin API routes to read
 // private collections, so Firestore security rules can deny all client reads.
@@ -9,23 +10,34 @@ import { getFirestore, type Firestore } from "firebase-admin/firestore";
 //  - Elsewhere: set FIREBASE_SERVICE_ACCOUNT_KEY to the service-account JSON.
 
 let cached: Firestore | null = null;
+let cachedAuth: Auth | null = null;
+
+function getAdminApp(): App {
+  if (getApps().length) return getApp();
+  const saJson = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
+  return saJson
+    ? initializeApp({ credential: cert(JSON.parse(saJson)) })
+    : initializeApp({ credential: applicationDefault() });
+}
 
 export function getAdminDb(): Firestore | null {
   if (cached) return cached;
   try {
-    let app: App;
-    if (getApps().length) {
-      app = getApp();
-    } else {
-      const saJson = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
-      app = saJson
-        ? initializeApp({ credential: cert(JSON.parse(saJson)) })
-        : initializeApp({ credential: applicationDefault() });
-    }
-    cached = getFirestore(app);
+    cached = getFirestore(getAdminApp());
     return cached;
   } catch (e) {
     console.error("firebase-admin init failed (falling back to client SDK):", e);
+    return null;
+  }
+}
+
+export function getAdminAuth(): Auth | null {
+  if (cachedAuth) return cachedAuth;
+  try {
+    cachedAuth = getAuth(getAdminApp());
+    return cachedAuth;
+  } catch (e) {
+    console.error("firebase-admin auth init failed:", e);
     return null;
   }
 }
