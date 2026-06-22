@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import nodemailer from "nodemailer";
 import { rateLimit, getClientIp, tooManyRequests } from "@/lib/rate-limit";
+import { isMailerConfigured, sendMail, EMAIL_FROM } from "@/lib/mailer";
 
 function sanitize(value: unknown): string {
   return String(value ?? "").replace(/[<>]/g, "").trim().slice(0, 500);
@@ -29,18 +29,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid email address." }, { status: 400 });
     }
 
-    const gmailUser = process.env.GMAIL_USER;
-    const gmailPass = process.env.GMAIL_APP_PASSWORD;
-
-    if (!gmailUser || !gmailPass) {
-      console.warn("Email not configured — logging inquiry instead");
+    if (!isMailerConfigured()) {
+      console.warn("SMTP not configured — logging inquiry instead");
       return NextResponse.json({ success: true });
     }
-
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: { user: gmailUser, pass: gmailPass },
-    });
 
     const bodyText = [
       "New Inquiry — Siksha Wallah",
@@ -54,12 +46,13 @@ export async function POST(req: NextRequest) {
       message || "—",
     ].join("\n");
 
-    await transporter.sendMail({
-      from: `"Siksha Wallah Website" <${gmailUser}>`,
-      to: process.env.CONTACT_EMAIL || gmailUser,
+    const contactTo = process.env.CONTACT_EMAIL || EMAIL_FROM();
+
+    await sendMail({
+      to: contactTo,
       subject: `New Inquiry: ${name} — ${course || "General"}`,
+      html: `<pre style="font-family:monospace;font-size:14px;">${bodyText}</pre>`,
       text: bodyText,
-      replyTo: email || undefined,
     });
 
     return NextResponse.json({ success: true });

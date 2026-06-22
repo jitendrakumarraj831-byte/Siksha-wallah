@@ -50,23 +50,30 @@ function friendlyAuthError(code: string): string {
   }
 }
 
+// Fire-and-forget POST helper — never throws, never blocks the caller.
+function fireEmail(path: string, body: Record<string, string>): void {
+  fetch(path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  }).catch(() => {});
+}
+
 export const authService = {
   // Register new student
   async registerStudent(email: string, password: string, name: string, phone?: string): Promise<User | null> {
     if (!auth) throw new Error('Firebase Auth not initialized');
-    
+
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Update profile name
       await updateProfile(user, { displayName: name });
 
-      // Create user document in Firestore
       await setDoc(doc(db, 'users', user.uid), {
         uid: user.uid,
         email: user.email ?? '',
-        name: name,
+        name,
         phone: phone || '',
         role: 'student',
         enrolledCourses: [],
@@ -74,6 +81,10 @@ export const authService = {
         createdAt: Date.now(),
         lastLogin: Date.now(),
       } satisfies UserProfile);
+
+      // Send branded welcome + verification emails (non-blocking)
+      fireEmail('/api/auth/welcome', { name, email: user.email ?? email });
+      fireEmail('/api/auth/send-verification', { name, email: user.email ?? email });
 
       return user;
     } catch (error: any) {
@@ -89,7 +100,6 @@ export const authService = {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Update last login — non-fatal if the Firestore doc doesn't exist yet
       updateDoc(doc(db, 'users', user.uid), {
         lastLogin: Date.now(),
       }).catch(() => {});
@@ -111,8 +121,8 @@ export const authService = {
   },
 
   // Send password reset email.
-  // Tries the fast Gmail SMTP API route first; falls back to Firebase's own
-  // email sender if the server route is unavailable or not yet configured.
+  // Tries Titan SMTP API route first; falls back to Firebase's own sender
+  // if the server route is unavailable or not yet configured.
   async sendPasswordReset(email: string): Promise<void> {
     try {
       const res = await fetch('/api/auth/send-reset', {
@@ -121,18 +131,16 @@ export const authService = {
         body: JSON.stringify({ email }),
       });
       if (res.ok) return;
-      // If route returns a user-facing error (400/429), surface it directly
       if (res.status === 400 || res.status === 429) {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error || 'Could not send reset email. Please try again.');
       }
-      // 5xx = server not configured — fall through to Firebase fallback below
+      // 5xx = SMTP not configured — fall through to Firebase fallback
     } catch (err: any) {
-      // Re-throw user-facing errors from above; swallow network/config errors
       if (err.message && !err.message.includes('fetch')) throw err;
     }
 
-    // Fallback: Firebase built-in sender (works everywhere, may take a few seconds longer)
+    // Fallback: Firebase built-in sender (slower but always works)
     if (!auth) throw new Error('Firebase Auth not initialized');
     const origin = typeof window !== 'undefined' ? window.location.origin : '';
     try {
@@ -159,9 +167,7 @@ export const authService = {
   async getUserProfile(uid: string): Promise<UserProfile | null> {
     try {
       const docSnap = await getDoc(doc(db, 'users', uid));
-      if (docSnap.exists()) {
-        return docSnap.data() as UserProfile;
-      }
+      if (docSnap.exists()) return docSnap.data() as UserProfile;
       return null;
     } catch (error: any) {
       throw new Error(error.message || 'Failed to fetch user profile');
@@ -183,11 +189,31 @@ export const authService = {
     return auth.currentUser;
   },
 
-  // Send email verification to current user
+  // Resend email verification — tries Titan SMTP route, falls back to Firebase.
   async sendVerificationEmail(): Promise<void> {
     if (!auth) throw new Error('Firebase Auth not initialized');
     const user = auth.currentUser;
     if (!user) throw new Error('No authenticated user');
+
+    try {
+      const res = await fetch('/api/auth/send-verification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: user.email ?? '',
+          name: user.displayName ?? 'Student',
+        }),
+      });
+      if (res.ok) return;
+      if (res.status === 400 || res.status === 429) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Failed to send verification email.');
+      }
+    } catch (err: any) {
+      if (err.message && !err.message.includes('fetch')) throw err;
+    }
+
+    // Fallback: Firebase built-in
     try {
       await sendEmailVerification(user);
     } catch (error: any) {

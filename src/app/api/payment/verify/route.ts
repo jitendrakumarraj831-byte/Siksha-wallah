@@ -4,7 +4,34 @@ import { paymentService } from '@/services/payment-service';
 import { db } from '@/lib/firebase';
 import { addDoc, collection, getDocs, query, where, limit } from 'firebase/firestore';
 import { rateLimit, getClientIp, tooManyRequests } from '@/lib/rate-limit';
-import { getAdminDb } from '@/lib/firebase-admin';
+import { getAdminDb, getAdminAuth } from '@/lib/firebase-admin';
+import { isMailerConfigured, sendMail } from '@/lib/mailer';
+import { admissionConfirmationTemplate } from '@/lib/email-templates';
+
+async function sendAdmissionConfirmation(uid: string, courseName: string, amount: number, paymentId: string): Promise<void> {
+  if (!isMailerConfigured()) return;
+  const adminAuth = getAdminAuth();
+  if (!adminAuth) return;
+  try {
+    const userRecord = await adminAuth.getUser(uid);
+    if (!userRecord.email) return;
+    const { html, text } = admissionConfirmationTemplate({
+      name: userRecord.displayName || 'Student',
+      courseName,
+      amount,
+      paymentId,
+      enrollmentDate: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }),
+    });
+    await sendMail({
+      to: userRecord.email,
+      subject: 'Siksha Wallah — Admission Confirmed! 🎉',
+      html,
+      text,
+    });
+  } catch (err) {
+    console.error('Admission confirmation email error (non-fatal):', err);
+  }
+}
 
 function timingSafeEqualHex(a: string, b: string): boolean {
   const bufA = Buffer.from(a, 'utf8');
@@ -80,6 +107,8 @@ export async function POST(request: NextRequest) {
               message: `Your payment for ${pay.courseName ?? 'your course'} has been processed. You are now enrolled!`,
               type: 'success', read: false, createdAt: Date.now(),
             });
+            // Send branded admission confirmation email (non-blocking)
+            sendAdmissionConfirmation(uid, pay.courseName ?? 'your course', pay.amount ?? 0, paymentId);
           }
         } catch (enrollErr) {
           console.error('Enrollment creation error (non-fatal):', enrollErr);
@@ -124,6 +153,8 @@ export async function POST(request: NextRequest) {
             message: `Your payment for ${paymentRecord.courseName} has been processed. You are now enrolled!`,
             type: 'success', read: false, createdAt: Date.now(),
           });
+          // Send branded admission confirmation email (non-blocking)
+          sendAdmissionConfirmation(uid, paymentRecord.courseName, paymentRecord.amount, paymentId);
         }
       } catch (enrollErr) {
         console.error('Enrollment creation error (non-fatal):', enrollErr);

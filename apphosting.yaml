@@ -7,7 +7,15 @@ runConfig:
   maxInstances: 1
 
 env:
-  - variable: GMAIL_USER
-    secret: GMAIL_USER
-  - variable: GMAIL_APP_PASSWORD
-    secret: GMAIL_APP_PASSWORD
+  - variable: SMTP_HOST
+    secret: SMTP_HOST
+  - variable: SMTP_PORT
+    secret: SMTP_PORT
+  - variable: SMTP_USER
+    secret: SMTP_USER
+  - variable: SMTP_PASS
+    secret: SMTP_PASS
+  - variable: EMAIL_FROM
+    secret: EMAIL_FROM
+  - variable: CONTACT_EMAIL
+    secret: CONTACT_EMAIL
