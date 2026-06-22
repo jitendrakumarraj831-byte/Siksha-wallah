@@ -57,20 +57,27 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  /* clip (not hidden) prevents any rogue child from causing horizontal scroll
+     on mobile without creating a scroll container that would break the sticky
+     header. */
+  overflow-x: clip;
 }
 
 body {
   margin: 0;
+  max-width: 100%;
   color: var(--gray-900);
   background: var(--white);
-  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  /* var(--font-inter) already includes a metric-adjusted fallback (next/font),
+     so the system-ui chain is only a last resort if the variable is missing. */
+  font-family: var(--font-inter), "Inter", system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 h1, h2, h3, h4, h5, h6, .font-headline, .font-display {
-  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-family: var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif;
   letter-spacing: -0.02em;
   font-weight: 700;
 }
