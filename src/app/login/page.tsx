@@ -117,8 +117,6 @@ export default function LoginChoicePage() {
           <Phone size={14} />
           <span>Need help signing in? Call us at </span>
           <a href="tel:+916203138576" className="font-bold text-white hover:text-amber-400 transition">+91 6203138576</a>
-          <span className="text-blue-500">·</span>
-          <a href="tel:+917858062498" className="font-bold text-white hover:text-amber-400 transition">+91 7858062498</a>
         </div>
 
         <div className="mt-6 text-center">

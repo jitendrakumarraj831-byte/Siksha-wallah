@@ -72,7 +72,7 @@ const localBusinessSchema = {
   description:
     "Forbesganj's most trusted education consultancy since 2015. Personalised admission guidance for B.Ed, D.El.Ed, Nursing, Pharmacy, Engineering & Management courses, with complete Bihar Student Credit Card (BSCC) loan support.",
   url: BASE_URL,
-  telephone: ["+916203138576", "+917858062498", "+919162653235"],
+  telephone: ["+916203138576", "+917858062498"],
   address: {
     "@type": "PostalAddress",
     streetAddress: "College Chowk, Near HP Petrol Pump",

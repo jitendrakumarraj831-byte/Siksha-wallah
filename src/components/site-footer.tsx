@@ -24,9 +24,8 @@ const COURSES = [
 ];
 
 const PHONES = [
-  { num: "6203138576", label: "Rajesh Kr. Sah — Senior Admission Counsellor" },
-  { num: "7858062498", label: "Md. Naseem Ansari — Nursing & BSCC Counsellor" },
-  { num: "9162653235", label: "Gautam Kumar — Technical & Management Counsellor" },
+  { num: "6203138576", label: "Rajesh Kr. Sah — Primary Admission Contact" },
+  { num: "7858062498", label: "Office Contact" },
 ];
 
 export function SiteFooter() {

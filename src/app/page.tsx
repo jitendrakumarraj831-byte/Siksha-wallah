@@ -1373,9 +1373,8 @@ export default function Home() {
                 <p className="text-blue-200 text-sm mb-5">Didn&apos;t find your answer here? Our counsellors are just one call away — free, friendly and honest.</p>
                 <div className="space-y-3">
                   {[
-                    { num: "6203138576", name: "Rajesh Kr. Sah", role: "Senior Counsellor" },
-                    { num: "7858062498", name: "Md. Naseem Ansari", role: "Admission Head" },
-                    { num: "9162653235", name: "Gautam Kumar", role: "BSCC Specialist" },
+                    { num: "6203138576", name: "Rajesh Kr. Sah", role: "Primary Admission Contact" },
+                    { num: "7858062498", name: "Office Contact", role: "" },
                   ].map(({ num, name, role }) => (
                     <a key={num} href={`tel:+91${num}`} className="flex items-center gap-3 rounded-xl bg-white/10 border border-white/20 p-3 transition hover:bg-white/20">
                       <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-amber-400 text-gray-900">
@@ -1383,7 +1382,7 @@ export default function Home() {
                       </div>
                       <div>
                         <div className="font-bold text-sm">+91 {num}</div>
-                        <div className="text-xs text-blue-200">{name} · {role}</div>
+                        <div className="text-xs text-blue-200">{role ? `${name} · ${role}` : name}</div>
                       </div>
                     </a>
                   ))}
@@ -1475,7 +1474,7 @@ export default function Home() {
               </div>
 
               <div className="space-y-3 mb-8">
-                {[["6203138576", "Rajesh Kr. Sah — Chief Admission Counsellor"], ["7858062498", "Md. Naseem Ansari — Nursing & BSCC Specialist"], ["9162653235", "Gautam Kumar — Technical & Management Counsellor"]].map(([num, label]) => (
+                {[["6203138576", "Rajesh Kr. Sah — Primary Admission Contact"], ["7858062498", "Office Contact"]].map(([num, label]) => (
                   <a key={num} href={`tel:+91${num}`} className="flex items-center gap-4 rounded-xl border border-white/10 bg-white/5 p-4 transition hover:bg-white/10 hover:border-amber-400/40">
                     <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary-blue">
                       <Phone size={18} />
