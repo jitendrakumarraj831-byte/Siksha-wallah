@@ -61,7 +61,7 @@ export default function StudentLoginPage() {
       });
       router.push("/dashboard");
     } catch (err: any) {
-      setError(err.message || "Login was unsuccessful. Please check your email and password and try again.");
+      setError(err.message || "Incorrect email or password. Please check and try again.");
     } finally {
       setLoading(false);
     }

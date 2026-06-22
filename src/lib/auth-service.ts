@@ -24,6 +24,31 @@ export interface UserProfile {
   lastLogin?: number;
 }
 
+function friendlyAuthError(code: string): string {
+  switch (code) {
+    case 'auth/invalid-credential':
+    case 'auth/wrong-password':
+    case 'auth/user-not-found':
+      return 'Incorrect email or password. Please check and try again.';
+    case 'auth/invalid-email':
+      return 'Please enter a valid email address.';
+    case 'auth/user-disabled':
+      return 'Your account has been disabled. Please contact our support team.';
+    case 'auth/email-already-in-use':
+      return 'An account with this email already exists. Please sign in instead.';
+    case 'auth/weak-password':
+      return 'Your password must be at least 6 characters long.';
+    case 'auth/too-many-requests':
+      return 'Too many failed attempts. Please wait a few minutes and try again.';
+    case 'auth/network-request-failed':
+      return 'Network error. Please check your internet connection and try again.';
+    case 'auth/popup-closed-by-user':
+      return 'Sign-in was cancelled. Please try again.';
+    default:
+      return 'Something went wrong. Please try again or contact our team.';
+  }
+}
+
 export const authService = {
   // Register new student
   async registerStudent(email: string, password: string, name: string, phone?: string): Promise<User | null> {
@@ -51,7 +76,7 @@ export const authService = {
 
       return user;
     } catch (error: any) {
-      throw new Error(error.message || 'Registration failed');
+      throw new Error(friendlyAuthError(error.code));
     }
   },
 
@@ -70,7 +95,7 @@ export const authService = {
 
       return user;
     } catch (error: any) {
-      throw new Error(error.message || 'Login failed');
+      throw new Error(friendlyAuthError(error.code));
     }
   },
 
@@ -90,7 +115,7 @@ export const authService = {
     try {
       await sendPasswordResetEmail(auth, email);
     } catch (error: any) {
-      throw new Error(error.message || 'Password reset failed');
+      throw new Error(friendlyAuthError(error.code));
     }
   },
 
