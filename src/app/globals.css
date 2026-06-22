@@ -3,14 +3,12 @@
 @tailwind utilities;
 
 :root {
-  /* Primary Brand Colors */
   --primary-blue: #003f9f;
   --primary-red: #dc143c;
   --primary-green: #2d5016;
   --primary-yellow: #ffc107;
   --primary-orange: #ff8c00;
 
-  /* Neutrals */
   --white: #ffffff;
   --gray-50: #f9fafb;
   --gray-100: #f3f4f6;
@@ -19,7 +17,6 @@
   --gray-700: #374151;
   --gray-900: #111827;
 
-  /* Shadcn / Radix UI CSS vars */
   --background: 0 0% 100%;
   --foreground: 222.2 84% 4.9%;
   --card: 0 0% 100%;
@@ -41,7 +38,6 @@
   --ring: 217 100% 31%;
   --radius: 0.75rem;
 
-  /* Sidebar */
   --sidebar-background: 0 0% 98%;
   --sidebar-foreground: 240 5.3% 26.1%;
   --sidebar-primary: 240 5.9% 10%;
@@ -52,14 +48,13 @@
   --sidebar-ring: 217.2 91.2% 59.8%;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
-  /* clip (not hidden) prevents any rogue child from causing horizontal scroll
-     on mobile without creating a scroll container that would break the sticky
-     header. */
   overflow-x: clip;
 }
 
@@ -67,16 +62,23 @@ body {
   margin: 0;
   max-width: 100%;
   color: var(--gray-900);
-  background: var(--white);
-  /* var(--font-inter) already includes a metric-adjusted fallback (next/font),
-     so the system-ui chain is only a last resort if the variable is missing. */
+  background:
+    radial-gradient(circle at top, rgba(0, 63, 159, 0.06), transparent 30%),
+    var(--white);
   font-family: var(--font-inter), "Inter", system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: clip;
 }
 
-h1, h2, h3, h4, h5, h6, .font-headline, .font-display {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-headline,
+.font-display {
   font-family: var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif;
   letter-spacing: -0.02em;
   font-weight: 700;
@@ -87,19 +89,20 @@ h1, h2, h3, h4, h5, h6, .font-headline, .font-display {
   color: white;
 }
 
-/* Remove blue outline on mobile tap */
-button, a, input, select, textarea {
+button,
+a,
+input,
+select,
+textarea {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Focus styles for accessibility */
 :focus-visible {
   outline: 2px solid var(--primary-blue);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-/* ── Container ─────────────────────────────────────── */
 .container-shell {
   width: min(1280px, calc(100% - 32px));
   margin-inline: auto;
@@ -111,61 +114,110 @@ button, a, input, select, textarea {
   }
 }
 
-/* ── Typography ─────────────────────────────────────── */
 @media (max-width: 768px) {
-  h1 { font-size: clamp(1.75rem, 5vw, 3rem); }
-  h2 { font-size: clamp(1.375rem, 4vw, 2.25rem); }
+  h1 {
+    font-size: clamp(1.75rem, 5vw, 3rem);
+  }
+
+  h2 {
+    font-size: clamp(1.375rem, 4vw, 2.25rem);
+  }
 }
 
-/* ── Hero background grid ───────────────────────────── */
 .hero-grid {
   background-image:
-    linear-gradient(rgba(0,63,159,.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,63,159,.05) 1px, transparent 1px);
+    linear-gradient(rgba(0, 63, 159, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 63, 159, 0.05) 1px, transparent 1px);
   background-size: 44px 44px;
 }
 
-/* ── Card effects ───────────────────────────────────── */
-.soft-shadow { box-shadow: 0 10px 30px rgba(0, 63, 159, 0.1); }
+.soft-shadow {
+  box-shadow: 0 10px 30px rgba(0, 63, 159, 0.1);
+}
 
 .card-lift {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
+
 .card-lift:hover {
   transform: translateY(-4px);
   box-shadow: 0 16px 40px rgba(0, 63, 159, 0.14);
 }
 
 @keyframes border-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(0,63,159,0.0); }
-  50%       { box-shadow: 0 0 0 4px rgba(0,63,159,0.12); }
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 63, 159, 0);
+  }
+
+  50% {
+    box-shadow: 0 0 0 4px rgba(0, 63, 159, 0.12);
+  }
 }
-.card-glow:hover { animation: border-glow 2s ease infinite; }
 
-/* ── Marquee ────────────────────────────────────────── */
-.marquee { animation: marquee 24s linear infinite; }
-@keyframes marquee { to { transform: translateX(-50%); } }
+.card-glow:hover {
+  animation: border-glow 2s ease infinite;
+}
 
-/* ── Reveal animations ──────────────────────────────── */
-.reveal { animation: reveal 0.7s ease both; }
-.reveal-delay { animation: reveal 0.7s 0.15s ease both; }
+.marquee {
+  animation: marquee 24s linear infinite;
+}
+
+.marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.reveal {
+  animation: reveal 0.7s ease both;
+}
+
+.reveal-delay {
+  animation: reveal 0.7s 0.15s ease both;
+}
+
 @keyframes reveal {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* ── Float animation ────────────────────────────────── */
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-8px); }
-}
-.animate-float { animation: float 3.5s ease-in-out infinite; }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
 
-/* ── Shimmer ────────────────────────────────────────── */
-@keyframes shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position: 200% center; }
+  50% {
+    transform: translateY(-8px);
+  }
 }
+
+.animate-float {
+  animation: float 3.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
 .animate-shimmer {
   background: linear-gradient(90deg, #ffc107 25%, #fff9c4 50%, #ffc107 75%);
   background-size: 200% auto;
@@ -175,37 +227,82 @@ button, a, input, select, textarea {
   animation: shimmer 3s linear infinite;
 }
 
-/* ── WhatsApp ping ──────────────────────────────────── */
 @keyframes ping-slow {
-  0%   { transform: scale(1);   opacity: 0.6; }
-  80%  { transform: scale(1.6); opacity: 0; }
-  100% { transform: scale(1.6); opacity: 0; }
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+
+  80% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
 }
-.animate-ping-slow { animation: ping-slow 2.2s cubic-bezier(0,0,0.2,1) infinite; }
 
-/* ── Staggered entrance ─────────────────────────────── */
-.stagger-child > *:nth-child(1)  { transition-delay: 0ms !important; }
-.stagger-child > *:nth-child(2)  { transition-delay: 80ms !important; }
-.stagger-child > *:nth-child(3)  { transition-delay: 160ms !important; }
-.stagger-child > *:nth-child(4)  { transition-delay: 240ms !important; }
-.stagger-child > *:nth-child(5)  { transition-delay: 320ms !important; }
-.stagger-child > *:nth-child(6)  { transition-delay: 400ms !important; }
-.stagger-child > *:nth-child(7)  { transition-delay: 480ms !important; }
-.stagger-child > *:nth-child(8)  { transition-delay: 560ms !important; }
-.stagger-child > *:nth-child(9)  { transition-delay: 640ms !important; }
-.stagger-child > *:nth-child(10) { transition-delay: 720ms !important; }
-.stagger-child > *:nth-child(11) { transition-delay: 800ms !important; }
-.stagger-child > *:nth-child(12) { transition-delay: 880ms !important; }
+.animate-ping-slow {
+  animation: ping-slow 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
 
-/* ── Glassmorphism utility ──────────────────────────── */
+.stagger-child > *:nth-child(1) {
+  transition-delay: 0ms !important;
+}
+
+.stagger-child > *:nth-child(2) {
+  transition-delay: 80ms !important;
+}
+
+.stagger-child > *:nth-child(3) {
+  transition-delay: 160ms !important;
+}
+
+.stagger-child > *:nth-child(4) {
+  transition-delay: 240ms !important;
+}
+
+.stagger-child > *:nth-child(5) {
+  transition-delay: 320ms !important;
+}
+
+.stagger-child > *:nth-child(6) {
+  transition-delay: 400ms !important;
+}
+
+.stagger-child > *:nth-child(7) {
+  transition-delay: 480ms !important;
+}
+
+.stagger-child > *:nth-child(8) {
+  transition-delay: 560ms !important;
+}
+
+.stagger-child > *:nth-child(9) {
+  transition-delay: 640ms !important;
+}
+
+.stagger-child > *:nth-child(10) {
+  transition-delay: 720ms !important;
+}
+
+.stagger-child > *:nth-child(11) {
+  transition-delay: 800ms !important;
+}
+
+.stagger-child > *:nth-child(12) {
+  transition-delay: 880ms !important;
+}
+
 .glass {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* ── Gradient text ──────────────────────────────────── */
 .gradient-text {
   background: linear-gradient(135deg, #003f9f, #0060c7);
   -webkit-background-clip: text;
@@ -213,25 +310,52 @@ button, a, input, select, textarea {
   background-clip: text;
 }
 
-/* ── Scroll bar styling ─────────────────────────────── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #f1f5f9; }
-::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
 
-/* ── Accordion (Radix) ──────────────────────────────── */
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
 @keyframes accordion-down {
-  from { height: 0; }
-  to   { height: var(--radix-accordion-content-height); }
-}
-@keyframes accordion-up {
-  from { height: var(--radix-accordion-content-height); }
-  to   { height: 0; }
-}
-.animate-accordion-down { animation: accordion-down 0.2s ease-out; }
-.animate-accordion-up   { animation: accordion-up   0.2s ease-out; }
+  from {
+    height: 0;
+  }
 
-/* ── Course badge hover ─────────────────────────────── */
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+
+  to {
+    height: 0;
+  }
+}
+
+.animate-accordion-down {
+  animation: accordion-down 0.2s ease-out;
+}
+
+.animate-accordion-up {
+  animation: accordion-up 0.2s ease-out;
+}
+
 .course-badge {
   display: inline-block;
   padding: 0.5rem 1rem;
@@ -240,12 +364,37 @@ button, a, input, select, textarea {
   font-size: 0.875rem;
   transition: all 0.2s ease;
 }
+
 .course-badge:hover {
   transform: scale(1.04);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
 
-/* ── Hide scrollbar for tab bars ─────────────────────────────────────── */
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .marquee {
+    animation: none;
+    transform: none;
+  }
+}
