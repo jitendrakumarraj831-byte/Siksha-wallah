@@ -6,6 +6,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   sendPasswordResetEmail,
+  confirmPasswordReset,
   sendEmailVerification,
   User,
   updateProfile,
@@ -109,11 +110,25 @@ export const authService = {
     }
   },
 
-  // Send password reset email
+  // Send password reset email — link opens in-app reset form
   async sendPasswordReset(email: string): Promise<void> {
     if (!auth) throw new Error('Firebase Auth not initialized');
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
     try {
-      await sendPasswordResetEmail(auth, email);
+      await sendPasswordResetEmail(auth, email, {
+        url: `${origin}/auth/login`,
+        handleCodeInApp: true,
+      });
+    } catch (error: any) {
+      throw new Error(friendlyAuthError(error.code));
+    }
+  },
+
+  // Complete password reset with oobCode from email link
+  async confirmPasswordReset(oobCode: string, newPassword: string): Promise<void> {
+    if (!auth) throw new Error('Firebase Auth not initialized');
+    try {
+      await confirmPasswordReset(auth, oobCode, newPassword);
     } catch (error: any) {
       throw new Error(friendlyAuthError(error.code));
     }

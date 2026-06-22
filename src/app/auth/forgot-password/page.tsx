@@ -71,7 +71,7 @@ export default function ForgotPasswordPage() {
           {sent && (
             <div className="mt-4 flex gap-3 rounded-xl bg-green-50 p-3 text-sm text-green-700">
               <CheckCircle2 size={18} className="mt-0.5 flex-shrink-0" />
-              <p>Password reset link sent successfully. Please check your email within the next 2–3 minutes.</p>
+              <p>Reset link sent! Check your inbox now — it usually arrives within a few seconds. Click the link in the email to set your new password.</p>
             </div>
           )}
 
