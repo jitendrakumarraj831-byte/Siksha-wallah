@@ -36,8 +36,15 @@ export function AnimateIn({
     const el = ref.current;
     if (!el) return;
 
+    // Respect prefers-reduced-motion
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const actualDuration = prefersReducedMotion ? 0 : Math.min(duration, 400); // Cap at 400ms for mobile
+    const actualDelay = prefersReducedMotion ? 0 : delay;
+
     el.style.opacity = "0";
-    el.style.transition = `opacity ${duration}ms cubic-bezier(.22,1,.36,1) ${delay}ms, transform ${duration}ms cubic-bezier(.22,1,.36,1) ${delay}ms`;
+    el.style.willChange = "opacity, transform";
+    el.style.contain = "layout style paint";
+    el.style.transition = `opacity ${actualDuration}ms cubic-bezier(.22,1,.36,1) ${actualDelay}ms, transform ${actualDuration}ms cubic-bezier(.22,1,.36,1) ${actualDelay}ms`;
 
     const initialTransforms: Record<AnimationType, string> = {
       "fade-up":    "translateY(40px)",
@@ -66,7 +73,11 @@ export function AnimateIn({
     );
 
     observer.observe(el);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      el.style.willChange = "auto";
+      el.style.contain = "auto";
+    };
   }, [type, delay, duration, threshold, once]);
 
   return (

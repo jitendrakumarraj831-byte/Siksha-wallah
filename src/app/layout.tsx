@@ -12,12 +12,16 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
+  weight: ["400", "600", "700"],
+  preload: true,
 });
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-space-grotesk",
+  weight: ["400", "600", "700"],
+  preload: true,
 });
 
 export const metadata: Metadata = {
