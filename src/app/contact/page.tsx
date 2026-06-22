@@ -16,33 +16,33 @@ const counsellors = [
     role: "Founder & Chief Admission Counsellor",
     phone: "6203138576",
     expertise: "B.Ed, D.El.Ed, BSCC and all courses",
-    available: "Mon–Sat: 9AM–6PM",
+    available: "Mon–Sat: 9 AM – 7 PM",
   },
   {
     name: "Md. Naseem Ansari",
     role: "Senior Counsellor — Nursing & BSCC",
     phone: "7858062498",
     expertise: "BSCC Loan, Nursing, B.Pharma, GNM, ANM",
-    available: "Mon–Sat: 9AM–6PM",
+    available: "Mon–Sat: 9 AM – 7 PM",
   },
   {
     name: "Medical Admissions Helpline",
     role: "Pan-India Medical Admissions Desk",
     phone: "9472813581",
     expertise: "Nursing, B.Pharma, MBBS — across India",
-    available: "Mon–Sat: 9AM–5PM",
+    available: "Mon–Sat: 9 AM – 5 PM",
   },
   {
     name: "Gautam Kumar",
     role: "Counsellor — Kursakanta Branch",
     phone: "9162653235",
     expertise: "BSCC, B.Tech, BBA, MBA — Kursakanta क्षेत्र",
-    available: "Mon–Sat: 9AM–6PM",
+    available: "Mon–Sat: 9 AM – 7 PM",
   },
 ];
 
 const officeHours = [
-  ["Monday – Saturday", "9:00 AM – 6:00 PM"],
+  ["Monday – Saturday", "9:00 AM – 7:00 PM"],
   ["Sunday", "10:00 AM – 2:00 PM (urgent assistance only)"],
   ["WhatsApp", "Available 24×7 — we respond as soon as possible"],
 ];
@@ -137,7 +137,7 @@ export default function ContactPage() {
             </h1>
             <div className="mx-auto mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-40" />
             <p className="mt-6 max-w-2xl mx-auto text-blue-100 leading-relaxed">
-              Course selection से लेकर BSCC loan तक — हर सवाल का जवाब हमारे अनुभवी counsellors से प्राप्त करें। सोमवार से शनिवार, सुबह 9 बजे से शाम 6 बजे तक।
+              Course selection से लेकर BSCC loan तक — हर सवाल का जवाब हमारे अनुभवी counsellors से प्राप्त करें। सोमवार से शनिवार, सुबह 9 बजे से शाम 7 बजे तक।
             </p>
             {/* CTAs */}
             <div className="mt-8 flex flex-wrap justify-center gap-4">
@@ -160,7 +160,7 @@ export default function ContactPage() {
             {/* Info pills */}
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               {[
-                "Open Mon–Sat, 9 AM – 6 PM",
+                "Open Mon–Sat, 9 AM – 7 PM",
                 "Office at Forbesganj, Araria",
                 "Typical response within 1 hour",
               ].map((pill) => (

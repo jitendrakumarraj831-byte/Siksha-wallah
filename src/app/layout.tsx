@@ -8,10 +8,6 @@ import { FloatingContact } from "@/components/floating-contact";
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 const BASE_URL = "https://sikshawallah.com";
 
-// Self-hosted via next/font: fonts are served from our own origin (no
-// render-blocking request to fonts.gstatic.com) and a metric-adjusted fallback
-// is generated automatically, so swapping the web font in causes ~zero layout
-// shift. Both are variable fonts, so the full weight axis is included.
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
@@ -61,14 +57,8 @@ export const metadata: Metadata = {
     description: "Personalised admission counselling and free BSCC loan support. Trusted by 5,000+ families since 2015.",
   },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
-  // Per-page canonicals are set in each route's metadata. The homepage canonical
-  // is set on the page itself; a global canonical here would wrongly point every
-  // page at the site root.
 };
 
-// Explicit, mobile-correct viewport. Ensures width=device-width so the page is
-// laid out at the device width on first paint (no desktop-width → rescale flash).
-// No maximum-scale / user-scalable=no — pinch-zoom must stay enabled for a11y.
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -79,7 +69,8 @@ const localBusinessSchema = {
   "@context": "https://schema.org",
   "@type": "EducationalOrganization",
   name: "Siksha Wallah",
-  description: "Forbesganj's most trusted education consultancy since 2015. Personalised admission guidance for B.Ed, D.El.Ed, Nursing, Pharmacy, Engineering & Management courses, with complete Bihar Student Credit Card (BSCC) loan support.",
+  description:
+    "Forbesganj's most trusted education consultancy since 2015. Personalised admission guidance for B.Ed, D.El.Ed, Nursing, Pharmacy, Engineering & Management courses, with complete Bihar Student Credit Card (BSCC) loan support.",
   url: BASE_URL,
   telephone: ["+916203138576", "+917858062498", "+919162653235"],
   address: {
@@ -99,7 +90,7 @@ const localBusinessSchema = {
     "@type": "OpeningHoursSpecification",
     dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
     opens: "09:00",
-    closes: "18:00",
+    closes: "19:00",
   },
   sameAs: [],
   priceRange: "Free Consultation",
