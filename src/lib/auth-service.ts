@@ -5,6 +5,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  sendPasswordResetEmail,
   confirmPasswordReset,
   sendEmailVerification,
   User,
@@ -109,16 +110,38 @@ export const authService = {
     }
   },
 
-  // Send password reset email via server API (Gmail SMTP — fast delivery)
+  // Send password reset email.
+  // Tries the fast Gmail SMTP API route first; falls back to Firebase's own
+  // email sender if the server route is unavailable or not yet configured.
   async sendPasswordReset(email: string): Promise<void> {
-    const res = await fetch('/api/auth/send-reset', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
-    });
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      throw new Error(data.error || 'Could not send reset email. Please try again.');
+    try {
+      const res = await fetch('/api/auth/send-reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      if (res.ok) return;
+      // If route returns a user-facing error (400/429), surface it directly
+      if (res.status === 400 || res.status === 429) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Could not send reset email. Please try again.');
+      }
+      // 5xx = server not configured — fall through to Firebase fallback below
+    } catch (err: any) {
+      // Re-throw user-facing errors from above; swallow network/config errors
+      if (err.message && !err.message.includes('fetch')) throw err;
+    }
+
+    // Fallback: Firebase built-in sender (works everywhere, may take a few seconds longer)
+    if (!auth) throw new Error('Firebase Auth not initialized');
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    try {
+      await sendPasswordResetEmail(auth, email, {
+        url: `${origin}/auth/login`,
+        handleCodeInApp: true,
+      });
+    } catch (error: any) {
+      throw new Error(friendlyAuthError(error.code));
     }
   },
 
