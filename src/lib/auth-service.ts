@@ -45,6 +45,9 @@ function friendlyAuthError(code: string): string {
       return 'Network error. Please check your internet connection and try again.';
     case 'auth/popup-closed-by-user':
       return 'Sign-in was cancelled. Please try again.';
+    case 'auth/unauthorized-continue-uri':
+    case 'auth/invalid-continue-uri':
+      return 'Configuration error. Please contact our support team.';
     default:
       return 'Something went wrong. Please try again or contact our team.';
   }
@@ -140,12 +143,15 @@ export const authService = {
       if (err.message && !err.message.includes('fetch')) throw err;
     }
 
-    // Fallback: Firebase built-in sender (slower but always works)
+    // Fallback: Firebase built-in sender (slower but always works).
+    // Always use the canonical production URL so Firebase's authorized-domain
+    // check passes even on preview deployments like *.vercel.app.
     if (!auth) throw new Error('Firebase Auth not initialized');
-    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '')
+      || (typeof window !== 'undefined' ? window.location.origin : '');
     try {
       await sendPasswordResetEmail(auth, email, {
-        url: `${origin}/auth/login`,
+        url: `${siteUrl}/auth/login`,
         handleCodeInApp: true,
       });
     } catch (error: any) {
