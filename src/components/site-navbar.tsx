@@ -8,9 +8,9 @@ import { GraduationCap, Phone, Menu, X, ChevronRight } from "lucide-react";
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/courses", label: "Courses" },
-  { href: "/student-credit-card", label: "BSCC Guide" },
-  { href: "/blog", label: "Blog" },
-  { href: "/about", label: "About" },
+  { href: "/student-credit-card", label: "BSCC Loan" },
+  { href: "/blog", label: "Career Guidance" },
+  { href: "/about", label: "About Us" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -96,7 +96,7 @@ export function SiteNavbar({ transparent = false }: { transparent?: boolean }) {
                 : "border-gray-200 text-gray-600 hover:border-gray-400 hover:text-gray-900"
             }`}
           >
-            Office Login
+            Counsellor Portal
           </Link>
           <Link
             href="/auth/login"
@@ -112,7 +112,7 @@ export function SiteNavbar({ transparent = false }: { transparent?: boolean }) {
             href="/apply"
             className="rounded-lg bg-primary-red px-4 py-2 text-sm font-bold text-white shadow-sm shadow-red-200 transition hover:bg-red-700 hover:shadow-red-300"
           >
-            Apply Now
+            Book Free Counselling
           </Link>
         </div>
 
@@ -161,7 +161,7 @@ export function SiteNavbar({ transparent = false }: { transparent?: boolean }) {
               href="/admin/login"
               className="flex items-center justify-center rounded-xl border-2 border-gray-200 py-2.5 text-sm font-bold text-gray-700 transition hover:border-gray-400"
             >
-              Office Login
+              Counsellor Portal
             </Link>
             <Link
               href="/auth/login"
@@ -173,13 +173,13 @@ export function SiteNavbar({ transparent = false }: { transparent?: boolean }) {
               href="/apply"
               className="col-span-2 flex items-center justify-center rounded-xl bg-primary-red py-3 text-sm font-bold text-white transition hover:bg-red-700"
             >
-              Apply Now →
+              Book Free Counselling →
             </Link>
             <a
               href="tel:+916203138576"
               className="col-span-2 flex items-center justify-center gap-2 rounded-xl bg-gray-50 py-2.5 text-sm font-semibold text-gray-700"
             >
-              <Phone size={14} aria-hidden="true" /> Call: 6203138576
+              <Phone size={14} aria-hidden="true" /> Speak to a Counsellor: 6203138576
             </a>
           </div>
         </nav>

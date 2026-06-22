@@ -31,11 +31,11 @@ export default function NewForumPostPage() {
       return;
     }
     if (title.trim().length < 5) {
-      setError('Title कम से कम 5 अक्षरों का होना चाहिए।');
+      setError('Please give your question a clear title — at least 5 characters long.');
       return;
     }
     if (content.trim().length < 10) {
-      setError('Content कम से कम 10 अक्षरों का होना चाहिए।');
+      setError('Please describe your question in a little more detail (at least 10 characters) so others can help you better.');
       return;
     }
 
@@ -54,7 +54,7 @@ export default function NewForumPostPage() {
       });
       router.push(`/forum/${postId}`);
     } catch {
-      setError('Post नहीं हुआ। कृपया दोबारा कोशिश करें।');
+      setError('We could not post your question right now. Please try again, or message us on WhatsApp for help.');
       setSubmitting(false);
     }
   };
@@ -76,19 +76,19 @@ export default function NewForumPostPage() {
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-orange-100">
               <LogIn size={26} className="text-orange-600" />
             </div>
-            <h1 className="font-headline text-xl font-extrabold text-gray-900">Login जरूरी है</h1>
+            <h1 className="font-headline text-xl font-extrabold text-gray-900">Please sign in to ask a question</h1>
             <p className="mt-2 text-sm text-gray-600">
-              सवाल पूछने के लिए पहले login करें। यह बिल्कुल निःशुल्क है।
+              Posting questions is completely free. Signing in helps us respond to you faster and keep your conversations private.
             </p>
             <div className="mt-6 flex flex-col gap-3">
               <Link
                 href="/auth/login"
                 className="rounded-xl bg-[#003f9f] px-6 py-3 font-bold text-white transition hover:bg-blue-700"
               >
-                Student Login →
+                Sign in to Continue →
               </Link>
               <Link href="/forum" className="text-sm font-semibold text-gray-500 hover:text-gray-800">
-                ← Forum पर वापस जाएं
+                ← Back to Community
               </Link>
             </div>
           </div>
@@ -107,13 +107,13 @@ export default function NewForumPostPage() {
             href="/forum"
             className="inline-flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-[#003f9f]"
           >
-            <ArrowLeft size={16} /> Forum पर वापस
+            <ArrowLeft size={16} /> Back to Community
           </Link>
 
           <div className="mt-5 rounded-2xl border border-orange-100 bg-white p-6 shadow-sm sm:p-8">
-            <h1 className="font-headline text-2xl font-extrabold text-gray-900">नया सवाल पूछें</h1>
+            <h1 className="font-headline text-2xl font-extrabold text-gray-900">Ask Your Question</h1>
             <p className="mt-1 text-sm text-gray-500">
-              अपना सवाल साफ़ तरीके से लिखें ताकि community और expert team जल्दी जवाब दे सकें।
+              The clearer your question, the faster our counsellors and fellow students can help you with the right answer.
             </p>
 
             {error && (
@@ -126,20 +126,20 @@ export default function NewForumPostPage() {
             <form onSubmit={handleSubmit} className="mt-6 space-y-5">
               <div>
                 <label htmlFor="post-title" className="mb-1.5 block text-sm font-semibold text-gray-700">
-                  Title *
+                  Question Title *
                 </label>
                 <input
                   id="post-title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="जैसे: B.Ed admission के लिए कौन से documents चाहिए?"
+                  placeholder="e.g. Which documents do I need for B.Ed admission?"
                   className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#003f9f]"
                 />
               </div>
 
               <div>
                 <label htmlFor="post-category" className="mb-1.5 block text-sm font-semibold text-gray-700">
-                  Category
+                  Topic
                 </label>
                 <select
                   id="post-category"
@@ -157,14 +157,14 @@ export default function NewForumPostPage() {
 
               <div>
                 <label htmlFor="post-content" className="mb-1.5 block text-sm font-semibold text-gray-700">
-                  आपका सवाल *
+                  Describe Your Question *
                 </label>
                 <textarea
                   id="post-content"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   rows={6}
-                  placeholder="अपना सवाल विस्तार से लिखें..."
+                  placeholder="Share as much detail as you can — your marks, course you're considering, what you've already tried…"
                   className="w-full resize-none rounded-xl border-2 border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#003f9f]"
                 />
               </div>
@@ -177,7 +177,7 @@ export default function NewForumPostPage() {
                   id="post-tags"
                   value={tags}
                   onChange={(e) => setTags(e.target.value)}
-                  placeholder="comma से अलग करें — जैसे: bed, bscc, documents"
+                  placeholder="Separate with commas — e.g. bed, bscc, documents"
                   className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#003f9f]"
                 />
               </div>
@@ -187,7 +187,7 @@ export default function NewForumPostPage() {
                 disabled={submitting}
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#003f9f] py-3.5 font-extrabold text-white transition hover:bg-blue-700 disabled:opacity-60"
               >
-                {submitting ? <Loader2 size={18} className="animate-spin" /> : 'सवाल Post करें'}
+                {submitting ? <Loader2 size={18} className="animate-spin" /> : 'Post My Question'}
               </button>
             </form>
           </div>

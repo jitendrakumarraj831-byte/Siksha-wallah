@@ -20,7 +20,7 @@ export default function AdminLoginPage() {
     e.preventDefault();
     setError("");
     if (!username.trim() || !password.trim()) {
-      setError("Username and password are required");
+      setError("Please enter both your username and password to sign in.");
       return;
     }
     setLoading(true);
@@ -39,12 +39,12 @@ export default function AdminLoginPage() {
         localStorage.setItem("sw_admin_user", data.user || username.trim());
         router.push("/admin/dashboard");
       } else if (res.status === 429) {
-        setError("Too many attempts. Please wait a few minutes and try again.");
+        setError("For your security, sign-in has been paused for a few minutes. Please try again shortly.");
       } else {
-        setError(data.error || "Invalid credentials. Please contact the system administrator.");
+        setError(data.error || "Those credentials don't seem to match. Please double-check, or contact the office for assistance.");
       }
     } catch {
-      setError("Login failed. Please check your connection and try again.");
+      setError("We couldn't sign you in just now. Please check your internet connection and try again.");
     } finally {
       setLoading(false);
     }
@@ -72,24 +72,24 @@ export default function AdminLoginPage() {
             </Link>
 
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold backdrop-blur">
-              <ShieldCheck size={15} className="text-amber-400" aria-hidden="true" /> Office Staff Portal
+              <ShieldCheck size={15} className="text-amber-400" aria-hidden="true" /> Counsellor & Office Portal
             </div>
 
             <h1 className="font-headline text-4xl font-extrabold leading-tight mb-4">
-              Office Login<br />
-              <span className="text-amber-400">Staff Dashboard</span>
+              Counsellor Sign-In<br />
+              <span className="text-amber-400">Office Workspace</span>
             </h1>
 
             <p className="text-blue-100 leading-relaxed mb-8">
-              Siksha Wallah का office management system। Student inquiries, applications, और analytics — सब एक जगह।
+              The Siksha Wallah counselling workspace — review enquiries, follow up with families and manage admissions, all in one place.
             </p>
 
             <div className="space-y-3">
               {[
-                [BarChart3, "Live Inquiry Dashboard — Real-time student inquiries"],
-                [Users, "Student Management — Applications & profiles"],
-                [BookOpen, "Course & Admission Management"],
-                [ShieldCheck, "Secure Role-Based Access Control"],
+                [BarChart3, "View live student enquiries as they come in"],
+                [Users, "Manage student profiles and admission applications"],
+                [BookOpen, "Update course information and admission progress"],
+                [ShieldCheck, "Secure access with role-based permissions"],
               ].map(([Icon, text], i) => (
                 <div key={i} className="flex items-center gap-3 text-sm text-blue-100">
                   <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-white/10" aria-hidden="true">
@@ -102,9 +102,9 @@ export default function AdminLoginPage() {
 
             <div className="mt-8 pt-6 border-t border-white/20 space-y-2">
               <p className="text-sm text-blue-200">
-                Student हैं?{" "}
+                Are you a student?{" "}
                 <Link href="/auth/login" className="font-bold text-amber-400 hover:text-amber-300 underline">
-                  Student Login →
+                  Sign in to your Student Dashboard →
                 </Link>
               </p>
             </div>
@@ -114,11 +114,11 @@ export default function AdminLoginPage() {
           <div className="rounded-2xl border border-white/20 bg-white/10 p-8 shadow-2xl backdrop-blur-xl">
             <div className="mb-6">
               <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-amber-400/20 border border-amber-400/30 px-3 py-1 text-xs font-bold text-amber-300">
-                <ShieldCheck size={12} aria-hidden="true" /> OFFICE LOGIN
+                <ShieldCheck size={12} aria-hidden="true" /> COUNSELLOR PORTAL
               </div>
-              <h2 className="font-headline text-2xl font-extrabold text-white">Staff Access</h2>
+              <h2 className="font-headline text-2xl font-extrabold text-white">Counsellor Sign-In</h2>
               <p className="mt-1 text-sm text-blue-200">
-                Office credentials से login करें
+                Please use the credentials provided by the Siksha Wallah office.
               </p>
             </div>
 
@@ -182,9 +182,9 @@ export default function AdminLoginPage() {
                 className="w-full flex items-center justify-center gap-2 rounded-xl bg-amber-400 py-4 font-extrabold text-gray-900 hover:bg-amber-300 transition disabled:opacity-60 active:scale-95 shadow-lg shadow-amber-500/30"
               >
                 {loading ? (
-                  <Loader size={18} className="animate-spin" aria-label="Logging in..." />
+                  <Loader size={18} className="animate-spin" aria-label="Signing in…" />
                 ) : (
-                  <><ArrowRight size={18} aria-hidden="true" /> Login to Dashboard</>
+                  <><ArrowRight size={18} aria-hidden="true" /> Sign In to Workspace</>
                 )}
               </button>
             </form>

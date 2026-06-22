@@ -22,10 +22,10 @@ export default function LoginChoicePage() {
             </span>
           </Link>
           <h1 className="mt-5 font-headline text-3xl font-extrabold text-white">
-            आप कौन हैं?
+            Welcome — How would you like to sign in?
           </h1>
           <p className="mt-2 text-blue-200 text-base">
-            अपना portal choose करें — Office Staff या Student
+            Choose the right portal — students access their dashboard here, counsellors and office staff sign in to their workspace.
           </p>
         </div>
 
@@ -43,18 +43,18 @@ export default function LoginChoicePage() {
             </div>
 
             <div className="mb-1 inline-flex w-fit items-center gap-1.5 rounded-full bg-amber-400/20 border border-amber-400/30 px-3 py-1 text-xs font-bold text-amber-300">
-              🏢 OFFICE STAFF
+              FOR OUR COUNSELLORS
             </div>
 
             <h2 className="mt-3 font-headline text-2xl font-extrabold text-white">
-              Office Login
+              Counsellor Portal
             </h2>
             <p className="mt-2 text-sm text-blue-200 leading-relaxed flex-1">
-              Counsellors और office staff के लिए। Student inquiries manage करें, admissions confirm करें, और follow-up calls handle करें।
+              Sign-in space for Siksha Wallah counsellors and office staff to manage student enquiries, follow-ups and admissions.
             </p>
 
             <div className="mt-6 space-y-1.5 text-xs font-semibold text-blue-300">
-              {["Student inquiry leads देखें", "Call/WhatsApp follow-up करें", "Admission status update करें"].map(f => (
+              {["Review and respond to student enquiries", "Manage call & WhatsApp follow-ups", "Update admission progress and status"].map(f => (
                 <p key={f} className="flex items-center gap-1.5">
                   <span className="text-amber-400">✓</span> {f}
                 </p>
@@ -62,7 +62,7 @@ export default function LoginChoicePage() {
             </div>
 
             <div className="mt-6 flex items-center gap-2 rounded-xl bg-amber-400 px-5 py-3 font-bold text-gray-900 group-hover:bg-amber-300 transition">
-              Office Login करें <ArrowRight size={16} className="transition group-hover:translate-x-1" />
+              Open Counsellor Portal <ArrowRight size={16} className="transition group-hover:translate-x-1" />
             </div>
           </Link>
 
@@ -77,18 +77,18 @@ export default function LoginChoicePage() {
             </div>
 
             <div className="mb-1 inline-flex w-fit items-center gap-1.5 rounded-full bg-emerald-400/20 border border-emerald-400/30 px-3 py-1 text-xs font-bold text-emerald-300">
-              🎓 STUDENT
+              FOR STUDENTS
             </div>
 
             <h2 className="mt-3 font-headline text-2xl font-extrabold text-white">
-              Student Login
+              Student Dashboard
             </h2>
             <p className="mt-2 text-sm text-blue-200 leading-relaxed flex-1">
-              Students के लिए। अपना application status track करें, documents upload करें, और BSCC loan status देखें।
+              Your personal admission space — track applications, share documents securely, and stay on top of your BSCC loan progress.
             </p>
 
             <div className="mt-6 space-y-1.5 text-xs font-semibold text-blue-300">
-              {["Application status real-time track करें", "Documents upload & manage करें", "BSCC loan और payment records देखें"].map(f => (
+              {["Track every admission application in real time", "Upload and manage your documents securely", "Stay updated on BSCC loan and payment status"].map(f => (
                 <p key={f} className="flex items-center gap-1.5">
                   <span className="text-emerald-400">✓</span> {f}
                 </p>
@@ -96,7 +96,7 @@ export default function LoginChoicePage() {
             </div>
 
             <div className="mt-6 flex items-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 font-bold text-white group-hover:bg-emerald-400 transition">
-              Student Login करें <ArrowRight size={16} className="transition group-hover:translate-x-1" />
+              Sign in to My Dashboard <ArrowRight size={16} className="transition group-hover:translate-x-1" />
             </div>
           </Link>
 
@@ -105,9 +105,9 @@ export default function LoginChoicePage() {
         {/* Register CTA */}
         <div className="mt-6 rounded-2xl border border-white/20 bg-white/5 p-5 text-center backdrop-blur">
           <p className="text-sm text-blue-200">
-            पहली बार आए हैं?{" "}
+            New to Siksha Wallah?{" "}
             <Link href="/auth/register" className="font-bold text-amber-400 hover:text-amber-300 underline transition">
-              Student Account Register करें →
+              Create your free student account →
             </Link>
           </p>
         </div>
@@ -115,7 +115,7 @@ export default function LoginChoicePage() {
         {/* Helpline */}
         <div className="mt-5 flex items-center justify-center gap-2 text-sm text-blue-300">
           <Phone size={14} />
-          <span>Helpline: </span>
+          <span>Need help signing in? Call us at </span>
           <a href="tel:+916203138576" className="font-bold text-white hover:text-amber-400 transition">+91 6203138576</a>
           <span className="text-blue-500">·</span>
           <a href="tel:+917858062498" className="font-bold text-white hover:text-amber-400 transition">+91 7858062498</a>

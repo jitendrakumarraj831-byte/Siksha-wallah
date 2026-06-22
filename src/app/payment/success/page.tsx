@@ -72,13 +72,13 @@ function PaymentSuccessContent() {
             </div>
           </div>
 
-          <h1 className="mt-6 text-3xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Payment Successful!</h1>
-          <p className="mt-2 text-slate-600">Your payment has been processed successfully</p>
+          <h1 className="mt-6 text-3xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Payment Received — Thank You!</h1>
+          <p className="mt-2 text-slate-600">Congratulations on taking the next step in your admission journey.</p>
 
           {payment && (
             <div className="mt-8 space-y-6 rounded-lg bg-slate-50 p-6 text-left">
               <div>
-                <p className="text-sm font-bold text-slate-700">Course</p>
+                <p className="text-sm font-bold text-slate-700">Course Enrolled</p>
                 <p className="mt-1 text-slate-900">{payment.courseName}</p>
               </div>
 
@@ -90,7 +90,7 @@ function PaymentSuccessContent() {
               </div>
 
               <div className="border-t pt-4">
-                <p className="text-sm font-bold text-slate-700">Payment ID</p>
+                <p className="text-sm font-bold text-slate-700">Your Payment Reference</p>
                 <p className="mt-1 font-mono text-sm text-slate-600">{payment.id}</p>
               </div>
 
@@ -102,9 +102,9 @@ function PaymentSuccessContent() {
               )}
 
               <div className="border-t pt-4">
-                <p className="text-sm font-bold text-slate-700">Date</p>
+                <p className="text-sm font-bold text-slate-700">Payment Date</p>
                 <p className="mt-1 text-slate-600">
-                  {payment.paidAt ? new Date(payment.paidAt).toLocaleString() : 'Pending'}
+                  {payment.paidAt ? new Date(payment.paidAt).toLocaleString() : 'Confirming…'}
                 </p>
               </div>
 
@@ -119,27 +119,27 @@ function PaymentSuccessContent() {
 
           <div className="mt-8 space-y-3">
             <p className="text-sm text-slate-600">
-              A confirmation email has been sent to your registered email address with course access details.
+              A confirmation has been sent to your registered email. Please save it for your records.
             </p>
             <p className="text-sm text-slate-600">
-              Your enrollment will be activated shortly. You can start accessing course materials from your dashboard.
+              Your Siksha Wallah counsellor will reach out shortly to confirm the next steps of your admission. Meanwhile, you can track everything from your dashboard.
             </p>
           </div>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Button onClick={() => router.push('/dashboard')} className="flex-1">
-              Go to Dashboard
+              Go to My Dashboard
             </Button>
             <Link href="/courses" className="flex-1">
               <Button variant="outline" className="w-full">
-                Browse More Courses
+                Explore More Courses
               </Button>
             </Link>
           </div>
 
           <div className="mt-6 border-t pt-6">
             <p className="text-xs text-slate-500">
-              Transaction reference: <span className="font-mono">{paymentId}</span>
+              Please keep this transaction reference handy: <span className="font-mono">{paymentId}</span>
             </p>
           </div>
         </div>

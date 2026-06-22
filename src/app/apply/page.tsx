@@ -85,15 +85,15 @@ export default function ApplyPage() {
     setForm(f => ({ ...f, [k]: v }));
 
   function validateStep1() {
-    if (!form.fullName.trim()) return "पूरा नाम जरूरी है";
-    if (!form.mobile.trim() || form.mobile.length < 10) return "10 अंकों का मोबाइल नंबर जरूरी है";
-    if (!form.gender) return "Gender select करें";
+    if (!form.fullName.trim()) return "कृपया अपना पूरा नाम दर्ज करें।";
+    if (!form.mobile.trim() || form.mobile.length < 10) return "कृपया एक सही 10-अंकों का mobile number दर्ज करें।";
+    if (!form.gender) return "कृपया gender का चयन करें।";
     return "";
   }
 
   function validateStep2() {
-    if (!form.course) return "Course select करें";
-    if (!form.qualification) return "Qualification select करें";
+    if (!form.course) return "कृपया उस course का चयन करें जिसमें आप admission लेना चाहते हैं।";
+    if (!form.qualification) return "कृपया अपनी current qualification का चयन करें।";
     return "";
   }
 
@@ -161,7 +161,7 @@ export default function ApplyPage() {
       }).catch(() => {});
       setSubmitted(true);
     } catch {
-      setError("Submit करने में error आई। Please call करें।");
+      setError("तकनीकी कारणवश आवेदन अभी जमा नहीं हो पाया। कृपया हमें सीधे कॉल करें — हमारी team आपकी सहायता के लिए तैयार है।");
     } finally {
       setLoading(false);
     }
@@ -179,15 +179,15 @@ export default function ApplyPage() {
               </div>
             </div>
             <h1 className="font-headline text-3xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent mb-2">
-              आवेदन सफलतापूर्वक जमा हो गया! 🎉
+              Application Submitted Successfully
             </h1>
             <p className="text-gray-600 mb-4">
-              आपकी application हमें मिल गई है। हमारा counsellor <strong>30 मिनट में</strong> आपको call या WhatsApp करेगा।
+              आपका आवेदन हमें प्राप्त हो गया है। हमारा एक अनुभवी counsellor <strong>30 मिनट के भीतर</strong> आपको call या WhatsApp पर संपर्क करेगा।
             </p>
             <div className="mb-6 rounded-2xl border-2 border-green-200 bg-white px-6 py-4">
-              <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Application Reference ID</p>
+              <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Your Application Reference ID</p>
               <p className="font-headline text-2xl font-extrabold text-[#003f9f]">#{appId}</p>
-              <p className="text-xs text-gray-400 mt-1">इसे note करें — यह आपकी application ID है</p>
+              <p className="text-xs text-gray-400 mt-1">कृपया इस reference ID को सुरक्षित रखें — यह आपकी application को track करने के काम आएगी।</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
               <a
@@ -195,15 +195,15 @@ export default function ApplyPage() {
                 target="_blank" rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 rounded-xl bg-green-500 px-6 py-3 font-extrabold text-white hover:bg-green-600 transition"
               >
-                <MessageCircle size={18} fill="currentColor" /> WhatsApp पर Connect करें
+                <MessageCircle size={18} fill="currentColor" /> Continue on WhatsApp
               </a>
               <a href="tel:+916203138576" className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#003f9f] px-6 py-3 font-extrabold text-white hover:bg-blue-700 transition">
-                <Phone size={18} /> Call Now
+                <Phone size={18} /> Speak to a Counsellor
               </a>
             </div>
             {user
-              ? <Link href="/dashboard" className="text-sm font-bold text-[#003f9f] hover:underline">📊 My Dashboard पर जाएं →</Link>
-              : <Link href="/" className="text-sm text-gray-400 hover:text-gray-600 transition">← वापस Homepage पर जाएं</Link>
+              ? <Link href="/dashboard" className="text-sm font-bold text-[#003f9f] hover:underline">Go to My Dashboard →</Link>
+              : <Link href="/" className="text-sm text-gray-400 hover:text-gray-600 transition">← Back to Homepage</Link>
             }
           </div>
         </main>
@@ -228,22 +228,22 @@ export default function ApplyPage() {
             {/* Label pill */}
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/[0.1] px-4 py-2">
               <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
-              <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Admission Apply करें</span>
+              <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Online Admission Application</span>
             </div>
             {/* H1 */}
             <h1 className="font-headline text-[2.5rem] font-black leading-[1.08] tracking-tight md:text-6xl lg:text-[4rem]">
-              <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">Online Apply करें —</span>
-              <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">सिर्फ 3 आसान Steps में!</span>
+              <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">Start Your Admission Journey</span>
+              <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">in Just 3 Simple Steps</span>
             </h1>
             <div className="mx-auto mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-40" />
             <p className="mt-6 max-w-xl mx-auto text-blue-100 leading-relaxed">
-              अपनी details भरें, documents upload करें, और हमारा team आपको guide करेगा।
+              अपनी जानकारी भरें — हमारी अनुभवी counselling team आपको सही course, सही college और (यदि eligible हो तो) BSCC loan तक पूरी guidance देगी।
             </p>
             {/* Step pills */}
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               {[
-                "Step 1: Details",
-                "Step 2: Documents",
+                "Step 1: Personal Details",
+                "Step 2: Course & Qualification",
                 "Step 3: Review & Submit",
               ].map((pill, i) => (
                 <span key={pill} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.07] px-4 py-2 text-xs font-semibold text-blue-100">
@@ -259,11 +259,11 @@ export default function ApplyPage() {
         {!authLoading && (
           <div className={`border-b py-3 text-sm text-center font-semibold ${user ? "bg-green-50 border-green-100 text-green-700" : "bg-amber-50 border-amber-100 text-amber-700"}`}>
             {user
-              ? `✅ आप logged in हैं (${userProfile?.name || user.email}) — application आपके dashboard में save होगी`
-              : <>⚠️ Guest के रूप में apply कर रहे हैं — application track करने के लिए{" "}
-                  <Link href="/auth/login" className="underline font-bold hover:text-amber-900">login करें</Link>
-                  {" "}या{" "}
-                  <Link href="/auth/register" className="underline font-bold hover:text-amber-900">register करें</Link>
+              ? `You are signed in as ${userProfile?.name || user.email} — this application will be saved to your personal dashboard.`
+              : <>You are applying as a guest. To track this application and stay updated, please{" "}
+                  <Link href="/auth/login" className="underline font-bold hover:text-amber-900">log in</Link>
+                  {" "}or{" "}
+                  <Link href="/auth/register" className="underline font-bold hover:text-amber-900">create a free account</Link>.
                 </>
             }
           </div>
@@ -279,7 +279,7 @@ export default function ApplyPage() {
                     {step > s ? "✓" : s}
                   </div>
                   <span className={`text-xs font-semibold hidden sm:block ${step >= s ? "text-amber-600" : "text-gray-400"}`}>
-                    {s === 1 ? "Personal Details" : s === 2 ? "Academic & Course" : "Review & Submit"}
+                    {s === 1 ? "Personal Details" : s === 2 ? "Course & Qualification" : "Review & Submit"}
                   </span>
                   {s < 3 && <div className={`flex-1 h-0.5 ${step > s ? "bg-amber-400" : "bg-gray-200"}`} />}
                 </div>
@@ -308,30 +308,30 @@ export default function ApplyPage() {
                       </div>
                       <div>
                         <h2 className="font-headline text-xl font-extrabold text-gray-900">Personal Details</h2>
-                        <p className="text-xs text-gray-400">आपकी basic information</p>
+                        <p className="text-xs text-gray-400">Basic information about the student</p>
                       </div>
                     </div>
 
                     <div className="space-y-4">
                       <div className="grid gap-4 sm:grid-cols-2">
                         <div>
-                          <label className="mb-1.5 block text-sm font-semibold text-gray-700">पूरा नाम (Full Name) *</label>
+                          <label className="mb-1.5 block text-sm font-semibold text-gray-700">Full Name (पूरा नाम) *</label>
                           <div className="relative">
                             <User size={15} className="absolute left-3.5 top-3.5 text-gray-400" />
                             <input
                               required value={form.fullName}
                               onChange={e => set("fullName", e.target.value)}
-                              placeholder="Aapka poora naam"
+                              placeholder="अपना पूरा नाम लिखें"
                               className="w-full rounded-xl border-2 border-gray-200 pl-10 pr-4 py-3 text-sm outline-none focus:border-[#003f9f] transition"
                             />
                           </div>
                         </div>
                         <div>
-                          <label className="mb-1.5 block text-sm font-semibold text-gray-700">पिता का नाम</label>
+                          <label className="mb-1.5 block text-sm font-semibold text-gray-700">Father&apos;s Name (पिता का नाम)</label>
                           <input
                             value={form.fatherName}
                             onChange={e => set("fatherName", e.target.value)}
-                            placeholder="Father's name"
+                            placeholder="पिता का पूरा नाम"
                             className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#003f9f] transition"
                           />
                         </div>
@@ -339,20 +339,20 @@ export default function ApplyPage() {
 
                       <div className="grid gap-4 sm:grid-cols-2">
                         <div>
-                          <label className="mb-1.5 block text-sm font-semibold text-gray-700">मोबाइल नंबर *</label>
+                          <label className="mb-1.5 block text-sm font-semibold text-gray-700">Mobile Number *</label>
                           <div className="relative">
                             <Phone size={15} className="absolute left-3.5 top-3.5 text-gray-400" />
                             <input
                               required type="tel" value={form.mobile}
                               onChange={e => set("mobile", e.target.value)}
-                              placeholder="10-digit mobile"
+                              placeholder="Active 10-digit mobile number"
                               maxLength={10}
                               className="w-full rounded-xl border-2 border-gray-200 pl-10 pr-4 py-3 text-sm outline-none focus:border-[#003f9f] transition"
                             />
                           </div>
                         </div>
                         <div>
-                          <label className="mb-1.5 block text-sm font-semibold text-gray-700">Email (Optional)</label>
+                          <label className="mb-1.5 block text-sm font-semibold text-gray-700">Email Address (optional)</label>
                           <div className="relative">
                             <Mail size={15} className="absolute left-3.5 top-3.5 text-gray-400" />
                             <input
@@ -367,7 +367,7 @@ export default function ApplyPage() {
 
                       <div className="grid gap-4 sm:grid-cols-2">
                         <div>
-                          <label className="mb-1.5 block text-sm font-semibold text-gray-700">जन्म तिथि (DOB)</label>
+                          <label className="mb-1.5 block text-sm font-semibold text-gray-700">Date of Birth</label>
                           <input
                             type="date" value={form.dob}
                             onChange={e => set("dob", e.target.value)}
@@ -390,26 +390,26 @@ export default function ApplyPage() {
                       </div>
 
                       <div>
-                        <label className="mb-1.5 block text-sm font-semibold text-gray-700">पता (Address)</label>
+                        <label className="mb-1.5 block text-sm font-semibold text-gray-700">Address (पूरा पता)</label>
                         <input
                           value={form.address}
                           onChange={e => set("address", e.target.value)}
-                          placeholder="Village / Mohalla, Post Office..."
+                          placeholder="गाँव / मोहल्ला, Post Office, पिन कोड…"
                           className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#003f9f] transition"
                         />
                       </div>
 
                       <div className="grid gap-4 sm:grid-cols-2">
                         <div>
-                          <label className="mb-1.5 block text-sm font-semibold text-gray-700">जिला (District)</label>
+                          <label className="mb-1.5 block text-sm font-semibold text-gray-700">District (जिला)</label>
                           <select
                             value={form.district}
                             onChange={e => set("district", e.target.value)}
                             className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-sm text-gray-700 outline-none focus:border-[#003f9f] bg-white transition"
                           >
-                            <option value="">-- Bihar District --</option>
+                            <option value="">-- Select your district --</option>
                             {DISTRICTS_BIHAR.map(d => <option key={d}>{d}</option>)}
-                            <option>Other State</option>
+                            <option>Outside Bihar</option>
                           </select>
                         </div>
                         <div>
@@ -428,7 +428,7 @@ export default function ApplyPage() {
                       type="button" onClick={nextStep}
                       className="mt-6 w-full flex items-center justify-center gap-2 rounded-xl bg-[#003f9f] py-4 font-extrabold text-white hover:bg-blue-700 transition shadow-lg shadow-blue-200"
                     >
-                      Next — Academic Details <ArrowRight size={18} />
+                      Continue to Course & Qualification <ArrowRight size={18} />
                     </button>
                   </div>
                 )}
@@ -441,90 +441,90 @@ export default function ApplyPage() {
                         <BookOpen size={20} />
                       </div>
                       <div>
-                        <h2 className="font-headline text-xl font-extrabold text-gray-900">Academic & Course Details</h2>
-                        <p className="text-xs text-gray-400">Educational background and course preference</p>
+                        <h2 className="font-headline text-xl font-extrabold text-gray-900">Course & Qualification</h2>
+                        <p className="text-xs text-gray-400">Your educational background and course of interest</p>
                       </div>
                     </div>
 
                     <div className="space-y-4">
                       <div>
-                        <label className="mb-1.5 block text-sm font-semibold text-gray-700">Course जिसमें Apply करना है *</label>
+                        <label className="mb-1.5 block text-sm font-semibold text-gray-700">Course of Interest *</label>
                         <select
                           value={form.course}
                           onChange={e => set("course", e.target.value)}
                           className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-sm text-gray-700 outline-none focus:border-[#003f9f] bg-white transition"
                         >
-                          <option value="">-- Course Select करें --</option>
-                          <optgroup label="🎓 Teaching">
+                          <option value="">-- Select a course --</option>
+                          <optgroup label="Teaching">
                             {["B.Ed", "D.El.Ed", "M.Ed", "B.P.Ed"].map(c => <option key={c}>{c}</option>)}
                           </optgroup>
-                          <optgroup label="🏥 Medical & Nursing">
+                          <optgroup label="Medical & Nursing">
                             {["MBBS", "BDS", "B.Sc Nursing", "GNM", "ANM", "B.Pharma", "D.Pharma", "BMLT", "BASLP"].map(c => <option key={c}>{c}</option>)}
                           </optgroup>
-                          <optgroup label="💻 Technical">
+                          <optgroup label="Technical">
                             {["B.Tech", "Polytechnic", "ITI", "Diploma"].map(c => <option key={c}>{c}</option>)}
                           </optgroup>
-                          <optgroup label="📊 Management & Commerce">
+                          <optgroup label="Management & Commerce">
                             {["BBA", "MBA", "BCA", "MCA", "B.Com", "M.Com"].map(c => <option key={c}>{c}</option>)}
                           </optgroup>
-                          <optgroup label="📚 General Degree">
+                          <optgroup label="General Degree">
                             {["BA", "B.Sc", "MA", "M.Sc"].map(c => <option key={c}>{c}</option>)}
                           </optgroup>
-                          <option>BSCC Guidance Only</option>
-                          <option>Not Sure — Need Guidance</option>
+                          <option>BSCC Loan Guidance Only</option>
+                          <option>Not yet decided — I would like career guidance</option>
                         </select>
                       </div>
 
                       <div>
-                        <label className="mb-1.5 block text-sm font-semibold text-gray-700">Current Qualification *</label>
+                        <label className="mb-1.5 block text-sm font-semibold text-gray-700">Current / Highest Qualification *</label>
                         <select
                           value={form.qualification}
                           onChange={e => set("qualification", e.target.value)}
                           className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-sm text-gray-700 outline-none focus:border-[#003f9f] bg-white transition"
                         >
-                          <option value="">-- Qualification Select करें --</option>
+                          <option value="">-- Select your qualification --</option>
                           {QUALIFICATIONS.map(q => <option key={q}>{q}</option>)}
                         </select>
                       </div>
 
                       <div className="grid gap-4 sm:grid-cols-2">
                         <div>
-                          <label className="mb-1.5 block text-sm font-semibold text-gray-700">Passing Year</label>
+                          <label className="mb-1.5 block text-sm font-semibold text-gray-700">Year of Passing</label>
                           <input
                             value={form.passingYear}
                             onChange={e => set("passingYear", e.target.value)}
-                            placeholder="2023"
+                            placeholder="e.g. 2023"
                             maxLength={4}
                             className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#003f9f] transition"
                           />
                         </div>
                         <div>
-                          <label className="mb-1.5 block text-sm font-semibold text-gray-700">Percentage / Marks</label>
+                          <label className="mb-1.5 block text-sm font-semibold text-gray-700">Percentage / Marks Obtained</label>
                           <input
                             value={form.percentage}
                             onChange={e => set("percentage", e.target.value)}
-                            placeholder="e.g. 65% या 450/500"
+                            placeholder="e.g. 65% or 450/500"
                             className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#003f9f] transition"
                           />
                         </div>
                       </div>
 
                       <div>
-                        <label className="mb-1.5 block text-sm font-semibold text-gray-700">School / College का नाम</label>
+                        <label className="mb-1.5 block text-sm font-semibold text-gray-700">Last Attended School / College</label>
                         <input
                           value={form.schoolCollege}
                           onChange={e => set("schoolCollege", e.target.value)}
-                          placeholder="Jahan se last padhai ki"
+                          placeholder="जिस संस्थान से अंतिम पढ़ाई पूरी की"
                           className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#003f9f] transition"
                         />
                       </div>
 
                       <div>
-                        <label className="mb-1.5 block text-sm font-semibold text-gray-700">College Preference (Optional)</label>
+                        <label className="mb-1.5 block text-sm font-semibold text-gray-700">Preferred College (optional)</label>
                         <input
                           value={form.preferredCollege}
                           onChange={e => set("preferredCollege", e.target.value)}
-                          placeholder="Koi preferred college hai to likhein"
+                          placeholder="यदि कोई विशेष college पसंद है, तो यहाँ बताएँ"
                           className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#003f9f] transition"
                         />
                       </div>
@@ -537,18 +537,18 @@ export default function ApplyPage() {
                           className="h-5 w-5 rounded accent-[#003f9f]"
                         />
                         <div>
-                          <p className="text-sm font-bold text-gray-800">BSCC (Bihar Student Credit Card) Loan चाहिए</p>
-                          <p className="text-xs text-gray-400">₹4 Lakh तक interest-free loan — check करें eligibility</p>
+                          <p className="text-sm font-bold text-gray-800">I am interested in the Bihar Student Credit Card (BSCC) loan</p>
+                          <p className="text-xs text-gray-400">₹4 लाख तक का education loan, 4% ब्याज दर — हम eligibility और प्रक्रिया की पूरी जानकारी देंगे।</p>
                         </div>
                       </label>
 
                       <div>
-                        <label className="mb-1.5 block text-sm font-semibold text-gray-700">Extra Message / Question (Optional)</label>
+                        <label className="mb-1.5 block text-sm font-semibold text-gray-700">Any specific question or note (optional)</label>
                         <textarea
                           value={form.message}
                           onChange={e => set("message", e.target.value)}
                           rows={3}
-                          placeholder="Koi special requirement ya question..."
+                          placeholder="कोई विशेष आवश्यकता या सवाल हो तो यहाँ लिखें…"
                           className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#003f9f] transition resize-none"
                         />
                       </div>
@@ -565,7 +565,7 @@ export default function ApplyPage() {
                         type="button" onClick={nextStep}
                         className="flex-[2] flex items-center justify-center gap-2 rounded-xl bg-[#003f9f] py-4 font-extrabold text-white hover:bg-blue-700 transition shadow-lg shadow-blue-200"
                       >
-                        Review Application <ArrowRight size={18} />
+                        Review My Application <ArrowRight size={18} />
                       </button>
                     </div>
                   </div>
@@ -585,13 +585,13 @@ export default function ApplyPage() {
                       </div>
                       <div className="grid grid-cols-2 gap-px bg-gray-100">
                         {[
-                          { label: "नाम", value: form.fullName },
-                          { label: "पिता का नाम", value: form.fatherName },
+                          { label: "Full Name", value: form.fullName },
+                          { label: "Father's Name", value: form.fatherName },
                           { label: "Mobile", value: form.mobile },
                           { label: "Email", value: form.email },
                           { label: "Gender", value: form.gender },
-                          { label: "DOB", value: form.dob },
-                          { label: "जिला", value: form.district },
+                          { label: "Date of Birth", value: form.dob },
+                          { label: "District", value: form.district },
                           { label: "State", value: form.state },
                         ].filter(r => r.value).map(r => (
                           <div key={r.label} className="bg-white px-4 py-3">
@@ -601,7 +601,7 @@ export default function ApplyPage() {
                         ))}
                         {form.address && (
                           <div className="col-span-2 bg-white px-4 py-3">
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">पता</p>
+                            <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Address</p>
                             <p className="mt-0.5 text-sm font-bold text-gray-800">{form.address}</p>
                           </div>
                         )}
@@ -624,9 +624,9 @@ export default function ApplyPage() {
                       <div className="grid grid-cols-2 gap-px bg-gray-100">
                         {[
                           { label: "Qualification", value: form.qualification },
-                          { label: "Passing Year", value: form.passingYear },
-                          { label: "Percentage", value: form.percentage },
-                          { label: "BSCC Required", value: form.bsccRequired ? "✅ हाँ" : "नहीं" },
+                          { label: "Year of Passing", value: form.passingYear },
+                          { label: "Percentage / Marks", value: form.percentage },
+                          { label: "BSCC Loan Interest", value: form.bsccRequired ? "Yes" : "No" },
                         ].filter(r => r.value).map(r => (
                           <div key={r.label} className="bg-white px-4 py-3">
                             <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">{r.label}</p>
@@ -655,11 +655,11 @@ export default function ApplyPage() {
                     </div>
 
                     <div className="rounded-2xl bg-amber-50 border-2 border-amber-200 px-5 py-4 text-sm text-amber-800">
-                      <p className="font-bold mb-1">📞 क्या होगा Submit के बाद?</p>
+                      <p className="font-bold mb-1">What happens after you submit?</p>
                       <ul className="space-y-1 text-xs">
-                        <li>✅ आपकी application हमारे system में save होगी</li>
-                        <li>✅ हमारा counsellor 30 मिनट में call/WhatsApp करेगा</li>
-                        <li>✅ Free guidance — कोई charge नहीं</li>
+                        <li>• आपकी application हमारे counselling team के पास securely save हो जाएगी।</li>
+                        <li>• एक dedicated counsellor 30 मिनट के भीतर आपको call या WhatsApp करेगा।</li>
+                        <li>• पूरा परामर्श और मार्गदर्शन 100% निःशुल्क — कोई hidden charges नहीं।</li>
                       </ul>
                     </div>
 
@@ -668,7 +668,7 @@ export default function ApplyPage() {
                         type="button" onClick={() => { setStep(2); setError(""); }}
                         className="flex-1 rounded-xl border-2 border-gray-200 py-4 text-sm font-bold text-gray-600 hover:border-gray-300 transition"
                       >
-                        ← Edit
+                        ← Edit Details
                       </button>
                       <button
                         type="submit"
@@ -677,7 +677,7 @@ export default function ApplyPage() {
                       >
                         {loading
                           ? <Loader size={18} className="animate-spin" />
-                          : <><Send size={18} /> Application Submit करें</>
+                          : <><Send size={18} /> Submit My Application</>
                         }
                       </button>
                     </div>
@@ -690,17 +690,17 @@ export default function ApplyPage() {
 
         {/* Help strip */}
         <section className="bg-[#001f6b] py-10 text-white text-center">
-          <p className="font-headline text-lg font-bold mb-3">सवाल है? हमें कॉल करें — निःशुल्क मार्गदर्शन</p>
+          <p className="font-headline text-lg font-bold mb-3">Need help filling the form? Our counsellors are happy to assist — free of cost.</p>
           <div className="flex flex-wrap justify-center gap-3">
             <a href="tel:+916203138576" className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-sm font-extrabold text-[#003f9f] hover:bg-blue-50">
-              <Phone size={16} /> +91 6203138576
+              <Phone size={16} /> Call +91 6203138576
             </a>
             <a
               href="https://wa.me/916203138576?text=नमस्ते!%20मैं%20किसी%20course%20के%20लिए%20apply%20करना%20चाहता/चाहती%20हूँ।%20Kripya%20guide%20karein।"
               target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-xl bg-green-500 px-5 py-2.5 text-sm font-extrabold text-white hover:bg-green-600"
             >
-              <MessageCircle size={16} fill="currentColor" /> WhatsApp करें
+              <MessageCircle size={16} fill="currentColor" /> Chat on WhatsApp
             </a>
           </div>
         </section>

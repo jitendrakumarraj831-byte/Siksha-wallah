@@ -27,11 +27,11 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "Siksha Wallah | Admission Consultancy Forbesganj, Bihar",
+    default: "Siksha Wallah | Trusted Education Consultancy in Forbesganj, Bihar",
     template: "%s | Siksha Wallah",
   },
   description:
-    "Forbesganj's most trusted admission consultancy since 2015. Expert guidance for B.Ed, D.El.Ed, Nursing, Pharmacy, Engineering & Management courses. 5,000+ students guided. Bihar Student Credit Card (BSCC) specialist.",
+    "Personalised admission guidance from Forbesganj's most trusted education consultancy. Choose the right course and college for B.Ed, D.El.Ed, Nursing, Pharmacy, Engineering, Management and more — with complete Bihar Student Credit Card (BSCC) loan support. 5,000+ students placed since 2015.",
   keywords: [
     "Siksha Wallah Forbesganj",
     "college admission Bihar",
@@ -51,14 +51,14 @@ export const metadata: Metadata = {
     locale: "en_IN",
     url: BASE_URL,
     siteName: "Siksha Wallah",
-    title: "Siksha Wallah | Admission Consultancy Forbesganj, Bihar",
+    title: "Siksha Wallah | Trusted Education Consultancy in Forbesganj, Bihar",
     description:
-      "Expert admission guidance for B.Ed, Nursing, Engineering & Management. 5,000+ students guided since 2015. Free BSCC loan guidance.",
+      "Personalised admission counselling for B.Ed, Nursing, Engineering, Management and 40+ courses. Free BSCC loan assistance. Trusted by 5,000+ families since 2015.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Siksha Wallah | Admission Consultancy Forbesganj",
-    description: "Expert admission guidance. 5,000+ students guided since 2015. Free BSCC loan support.",
+    title: "Siksha Wallah | Trusted Education Consultancy in Forbesganj",
+    description: "Personalised admission counselling and free BSCC loan support. Trusted by 5,000+ families since 2015.",
   },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
   // Per-page canonicals are set in each route's metadata. The homepage canonical
@@ -79,7 +79,7 @@ const localBusinessSchema = {
   "@context": "https://schema.org",
   "@type": "EducationalOrganization",
   name: "Siksha Wallah",
-  description: "Forbesganj's most trusted admission consultancy since 2015. Expert guidance for B.Ed, D.El.Ed, Nursing, Pharmacy, Engineering & Management courses.",
+  description: "Forbesganj's most trusted education consultancy since 2015. Personalised admission guidance for B.Ed, D.El.Ed, Nursing, Pharmacy, Engineering & Management courses, with complete Bihar Student Credit Card (BSCC) loan support.",
   url: BASE_URL,
   telephone: ["+916203138576", "+917858062498", "+919162653235"],
   address: {

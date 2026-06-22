@@ -54,7 +54,7 @@ function CheckoutContent() {
     }
 
     if (!courseId) {
-      setError('Course ID is missing');
+      setError('We couldn\'t find the course you wanted to enrol in. Please go back and try again.');
       setLoading(false);
       return;
     }
@@ -63,7 +63,7 @@ function CheckoutContent() {
       try {
         const courseData = await courseService.getCourse(courseId);
         if (!courseData) {
-          setError('Course not found');
+          setError('This course is no longer available. Please choose another or speak to a counsellor.');
         } else {
           setCourse(courseData);
         }
@@ -160,7 +160,7 @@ function CheckoutContent() {
             if (verifyResponse.ok && verifyData.success) {
               router.push(`/payment/success?paymentId=${pId}`);
             } else {
-              setError(verifyData.error || 'Payment verification failed. Please contact support.');
+              setError(verifyData.error || 'We could not confirm your payment. Please contact our counsellor on +91 6203138576 and keep your transaction details ready.');
             }
           } catch (error: any) {
             setError(error.message);
@@ -178,7 +178,7 @@ function CheckoutContent() {
       };
 
       if (!window.Razorpay) {
-        throw new Error('Payment gateway is not loaded. Please refresh and try again.');
+        throw new Error('The secure payment window did not load. Please refresh the page and try again.');
       }
       const razorpay = new window.Razorpay(options);
       razorpay.open();
@@ -208,10 +208,10 @@ function CheckoutContent() {
         <div className="container-shell py-8">
           <div className="rounded-xl bg-red-50 p-6 text-red-700">
             <AlertCircle size={24} className="mb-3" />
-            <p>{error || 'Course not found'}</p>
+            <p>{error || 'We couldn\'t find this course. It may have been moved or is no longer available.'}</p>
           </div>
           <Link href="/courses" className="mt-6 inline-block">
-            <Button>Back to Courses</Button>
+            <Button>Explore Other Courses</Button>
           </Link>
         </div>
       </PortalShell>
@@ -223,14 +223,14 @@ function CheckoutContent() {
       <div className="container-shell py-8">
         <Link href={`/courses/${courseId}`} className="inline-flex items-center gap-2 text-blue-600 hover:underline">
           <ArrowLeft size={18} />
-          Back to Course
+          Back to Course Details
         </Link>
 
         <div className="mt-8 grid gap-8 lg:grid-cols-3">
           {/* Order Summary */}
           <div className="lg:col-span-2">
             <div className="rounded-xl border bg-white p-8">
-              <h1 className="text-3xl font-extrabold text-slate-900">Order Summary</h1>
+              <h1 className="text-3xl font-extrabold text-slate-900">Review Your Enrolment</h1>
 
               {error && (
                 <div className="mt-6 flex gap-3 rounded-xl bg-red-50 p-4 text-red-700">
@@ -240,25 +240,25 @@ function CheckoutContent() {
               )}
 
               <div className="mt-8">
-                <h2 className="font-bold text-slate-900">Course Details</h2>
+                <h2 className="font-bold text-slate-900">Course You&apos;re Enrolling In</h2>
                 <div className="mt-4 rounded-lg bg-slate-50 p-4">
                   <p className="text-sm text-slate-600">Course Name</p>
                   <p className="mt-1 font-bold text-slate-900">{course.name}</p>
 
                   <div className="mt-4 border-t pt-4">
-                    <p className="text-sm text-slate-600">Duration</p>
+                    <p className="text-sm text-slate-600">Course Duration</p>
                     <p className="mt-1 font-bold text-slate-900">{course.duration}</p>
                   </div>
 
                   <div className="mt-4 border-t pt-4">
-                    <p className="text-sm text-slate-600">Category</p>
+                    <p className="text-sm text-slate-600">Stream</p>
                     <p className="mt-1 font-bold text-slate-900 capitalize">{course.category}</p>
                   </div>
                 </div>
               </div>
 
               <div className="mt-8">
-                <h2 className="font-bold text-slate-900">Billing Information</h2>
+                <h2 className="font-bold text-slate-900">Student Details</h2>
                 <div className="mt-4 rounded-lg bg-slate-50 p-4">
                   <p className="text-sm text-slate-600">Student Name</p>
                   <p className="mt-1 font-bold text-slate-900">{user?.displayName || 'Student'}</p>
@@ -284,7 +284,7 @@ function CheckoutContent() {
                 </div>
 
                 <div className="flex justify-between border-t pt-4">
-                  <span className="font-bold text-slate-900">Total Amount</span>
+                  <span className="font-bold text-slate-900">Amount Payable</span>
                   <span className="text-2xl font-extrabold text-blue-600">
                     ₹{course.fees.toLocaleString()}
                   </span>
@@ -293,7 +293,7 @@ function CheckoutContent() {
 
               <div className="mt-6 rounded-lg bg-blue-50 p-3 text-sm text-blue-700">
                 <CheckCircle2 size={16} className="mb-2 inline" />
-                <p>Secure payment powered by Razorpay</p>
+                <p>100% secure payment, processed via Razorpay.</p>
               </div>
 
               <Button
@@ -304,15 +304,15 @@ function CheckoutContent() {
                 {processing ? (
                   <>
                     <Loader size={18} className="mr-2 animate-spin" />
-                    Processing...
+                    Opening secure payment…
                   </>
                 ) : (
-                  `Pay ₹${course.fees.toLocaleString()}`
+                  `Pay ₹${course.fees.toLocaleString()} Securely`
                 )}
               </Button>
 
               <p className="mt-4 text-center text-xs text-slate-500">
-                Your payment information is secure and encrypted
+                Your card and payment details are encrypted and never stored on our servers.
               </p>
             </div>
           </div>

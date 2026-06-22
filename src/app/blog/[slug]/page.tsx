@@ -150,7 +150,7 @@ export default async function BlogArticlePage({ params }: Props) {
               href="/blog"
               className="inline-flex items-center gap-2 text-gray-400 hover:text-white text-sm mb-6 transition"
             >
-              <ArrowLeft size={14} /> Back to Blog
+              <ArrowLeft size={14} /> Back to All Articles
             </Link>
             <div className="flex items-center gap-3 mb-3">
               <span className="text-xs font-bold bg-gray-700 text-gray-200 px-3 py-1 rounded-full">
@@ -176,30 +176,30 @@ export default async function BlogArticlePage({ params }: Props) {
           {/* Sidebar CTA */}
           <div className="mt-8 bg-amber-50 border border-amber-200 rounded-2xl text-gray-900 p-6 text-center">
             <h3 className="font-headline text-xl font-bold mb-2 text-amber-900">
-              Admission Guidance चाहिए?
+              Have a question after reading this article?
             </h3>
             <p className="text-amber-700 text-sm mb-4">
-              Siksha Wallah के experts से मिलें — College Chowk, Forbesganj
+              Our admission counsellors are happy to help — visit our Forbesganj office or simply give us a call.
             </p>
             <div className="flex gap-3 justify-center flex-wrap">
               <a
                 href="tel:+916203138576"
                 className="inline-flex items-center gap-2 bg-amber-400 text-gray-900 px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-amber-300 transition"
               >
-                <Phone size={14} /> 6203138576
+                <Phone size={14} /> Call +91 6203138576
               </a>
               <Link
                 href="/contact"
                 className="inline-flex items-center gap-2 border-2 border-amber-400 text-amber-800 px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-amber-100 transition"
               >
-                Contact Us →
+                Book Free Counselling →
               </Link>
             </div>
           </div>
 
           {/* Related */}
           <div className="mt-10">
-            <h3 className="font-headline text-lg font-bold text-gray-800 mb-4">और पढ़ें</h3>
+            <h3 className="font-headline text-lg font-bold text-gray-800 mb-4">Continue Reading</h3>
             <div className="grid gap-4 sm:grid-cols-2">
               {blogArticles
                 .filter((a) => a.slug !== slug)

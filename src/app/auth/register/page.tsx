@@ -34,19 +34,19 @@ export default function RegisterPage() {
 
     // Validation
     if (!formData.fullName.trim()) {
-      setError('Full name is required');
+      setError('Please enter your full name to continue.');
       return;
     }
     if (!formData.email.trim()) {
-      setError('Email is required');
+      setError('Please enter a valid email address.');
       return;
     }
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      setError('The two passwords do not match. Please re-enter them.');
       return;
     }
     if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
+      setError('For your security, please use a password of at least 6 characters.');
       return;
     }
 
@@ -67,10 +67,10 @@ export default function RegisterPage() {
         email: formData.email,
         page: "/auth/register",
       });
-      setSuccess('Account created successfully! Redirecting...');
+      setSuccess('Welcome to Siksha Wallah! Your account is ready — redirecting you to your dashboard…');
       setTimeout(() => router.push('/dashboard'), 2000);
     } catch (err: any) {
-      setError(err.message || 'Registration failed');
+      setError(err.message || 'We were unable to create your account. Please try again or contact our team.');
     } finally {
       setLoading(false);
     }
@@ -80,16 +80,21 @@ export default function RegisterPage() {
     <PortalShell>
       <section className="container-shell grid min-h-screen items-center gap-12 py-16 lg:grid-cols-2">
         <div>
-          <p className="text-sm font-extrabold uppercase tracking-[.2em] text-[#1357e6]">Join Us</p>
+          <p className="text-sm font-extrabold uppercase tracking-[.2em] text-[#1357e6]">Join Siksha Wallah</p>
           <h1 className="mt-3 font-display text-4xl font-extrabold sm:text-5xl bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
-            Create your student account
+            Create Your Free Student Account
           </h1>
           <p className="mt-5 max-w-xl text-lg leading-8 text-slate-600">
-            Start your educational journey with Siksha Wallah. Get access to courses, track your
-            progress, and manage your admissions.
+            Start your admission journey with personalised counsellor support. Save your applications, track every step
+            and manage all your admission documents from one secure place.
           </p>
           <div className="mt-8 space-y-3 text-sm font-bold">
-            {['Complete profile setup', 'Browse all courses', 'Track applications', 'Secure access'].map(
+            {[
+              'Save your profile and academic details once',
+              'Track every admission application in real time',
+              'Receive timely counsellor follow-ups and updates',
+              'Your information is kept private and secure',
+            ].map(
               (feature) => (
                 <p key={feature} className="flex gap-2">
                   <CheckCircle2 size={18} className="text-emerald-500" />
@@ -104,8 +109,8 @@ export default function RegisterPage() {
           onSubmit={handleSubmit}
           className="rounded-3xl border bg-white p-7 shadow-xl shadow-slate-200/60 sm:p-9"
         >
-          <h2 className="font-display text-2xl font-extrabold">Create Account</h2>
-          <p className="mt-2 text-sm text-slate-600">Fill in your details to get started</p>
+          <h2 className="font-display text-2xl font-extrabold">Create Your Account</h2>
+          <p className="mt-2 text-sm text-slate-600">Takes less than a minute — and your counsellor will reach out to help you with the next steps.</p>
 
           {error && (
             <div className="mt-4 flex gap-3 rounded-xl bg-red-50 p-3 text-sm text-red-700">
@@ -127,7 +132,7 @@ export default function RegisterPage() {
               <input
                 type="text"
                 name="fullName"
-                placeholder="Full name"
+                placeholder="Student's full name"
                 value={formData.fullName}
                 onChange={handleChange}
                 required
@@ -153,7 +158,7 @@ export default function RegisterPage() {
               <input
                 type="tel"
                 name="phone"
-                placeholder="Phone number (optional)"
+                placeholder="Mobile number (optional, recommended)"
                 value={formData.phone}
                 onChange={handleChange}
                 className="w-full rounded-xl border border-slate-200 py-3.5 pl-12 pr-4 focus:border-blue-500 focus:outline-none"
@@ -165,7 +170,7 @@ export default function RegisterPage() {
               <input
                 type="password"
                 name="password"
-                placeholder="Password (min 6 characters)"
+                placeholder="Create a password (at least 6 characters)"
                 value={formData.password}
                 onChange={handleChange}
                 required
@@ -178,7 +183,7 @@ export default function RegisterPage() {
               <input
                 type="password"
                 name="confirmPassword"
-                placeholder="Confirm password"
+                placeholder="Confirm your password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 required
@@ -194,17 +199,17 @@ export default function RegisterPage() {
               {loading ? (
                 <>
                   <Loader size={18} className="mr-2 animate-spin" />
-                  Creating Account...
+                  Setting up your account…
                 </>
               ) : (
-                'Create Account'
+                'Create My Free Account'
               )}
             </Button>
 
             <p className="text-center text-sm text-slate-600">
               Already have an account?{' '}
               <Link href="/auth/login" className="font-bold text-blue-600 hover:underline">
-                Login
+                Sign in here
               </Link>
             </p>
           </div>

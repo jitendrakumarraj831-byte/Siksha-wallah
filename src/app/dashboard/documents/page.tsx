@@ -13,16 +13,16 @@ import {
 } from 'lucide-react';
 
 const DOC_TYPES = [
-  { value: 'mark_sheet',       label: '📋 Marksheet (10th/12th/Graduation)' },
-  { value: 'certificate',      label: '🎓 Certificate (Passing/Migration/TC)' },
-  { value: 'id_proof',         label: '🪪 ID Proof (Aadhaar/PAN)' },
-  { value: 'domicile',         label: '🏠 Domicile / Residence Certificate' },
-  { value: 'income_cert',      label: '💰 Income Certificate' },
-  { value: 'caste_cert',       label: '📄 Caste Certificate' },
-  { value: 'photo',            label: '📸 Passport Size Photo' },
-  { value: 'admission_letter', label: '📬 Admission Letter / Bonafide' },
-  { value: 'bscc_docs',        label: '💳 BSCC Related Document' },
-  { value: 'other',            label: '📎 Other' },
+  { value: 'mark_sheet',       label: 'Marksheet (10th / 12th / Graduation)' },
+  { value: 'certificate',      label: 'Passing / Migration / Transfer Certificate' },
+  { value: 'id_proof',         label: 'ID Proof (Aadhaar or PAN)' },
+  { value: 'domicile',         label: 'Domicile / Residence Certificate' },
+  { value: 'income_cert',      label: 'Family Income Certificate' },
+  { value: 'caste_cert',       label: 'Caste Certificate' },
+  { value: 'photo',            label: 'Passport-Size Photograph' },
+  { value: 'admission_letter', label: 'Admission Letter / Bonafide Certificate' },
+  { value: 'bscc_docs',        label: 'BSCC Loan-Related Document' },
+  { value: 'other',            label: 'Other Supporting Document' },
 ];
 
 const ACCEPTED_TYPES = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
@@ -78,10 +78,10 @@ export default function DocumentsPage() {
 
   function validateFile(file: File): string {
     if (!ACCEPTED_TYPES.includes(file.type)) {
-      return 'Only PDF, JPG, और PNG files allowed हैं';
+      return 'Please upload a PDF, JPG or PNG file only.';
     }
     if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-      return `File size ${MAX_FILE_SIZE_MB}MB से कम होनी चाहिए`;
+      return `For smooth uploads, please keep the file size under ${MAX_FILE_SIZE_MB} MB.`;
     }
     return '';
   }
@@ -108,9 +108,9 @@ export default function DocumentsPage() {
     setError('');
     setSuccess('');
 
-    if (!selectedFile) { setFileError('File select करें'); return; }
-    if (!docName.trim()) { setError('Document का नाम दर्ज करें'); return; }
-    if (!docType) { setError('Document type select करें'); return; }
+    if (!selectedFile) { setFileError('Please select a file to upload.'); return; }
+    if (!docName.trim()) { setError('Please give your document a clear name (e.g. "12th Marksheet").'); return; }
+    if (!docType) { setError('Please choose the type of document you are uploading.'); return; }
     if (!user) return;
 
     setUploading(true);
@@ -136,7 +136,7 @@ export default function DocumentsPage() {
         page: '/dashboard/documents',
       }).catch(() => {});
 
-      setSuccess(`"${docName.trim()}" successfully upload हो गया!`);
+      setSuccess(`"${docName.trim()}" was uploaded successfully. Your counsellor will review it shortly.`);
       setSelectedFile(null);
       setDocName('');
       setDocType('');
@@ -147,19 +147,19 @@ export default function DocumentsPage() {
       const docs = await studentService.getDocuments(user.uid);
       setDocuments(docs);
     } catch (err: any) {
-      setError(err.message || 'Upload failed. Please try again.');
+      setError(err.message || 'The upload could not be completed. Please check your connection and try again.');
     } finally {
       setUploading(false);
     }
   }
 
   async function handleDelete(doc: Document) {
-    if (!confirm(`"${doc.name}" delete करना चाहते हैं?`)) return;
+    if (!confirm(`Are you sure you want to remove "${doc.name}"? This action cannot be undone.`)) return;
     setError('');
     try {
       await studentService.deleteDocument(doc.id!, doc.storagePath);
       setDocuments(prev => prev.filter(d => d.id !== doc.id));
-      setSuccess(`"${doc.name}" delete हो गया।`);
+      setSuccess(`"${doc.name}" has been removed from your documents.`);
     } catch (err: any) {
       setError(err.message);
     }
@@ -181,20 +181,20 @@ export default function DocumentsPage() {
     <PortalShell>
       <div className="container-shell py-8">
         <Link href="/dashboard" className="inline-flex items-center gap-2 text-blue-600 hover:underline text-sm font-semibold">
-          <ArrowLeft size={16} /> Dashboard पर वापस जाएं
+          <ArrowLeft size={16} /> Back to My Dashboard
         </Link>
 
         <div className="mt-6 flex items-center justify-between flex-wrap gap-3">
           <div>
-            <h1 className="text-2xl font-extrabold text-slate-900">My Documents</h1>
-            <p className="text-sm text-slate-500 mt-0.5">PDF, JPG, PNG — max {MAX_FILE_SIZE_MB}MB per file</p>
+            <h1 className="text-2xl font-extrabold text-slate-900">My Admission Documents</h1>
+            <p className="text-sm text-slate-500 mt-0.5">Upload PDF, JPG or PNG files — up to {MAX_FILE_SIZE_MB} MB each. All documents stay private and secure.</p>
           </div>
           <button
             onClick={() => { setShowForm(!showForm); setError(''); setSuccess(''); setFileError(''); }}
             className="flex items-center gap-2 rounded-xl bg-[#003f9f] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-blue-700"
           >
             {showForm ? <X size={16} /> : <Upload size={16} />}
-            {showForm ? 'Cancel' : 'Upload Document'}
+            {showForm ? 'Cancel' : 'Upload a Document'}
           </button>
         </div>
 
@@ -215,7 +215,7 @@ export default function DocumentsPage() {
         {/* ── Upload Form ── */}
         {showForm && (
           <form onSubmit={handleUpload} className="mt-6 rounded-2xl border-2 border-blue-100 bg-white p-6 shadow-sm">
-            <h2 className="font-bold text-slate-900 mb-5 text-lg">New Document Upload</h2>
+            <h2 className="font-bold text-slate-900 mb-5 text-lg">Upload a New Document</h2>
 
             {/* Drop Zone */}
             <div
@@ -256,8 +256,8 @@ export default function DocumentsPage() {
                 <div className="flex flex-col items-center gap-3">
                   <CloudUpload size={40} className="text-gray-400" />
                   <div>
-                    <p className="font-bold text-gray-700">Click to choose file or drag & drop</p>
-                    <p className="text-xs text-gray-500 mt-1">PDF, JPG, PNG — max {MAX_FILE_SIZE_MB}MB</p>
+                    <p className="font-bold text-gray-700">Tap to choose a file, or drag and drop it here</p>
+                    <p className="text-xs text-gray-500 mt-1">Accepts PDF, JPG and PNG — up to {MAX_FILE_SIZE_MB} MB</p>
                   </div>
                 </div>
               )}
@@ -271,12 +271,12 @@ export default function DocumentsPage() {
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1.5">Document का नाम *</label>
+                <label className="block text-sm font-bold text-slate-700 mb-1.5">Document Name *</label>
                 <input
                   type="text"
                   value={docName}
                   onChange={e => setDocName(e.target.value)}
-                  placeholder="e.g., 12th Marksheet"
+                  placeholder="e.g. Class 12 Marksheet"
                   required
                   className="w-full rounded-xl border-2 border-slate-200 px-4 py-2.5 text-sm focus:border-blue-500 focus:outline-none transition"
                 />
@@ -289,7 +289,7 @@ export default function DocumentsPage() {
                   required
                   className="w-full rounded-xl border-2 border-slate-200 px-4 py-2.5 text-sm bg-white focus:border-blue-500 focus:outline-none transition"
                 >
-                  <option value="">-- Type Select करें --</option>
+                  <option value="">-- Select document type --</option>
                   {DOC_TYPES.map(t => (
                     <option key={t.value} value={t.value}>{t.label}</option>
                   ))}
@@ -301,7 +301,7 @@ export default function DocumentsPage() {
             {uploading && (
               <div className="mt-5">
                 <div className="mb-1 flex items-center justify-between text-xs font-semibold text-slate-600">
-                  <span>Uploading to Firebase Storage…</span>
+                  <span>Uploading your document securely…</span>
                   <span>{uploadProgress}%</span>
                 </div>
                 <div className="h-2.5 w-full overflow-hidden rounded-full bg-slate-100">
@@ -322,7 +322,7 @@ export default function DocumentsPage() {
                 {uploading ? (
                   <><Loader size={16} className="animate-spin" /> Uploading {uploadProgress}%…</>
                 ) : (
-                  <><CloudUpload size={16} /> Upload करें</>
+                  <><CloudUpload size={16} /> Upload Document</>
                 )}
               </button>
               <button
@@ -340,7 +340,7 @@ export default function DocumentsPage() {
         <div className="mt-8">
           {documents.length > 0 ? (
             <>
-              <p className="mb-4 text-sm font-semibold text-slate-500">{documents.length} document{documents.length !== 1 ? 's' : ''} uploaded</p>
+              <p className="mb-4 text-sm font-semibold text-slate-500">You have shared {documents.length} document{documents.length !== 1 ? 's' : ''} with us so far.</p>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {documents.map(doc => (
                   <div key={doc.id} className="group rounded-2xl border-2 border-slate-100 bg-white p-5 shadow-sm hover:border-blue-200 hover:shadow-md transition">
@@ -388,15 +388,15 @@ export default function DocumentsPage() {
           ) : (
             <div className="rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 p-16 text-center">
               <CloudUpload size={48} className="mx-auto text-slate-300 mb-4" />
-              <p className="font-bold text-slate-600 text-lg">कोई document नहीं है अभी</p>
+              <p className="font-bold text-slate-600 text-lg">You haven&apos;t uploaded any documents yet.</p>
               <p className="text-sm text-slate-400 mt-1 mb-5">
-                Admission के लिए सभी जरूरी documents यहाँ upload करें।
+                Begin by uploading your essential admission documents — your counsellor will verify them and guide you through the next steps.
               </p>
               <button
                 onClick={() => setShowForm(true)}
                 className="inline-flex items-center gap-2 rounded-xl bg-[#003f9f] px-6 py-3 text-sm font-bold text-white hover:bg-blue-700 transition"
               >
-                <Upload size={16} /> पहला Document Upload करें
+                <Upload size={16} /> Upload Your First Document
               </button>
             </div>
           )}
@@ -404,12 +404,12 @@ export default function DocumentsPage() {
 
         {/* Info box */}
         <div className="mt-8 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
-          <p className="font-bold mb-1">📌 Important:</p>
+          <p className="font-bold mb-1">A few helpful tips:</p>
           <ul className="space-y-1 list-disc list-inside text-xs">
-            <li>सभी documents की original copy अपने पास रखें</li>
-            <li>PDF format सबसे अच्छा है — clearly scan करके upload करें</li>
-            <li>BSCC के लिए Aadhaar, Income Certificate, और Domicile जरूरी है</li>
-            <li>Documents 100% secure हैं — केवल आप और Siksha Wallah counsellor देख सकते हैं</li>
+            <li>Always keep the original copy of every document with you.</li>
+            <li>PDF format works best — please scan documents clearly before uploading.</li>
+            <li>For BSCC, Aadhaar, Family Income Certificate and Domicile Certificate are essential.</li>
+            <li>Your documents are 100% private — only you and your Siksha Wallah counsellor can view them.</li>
           </ul>
         </div>
       </div>

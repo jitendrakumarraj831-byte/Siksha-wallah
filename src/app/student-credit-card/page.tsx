@@ -49,12 +49,12 @@ export default function StudentCreditCardPage() {
           </div>
           {/* H1 */}
           <h1 className="font-headline text-[2.5rem] font-black leading-[1.08] tracking-tight md:text-6xl lg:text-[4rem]">
-            <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">BSCC — Bihar Student</span>
-            <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Credit Card Guide</span>
+            <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">Fund Your Higher Education</span>
+            <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">with the BSCC Loan</span>
           </h1>
           <div className="mx-auto mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-40" />
           <p className="mt-6 max-w-2xl mx-auto text-blue-100 text-lg leading-relaxed">
-            ₹4 लाख तक का education loan, 0% interest — Bihar सरकार की इस scheme से अपना admission सपना पूरा करें।
+            ₹4 लाख तक का education loan, सिर्फ 4% ब्याज दर पर — Bihar सरकार की Student Credit Card Scheme के माध्यम से अपने सपनों की पढ़ाई आसानी से पूरी करें। हम पूरी आवेदन प्रक्रिया में आपका मार्गदर्शन करते हैं — बिल्कुल निःशुल्क।
           </p>
           {/* CTAs */}
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
@@ -63,7 +63,7 @@ export default function StudentCreditCardPage() {
               className="group relative flex items-center justify-center gap-2.5 overflow-hidden rounded-2xl bg-gradient-to-r from-amber-400 to-orange-400 px-8 py-4 font-extrabold text-gray-900 shadow-xl shadow-amber-500/30 transition-all hover:-translate-y-1 hover:shadow-2xl active:scale-[0.97]"
             >
               <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
-              Eligibility Check करें <ArrowRight size={18} />
+              Check Your BSCC Eligibility <ArrowRight size={18} />
             </a>
             <a
               href="https://wa.me/916203138576?text=नमस्ते!%20मुझे%20Bihar%20Student%20Credit%20Card%20(BSCC)%20के%20लिए%20guidance%20चाहिए।%20Kripya%20help%20karein।"
@@ -71,12 +71,12 @@ export default function StudentCreditCardPage() {
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2.5 rounded-2xl border-2 border-white/25 bg-white/[0.08] px-8 py-4 font-bold text-white backdrop-blur transition-all hover:bg-white/[0.15] hover:-translate-y-1 active:scale-[0.97]"
             >
-              <MessageCircle size={18} /> Apply करें
+              <MessageCircle size={18} /> Talk to a BSCC Counsellor
             </a>
           </div>
           {/* Stat pills */}
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            {["₹4L Loan", "0% Interest", "All Courses Eligible"].map((pill) => (
+            {["Up to ₹4 Lakh", "Only 4% Interest", "40+ Eligible Courses"].map((pill) => (
               <span key={pill} className="rounded-full border border-white/20 bg-white/[0.07] px-4 py-2 text-xs font-semibold text-blue-100">
                 {pill}
               </span>
@@ -90,11 +90,11 @@ export default function StudentCreditCardPage() {
         <div className="container-shell">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {[
-              ["₹4 Lakh Loan", "Tuition, hostel, food, books — all covered"],
-              ["4% Interest", "1% for women & differently-abled"],
-              ["40+ Courses", "B.Ed, Nursing, B.Tech, MBBS & more"],
-              ["No Collateral", "No guarantor, no property mortgage"],
-              ["Pay After Job", "Repay only after you start earning"],
+              ["Up to ₹4 Lakh Loan", "Covers tuition, hostel, food and study material"],
+              ["Only 4% Interest", "Just 1% interest for women and differently-abled students"],
+              ["40+ Eligible Courses", "B.Ed, Nursing, B.Tech, MBBS, Pharmacy and many more"],
+              ["No Collateral Needed", "No guarantor, no property mortgage required"],
+              ["Repay After Employment", "EMI starts only after you complete your course and start earning"],
             ].map(([title, desc]) => (
               <div key={title as string} className="flex gap-3 rounded-xl border border-white/10 bg-white/5 p-4">
                 <div className="mt-0.5 flex-shrink-0 rounded-full bg-green-500 p-1">
@@ -118,32 +118,32 @@ export default function StudentCreditCardPage() {
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-400">
                 <ListChecks size={18} className="text-gray-900" />
               </div>
-              <h2 className="font-headline text-2xl font-extrabold text-amber-400">BSCC Application Process — Step by Step</h2>
+              <h2 className="font-headline text-2xl font-extrabold text-amber-400">How Your BSCC Loan Gets Approved — Step by Step</h2>
             </div>
 
             <div className="grid gap-5 md:grid-cols-3">
               {[
                 {
                   num: "01",
-                  title: "Document Verification at Siksha Wallah",
-                  location: "College Chowk, Forbesganj (Our Office)",
-                  desc: "Visit our office with your original documents. Our expert team verifies your eligibility, checks all certificates, and prepares a complete document file for BSCC application. We ensure nothing is missing before proceeding.",
+                  title: "Document Review at Siksha Wallah",
+                  location: "Our Office — College Chowk, Forbesganj",
+                  desc: "Bring your original documents to our office. Our counselling team carefully checks your eligibility, verifies every certificate and prepares a complete, error-free file for your BSCC application — ensuring nothing gets rejected later.",
                   icon: FileCheck2,
                   color: "text-blue-300",
                 },
                 {
                   num: "02",
                   title: "College Selection & Bonafide Certificate",
-                  location: "Selected BSCC-Approved College",
-                  desc: "We help you select the right BSCC-approved college based on your course and location preference. After securing admission, the college provides a Bonafide Certificate confirming your enrollment — required for BSCC loan application.",
+                  location: "Your Chosen BSCC-Approved College",
+                  desc: "We help you shortlist the most suitable BSCC-approved college based on your course, fees and location. Once admission is confirmed, the college issues a Bonafide Certificate — an essential document for your BSCC application.",
                   icon: GraduationCap,
                   color: "text-green-300",
                 },
                 {
                   num: "03",
-                  title: "DRCC Office Registration & Approval",
+                  title: "DRCC Registration & Loan Approval",
                   location: "District Registration & Counselling Centre (DRCC)",
-                  desc: "Your complete application is submitted at the DRCC office (District Headquarter). The loan is processed through your bank account directly. Siksha Wallah team accompanies and guides you through the entire DRCC process.",
+                  desc: "Your final application is submitted at the DRCC office in your district. The approved loan is credited directly into your bank account. Our team accompanies and supports you through every step of the DRCC process.",
                   icon: BadgeCheck,
                   color: "text-amber-300",
                 },
@@ -156,7 +156,7 @@ export default function StudentCreditCardPage() {
                     </div>
                   </div>
                   <h3 className="font-headline font-extrabold text-white text-base mb-1">{title}</h3>
-                  <p className={`text-xs font-semibold mb-3 ${color}`}>📍 {location}</p>
+                  <p className={`text-xs font-semibold mb-3 ${color}`}>Location: {location}</p>
                   <p className="text-sm text-blue-100 leading-relaxed">{desc}</p>
                 </div>
               ))}
@@ -165,7 +165,7 @@ export default function StudentCreditCardPage() {
             <div className="mt-6 flex items-start gap-3 rounded-xl border border-green-500/30 bg-green-500/10 p-4">
               <CheckCircle2 size={20} className="mt-0.5 flex-shrink-0 text-green-400" />
               <p className="text-sm font-semibold text-green-200">
-                <strong className="text-green-300">100% Free Guidance:</strong> हमारी team पूरे BSCC application process में आपकी निःशुल्क (free) सहायता करती है — document preparation से DRCC approval तक। कोई extra charge नहीं।
+                <strong className="text-green-300">100% Free Assistance:</strong> document preparation से लेकर DRCC approval तक — हमारी team पूरे BSCC application process में आपकी निःशुल्क सहायता करती है। कोई processing fee, कोई hidden charges नहीं।
               </p>
             </div>
           </div>
@@ -174,16 +174,16 @@ export default function StudentCreditCardPage() {
           <div className="grid gap-10 lg:grid-cols-2 items-start">
             {/* Required Documents */}
             <div className="space-y-4">
-              <h3 className="font-headline text-xl font-extrabold text-amber-400">BSCC के लिए Required Documents</h3>
+              <h3 className="font-headline text-xl font-extrabold text-amber-400">Documents Required for BSCC Loan</h3>
               {[
-                ["Aadhaar Card", "Student's original Aadhaar linked to mobile"],
-                ["10th & 12th Marksheet + Certificate", "Original & photocopy both required"],
-                ["Domicile Certificate", "Bihar state residence proof"],
-                ["Income Certificate", "Family annual income below ₹4.5 Lakh"],
-                ["Bank Account Details", "Student's own savings account (SBI/BOI preferred)"],
-                ["College Bonafide Certificate", "Issued by BSCC-approved enrolled college"],
-                ["Passport Size Photos", "4 recent color photographs on white background"],
-                ["PAN Card (if available)", "Student's or parent's PAN for verification"],
+                ["Aadhaar Card", "Student's original Aadhaar, linked with an active mobile number"],
+                ["10th & 12th Marksheet + Passing Certificate", "Originals along with two clear photocopies of each"],
+                ["Domicile Certificate", "Proof of Bihar state residence, issued by SDO/Circle Office"],
+                ["Family Income Certificate", "Annual family income should be below ₹4.5 Lakh"],
+                ["Bank Account Details", "Student's own savings account (SBI / BOI preferred)"],
+                ["College Bonafide Certificate", "Issued by your BSCC-approved enrolled college"],
+                ["Passport-Size Photographs", "4 recent colour photos on a white background"],
+                ["PAN Card (if available)", "Student's or parent's PAN for KYC verification"],
               ].map(([doc, detail]) => (
                 <div key={doc as string} className="flex gap-3 rounded-xl border border-white/10 bg-white/5 p-3.5">
                   <Check size={15} className="mt-0.5 flex-shrink-0 text-green-400" />
@@ -197,38 +197,38 @@ export default function StudentCreditCardPage() {
 
             {/* Eligibility Checker */}
             <div id="eligibility-checker" className="rounded-2xl border border-teal-200 bg-teal-50/10 p-7 backdrop-blur-xl">
-              <h3 className="font-headline text-xl font-extrabold mb-5">BSCC पात्रता जाँचें</h3>
+              <h3 className="font-headline text-xl font-extrabold mb-5">Quick BSCC Eligibility Check</h3>
 
               {bsccEligible === null ? (
                 <form onSubmit={handleBsccCheck} className="space-y-4">
                   <div>
-                    <label className="mb-1.5 block text-sm font-semibold text-blue-100">क्या आप Bihar के निवासी हैं?</label>
+                    <label className="mb-1.5 block text-sm font-semibold text-blue-100">Are you a permanent resident of Bihar?</label>
                     <div className="flex gap-3">
                       {["yes", "no"].map((val) => (
                         <label key={val} className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl border border-white/30 bg-white/10 py-3 text-sm font-bold transition hover:bg-white/20">
                           <input type="radio" name="bihar" value={val} onChange={(e) => setBsccBihar(e.target.value)} className="accent-amber-400" required />
-                          {val === "yes" ? "हाँ (Yes)" : "नहीं (No)"}
+                          {val === "yes" ? "Yes" : "No"}
                         </label>
                       ))}
                     </div>
                   </div>
 
                   <div>
-                    <label className="mb-1.5 block text-sm font-semibold text-blue-100">परिवार की वार्षिक आय?</label>
+                    <label className="mb-1.5 block text-sm font-semibold text-blue-100">What is your family&apos;s annual income?</label>
                     <select
                       value={bsccIncome}
                       onChange={(e) => setBsccIncome(e.target.value)}
                       required
                       className="w-full rounded-xl border border-white/30 bg-teal-900 px-4 py-3 text-white outline-none"
                     >
-                      <option value="">Select Income</option>
-                      <option value="below">₹4.5 Lakh से कम</option>
-                      <option value="above">₹4.5 Lakh से अधिक</option>
+                      <option value="">Select annual family income</option>
+                      <option value="below">Below ₹4.5 Lakh</option>
+                      <option value="above">Above ₹4.5 Lakh</option>
                     </select>
                   </div>
 
                   <div>
-                    <label className="mb-1.5 block text-sm font-semibold text-blue-100">आपकी उम्र (Age)</label>
+                    <label className="mb-1.5 block text-sm font-semibold text-blue-100">Student&apos;s Age</label>
                     <input
                       type="number"
                       value={bsccAge}
@@ -242,24 +242,24 @@ export default function StudentCreditCardPage() {
                   </div>
 
                   <button type="submit" className="w-full rounded-xl bg-amber-400 py-3.5 font-extrabold text-gray-900 transition hover:bg-amber-300 active:scale-95">
-                    Check Eligibility Now →
+                    Check My Eligibility →
                   </button>
                 </form>
               ) : bsccEligible ? (
                 <div className="py-4 text-center space-y-4">
                   <CheckCircle2 size={52} className="mx-auto text-green-400" />
-                  <h4 className="font-headline text-2xl font-extrabold text-green-300">🎉 आप Eligible हैं!</h4>
-                  <p className="text-blue-100">आप Bihar Student Credit Card के लिए apply कर सकते हैं। हमारे experts आपको पूरा process guide करेंगे।</p>
+                  <h4 className="font-headline text-2xl font-extrabold text-green-300">Good news — you are eligible!</h4>
+                  <p className="text-blue-100">आप Bihar Student Credit Card के लिए apply कर सकते हैं। हमारे BSCC विशेषज्ञ पूरी process में आपका मार्गदर्शन करेंगे — document preparation से लेकर loan approval तक।</p>
                   <a
                     href="https://wa.me/916203138576?text=नमस्ते!%20मैंने%20BSCC%20eligibility%20check%20की%20और%20मैं%20eligible%20हूँ।%20कृपया%20application%20process%20guide%20करें।"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 rounded-xl bg-green-500 px-6 py-3 font-bold text-white hover:bg-green-600"
                   >
-                    <MessageCircle size={18} /> BSCC Apply करें
+                    <MessageCircle size={18} /> Start My BSCC Application
                   </a>
                   <button onClick={() => { setBsccEligible(null); setBsccBihar(""); setBsccIncome(""); setBsccAge(""); }} className="block w-full text-center text-sm text-blue-300 underline mt-2">
-                    फिर से Check करें
+                    Check Again
                   </button>
                 </div>
               ) : (
@@ -267,13 +267,13 @@ export default function StudentCreditCardPage() {
                   <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-orange-500/20">
                     <X size={28} className="text-orange-400" />
                   </div>
-                  <h4 className="font-headline text-xl font-extrabold text-orange-300">Currently Not Eligible</h4>
-                  <p className="text-blue-100 text-sm">BSCC के लिए Bihar domicile, age ≤ 25, और family income ≤ ₹4.5L जरूरी है। लेकिन हम आपके लिए education loan के अन्य options खोज सकते हैं।</p>
+                  <h4 className="font-headline text-xl font-extrabold text-orange-300">You may not be eligible for BSCC</h4>
+                  <p className="text-blue-100 text-sm">BSCC scheme के लिए Bihar domicile, age 25 वर्ष या उससे कम, और family income ₹4.5 लाख से कम होना आवश्यक है। चिंता न करें — हम आपके लिए अन्य education loan विकल्प सुझा सकते हैं।</p>
                   <a href="tel:+916203138576" className="inline-flex items-center gap-2 rounded-xl bg-white/20 px-6 py-3 font-bold text-white hover:bg-white/30">
-                    <Phone size={16} /> Call for Other Options
+                    <Phone size={16} /> Call to Explore Other Loan Options
                   </a>
                   <button onClick={() => { setBsccEligible(null); setBsccBihar(""); setBsccIncome(""); setBsccAge(""); }} className="block w-full text-center text-sm text-blue-300 underline">
-                    फिर से Check करें
+                    Check Again
                   </button>
                 </div>
               )}
@@ -286,10 +286,10 @@ export default function StudentCreditCardPage() {
       <section className="py-20 bg-white">
         <div className="container-shell">
           <div className="text-center mb-12">
-            <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">Admission Preparation</p>
-            <h2 className="font-headline text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Required Documents Checklist</h2>
+            <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">Get Admission-Ready</p>
+            <h2 className="font-headline text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Your Admission Documents Checklist</h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto">
-              Tick off each document as you gather it. Bring all originals + 2 photocopies to the Siksha Wallah office.
+              इस interactive checklist का उपयोग करके अपनी application तैयार करें। हर document को tick करते जाएँ — और original के साथ 2 photocopies लेकर हमारे office में आएँ।
             </p>
           </div>
 
@@ -390,8 +390,8 @@ export default function StudentCreditCardPage() {
 
                 <div className="rounded-xl bg-teal-700 p-4 text-white flex items-center justify-between gap-4 flex-wrap">
                   <div>
-                    <p className="font-bold text-sm">Documents ready? Visit us or call!</p>
-                    <p className="text-xs text-blue-200">We verify all documents for FREE at our Forbesganj office.</p>
+                    <p className="font-bold text-sm">All documents ready? Let&apos;s move forward.</p>
+                    <p className="text-xs text-blue-200">हम Forbesganj office में सभी documents की निःशुल्क verification करते हैं।</p>
                   </div>
                   <a
                     href="https://wa.me/916203138576?text=नमस्ते!%20मैंने%20सभी%20admission%20documents%20collect%20कर%20लिए%20हैं।%20आगे%20का%20process%20बताएं।"
@@ -399,7 +399,7 @@ export default function StudentCreditCardPage() {
                     rel="noopener noreferrer"
                     className="flex-shrink-0 flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-teal-700 hover:bg-teal-50 transition"
                   >
-                    <MessageCircle size={15} /> WhatsApp Now
+                    <MessageCircle size={15} /> Share on WhatsApp
                   </a>
                 </div>
               </div>
@@ -407,7 +407,7 @@ export default function StudentCreditCardPage() {
 
             {/* Course-Specific Docs */}
             <div className="space-y-5">
-              <h3 className="font-headline text-2xl font-extrabold text-gray-900">Course-Specific Additional Requirements</h3>
+              <h3 className="font-headline text-2xl font-extrabold text-gray-900">Additional Documents by Course</h3>
               {[
                 {
                   course: "B.Ed / M.Ed",
@@ -478,17 +478,17 @@ export default function StudentCreditCardPage() {
         <div className="container-shell text-center">
           <CheckCircle2 size={52} className="mx-auto mb-5 text-green-400" />
           <h2 className="font-headline text-3xl md:text-4xl font-extrabold mb-3 bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
-            कागजात तैयार हैं? हमसे संपर्क करें
+            Documents Ready? Let&apos;s Begin Your BSCC Application
           </h2>
           <p className="text-teal-100 max-w-xl mx-auto mb-8 text-lg">
-            अब अगला कदम उठाएं। हमारे office में visit करें या call करें — हमारी team तुरंत आपकी मदद करेगी।
+            अगला कदम उठाएं — हमारे office में visit करें या एक call कर लें। हमारी team पूरी application को आपके साथ बैठकर तैयार करेगी।
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/contact"
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-400 px-8 py-4 font-extrabold text-gray-900 shadow-lg shadow-amber-500/30 transition hover:-translate-y-0.5 hover:bg-amber-300"
             >
-              हमसे संपर्क करें <ArrowRight size={18} />
+              Contact Our BSCC Team <ArrowRight size={18} />
             </Link>
             <a
               href="https://wa.me/916203138576?text=नमस्ते!%20मैंने%20BSCC%20के%20लिए%20सभी%20documents%20तैयार%20कर%20लिए%20हैं।%20अब%20आगे%20क्या%20करूँ?%20Please%20guide%20karein।"
@@ -496,7 +496,7 @@ export default function StudentCreditCardPage() {
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white/40 bg-white/10 px-8 py-4 font-bold text-white transition hover:bg-white/20"
             >
-              <MessageCircle size={18} /> WhatsApp करें
+              <MessageCircle size={18} /> Continue on WhatsApp
             </a>
           </div>
         </div>
