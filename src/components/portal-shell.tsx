@@ -172,7 +172,7 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
             <p className="mb-3 font-bold text-white">Contact</p>
             <div className="flex flex-col gap-2 text-sm">
               <p className="text-gray-500">College Chowk, Near HP Petrol Pump<br />Forbesganj, Araria, Bihar</p>
-              {["6203138576", "7858062498", "9472813581"].map((num) => (
+              {["6203138576", "7858062498"].map((num) => (
                 <a key={num} href={`tel:+91${num}`} className="flex items-center gap-1.5 hover:text-white transition">
                   <Phone size={13} /> +91 {num}
                 </a>

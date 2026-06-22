@@ -12,31 +12,17 @@ import {
 
 const counsellors = [
   {
-    name: "Rajesh Kumar Sah",
-    role: "Founder & Chief Admission Counsellor",
+    name: "Rajesh Kr. Sah",
+    role: "Primary Admission Contact",
     phone: "6203138576",
     expertise: "B.Ed, D.El.Ed, BSCC and all courses",
     available: "Mon–Sat: 9 AM – 7 PM",
   },
   {
-    name: "Md. Naseem Ansari",
-    role: "Senior Counsellor — Nursing & BSCC",
+    name: "Office Contact",
+    role: "General Inquiries",
     phone: "7858062498",
-    expertise: "BSCC Loan, Nursing, B.Pharma, GNM, ANM",
-    available: "Mon–Sat: 9 AM – 7 PM",
-  },
-  {
-    name: "Medical Admissions Helpline",
-    role: "Pan-India Medical Admissions Desk",
-    phone: "9472813581",
-    expertise: "Nursing, B.Pharma, MBBS — across India",
-    available: "Mon–Sat: 9 AM – 5 PM",
-  },
-  {
-    name: "Gautam Kumar",
-    role: "Counsellor — Kursakanta Branch",
-    phone: "9162653235",
-    expertise: "BSCC, B.Tech, BBA, MBA — Kursakanta क्षेत्र",
+    expertise: "General information and support",
     available: "Mon–Sat: 9 AM – 7 PM",
   },
 ];

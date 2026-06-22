@@ -16,22 +16,6 @@ const team = [
     specialization: "B.Ed • D.El.Ed • BSCC • All Streams",
     bio: "Forbesganj के सबसे अनुभवी Admission Counsellor में से एक। 2015 से अब तक 5,000+ students और उनके परिवारों को सही college और सुरक्षित career की राह दिखाई है। Bihar Student Credit Card (BSCC), B.Ed और Nursing admissions में गहरी विशेषज्ञता।",
   },
-  {
-    name: "Md. Naseem Ansari",
-    role: "Senior Counsellor — Nursing & Medical",
-    phone: "7858062498",
-    exp: "5+ Years",
-    specialization: "BSCC • B.Sc Nursing • GNM • ANM • B.Pharma",
-    bio: "Nursing, Pharmacy और Bihar Student Credit Card के विशेषज्ञ। सैकड़ों students को BSCC loan के माध्यम से INC-approved nursing colleges में सफलतापूर्वक admission दिलवाया है — पूरी प्रक्रिया में step-by-step मार्गदर्शन के साथ।",
-  },
-  {
-    name: "Gautam Kumar",
-    role: "Counsellor — Kursakanta Branch",
-    phone: "9162653235",
-    exp: "4+ Years",
-    specialization: "BSCC • B.Tech • BBA • MBA — Kursakanta क्षेत्र",
-    bio: "Kursakanta शाखा से Araria और आसपास के students को complete admission guidance देते हैं। B.Tech, BBA, MBA और BSCC applications में विशेषज्ञ। पूरी आवेदन प्रक्रिया में निःशुल्क सहायता।",
-  },
 ];
 
 const milestones = [
