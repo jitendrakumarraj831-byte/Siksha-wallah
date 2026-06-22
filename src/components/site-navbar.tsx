@@ -29,8 +29,7 @@ export function SiteNavbar({ transparent = false }: { transparent?: boolean }) {
     setMenuOpen(false);
   }, [pathname]);
 
-  const shouldAllowTransparent = transparent || pathname === "/";
-  const isTransparent = shouldAllowTransparent && !scrolled && !menuOpen;
+  const isTransparent = !scrolled && !menuOpen;
 
   return (
     <header
