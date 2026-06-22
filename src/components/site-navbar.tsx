@@ -38,7 +38,7 @@ export function SiteNavbar({ transparent = false }: { transparent?: boolean }) {
           scrolled
             ? "border-gray-200 bg-white/96 shadow-md backdrop-blur-md"
             : isTransparent
-              ? "border-white/10 bg-transparent"
+              ? "border-white/10 bg-[#00102e]/70 backdrop-blur-md"
               : "border-gray-100 bg-white/95 shadow-sm backdrop-blur"
         }`}
       >
