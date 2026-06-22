@@ -8,7 +8,7 @@ export default function manifest(): MetadataRoute.Manifest {
       "Forbesganj's most trusted admission consultancy for B.Ed, Nursing, Engineering & Management courses.",
     start_url: "/",
     display: "standalone",
-    background_color: "#ffffff",
+    background_color: "#003f9f",
     theme_color: "#003f9f",
     icons: [
       { src: "/icon-192.png", sizes: "192x192", type: "image/png" },
