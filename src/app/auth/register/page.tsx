@@ -67,8 +67,10 @@ export default function RegisterPage() {
         email: formData.email,
         page: "/auth/register",
       });
-      setSuccess('Welcome to Siksha Wallah! Your account is ready — redirecting you to your dashboard…');
-      setTimeout(() => router.push('/dashboard'), 2000);
+      // Send email verification
+      try { await authService.sendVerificationEmail(); } catch { /* non-fatal */ }
+      setSuccess('Account created! A verification email has been sent to your address. Please verify your email, then sign in.');
+      setTimeout(() => router.push('/auth/login'), 3000);
     } catch (err: any) {
       setError(err.message || 'We were unable to create your account. Please try again or contact our team.');
     } finally {

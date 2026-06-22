@@ -8,7 +8,7 @@ import { PortalShell } from '@/components/portal-shell';
 import {
   BookOpen, FileText, Bell, User, LogOut, Loader,
   AlertCircle, CheckCircle2, Clock, Phone, MessageCircle,
-  ClipboardList, ArrowRight, Plus,
+  ClipboardList, ArrowRight, Plus, Mail, ShieldCheck,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -36,6 +36,8 @@ export default function DashboardPage() {
   const [applications, setApplications] = useState<CourseApplication[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [sendingVerification, setSendingVerification] = useState(false);
+  const [verificationSent, setVerificationSent] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -52,6 +54,20 @@ export default function DashboardPage() {
   const handleLogout = async () => {
     await logout();
     router.push('/');
+  };
+
+  const handleSendVerification = async () => {
+    setSendingVerification(true);
+    setVerificationSent(false);
+    try {
+      const { authService } = await import('@/lib/auth-service');
+      await authService.sendVerificationEmail();
+      setVerificationSent(true);
+    } catch {
+      // silently ignore — user can try again
+    } finally {
+      setSendingVerification(false);
+    }
   };
 
   if (authLoading || loading) {
@@ -91,6 +107,42 @@ export default function DashboardPage() {
             <LogOut size={16} /> Sign Out
           </button>
         </div>
+
+        {/* Email verification banner */}
+        {user && !user.emailVerified && (
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border-2 border-amber-200 bg-amber-50 px-5 py-4">
+            <div className="flex items-start gap-3">
+              <Mail size={20} className="mt-0.5 flex-shrink-0 text-amber-600" />
+              <div>
+                <p className="font-bold text-amber-800">Email not verified</p>
+                <p className="text-sm text-amber-700">Please verify your email address to secure your account. Check your inbox for the verification link.</p>
+              </div>
+            </div>
+            <div className="flex flex-shrink-0 items-center gap-3">
+              {verificationSent ? (
+                <span className="flex items-center gap-1.5 text-sm font-semibold text-green-700">
+                  <CheckCircle2 size={15} /> Email sent!
+                </span>
+              ) : (
+                <button
+                  onClick={handleSendVerification}
+                  disabled={sendingVerification}
+                  className="inline-flex items-center gap-2 rounded-xl bg-amber-500 px-4 py-2 text-sm font-bold text-white hover:bg-amber-600 transition disabled:opacity-60"
+                >
+                  {sendingVerification ? <Loader size={14} className="animate-spin" /> : <Mail size={14} />}
+                  {sendingVerification ? "Sending…" : "Resend Verification Email"}
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Email verified badge */}
+        {user?.emailVerified && (
+          <div className="mb-6 flex items-center gap-2 rounded-2xl border-2 border-green-100 bg-green-50 px-5 py-3 text-sm font-semibold text-green-700">
+            <ShieldCheck size={17} className="text-green-600" /> Email verified — your account is secure
+          </div>
+        )}
 
         {/* Quick stats */}
         <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
