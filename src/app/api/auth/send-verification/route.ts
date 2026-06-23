@@ -17,12 +17,14 @@ export async function POST(req: NextRequest) {
   }
 
   if (!isMailerConfigured()) {
-    return NextResponse.json({ error: "Email service not configured." }, { status: 500 });
+    // SMTP not configured — tell client to fall back to Firebase built-in.
+    return NextResponse.json({ success: false, useFirebase: true });
   }
 
   const adminAuth = getAdminAuth();
   if (!adminAuth) {
-    return NextResponse.json({ error: "Auth service not available." }, { status: 500 });
+    // Admin SDK not available — tell client to fall back to Firebase built-in.
+    return NextResponse.json({ success: false, useFirebase: true });
   }
 
   const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://sikshawallahfbg.in").replace(/\/$/, "");
