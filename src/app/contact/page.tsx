@@ -168,7 +168,7 @@ export default function ContactPage() {
                 {/* Office Address */}
                 <div className="rounded-2xl bg-white border-2 border-gray-100 p-6 shadow-sm">
                   <div className="flex items-start gap-4">
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-rose-700 text-white">
+                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-primary-blue text-white">
                       <MapPin size={22} />
                     </div>
                     <div>
@@ -179,7 +179,7 @@ export default function ContactPage() {
                         href="https://maps.google.com/?q=College+Chowk+Forbesganj+Araria+Bihar"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-2 inline-flex items-center gap-1.5 text-sm font-bold text-rose-700 hover:underline"
+                        className="mt-2 inline-flex items-center gap-1.5 text-sm font-bold text-primary-blue hover:underline"
                       >
                         Get Directions on Google Maps <ArrowRight size={13} />
                       </a>
@@ -190,14 +190,14 @@ export default function ContactPage() {
                 {/* Office Hours */}
                 <div className="rounded-2xl bg-white border-2 border-gray-100 p-6 shadow-sm">
                   <div className="flex items-center gap-3 mb-4">
-                    <Clock size={20} className="text-rose-700" />
+                    <Clock size={20} className="text-primary-blue" />
                     <h3 className="font-headline text-lg font-extrabold text-gray-900">Office Hours</h3>
                   </div>
                   <div className="space-y-2">
                     {officeHours.map(([day, time]) => (
                       <div key={day} className="flex items-center justify-between text-sm py-2 border-b border-gray-100 last:border-0">
                         <span className="font-semibold text-gray-700">{day}</span>
-                        <span className="text-rose-700 font-bold">{time}</span>
+                        <span className="text-primary-blue font-bold">{time}</span>
                       </div>
                     ))}
                   </div>
@@ -213,18 +213,18 @@ export default function ContactPage() {
                       <a
                         key={phone}
                         href={`tel:+91${phone}`}
-                        className="flex items-center gap-4 rounded-2xl bg-rose-50 border-2 border-rose-100 p-4 shadow-sm hover:border-rose-400 hover:shadow-md transition group"
+                        className="flex items-center gap-4 rounded-2xl bg-blue-50 border-2 border-blue-100 p-4 shadow-sm hover:border-blue-400 hover:shadow-md transition group"
                       >
                         <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#003f9f] to-[#0060c7] font-headline font-extrabold text-lg text-white">
                           {name[0]}
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="font-bold text-gray-900 truncate">{name}</p>
-                          <p className="text-xs text-rose-700 font-semibold">{role}</p>
+                          <p className="text-xs text-primary-blue font-semibold">{role}</p>
                           <p className="text-xs text-gray-400 mt-0.5 truncate">{expertise}</p>
                         </div>
                         <div className="text-right flex-shrink-0">
-                          <p className="font-bold text-gray-900 text-sm group-hover:text-rose-700 transition">+91 {phone}</p>
+                          <p className="font-bold text-gray-900 text-sm group-hover:text-primary-blue transition">+91 {phone}</p>
                           <span className="text-xs text-green-600 font-semibold">● Tap to Call</span>
                         </div>
                       </a>
@@ -244,7 +244,7 @@ export default function ContactPage() {
               </div>
 
               {/* RIGHT — Contact Form */}
-              <div className="rounded-2xl bg-white border-t-4 border-rose-500 border-x-2 border-b-2 border-x-gray-100 border-b-gray-100 p-8 shadow-sm">
+              <div className="rounded-2xl bg-white border-t-4 border-amber-400 border-x-2 border-b-2 border-x-gray-100 border-b-gray-100 p-8 shadow-sm">
                 {submitted ? (
                   <div className="flex flex-col items-center gap-4 py-16 text-center">
                     <div className="flex h-24 w-24 items-center justify-center rounded-full bg-green-100">
@@ -262,7 +262,7 @@ export default function ContactPage() {
                     <div className="flex gap-3 mt-2">
                       <a
                         href="tel:+916203138576"
-                        className="inline-flex items-center gap-2 rounded-xl bg-rose-700 px-5 py-2.5 text-sm font-bold text-white hover:bg-rose-800 transition"
+                        className="inline-flex items-center gap-2 rounded-xl bg-primary-blue px-5 py-2.5 text-sm font-bold text-white hover:bg-blue-800 transition"
                       >
                         <Phone size={15} /> Speak to a Counsellor Now
                       </a>
@@ -280,8 +280,8 @@ export default function ContactPage() {
                 ) : (
                   <>
                     <div className="mb-6">
-                      <h2 className="font-headline text-2xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
-                        Request Your Free Admission Counselling
+                      <h2 className="font-headline text-2xl font-extrabold text-gray-900">
+                        Request Your <span className="text-primary-blue">Free Admission Counselling</span>
                       </h2>
                       <p className="text-gray-500 text-sm mt-1">
                         अपनी जानकारी भरें — हमारे एक विशेषज्ञ counsellor <strong className="text-gray-700">30 मिनट के भीतर</strong> आपसे संपर्क करेंगे।
@@ -308,7 +308,7 @@ export default function ContactPage() {
                             value={form.fullName}
                             onChange={(e) => setForm({ ...form, fullName: e.target.value })}
                             placeholder="जैसे: Rahul Kumar"
-                            className="w-full rounded-xl border-2 border-gray-200 pl-10 pr-4 py-3.5 text-sm outline-none focus:border-rose-500 transition"
+                            className="w-full rounded-xl border-2 border-gray-200 pl-10 pr-4 py-3.5 text-sm outline-none focus:border-primary-blue transition"
                           />
                         </div>
                       </div>
@@ -327,7 +327,7 @@ export default function ContactPage() {
                             value={form.mobile}
                             onChange={(e) => setForm({ ...form, mobile: e.target.value.replace(/\D/g, "") })}
                             placeholder="Active 10-digit mobile number"
-                            className="w-full rounded-xl border-2 border-gray-200 pl-10 pr-4 py-3.5 text-sm outline-none focus:border-rose-500 transition"
+                            className="w-full rounded-xl border-2 border-gray-200 pl-10 pr-4 py-3.5 text-sm outline-none focus:border-primary-blue transition"
                           />
                         </div>
                       </div>
@@ -344,7 +344,7 @@ export default function ContactPage() {
                             value={form.email}
                             onChange={(e) => setForm({ ...form, email: e.target.value })}
                             placeholder="your@email.com"
-                            className="w-full rounded-xl border-2 border-gray-200 pl-10 pr-4 py-3.5 text-sm outline-none focus:border-rose-500 transition"
+                            className="w-full rounded-xl border-2 border-gray-200 pl-10 pr-4 py-3.5 text-sm outline-none focus:border-primary-blue transition"
                           />
                         </div>
                       </div>
@@ -357,7 +357,7 @@ export default function ContactPage() {
                           id="contact-course"
                           value={form.course}
                           onChange={(e) => setForm({ ...form, course: e.target.value })}
-                          className="w-full rounded-xl border-2 border-gray-200 px-4 py-3.5 text-sm text-gray-700 outline-none focus:border-rose-500 bg-white transition"
+                          className="w-full rounded-xl border-2 border-gray-200 px-4 py-3.5 text-sm text-gray-700 outline-none focus:border-primary-blue bg-white transition"
                         >
                           <option value="">-- Select a course --</option>
                           <optgroup label="Teaching">
@@ -386,14 +386,14 @@ export default function ContactPage() {
                           onChange={(e) => setForm({ ...form, message: e.target.value })}
                           rows={3}
                           placeholder="उदाहरण: मेरे 12th में 65% हैं — क्या मैं B.Ed के लिए eligible हूँ?"
-                          className="w-full rounded-xl border-2 border-gray-200 px-4 py-3.5 text-sm outline-none focus:border-rose-500 transition resize-none"
+                          className="w-full rounded-xl border-2 border-gray-200 px-4 py-3.5 text-sm outline-none focus:border-primary-blue transition resize-none"
                         />
                       </div>
 
                       <button
                         type="submit"
                         disabled={loading}
-                        className="w-full flex items-center justify-center gap-2 rounded-xl bg-rose-700 py-4 font-extrabold text-white hover:bg-rose-800 transition disabled:opacity-60 shadow-lg shadow-rose-200 active:scale-95"
+                        className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary-blue py-4 font-extrabold text-white hover:bg-blue-800 transition disabled:opacity-60 shadow-lg shadow-blue-200 active:scale-95"
                       >
                         {loading ? (
                           <span className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
@@ -435,7 +435,7 @@ export default function ContactPage() {
                 href="https://maps.google.com/?q=College+Chowk+Forbesganj+Araria+Bihar"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl bg-rose-700 px-5 py-2.5 text-sm font-bold text-white hover:bg-rose-800 transition shadow"
+                className="inline-flex items-center gap-2 rounded-xl bg-primary-blue px-5 py-2.5 text-sm font-bold text-white hover:bg-blue-800 transition shadow"
               >
                 Open in Google Maps <ArrowRight size={14} />
               </a>
