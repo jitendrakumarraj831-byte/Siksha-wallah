@@ -8,9 +8,9 @@ export const metadata: Metadata = {
     title: "About Siksha Wallah | Admission Consultancy Forbesganj",
     description:
       "5,000+ students guided since 2015. Meet the team behind Bihar's trusted education consultancy.",
-    url: "https://sikshawallah.com/about",
+    url: "https://www.sikshawallahfbg.in/about",
   },
-  alternates: { canonical: "https://sikshawallah.com/about" },
+  alternates: { canonical: "https://www.sikshawallahfbg.in/about" },
 };
 
 export default function AboutLayout({ children }: { children: React.ReactNode }) {

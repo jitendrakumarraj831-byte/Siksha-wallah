@@ -24,9 +24,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: article.title,
       description: article.excerpt,
-      url: `https://sikshawallah.com/blog/${article.slug}`,
+      url: `https://www.sikshawallahfbg.in/blog/${article.slug}`,
     },
-    alternates: { canonical: `https://sikshawallah.com/blog/${article.slug}` },
+    alternates: { canonical: `https://www.sikshawallahfbg.in/blog/${article.slug}` },
   };
 }
 

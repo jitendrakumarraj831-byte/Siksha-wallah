@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const BASE_URL = "https://sikshawallah.com";
+const BASE_URL = "https://www.sikshawallahfbg.in";
 
 const BLOG_SLUGS = [
   "bed-admission-bihar-2025",

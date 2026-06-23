@@ -9,7 +9,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/admin/", "/dashboard/", "/api/", "/auth/"],
       },
     ],
-    sitemap: "https://sikshawallah.com/sitemap.xml",
-    host: "https://sikshawallah.com",
+    sitemap: "https://www.sikshawallahfbg.in/sitemap.xml",
+    host: "https://www.sikshawallahfbg.in",
   };
 }

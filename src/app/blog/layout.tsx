@@ -7,9 +7,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Blog | Siksha Wallah",
     description: "Bihar education guides, admission tips, BSCC loan info — in Hindi & English.",
-    url: "https://sikshawallah.com/blog",
+    url: "https://www.sikshawallahfbg.in/blog",
   },
-  alternates: { canonical: "https://sikshawallah.com/blog" },
+  alternates: { canonical: "https://www.sikshawallahfbg.in/blog" },
 };
 
 export default function BlogLayout({ children }: { children: React.ReactNode }) {

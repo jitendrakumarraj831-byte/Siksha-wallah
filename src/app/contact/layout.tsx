@@ -8,9 +8,9 @@ export const metadata: Metadata = {
     title: "Contact Siksha Wallah | Admission Guidance Forbesganj",
     description:
       "College Chowk, Forbesganj. Call 6203138576. Get expert admission counselling for B.Ed, Nursing, Engineering & more.",
-    url: "https://sikshawallah.com/contact",
+    url: "https://www.sikshawallahfbg.in/contact",
   },
-  alternates: { canonical: "https://sikshawallah.com/contact" },
+  alternates: { canonical: "https://www.sikshawallahfbg.in/contact" },
 };
 
 export default function ContactLayout({ children }: { children: React.ReactNode }) {
