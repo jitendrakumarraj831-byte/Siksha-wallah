@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { authService } from '@/lib/auth-service';
+import { saveActivity } from '@/services/activity-service';
 import { PortalShell } from '@/components/portal-shell';
 import { Button } from '@/components/ui/button';
 import { Mail, AlertCircle, CheckCircle2, Loader, ArrowLeft } from 'lucide-react';
@@ -27,6 +28,13 @@ export default function ForgotPasswordPage() {
     try {
       await authService.sendPasswordReset(email);
       setSent(true);
+      saveActivity({
+        type: "student_login",
+        title: "🔑 Password Reset Requested",
+        description: `Reset link sent to: ${email}`,
+        email,
+        page: "/auth/forgot-password",
+      });
       setEmail('');
     } catch (err: any) {
       setError(err.message || 'We could not send the password reset link. Please try again or contact our office.');

@@ -7,8 +7,7 @@ import {
   GraduationCap, LogOut, Loader, ArrowLeft,
   Phone, Filter, RefreshCw, LayoutDashboard,
 } from "lucide-react";
-import { getAllActivities, type Activity, type ActivityType } from "@/services/activity-service";
-import { adminFetchData } from "@/lib/admin-api";
+import { subscribeActivities, type Activity, type ActivityType } from "@/services/activity-service";
 
 const TYPE_META: Record<ActivityType, { icon: string; label: string; color: string; detailLink?: (act: Activity) => string }> = {
   inquiry:        { icon: "📋", label: "Inquiry",          color: "bg-blue-100 text-blue-800 border-blue-200",       detailLink: () => "/admin/dashboard" },
@@ -53,10 +52,11 @@ export default function ActivityPage() {
   useEffect(() => {
     if (!authorized) return;
     setLoading(true);
-    adminFetchData("activities", () => getAllActivities(200))
-      .then((data) => setActivities(data))
-      .catch(() => {})
-      .finally(() => setLoading(false));
+    const unsub = subscribeActivities(200, (data) => {
+      setActivities(data);
+      setLoading(false);
+    });
+    return () => unsub();
   }, [authorized]);
 
   async function handleLogout() {

@@ -12,6 +12,7 @@ import {
 import { SiteNavbar } from "@/components/site-navbar";
 import { SiteFooter } from "@/components/site-footer";
 import { streamTabs, colorMap, type StreamKey } from "@/lib/courses-data";
+import { saveActivity } from "@/services/activity-service";
 
 /* ─── per-stream metadata ─────────────────────────────────────────────── */
 const STREAM_META: Record<StreamKey, {
@@ -238,6 +239,7 @@ function CourseCard({
             href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(course.name)}%20(${encodeURIComponent(course.full)})%20के%20बारे%20में%20जानकारी%20चाहिए।%20Fees%20aur%20admission%20process%20batayein।`}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => saveActivity({ type: 'whatsapp', title: `💬 WhatsApp — Course: ${course.name}`, description: `Enquiry for ${course.full}`, page: '/courses' })}
             className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold text-white transition ${colors.btn}`}
           >
             <MessageCircle size={15} /> Enquire About Fees & Admission
@@ -610,6 +612,7 @@ function CoursesInner() {
               href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(activeTab.label)}%20के%20लिए%20admission%20guidance%20चाहिए।%20Please%20help%20karein।`}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => saveActivity({ type: 'whatsapp', title: `💬 WhatsApp — Stream: ${activeTab.label}`, description: `Stream-level counselling enquiry`, page: '/courses' })}
               className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-green-500 px-6 py-3 text-sm font-extrabold text-white transition hover:bg-green-600"
             >
               <MessageCircle size={16} /> Speak to a Counsellor

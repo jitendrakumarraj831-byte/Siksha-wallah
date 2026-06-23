@@ -1,10 +1,20 @@
 "use client";
 
 import { Phone, MessageCircle } from "lucide-react";
+import { saveActivity } from "@/services/activity-service";
+
+function trackWA(page?: string) {
+  saveActivity({
+    type: "whatsapp",
+    title: "💬 WhatsApp Button Click",
+    description: "Floating WhatsApp button clicked",
+    page: page || (typeof window !== "undefined" ? window.location.pathname : ""),
+  });
+}
 
 export function FloatingContact() {
   return (
-    <div 
+    <div
       className="fixed bottom-6 right-5 z-50 flex flex-col items-end gap-3"
       style={{ contain: "layout style paint" }}
     >
@@ -27,6 +37,7 @@ export function FloatingContact() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat with our counsellor on WhatsApp"
+        onClick={() => trackWA()}
         className="group flex items-center gap-2 rounded-full bg-green-500 px-4 py-3 text-white shadow-xl shadow-green-500/25 transition hover:bg-green-600 active:scale-95 md:hover:scale-105"
         style={{ willChange: "transform" }}
       >

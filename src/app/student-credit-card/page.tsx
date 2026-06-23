@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { SiteNavbar } from "@/components/site-navbar";
 import { SiteFooter } from "@/components/site-footer";
+import { saveActivity } from "@/services/activity-service";
 
 export default function StudentCreditCardPage() {
   const [bsccEligible, setBsccEligible] = useState<null | boolean>(null);
@@ -69,6 +70,7 @@ export default function StudentCreditCardPage() {
               href="https://wa.me/916203138576?text=नमस्ते!%20मुझे%20Bihar%20Student%20Credit%20Card%20(BSCC)%20के%20लिए%20guidance%20चाहिए।%20Kripya%20help%20karein।"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => saveActivity({ type: 'whatsapp', title: '💬 WhatsApp — BSCC Hero', description: 'Hero section BSCC enquiry', page: '/student-credit-card' })}
               className="flex items-center justify-center gap-2.5 rounded-2xl border-2 border-white/25 bg-white/[0.08] px-8 py-4 font-bold text-white backdrop-blur transition-all hover:bg-white/[0.15] hover:-translate-y-1 active:scale-[0.97]"
             >
               <MessageCircle size={18} /> Talk to a BSCC Counsellor
@@ -254,6 +256,7 @@ export default function StudentCreditCardPage() {
                     href="https://wa.me/916203138576?text=नमस्ते!%20मैंने%20BSCC%20eligibility%20check%20की%20और%20मैं%20eligible%20हूँ।%20कृपया%20application%20process%20guide%20करें।"
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => saveActivity({ type: 'whatsapp', title: '💬 WhatsApp — BSCC Eligible Student', description: 'Student checked eligibility and clicked Apply', page: '/student-credit-card' })}
                     className="inline-flex items-center gap-2 rounded-xl bg-green-500 px-6 py-3 font-bold text-white hover:bg-green-600"
                   >
                     <MessageCircle size={18} /> Start My BSCC Application

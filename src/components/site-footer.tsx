@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { GraduationCap, Phone, MessageCircle, MapPin, Mail, Clock } from "lucide-react";
+import { saveActivity } from "@/services/activity-service";
 
 const QUICK_LINKS = [
   { href: "/", label: "Home" },
@@ -48,6 +51,7 @@ export function SiteFooter() {
               href="https://wa.me/916203138576?text=नमस्ते!%20मुझे%20Free%20Admission%20Counselling%20चाहिए।%20Please%20guide%20karein।"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => saveActivity({ type: "whatsapp", title: "💬 WhatsApp Click — Footer CTA", description: "Footer top banner WhatsApp button", page: window.location.pathname })}
               className="flex items-center gap-2 rounded-xl border-2 border-white/40 bg-white/10 px-5 py-2.5 text-sm font-bold text-white backdrop-blur transition hover:bg-white/20"
             >
               <MessageCircle size={15} aria-hidden="true" /> Chat on WhatsApp
@@ -145,6 +149,7 @@ export function SiteFooter() {
                   href="https://wa.me/916203138576"
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => saveActivity({ type: "whatsapp", title: "💬 WhatsApp Click — Footer Link", description: "Footer quick-links WhatsApp", page: window.location.pathname })}
                   className="flex items-center gap-2 font-semibold text-green-400 transition hover:text-green-300"
                 >
                   <MessageCircle size={13} aria-hidden="true" /> WhatsApp Our Counsellors
