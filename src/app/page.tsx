@@ -144,7 +144,7 @@ export default function Home() {
                   आपका Future?
                 </span>
                 <span className="block text-[1.7rem] text-white md:text-[2.4rem] lg:text-[2.8rem] [text-shadow:0_2px_16px_rgba(255,255,255,0.12)]">
-                  ���म बताएंगे —{" "}
+                  हम बताएंगे —{" "}
                   <span className="bg-gradient-to-r from-amber-300 to-yellow-200 bg-clip-text text-transparent">मुफ़्त।</span>
                 </span>
               </h1>
@@ -984,7 +984,7 @@ export default function Home() {
               </span>
             </h2>
             <p className="mt-3 max-w-xl mx-auto text-gray-500">
-              हज़ारों Bihar के students ने Siksha Wallah पर भरोसा किया — क्योंकि हम सिर्फ college नहीं, सही दिशा देते हैं।
+              हज़ारों Bihar के students ने Siksha Wallah पर भरोसा किया — क्योंकि हम सिर���फ college नहीं, सही दिशा देते हैं।
             </p>
           </AnimateIn>
 
