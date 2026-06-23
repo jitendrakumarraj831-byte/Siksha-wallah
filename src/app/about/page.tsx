@@ -104,9 +104,9 @@ export default function AboutPage() {
         <div className="container-shell">
           <div className="grid gap-12 lg:grid-cols-2 items-center">
             <div>
-              <p className="text-sm font-bold uppercase tracking-widest text-purple-700 mb-2">Our Story</p>
-              <h2 className="font-headline text-4xl font-extrabold mb-6 bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
-                Why Siksha Wallah exists.
+              <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">Our Story</p>
+              <h2 className="font-headline text-4xl font-extrabold mb-6 text-gray-900">
+                Why <span className="text-primary-blue">Siksha Wallah</span> exists.
               </h2>
               <p className="text-gray-600 leading-relaxed mb-4">
                 2015 में, Forbesganj और आसपास के गाँवों के हजारों students और उनके माता-पिता के पास न सही जानकारी थी, न कोई भरोसेमंद मार्गदर्शक। महंगे private agents झूठे वादे करते थे, hidden charges वसूलते थे — और एक होनहार student का भविष्य अंधेरे में चला जाता था।
@@ -127,12 +127,12 @@ export default function AboutPage() {
 
             <div className="grid gap-4 sm:grid-cols-2">
               {[
-                { icon: Target, color: "bg-purple-600", title: "Our Mission", desc: "Bihar के हर student और परिवार को quality education का सही रास्ता दिखाना — बिना किसी hidden charge और बिना किसी झूठे वादे के।" },
+                { icon: Target, color: "bg-primary-blue", title: "Our Mission", desc: "Bihar के हर student और परिवार को quality education का सही रास्ता दिखाना — बिना किसी hidden charge और बिना किसी झूठे वादे के।" },
                 { icon: Heart, color: "bg-[#dc143c]", title: "Our Vision", desc: "Forbesganj को एक ऐसा education hub बनाना जहाँ से students देश के top colleges और सम्मानजनक careers तक आसानी से पहुँचें।" },
                 { icon: ShieldCheck, color: "bg-green-600", title: "Our Values", desc: "पारदर्शिता, ईमानदारी और हर परिवार के साथ खड़े रहने की प्रतिबद्धता — यही Siksha Wallah की पहचान है।" },
                 { icon: Award, color: "bg-amber-500", title: "Our Expertise", desc: "B.Ed, Nursing, Pharmacy, Engineering, Management — सभी streams में 9+ वर्षों का सिद्ध अनुभव और हजारों सफल admissions।" },
               ].map(({ icon: Icon, color, title, desc }) => (
-                <div key={title} className="rounded-2xl border-2 border-purple-100 bg-purple-50 p-5 hover:shadow-md transition">
+                <div key={title} className="rounded-2xl border-2 border-blue-100 bg-blue-50 p-5 hover:shadow-md transition">
                   <div className={`mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl ${color} text-white`}>
                     <Icon size={22} />
                   </div>
@@ -149,8 +149,8 @@ export default function AboutPage() {
       <section id="team" className="py-20 bg-gray-50">
         <div className="container-shell">
           <div className="text-center mb-12">
-            <p className="text-sm font-bold uppercase tracking-widest text-purple-700 mb-2">Meet Our Expert Counsellors</p>
-            <h2 className="font-headline text-4xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">The team that guides your family</h2>
+            <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">Meet Our Expert Counsellors</p>
+            <h2 className="font-headline text-4xl font-extrabold text-gray-900">The team that <span className="text-primary-blue">guides your family</span></h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto text-sm">
               हर counsellor एक प्रशिक्षित और अनुभवी admission expert हैं — सीधे बात करने के लिए हमेशा उपलब्ध।
             </p>
@@ -158,19 +158,19 @@ export default function AboutPage() {
           <div className="grid gap-6 md:grid-cols-3">
             {team.map(({ name, role, phone, exp, specialization, bio }) => (
               <div key={name} className="rounded-2xl bg-white border-2 border-gray-100 p-7 text-center shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[#6b21a8] to-[#9333ea] font-headline text-3xl font-extrabold text-white shadow-lg">
+                <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[#003f9f] to-[#0060c7] font-headline text-3xl font-extrabold text-white shadow-lg">
                   {name[0]}
                 </div>
                 <h3 className="font-headline text-xl font-extrabold text-gray-900">{name}</h3>
-                <p className="text-purple-700 font-semibold text-sm mt-1">{role}</p>
+                <p className="text-primary-blue font-semibold text-sm mt-1">{role}</p>
                 <p className="mt-1 text-xs text-gray-400 font-semibold">{exp} of counselling experience</p>
-                <div className="mt-2 inline-block rounded-full bg-purple-50 px-3 py-1 text-xs font-semibold text-purple-700">
+                <div className="mt-2 inline-block rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-primary-blue">
                   {specialization}
                 </div>
                 <p className="mt-4 text-sm text-gray-600 leading-relaxed">{bio}</p>
                 <a
                   href={`tel:+91${phone}`}
-                  className="mt-5 flex items-center justify-center gap-2 rounded-xl bg-purple-700 px-4 py-3 text-sm font-bold text-white hover:bg-purple-800 transition"
+                  className="mt-5 flex items-center justify-center gap-2 rounded-xl bg-primary-blue px-4 py-3 text-sm font-bold text-white hover:bg-blue-800 transition"
                 >
                   <Phone size={15} /> Call +91 {phone}
                 </a>
@@ -185,8 +185,8 @@ export default function AboutPage() {
               </div>
             ))}
           </div>
-          <div className="mt-8 rounded-2xl bg-purple-50 border-2 border-purple-100 p-6 text-center">
-            <p className="text-sm text-purple-800 font-semibold">
+          <div className="mt-8 rounded-2xl bg-blue-50 border-2 border-blue-100 p-6 text-center">
+            <p className="text-sm text-blue-800 font-semibold">
               <strong>आश्वासन:</strong> हमारे काउंसलर हर सवाल का जवाब स्वयं देते हैं — कोई IVR नहीं, कोई automated bot नहीं। आपको हमेशा एक असली व्यक्ति, असली मार्गदर्शन और असली ज़िम्मेदारी मिलेगी।
             </p>
           </div>
@@ -197,15 +197,15 @@ export default function AboutPage() {
       <section className="py-20 bg-white">
         <div className="container-shell">
           <div className="text-center mb-12">
-            <p className="text-sm font-bold uppercase tracking-widest text-purple-700 mb-2">Why Families Trust Us</p>
-            <h2 className="font-headline text-4xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Why choose Siksha Wallah for your admission?</h2>
+            <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">Why Families Trust Us</p>
+            <h2 className="font-headline text-4xl font-extrabold text-gray-900">Why choose <span className="text-primary-blue">Siksha Wallah</span> for your admission?</h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto text-sm">
               सिर्फ वादे नहीं — 5,000+ परिवारों द्वारा भरोसा किया गया, और हर वर्ष सैकड़ों सफल admissions।
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {trustPoints.map(([title, desc]) => (
-              <div key={title as string} className="flex gap-3 rounded-2xl border-2 border-gray-100 bg-gray-50 p-5 hover:border-purple-200 hover:bg-purple-50 transition">
+              <div key={title as string} className="flex gap-3 rounded-2xl border-2 border-gray-100 bg-gray-50 p-5 hover:border-blue-200 hover:bg-blue-50 transition">
                 <CheckCircle2 size={20} className="mt-0.5 flex-shrink-0 text-green-500" />
                 <div>
                   <p className="font-bold text-gray-900">{title}</p>
@@ -229,7 +229,7 @@ export default function AboutPage() {
             <div className="space-y-8">
               {milestones.map(({ year, event }) => (
                 <div key={year} className="relative flex gap-6 pl-16">
-                  <div className="absolute left-0 flex h-12 w-12 items-center justify-center rounded-full bg-purple-700 font-headline font-extrabold text-sm text-white border-2 border-amber-400">
+                  <div className="absolute left-0 flex h-12 w-12 items-center justify-center rounded-full bg-primary-blue font-headline font-extrabold text-sm text-white border-2 border-amber-400">
                     {year.slice(2)}
                   </div>
                   <div className="flex-1 rounded-xl border border-white/10 bg-white/5 p-4">
@@ -244,18 +244,18 @@ export default function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 bg-gradient-to-r from-purple-600 to-indigo-600">
+      <section className="py-16 bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590]">
         <div className="container-shell text-center">
           <h2 className="font-headline text-3xl md:text-4xl font-extrabold text-white mb-3">
-            Book Your Free Admission Counselling Today
+            Book Your Free <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Admission Counselling</span> Today
           </h2>
-          <p className="text-purple-100 mb-8 max-w-xl mx-auto text-sm leading-relaxed">
+          <p className="text-blue-100 mb-8 max-w-xl mx-auto text-sm leading-relaxed">
             एक call, एक WhatsApp message — हमारे विशेषज्ञ आपके हर सवाल का स्पष्ट जवाब देंगे। कोई शुल्क नहीं, कोई दबाव नहीं, सिर्फ ईमानदार मार्गदर्शन।
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a
               href="tel:+916203138576"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-4 font-extrabold text-purple-700 hover:bg-purple-50 shadow-lg transition"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-7 py-4 font-extrabold text-primary-blue hover:bg-blue-50 shadow-lg transition"
             >
               <Phone size={18} /> Speak to a Counsellor: 6203138576
             </a>
