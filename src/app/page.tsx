@@ -990,10 +990,10 @@ export default function Home() {
           <AnimateIn type="fade-up" delay={60}>
           <div className="mb-12 grid grid-cols-2 md:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-blue-100 shadow-sm">
             {[
-              { target: 500,  suffix: "+",      label: "Successful Admissions" },
+              { target: 5000, suffix: "+",      label: "Successful Admissions" },
               { target: 200,  suffix: "+",      label: "Partner Colleges" },
               { target: 2,    suffix: " Cr+",   label: "BSCC Loans Sanctioned" },
-              { target: 10,   suffix: "+ Yrs",  label: "Forbesganj में अनुभव" },
+              { target: 9,    suffix: "+ Yrs",  label: "Forbesganj में अनुभव" },
             ].map(({ target, suffix, label }) => (
               <div key={label} className="flex flex-col items-center justify-center gap-1 bg-blue-50 py-6 px-4 text-center">
                 <p className="font-headline text-3xl font-black text-blue-700 md:text-4xl">
@@ -1035,8 +1035,8 @@ export default function Home() {
               },
               {
                 icon: Award,       border: "border-l-teal-500",   iconBg: "bg-teal-50",   iconColor: "text-teal-600",
-                title: "10+ साल का अनुभव",
-                desc: "Forbesganj में एक दशक से active — हज़ारों परिवारों का भरोसा, बिना किसी complaint के।",
+                title: "9+ साल का अनुभव",
+                desc: "Forbesganj में 9 साल से active — 5,000+ परिवारों का भरोसा, बिना किसी complaint के।",
               },
             ].map(({ icon: Icon, border, iconBg, iconColor, title, desc }, i) => (
               <AnimateIn key={title} type="zoom-in" delay={i * 60}>
