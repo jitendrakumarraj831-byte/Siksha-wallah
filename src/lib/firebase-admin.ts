@@ -9,14 +9,19 @@ import { getAuth, type Auth } from "firebase-admin/auth";
 //  - On Firebase App Hosting / GCP: Application Default Credentials (no config).
 //  - Elsewhere: set FIREBASE_SERVICE_ACCOUNT_KEY to the service-account JSON.
 
+// Use a named app ("sw-admin") to avoid conflicts with any default-app instance
+// that might be left in a partially-initialized state from a previous warm
+// serverless invocation (the cause of FUNCTION_INVOCATION_FAILED crashes).
+const APP_NAME = "sw-admin";
+
 let cached: Firestore | null = null;
 let cachedAuth: Auth | null = null;
+let lastInitError: string | null = null;
 
-// Robustly parse the service-account JSON from an env var. Vercel/CI paste
-// quirks we defend against:
-//  - surrounding single/double quotes around the whole value
-//  - the JSON base64-encoded (some setups encode to avoid newline issues)
-//  - private_key stored with escaped "\\n" instead of real newlines
+// Robustly parse the service-account JSON from an env var. Handles:
+//  - surrounding single/double quotes
+//  - base64-encoded value (some CI setups encode to avoid newline issues)
+//  - private_key with escaped "\\n" instead of real newlines
 //  - literal newlines inside the JSON string that break JSON.parse
 function parseServiceAccount(raw: string): Record<string, any> {
   let s = raw.trim();
@@ -40,13 +45,12 @@ function parseServiceAccount(raw: string): Record<string, any> {
   try {
     parsed = JSON.parse(s);
   } catch {
-    // JSON.parse fails when private_key contains real (unescaped) newlines.
-    // Re-escape control characters inside string literals, then retry.
+    // Retry after re-escaping any bare control characters inside string values.
     parsed = JSON.parse(s.replace(/[\n\r\t]/g, (c) =>
       c === "\n" ? "\\n" : c === "\r" ? "\\r" : "\\t"));
   }
 
-  // Firebase Admin SDK needs real newlines in the PEM private key.
+  // Firebase Admin SDK needs actual newlines in the PEM private key.
   if (parsed.private_key && parsed.private_key.includes("\\n")) {
     parsed.private_key = parsed.private_key.replace(/\\n/g, "\n");
   }
@@ -54,21 +58,29 @@ function parseServiceAccount(raw: string): Record<string, any> {
 }
 
 function getAdminApp(): App {
-  if (getApps().length) return getApp();
+  // Return existing named app if already initialized.
+  try {
+    return getApp(APP_NAME);
+  } catch {
+    /* app not yet initialized — fall through to init */
+  }
+
   const saJson = process.env.FIREBASE_SERVICE_ACCOUNT_KEY?.trim();
   if (saJson) {
-    return initializeApp({ credential: cert(parseServiceAccount(saJson)) });
+    return initializeApp({ credential: cert(parseServiceAccount(saJson)) }, APP_NAME);
   }
-  return initializeApp({ credential: applicationDefault() });
+  return initializeApp({ credential: applicationDefault() }, APP_NAME);
 }
 
 export function getAdminDb(): Firestore | null {
   if (cached) return cached;
   try {
     cached = getFirestore(getAdminApp());
+    lastInitError = null;
     return cached;
   } catch (e) {
-    console.error("firebase-admin init failed (falling back to client SDK):", e);
+    lastInitError = e instanceof Error ? e.message : String(e);
+    console.error("firebase-admin getAdminDb failed:", lastInitError);
     return null;
   }
 }
@@ -79,9 +91,13 @@ export function getAdminAuth(): Auth | null {
     cachedAuth = getAuth(getAdminApp());
     return cachedAuth;
   } catch (e) {
-    console.error("firebase-admin auth init failed:", e);
+    console.error("firebase-admin getAdminAuth failed:", e instanceof Error ? e.message : e);
     return null;
   }
+}
+
+export function getAdminInitError(): string | null {
+  return lastInitError;
 }
 
 // Convert Firestore Timestamp fields to epoch millis so the client can render

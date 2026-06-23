@@ -5,21 +5,19 @@ import { getAdminDb, serialize } from "@/lib/firebase-admin";
 // Cookie-gated read API for the office dashboard. With this in place, Firestore
 // rules can deny all client reads of private collections.
 export async function GET(request: NextRequest) {
-  const session = await verifyAdminToken(request.cookies.get(ADMIN_COOKIE)?.value);
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const db = getAdminDb();
-  if (!db) {
-    // Admin SDK unavailable (e.g. local dev without ADC). The client falls back
-    // to its direct read, which still works while Firestore rules are open.
-    return NextResponse.json({ error: "Admin backend unavailable" }, { status: 503 });
-  }
-
-  const type = request.nextUrl.searchParams.get("type");
-
   try {
+    const session = await verifyAdminToken(request.cookies.get(ADMIN_COOKIE)?.value);
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const db = getAdminDb();
+    if (!db) {
+      return NextResponse.json({ error: "Admin backend unavailable" }, { status: 503 });
+    }
+
+    const type = request.nextUrl.searchParams.get("type");
+
     switch (type) {
       case "inquiries": {
         const snap = await db.collection("inquiries").orderBy("createdAt", "desc").limit(500).get();

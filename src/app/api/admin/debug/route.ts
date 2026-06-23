@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAdminToken, ADMIN_COOKIE } from "@/lib/admin-session";
-import { getAdminDb } from "@/lib/firebase-admin";
+import { getAdminDb, getAdminInitError } from "@/lib/firebase-admin";
 
 // Cookie-gated diagnostic endpoint. Visit /api/admin/debug while logged in
 // to check if Firebase Admin SDK is initialised correctly.
@@ -41,6 +41,7 @@ export async function GET(request: NextRequest) {
       canRead = true;
     } else {
       sdkStatus = "init_failed_null";
+      sdkError = getAdminInitError();
     }
   } catch (e) {
     sdkStatus = "read_failed";
