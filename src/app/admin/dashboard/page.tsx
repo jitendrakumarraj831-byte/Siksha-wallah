@@ -13,7 +13,7 @@ import {
   getAllInquiries, updateInquiryStatus, updateInquiryNote,
   type Inquiry, type InquiryStatus,
 } from "@/services/inquiry-service";
-import { getAllActivities, type Activity, type ActivityType } from "@/services/activity-service";
+import { subscribeActivities, type Activity, type ActivityType } from "@/services/activity-service";
 import { adminFetchData, adminUpdate } from "@/lib/admin-api";
 
 /* ── helpers ─────────────────────────────────────────── */
@@ -153,8 +153,9 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     if (!authorized) return;
     loadInquiries();
-    // Activity feed (via cookie-gated admin API, with client fallback)
-    adminFetchData("activities", () => getAllActivities(30)).then(setActivities).catch(() => {});
+    // Real-time activity feed — updates live as events arrive
+    const unsub = subscribeActivities(50, setActivities);
+    return () => unsub();
   }, [authorized]);
 
   async function loadInquiries() {

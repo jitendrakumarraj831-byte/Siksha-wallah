@@ -10,6 +10,7 @@ import {
 import { SiteNavbar } from "@/components/site-navbar";
 import { SiteFooter } from "@/components/site-footer";
 import { blogArticles } from "@/lib/blog-data";
+import { saveActivity } from "@/services/activity-service";
 
 /* ── Category config ─────────────────────────────── */
 const CATEGORIES = [
@@ -238,6 +239,7 @@ export default function BlogPage() {
                       href="https://wa.me/916203138576"
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() => saveActivity({ type: 'whatsapp', title: '💬 WhatsApp Click — Blog Article', description: 'In-article counselling WhatsApp CTA', page: '/blog' })}
                       className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-2xl bg-gradient-to-r from-amber-400 to-orange-400 px-6 py-3.5 font-extrabold text-gray-900 shadow-lg shadow-amber-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl active:scale-[0.97]"
                     >
                       <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
@@ -285,6 +287,7 @@ export default function BlogPage() {
                 href="https://wa.me/916203138576"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => saveActivity({ type: 'whatsapp', title: '💬 WhatsApp Click — Blog CTA', description: 'Bottom CTA WhatsApp button on Blog page', page: '/blog' })}
                 className="flex items-center gap-2 rounded-2xl border-2 border-gray-200 px-7 py-4 font-bold text-gray-700 transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 active:scale-[0.97]"
               >
                 <MessageCircle size={16} className="text-green-500" />

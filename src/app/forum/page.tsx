@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/components/auth-provider';
 import { forumService, ForumPost } from '@/services/forum-service';
+import { saveActivity } from '@/services/activity-service';
 import { SiteNavbar } from '@/components/site-navbar';
 import { SiteFooter } from '@/components/site-footer';
 import { Button } from '@/components/ui/button';
@@ -90,6 +91,7 @@ export default function ForumPage() {
               href="https://wa.me/916203138576?text=नमस्ते! मुझे Admission के बारे में सवाल पूछना है।"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => saveActivity({ type: 'whatsapp', title: '💬 WhatsApp Click — Forum', description: 'Speak to Counsellor button on Forum page', page: '/forum' })}
               className="flex items-center justify-center gap-2.5 rounded-2xl border-2 border-white/25 bg-white/[0.08] px-8 py-4 font-bold text-white backdrop-blur transition-all hover:bg-white/[0.15] hover:-translate-y-1 active:scale-[0.97]"
             >
               Speak to a Counsellor
