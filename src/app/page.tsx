@@ -483,7 +483,7 @@ export default function Home() {
               { icon: ShieldCheck,  text: "100% Free Initial Counselling",   color: "text-green-400"  },
               { icon: GraduationCap, text: "NCTE / UGC Recognised Colleges",  color: "text-blue-400"   },
               { icon: CreditCard,   text: "End-to-End BSCC Loan Support",     color: "text-amber-400"  },
-              { icon: Phone,        text: "Personal Counsellor for Every Student", color: "text-purple-400" },
+              { icon: Phone,        text: "Personal Counsellor for Every Student", color: "text-rose-400" },
             ].map(({ icon: Icon, text, color }) => (
               <span key={text} className="flex items-center gap-2 text-sm font-semibold text-gray-300">
                 <Icon size={15} className={color} />
@@ -1509,8 +1509,12 @@ export default function Home() {
       </section>
 
       {/* ── CONTACT & LOCATION ── */}
-      <section id="contact" className="py-24 bg-gradient-to-br from-gray-900 to-gray-800 text-white">
-        <div className="container-shell">
+      <section id="contact" className="relative overflow-hidden py-24 bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] text-white">
+        {/* dot-grid */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.07]"
+          style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+        <div className="pointer-events-none absolute -top-32 -right-24 h-[400px] w-[400px] rounded-full bg-amber-400 opacity-[0.10] blur-3xl" />
+        <div className="container-shell relative">
           <div className="grid gap-12 lg:grid-cols-2">
             {/* Left — contact info */}
             <AnimateIn type="fade-right">
@@ -1528,8 +1532,8 @@ export default function Home() {
                   </div>
                   <div>
                     <h3 className="font-headline text-lg font-extrabold text-white">Our Office Address</h3>
-                    <p className="mt-1 text-gray-300">College Chowk, Near HP Petrol Pump</p>
-                    <p className="text-gray-300">Forbesganj, Araria — Bihar 854318</p>
+                    <p className="mt-1 text-blue-200">College Chowk, Near HP Petrol Pump</p>
+                    <p className="text-blue-200">Forbesganj, Araria — Bihar 854318</p>
                     <a
                       href="https://maps.google.com/?q=College+Chowk+Forbesganj+Araria+Bihar"
                       target="_blank"
@@ -1550,7 +1554,7 @@ export default function Home() {
                     </div>
                     <div>
                       <p className="font-bold text-white">+91 {num}</p>
-                      <p className="text-xs text-gray-400">{label}</p>
+                      <p className="text-xs text-blue-300">{label}</p>
                     </div>
                   </a>
                 ))}
