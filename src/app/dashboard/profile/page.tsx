@@ -113,7 +113,7 @@ export default function ProfilePage() {
         </Link>
 
         <div className="mt-8 max-w-2xl rounded-2xl border bg-white p-8">
-          <h1 className="text-3xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">My Profile Details</h1>
+          <h1 className="text-3xl font-extrabold text-gray-900">My <span className="text-[#003f9f]">Profile</span> Details</h1>
           <p className="mt-2 text-slate-600">Keep your information up to date — it helps your counsellor recommend the best colleges and courses for you.</p>
 
           {error && (

@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/components/auth-provider';
 import { forumService, ForumPost } from '@/services/forum-service';
+import { SiteNavbar } from '@/components/site-navbar';
+import { SiteFooter } from '@/components/site-footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader2 } from 'lucide-react';
@@ -49,7 +51,9 @@ export default function ForumPage() {
   }
 
   return (
-    <div className="min-h-screen bg-orange-50">
+    <>
+    <SiteNavbar />
+    <div className="min-h-screen bg-gray-50">
       {/* Hero header */}
       <div className="relative overflow-hidden bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] text-white py-16">
         {/* Dot-grid */}
@@ -137,17 +141,17 @@ export default function ForumPage() {
           ) : filteredPosts.length > 0 ? (
             filteredPosts.map((post) => (
               <Link key={post.id} href={`/forum/${post.id}`}>
-                <div className="bg-orange-50 border border-orange-100 hover:border-orange-300 rounded-lg shadow hover:shadow-lg transition-all p-6 cursor-pointer">
+                <div className="bg-white border border-gray-100 hover:border-blue-300 rounded-lg shadow hover:shadow-lg transition-all p-6 cursor-pointer">
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-gray-900 hover:text-orange-600">
+                      <h3 className="text-xl font-semibold text-gray-900 hover:text-primary-blue">
                         {post.title}
                       </h3>
                       <p className="text-gray-600 text-sm mt-1">
                         By {post.authorName} in {post.category}
                       </p>
                     </div>
-                    <span className="text-xs bg-orange-100 text-orange-700 px-3 py-1 rounded-full">
+                    <span className="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
                       {post.category}
                     </span>
                   </div>
@@ -168,5 +172,7 @@ export default function ForumPage() {
         </div>
       </div>
     </div>
+    <SiteFooter />
+    </>
   );
 }

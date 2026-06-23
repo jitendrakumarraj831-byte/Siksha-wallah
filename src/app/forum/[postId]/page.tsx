@@ -109,9 +109,9 @@ export default function ForumPostPage() {
     return (
       <>
         <SiteNavbar />
-        <main className="min-h-screen bg-orange-50 flex items-center justify-center px-4 py-16">
+        <main className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-16">
           <div className="text-center">
-            <AlertCircle size={44} className="mx-auto text-orange-400" />
+            <AlertCircle size={44} className="mx-auto text-red-400" />
             <p className="mt-4 font-semibold text-gray-700">We couldn&apos;t find this question. It may have been removed.</p>
             <Link
               href="/forum"
@@ -129,7 +129,7 @@ export default function ForumPostPage() {
   return (
     <>
       <SiteNavbar />
-      <main className="min-h-screen bg-orange-50 py-10">
+      <main className="min-h-screen bg-gray-50 py-10">
         <div className="container mx-auto max-w-3xl px-4">
           <Link
             href="/forum"
@@ -139,9 +139,9 @@ export default function ForumPostPage() {
           </Link>
 
           {/* Post */}
-          <article className="mt-5 rounded-2xl border border-orange-100 bg-white p-6 shadow-sm sm:p-8">
+          <article className="mt-5 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm sm:p-8">
             <div className="mb-3 flex flex-wrap items-center gap-2">
-              <span className="rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-orange-700">
+              <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-bold text-blue-700">
                 {post.category}
               </span>
               {post.tags?.map((t) => (
@@ -178,7 +178,7 @@ export default function ForumPostPage() {
                   <div
                     key={reply.id}
                     className={`rounded-2xl border bg-white p-5 shadow-sm ${
-                      reply.isAccepted ? 'border-green-300 ring-1 ring-green-200' : 'border-orange-100'
+                      reply.isAccepted ? 'border-green-300 ring-1 ring-green-200' : 'border-gray-100'
                     }`}
                   >
                     {reply.isAccepted && (
@@ -206,7 +206,7 @@ export default function ForumPostPage() {
             </div>
 
             {/* Reply form */}
-            <div className="mt-8 rounded-2xl border border-orange-100 bg-white p-6 shadow-sm">
+            <div className="mt-8 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
               {user ? (
                 <form onSubmit={handleReply}>
                   <h3 className="mb-3 flex items-center gap-2 font-bold text-gray-900">

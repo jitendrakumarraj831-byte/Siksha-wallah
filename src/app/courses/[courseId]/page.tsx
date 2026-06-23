@@ -124,7 +124,7 @@ export default function CourseDetailPage() {
                 <span className="inline-block rounded-full bg-blue-100 px-4 py-1 text-sm font-bold text-blue-600">
                   {course.code}
                 </span>
-                <h1 className="mt-4 text-4xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">{course.name}</h1>
+                <h1 className="mt-4 text-4xl font-extrabold text-gray-900">{course.name}</h1>
                 <p className="mt-4 text-lg text-slate-600">{course.description}</p>
               </div>
 

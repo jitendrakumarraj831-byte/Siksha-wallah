@@ -72,7 +72,7 @@ function PaymentSuccessContent() {
             </div>
           </div>
 
-          <h1 className="mt-6 text-3xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Payment Received — Thank You!</h1>
+          <h1 className="mt-6 text-3xl font-extrabold text-gray-900">Payment Received — <span className="text-[#003f9f]">Thank You!</span></h1>
           <p className="mt-2 text-slate-600">Congratulations on taking the next step in your admission journey.</p>
 
           {payment && (

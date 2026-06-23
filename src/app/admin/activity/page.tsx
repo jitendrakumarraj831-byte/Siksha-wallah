@@ -12,13 +12,13 @@ import { adminFetchData } from "@/lib/admin-api";
 
 const TYPE_META: Record<ActivityType, { icon: string; label: string; color: string; detailLink?: (act: Activity) => string }> = {
   inquiry:        { icon: "📋", label: "Inquiry",          color: "bg-blue-100 text-blue-800 border-blue-200",       detailLink: () => "/admin/dashboard" },
-  contact:        { icon: "📝", label: "Contact Form",     color: "bg-purple-100 text-purple-800 border-purple-200" },
+  contact:        { icon: "📝", label: "Contact Form",     color: "bg-blue-100 text-blue-800 border-blue-200" },
   registration:   { icon: "👤", label: "Registration",     color: "bg-green-100 text-green-800 border-green-200",    detailLink: () => "/admin/students" },
   student_login:  { icon: "🔑", label: "Student Login",    color: "bg-gray-100 text-gray-700 border-gray-200",       detailLink: () => "/admin/students" },
   application:    { icon: "🎓", label: "Application",      color: "bg-blue-100 text-blue-800 border-blue-200",       detailLink: () => "/admin/applications" },
-  doc_upload:     { icon: "📄", label: "Doc Upload",       color: "bg-teal-100 text-teal-800 border-teal-200",       detailLink: () => "/admin/students" },
-  profile_update: { icon: "✏️",  label: "Profile Update",  color: "bg-orange-100 text-orange-800 border-orange-200", detailLink: () => "/admin/students" },
-  whatsapp:       { icon: "📱", label: "WhatsApp Click",   color: "bg-emerald-100 text-emerald-800 border-emerald-200" },
+  doc_upload:     { icon: "📄", label: "Doc Upload",       color: "bg-blue-100 text-blue-800 border-blue-200",       detailLink: () => "/admin/students" },
+  profile_update: { icon: "✏️",  label: "Profile Update",  color: "bg-amber-100 text-amber-800 border-amber-200", detailLink: () => "/admin/students" },
+  whatsapp:       { icon: "📱", label: "WhatsApp Click",   color: "bg-green-100 text-green-800 border-green-200" },
   bscc_check:     { icon: "🏦", label: "BSCC Check",       color: "bg-amber-100 text-amber-800 border-amber-200" },
   course_view:    { icon: "📚", label: "Course Viewed",    color: "bg-indigo-100 text-indigo-800 border-indigo-200" },
 };

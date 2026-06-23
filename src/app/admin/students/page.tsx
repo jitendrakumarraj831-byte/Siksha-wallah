@@ -38,7 +38,7 @@ interface StudentProfile {
 const APP_STATUS_META: Record<ApplicationStatus, { label: string; color: string; icon: string }> = {
   new:               { label: "Submitted",          color: "bg-blue-100 text-blue-700",    icon: "🆕" },
   contacted:         { label: "Contacted",           color: "bg-yellow-100 text-yellow-800", icon: "📞" },
-  documents_pending: { label: "Docs Pending",        color: "bg-orange-100 text-orange-800", icon: "📄" },
+  documents_pending: { label: "Docs Pending",        color: "bg-amber-100 text-amber-800", icon: "📄" },
   admission_done:    { label: "Admission Done",      color: "bg-green-100 text-green-700",  icon: "✅" },
   not_interested:    { label: "Not Interested",      color: "bg-gray-100 text-gray-600",    icon: "❌" },
 };
@@ -149,7 +149,7 @@ function StudentCard({
                   </>
                 )}
                 {student.email && (
-                  <a href={`mailto:${student.email}?subject=Siksha Wallah — Admission Update`} className="flex items-center gap-1 rounded-lg bg-purple-500 px-3 py-1.5 text-xs font-bold text-white hover:bg-purple-600">
+                  <a href={`mailto:${student.email}?subject=Siksha Wallah — Admission Update`} className="flex items-center gap-1 rounded-lg bg-[#003f9f] px-3 py-1.5 text-xs font-bold text-white hover:bg-blue-700">
                     <Mail size={11} /> Email
                   </a>
                 )}
@@ -421,7 +421,7 @@ export default function AdminStudentsPage() {
           {[
             { label: "Total Registered", value: stats.total,        color: "text-[#003f9f]" },
             { label: "With Applications",value: stats.withApps,    color: "text-blue-700" },
-            { label: "Total Apps",        value: stats.totalApps,   color: "text-purple-700" },
+            { label: "Total Apps",        value: stats.totalApps,   color: "text-blue-700" },
             { label: "Admission Done",    value: stats.admissionDone, color: "text-green-700" },
             { label: "BSCC Requested",   value: stats.bscc,         color: "text-amber-700" },
           ].map(s => (
