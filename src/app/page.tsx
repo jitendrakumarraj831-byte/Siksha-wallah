@@ -1117,47 +1117,67 @@ export default function Home() {
       </section>
 
       {/* ── SUCCESS STORIES ── */}
-      <section className="py-24 bg-gray-50">
-        <div className="container-shell">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] py-24 text-white">
+        {/* dot-grid */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.07]"
+          style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+        {/* glow orbs */}
+        <div className="pointer-events-none absolute -top-32 right-1/4 h-96 w-96 rounded-full bg-blue-500/20 blur-3xl" />
+        <div className="pointer-events-none absolute bottom-0 left-1/3 h-64 w-64 rounded-full bg-amber-500/10 blur-3xl" />
+
+        <div className="container-shell relative">
           <AnimateIn type="fade-up" className="text-center mb-14">
-            <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">Real Stories. Real Results.</p>
-            <h2 className="font-headline text-4xl md:text-5xl font-extrabold">Trusted by Students &amp; Their Families</h2>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-amber-400 mb-3">Real Stories · Real Results</p>
+            <h2 className="font-headline text-4xl md:text-5xl font-extrabold text-white">
+              छात्रों के{" "}
+              <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
+                असली अनुभव
+              </span>
+            </h2>
+            <p className="mt-3 text-blue-200 max-w-lg mx-auto text-base">
+              5,000+ परिवारों ने हम पर भरोसा किया — यह उन्हीं की आवाज़ है।
+            </p>
           </AnimateIn>
-          <div className="grid gap-6 md:grid-cols-3">
-            {[
-              { name: "Priya Kumari", course: "B.Ed (2024)", place: "Forbesganj", text: "Counsellor ने हर कदम पर बहुत अच्छे से मार्गदर्शन किया। BSCC loan की पूरी प्रक्रिया में भी मदद मिली। पूरा admission बिल्कुल tension-free रहा।" },
-              { name: "Aman Raj", course: "B.Pharma (2023)", place: "Araria", text: "शुरू से लेकर अंत तक हर बात पारदर्शी रही। Document verification से लेकर hostel selection तक — हर मोड़ पर सही guidance मिली।" },
-              { name: "Sakshi Jha", course: "B.Sc Nursing (2024)", place: "Kishanganj", text: "Nursing career को लेकर बहुत confusion थी। Siksha Wallah की counselling के बाद सही college मिला और BSCC loan भी आसानी से approve हो गया।" },
-              { name: "Ravi Shankar", course: "B.Tech (2023)", place: "Forbesganj", text: "Engineering के लिए कौन-सा college सही रहेगा — समझ नहीं आ रहा था। Siksha Wallah की मदद से एक AICTE-approved college में आसानी से admission मिल गया।" },
-              { name: "Anjali Devi", course: "GNM (2024)", place: "Purnea", text: "GNM admission की पूरी प्रक्रिया यहाँ बहुत सरल थी। BSCC loan भी मिला, और staff हर सवाल का जवाब बहुत धैर्य से देते हैं।" },
-              { name: "Vikash Kumar", course: "D.El.Ed (2023)", place: "Araria", text: "Primary teacher बनना मेरा सपना था। D.El.Ed के लिए सही college चुनने में Siksha Wallah की भूमिका बहुत बड़ी रही। आज मैं एक सरकारी विद्यालय में पढ़ा रहा हूँ।" },
-              { name: "Neha Bharti", course: "BBA (2024)", place: "Forbesganj", text: "BBA admission पहली ही कोशिश में confirm हो गया — और कोई extra charge भी नहीं। पूरी प्रक्रिया पर पूरा भरोसा बना रहा।" },
-              { name: "Sonu Kumar", course: "B.Pharma (2024)", place: "Supaul", text: "Pharmacy में मेरी रुचि थी, लेकिन सही जानकारी नहीं थी। यहाँ आकर सब कुछ स्पष्ट हो गया और एक अच्छे college में admission मिला।" },
-              { name: "Puja Kumari", course: "ANM (2023)", place: "Kishanganj", text: "ANM course के लिए सभी documents की पूरी list और प्रक्रिया यहाँ से मिली। बहुत ही आसान अनुभव — मैं इन्हें पूरे 10 में 10 दूँगी।" },
-              { name: "Rahul Paswan", course: "ITI (2024)", place: "Forbesganj", text: "ITI में admission को लेकर परिवार में काफी असमंजस था। Siksha Wallah के counsellor ने हर पहलू समझाया और सही trade चुनने में मदद की।" },
-              { name: "Komal Singh", course: "M.Ed (2024)", place: "Araria", text: "M.Ed के लिए Bihar से बाहर जाना पड़ा। Siksha Wallah ने out-of-state college में भी सहज admission दिलाया। शानदार अनुभव रहा।" },
-              { name: "Deepak Jha", course: "MBA (2023)", place: "Purnea", text: "MBA के लिए BSCC loan apply किया। पूरी file Siksha Wallah team ने तैयार की और loan बिना किसी परेशानी के approve हो गया।" },
-            ].map(({ name, course, place, text }, i) => (
-              <AnimateIn
-                key={name}
-                type={i % 3 === 0 ? "fade-right" : i % 3 === 1 ? "fade-up" : "fade-left"}
-                delay={((i % 3) * 100)}
-              >
-              <article className="rounded-2xl bg-white border-2 border-gray-100 p-7 shadow-sm card-lift card-glow hover:border-blue-100 h-full">
-                <div className="flex gap-1 text-amber-400 mb-4">
-                  {[...Array(5)].map((_, i) => <Star key={i} size={18} fill="currentColor" />)}
-                </div>
-                <p className="text-gray-700 leading-relaxed">"{text}"</p>
-                <div className="mt-6 flex items-center gap-3 border-t border-gray-100 pt-5">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary-blue font-bold text-white text-lg">
-                    {name[0]}
+
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {([
+              { name: "Priya Kumari",  course: "B.Ed · 2024",       place: "Forbesganj", text: "Counsellor ने हर कदम पर बहुत अच्छे से मार्गदर्शन किया। BSCC loan की पूरी प्रक्रिया में भी मदद मिली। पूरा admission बिल्कुल tension-free रहा।",            avatar: "from-blue-500 to-indigo-600" },
+              { name: "Aman Raj",      course: "B.Pharma · 2023",   place: "Araria",     text: "शुरू से लेकर अंत तक हर बात पारदर्शी रही। Document verification से लेकर hostel selection तक — हर मोड़ पर सही guidance मिली।",                              avatar: "from-purple-500 to-violet-600" },
+              { name: "Sakshi Jha",    course: "B.Sc Nursing · 2024",place: "Kishanganj", text: "Nursing career को लेकर बहुत confusion थी। Siksha Wallah की counselling के बाद सही college मिला और BSCC loan भी आसानी से approve हो गया।",              avatar: "from-emerald-500 to-teal-600" },
+              { name: "Ravi Shankar",  course: "B.Tech · 2023",     place: "Forbesganj", text: "Engineering के लिए कौन-सा college सही रहेगा — समझ नहीं आ रहा था। Siksha Wallah की मदद से एक AICTE-approved college में आसानी से admission मिल गया।", avatar: "from-rose-500 to-pink-600" },
+              { name: "Anjali Devi",   course: "GNM · 2024",        place: "Purnea",     text: "GNM admission की पूरी प्रक्रिया यहाँ बहुत सरल थी। BSCC loan भी मिला, और staff हर सवाल का जवाब बहुत धैर्य से देते हैं।",                              avatar: "from-amber-500 to-orange-600" },
+              { name: "Vikash Kumar",  course: "D.El.Ed · 2023",    place: "Araria",     text: "Primary teacher बनना मेरा सपना था। D.El.Ed के लिए सही college चुनने में Siksha Wallah की भूमिका बहुत बड़ी रही। आज मैं एक सरकारी विद्यालय में पढ़ा रहा हूँ।", avatar: "from-cyan-500 to-blue-600" },
+              { name: "Neha Bharti",   course: "BBA · 2024",        place: "Forbesganj", text: "BBA admission पहली ही कोशिश में confirm हो गया — और कोई extra charge भी नहीं। पूरी प्रक्रिया पर पूरा भरोसा बना रहा।",                              avatar: "from-fuchsia-500 to-purple-600" },
+              { name: "Sonu Kumar",    course: "B.Pharma · 2024",   place: "Supaul",     text: "Pharmacy में मेरी रुचि थी, लेकिन सही जानकारी नहीं थी। यहाँ आकर सब कुछ स्पष्ट हो गया और एक अच्छे college में admission मिला।",                       avatar: "from-green-500 to-emerald-600" },
+              { name: "Puja Kumari",   course: "ANM · 2023",        place: "Kishanganj", text: "ANM course के लिए सभी documents की पूरी list और प्रक्रिया यहाँ से मिली। बहुत ही आसान अनुभव — मैं इन्हें पूरे 10 में 10 दूँगी।",                   avatar: "from-sky-500 to-cyan-600" },
+              { name: "Rahul Paswan",  course: "ITI · 2024",        place: "Forbesganj", text: "ITI में admission को लेकर परिवार में काफी असमंजस था। Siksha Wallah के counsellor ने हर पहलू समझाया और सही trade चुनने में मदद की।",                 avatar: "from-orange-500 to-red-600" },
+              { name: "Komal Singh",   course: "M.Ed · 2024",       place: "Araria",     text: "M.Ed के लिए Bihar से बाहर जाना पड़ा। Siksha Wallah ने out-of-state college में भी सहज admission दिलाया। शानदार अनुभव रहा।",                         avatar: "from-violet-500 to-indigo-600" },
+              { name: "Deepak Jha",    course: "MBA · 2023",        place: "Purnea",     text: "MBA के लिए BSCC loan apply किया। पूरी file Siksha Wallah team ने तैयार की और loan बिना किसी परेशानी के approve हो गया।",                             avatar: "from-teal-500 to-green-600" },
+            ] as { name: string; course: string; place: string; text: string; avatar: string }[]).map(({ name, course, place, text, avatar }, i) => (
+              <AnimateIn key={name} type="fade-up" delay={(i % 3) * 80}>
+                <article className="group relative flex h-full flex-col rounded-2xl border border-white/[0.1] bg-white/[0.05] p-6 backdrop-blur-sm transition-all duration-300 hover:border-white/[0.2] hover:bg-white/[0.09]">
+                  {/* decorative quote */}
+                  <div className="select-none font-serif text-5xl leading-none text-amber-400/30 mb-1">&ldquo;</div>
+                  {/* stars */}
+                  <div className="flex gap-0.5 text-amber-400 mb-3">
+                    {[...Array(5)].map((_, j) => <Star key={j} size={13} fill="currentColor" />)}
                   </div>
-                  <div>
-                    <p className="font-headline font-extrabold text-gray-900">{name}</p>
-                    <p className="text-sm text-gray-500">{course} · {place}</p>
+                  {/* review text — flex-1 ensures uniform card height */}
+                  <p className="flex-1 text-sm leading-[1.75] text-blue-100">{text}</p>
+                  {/* footer */}
+                  <div className="mt-5 flex items-center gap-3 border-t border-white/[0.1] pt-4">
+                    <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${avatar} text-base font-bold text-white`}>
+                      {name[0]}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-headline font-extrabold text-white truncate">{name}</p>
+                      <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                        <span className="rounded-full border border-amber-400/30 bg-amber-400/15 px-2 py-0.5 text-[11px] font-bold text-amber-300">{course}</span>
+                        <span className="text-[11px] text-blue-300">{place}</span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </article>
+                </article>
               </AnimateIn>
             ))}
           </div>
