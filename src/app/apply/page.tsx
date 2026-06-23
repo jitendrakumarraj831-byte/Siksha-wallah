@@ -112,6 +112,8 @@ export default function ApplyPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    const e1 = validateStep1();
+    if (e1) { setError(e1); return; }
     const e2 = validateStep2();
     if (e2) { setError(e2); return; }
     setLoading(true);
