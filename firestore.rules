@@ -19,15 +19,19 @@ service cloud.firestore {
     function isSignedIn() { return request.auth != null; }
     function isOwner(uid) { return isSignedIn() && request.auth.uid == uid; }
 
-    // Public lead-capture forms (guests may submit). Readable only via server
-    // admin API (/api/admin/data) which uses firebase-admin and bypasses rules.
+    // Public lead-capture forms (guests may submit). The office dashboard reads
+    // these from the browser (cookie-gated /admin pages) via the client SDK as a
+    // reliable fallback when the Admin SDK backend is unavailable. Updates/deletes
+    // stay locked to the server admin API.
     match /inquiries/{id} {
       allow create: if true;
-      allow read, update, delete: if false;
+      allow read: if true;
+      allow update, delete: if false;
     }
     match /course_applications/{id} {
       allow create: if true;
-      allow read, update, delete: if false;
+      allow read: if true;
+      allow update, delete: if false;
     }
 
     // Activity log: write-only for guests; office admin reads via real-time
