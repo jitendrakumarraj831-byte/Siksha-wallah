@@ -66,7 +66,7 @@ export const metadata: Metadata = {
       "Free admission counselling for B.Ed, Nursing, MBBS, B.Tech, MBA & 50+ courses. Complete BSCC loan support. 5,000+ students guided. Forbesganj, Bihar.",
     images: [
       {
-        url: "/og-image.jpg",
+        url: `${BASE_URL}/og-image.jpg`,
         width: 1200,
         height: 630,
         alt: "Siksha Wallah – Bihar's Most Trusted Education Consultancy, Forbesganj",
@@ -79,7 +79,7 @@ export const metadata: Metadata = {
     title: "Siksha Wallah | Bihar's Most Trusted Admission Consultancy",
     description:
       "Free admission counselling for B.Ed, Nursing, MBBS, B.Tech, MBA & 50+ courses. BSCC loan support. 5,000+ students guided since 2015.",
-    images: ["/og-image.jpg"],
+    images: [`${BASE_URL}/og-image.jpg`],
   },
   icons: {
     icon: [
