@@ -117,13 +117,14 @@ export default function ContactPage() {
               <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Get in Touch</span>
             </div>
             {/* H1 */}
-            <h1 className="font-headline text-[2.5rem] font-black leading-[1.08] tracking-tight md:text-6xl lg:text-[4rem]">
-              <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">Talk to an Admission</span>
-              <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Counsellor Today</span>
+            <h1 className="font-headline font-black tracking-tight leading-[1.1]">
+              <span className="block text-[1.5rem] md:text-[2.2rem] lg:text-[2.6rem] text-white/80">कोई भी सवाल हो —</span>
+              <span className="block text-[2.8rem] md:text-[4.2rem] lg:text-[5rem] bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">हम यहाँ हैं।</span>
+              <span className="block text-[1.5rem] md:text-[2rem] lg:text-[2.3rem] text-white">Free Counselling · 9 AM – 7 PM</span>
             </h1>
-            <div className="mx-auto mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-40" />
+            <div className="mx-auto mt-4 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-40" />
             <p className="mt-6 max-w-2xl mx-auto text-blue-100 leading-relaxed">
-              Course selection से लेकर BSCC loan तक — हर सवाल का जवाब हमारे अनुभवी counsellors से प्राप्त करें। सोमवार से शनिवार, सुबह 9 बजे से शाम 7 बजे तक।
+              Course selection से लेकर BSCC loan तक — हर सवाल का जवाब हमारे अनुभवी counsellors से मुफ़्त प्राप्त करें। सोमवार से शनिवार, सुबह 9 बजे से शाम 7 बजे तक।
             </p>
             {/* CTAs */}
             <div className="mt-8 flex flex-wrap justify-center gap-4">

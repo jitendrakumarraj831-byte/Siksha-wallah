@@ -483,7 +483,7 @@ export default function Home() {
               { icon: ShieldCheck,  text: "100% Free Initial Counselling",   color: "text-green-400"  },
               { icon: GraduationCap, text: "NCTE / UGC Recognised Colleges",  color: "text-blue-400"   },
               { icon: CreditCard,   text: "End-to-End BSCC Loan Support",     color: "text-amber-400"  },
-              { icon: Phone,        text: "Personal Counsellor for Every Student", color: "text-purple-400" },
+              { icon: Phone,        text: "Personal Counsellor for Every Student", color: "text-red-400" },
             ].map(({ icon: Icon, text, color }) => (
               <span key={text} className="flex items-center gap-2 text-sm font-semibold text-gray-300">
                 <Icon size={15} className={color} />
@@ -703,8 +703,8 @@ export default function Home() {
 
                         {/* Entrance Exam */}
                         <div className="flex items-start gap-2">
-                          <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100">
-                            <FileText size={13} className="text-purple-600" />
+                          <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
+                            <FileText size={13} className="text-blue-600" />
                           </div>
                           <div>
                             <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Entrance Exam</p>
@@ -1024,7 +1024,7 @@ export default function Home() {
                 desc: "₹2 Cr+ loans sanctioned — document preparation से DRCC approval तक हमारी team पूरी तरह साथ है।",
               },
               {
-                icon: BadgeCheck,  border: "border-l-purple-500", iconBg: "bg-purple-50", iconColor: "text-purple-600",
+                icon: BadgeCheck,  border: "border-l-blue-500",   iconBg: "bg-blue-50",   iconColor: "text-blue-600",
                 title: "पारदर्शी Fee Structure",
                 desc: "पहले दिन से सब कुछ clear — कोई surprise नहीं, कोई बाद में अचानक fee नहीं। 100% transparent process।",
               },
@@ -1034,7 +1034,7 @@ export default function Home() {
                 desc: "एक call — एक dedicated counsellor — admission confirm होने तक वही एक व्यक्ति आपके साथ रहेगा।",
               },
               {
-                icon: Award,       border: "border-l-teal-500",   iconBg: "bg-teal-50",   iconColor: "text-teal-600",
+                icon: Award,       border: "border-l-amber-500",  iconBg: "bg-amber-50",  iconColor: "text-amber-600",
                 title: "9+ साल का अनुभव",
                 desc: "Forbesganj में 9 साल से active — 5,000+ परिवारों का भरोसा, बिना किसी complaint के।",
               },
@@ -1076,7 +1076,7 @@ export default function Home() {
                 { step: "01", icon: Phone,        title: "Call या WhatsApp करें",            desc: "पहली बातचीत बिल्कुल निःशुल्क। हम आपकी situation समझेंगे।",             color: "text-blue-300",  bg: "bg-blue-500/20" },
                 { step: "02", icon: FileText,     title: "अपनी Profile Share करें",          desc: "Marks, बजट, stream और career goal बताएँ — हम सही options निकालेंगे।", color: "text-green-300", bg: "bg-green-500/20" },
                 { step: "03", icon: Building2,    title: "Verified College Options पाएँ",    desc: "आपके लिए NCTE/INC/AICTE approved colleges की shortlist ready होगी।",   color: "text-amber-300", bg: "bg-amber-500/20" },
-                { step: "04", icon: BadgeCheck,   title: "Admission Confirm करें",           desc: "Documents से DRCC तक — हर step पर हम साथ। Seat confirm होने तक।",    color: "text-purple-300",bg: "bg-purple-500/20"},
+                { step: "04", icon: BadgeCheck,   title: "Admission Confirm करें",           desc: "Documents से DRCC तक — हर step पर हम साथ। Seat confirm होने तक।",    color: "text-red-300",   bg: "bg-red-500/20"  },
               ].map(({ step, icon: StepIcon, title, desc, color, bg }, i) => (
                 <div key={step} className="relative">
                   {i < 3 && (
@@ -1464,9 +1464,9 @@ export default function Home() {
                   {[
                     { label: "Counselling & Services", color: "bg-blue-100 text-blue-700", range: "1–4" },
                     { label: "Choosing the Right Course", color: "bg-green-100 text-green-700", range: "5–9" },
-                    { label: "Admission Process", color: "bg-purple-100 text-purple-700", range: "10–12" },
+                    { label: "Admission Process", color: "bg-blue-100 text-blue-700", range: "10–12" },
                     { label: "BSCC Loan Support", color: "bg-amber-100 text-amber-700", range: "13–15" },
-                    { label: "Fees & Expenses", color: "bg-rose-100 text-rose-700", range: "16–17" },
+                    { label: "Fees & Expenses", color: "bg-red-100 text-red-700", range: "16–17" },
                   ].map(({ label, color, range }) => (
                     <div key={label} className={`flex items-center justify-between rounded-lg px-3 py-2 text-xs font-semibold ${color}`}>
                       <span>{label}</span>
@@ -1509,8 +1509,12 @@ export default function Home() {
       </section>
 
       {/* ── CONTACT & LOCATION ── */}
-      <section id="contact" className="py-24 bg-gradient-to-br from-gray-900 to-gray-800 text-white">
-        <div className="container-shell">
+      <section id="contact" className="relative overflow-hidden py-24 bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] text-white">
+        {/* dot-grid */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.07]"
+          style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+        <div className="pointer-events-none absolute -top-32 -right-24 h-[400px] w-[400px] rounded-full bg-amber-400 opacity-[0.10] blur-3xl" />
+        <div className="container-shell relative">
           <div className="grid gap-12 lg:grid-cols-2">
             {/* Left — contact info */}
             <AnimateIn type="fade-right">
@@ -1528,8 +1532,8 @@ export default function Home() {
                   </div>
                   <div>
                     <h3 className="font-headline text-lg font-extrabold text-white">Our Office Address</h3>
-                    <p className="mt-1 text-gray-300">College Chowk, Near HP Petrol Pump</p>
-                    <p className="text-gray-300">Forbesganj, Araria — Bihar 854318</p>
+                    <p className="mt-1 text-blue-200">College Chowk, Near HP Petrol Pump</p>
+                    <p className="text-blue-200">Forbesganj, Araria — Bihar 854318</p>
                     <a
                       href="https://maps.google.com/?q=College+Chowk+Forbesganj+Araria+Bihar"
                       target="_blank"
@@ -1550,7 +1554,7 @@ export default function Home() {
                     </div>
                     <div>
                       <p className="font-bold text-white">+91 {num}</p>
-                      <p className="text-xs text-gray-400">{label}</p>
+                      <p className="text-xs text-blue-300">{label}</p>
                     </div>
                   </a>
                 ))}

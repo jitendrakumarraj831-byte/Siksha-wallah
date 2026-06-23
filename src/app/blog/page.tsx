@@ -56,14 +56,15 @@ export default function BlogPage() {
               <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Career Guidance Blog</span>
             </div>
             {/* H1 */}
-            <h1 className="font-headline text-[2.5rem] font-black leading-[1.08] tracking-tight md:text-6xl lg:text-[4rem]">
-              <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">Admission Tips &amp;</span>
-              <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Career Guidance for Students</span>
+            <h1 className="font-headline font-black tracking-tight leading-[1.1]">
+              <span className="block text-[1.5rem] md:text-[2.2rem] lg:text-[2.6rem] text-white/80">Admission और Career की</span>
+              <span className="block text-[2.8rem] md:text-[4.2rem] lg:text-[5rem] bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">सही जानकारी यहाँ है।</span>
+              <span className="block text-[1.4rem] md:text-[1.9rem] lg:text-[2.2rem] text-white">Bihar के students के लिए — <span className="text-amber-300">मुफ़्त।</span></span>
             </h1>
-            <div className="mx-auto mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-40" />
+            <div className="mx-auto mt-4 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-40" />
             <p className="mx-auto mt-6 max-w-xl leading-relaxed text-blue-100">
-              Expert articles on B.Ed, Nursing, BSCC loan, Engineering admissions और career planning — विशेष रूप से{" "}
-              <strong className="text-white">Bihar के students और परिवारों</strong> के लिए लिखे गए।
+              B.Ed, Nursing, BSCC loan, Engineering admissions और career planning पर expert articles — विशेष रूप से{" "}
+              <strong className="text-white">Araria, Forbesganj और Bihar के हर ज़िले के students</strong> के लिए।
             </p>
 
             {/* Blog stats */}

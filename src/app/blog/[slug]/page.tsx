@@ -144,26 +144,30 @@ export default async function BlogArticlePage({ params }: Props) {
       <SiteNavbar />
       <main className="bg-gray-50 min-h-screen">
         {/* Hero */}
-        <div className="bg-gray-900 text-white py-12">
-          <div className="container-shell max-w-3xl">
+        <div className="relative overflow-hidden bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] text-white py-14">
+          {/* dot-grid */}
+          <div className="pointer-events-none absolute inset-0 opacity-[0.07]"
+            style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+          <div className="pointer-events-none absolute -top-20 right-0 h-64 w-64 rounded-full bg-amber-400 opacity-[0.10] blur-3xl" />
+          <div className="container-shell max-w-3xl relative">
             <Link
               href="/blog"
-              className="inline-flex items-center gap-2 text-gray-400 hover:text-white text-sm mb-6 transition"
+              className="inline-flex items-center gap-2 text-blue-300 hover:text-white text-sm mb-6 transition"
             >
-              <ArrowLeft size={14} /> Back to All Articles
+              <ArrowLeft size={14} /> सभी Articles पर वापस जाएँ
             </Link>
-            <div className="flex items-center gap-3 mb-3">
-              <span className="text-xs font-bold bg-gray-700 text-gray-200 px-3 py-1 rounded-full">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-xs font-bold border border-amber-400/40 bg-amber-400/15 text-amber-300 px-3 py-1 rounded-full">
                 {article.category}
               </span>
-              <span className="flex items-center gap-1 text-gray-400 text-xs">
+              <span className="flex items-center gap-1 text-blue-300 text-xs">
                 <Clock size={11} /> {article.readTime} read
               </span>
             </div>
-            <h1 className="font-headline text-4xl md:text-5xl font-black leading-tight mb-2 text-white">
+            <h1 className="font-headline text-3xl md:text-5xl font-black leading-tight mb-3 text-white">
               {article.titleHi ?? article.title}
             </h1>
-            <p className="text-gray-400 text-sm">{article.excerpt}</p>
+            <p className="text-blue-200 text-sm leading-relaxed">{article.excerpt}</p>
           </div>
         </div>
 
