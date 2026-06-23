@@ -1,11 +1,13 @@
 "use client";
 
 import { PortalShell } from "@/components/portal-shell";
+import { ReviewsCarousel } from "@/components/reviews-carousel";
 import {
   GraduationCap, Users, Award, BadgeCheck, MapPin, Phone,
   MessageCircle, Star, Heart, Target, ShieldCheck, CheckCircle2,
 } from "lucide-react";
 import Link from "next/link";
+import { successStories } from "@/lib/reviews-data";
 
 const team = [
   {
@@ -116,7 +118,7 @@ export default function AboutPage() {
                 इसी कमी को दूर करने के लिए Rajesh Kumar Sah ने एक स्पष्ट संकल्प के साथ Siksha Wallah की नींव रखी: <strong className="text-gray-900">&ldquo;हर student और परिवार को 100% ईमानदार, पारदर्शी और निःशुल्क मार्गदर्शन।&rdquo;</strong> आज हम Araria जिले की #1 trusted education consultancy के रूप में जाने जाते हैं।
               </p>
               <p className="text-gray-600 leading-relaxed">
-                हम केवल admission नहीं दिलाते — हम <strong className="text-gray-900">सही career और एक सुरक्षित भविष्य की नींव</strong> तैयार करते हैं। B.Ed से MBBS तक, D.El.Ed से MBA तक — हर stream में अनुभवी विशेषज्ञ, और कोई छिपा शुल्क नहीं।
+                हम केवल admission नहीं दिलाते — हम <strong className="text-gray-900">सही career और एक सुरक्षित भविष्य की नींव</strong> तैयार करते हैं। B.Ed से MBBS तक, D.El.Ed से MBA तक — हर stream में अनुभवी विशेषज्ञ, और कोई छिपा शुल्क ��हीं।
               </p>
               <div className="mt-6 rounded-xl bg-amber-50 border-2 border-amber-200 p-5">
                 <p className="text-sm font-bold text-amber-800">
@@ -280,6 +282,13 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* ── SUCCESS STORIES CAROUSEL ── */}
+      <ReviewsCarousel 
+        reviews={successStories}
+        title="सफल छात्रों की प्रेरणादायक कहानियाँ"
+        subtitle="हमारे साथ admission पाने वाले 5,000+ students के असली अनुभव सुनें।"
+      />
     </PortalShell>
   );
 }
