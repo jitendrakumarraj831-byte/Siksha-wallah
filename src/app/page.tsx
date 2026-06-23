@@ -988,14 +988,14 @@ export default function Home() {
           <AnimateIn type="fade-up" delay={60}>
           <div className="mb-12 grid grid-cols-2 md:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-blue-100 shadow-sm">
             {[
-              { value: 500,  suffix: "+", label: "Successful Admissions" },
-              { value: 200,  suffix: "+", label: "Partner Colleges" },
-              { value: 2,    suffix: " Cr+", label: "BSCC Loans Sanctioned" },
-              { value: 10,   suffix: "+ Years", label: "Forbesganj में अनुभव" },
-            ].map(({ value, suffix, label }) => (
+              { target: 500,  suffix: "+",      label: "Successful Admissions" },
+              { target: 200,  suffix: "+",      label: "Partner Colleges" },
+              { target: 2,    suffix: " Cr+",   label: "BSCC Loans Sanctioned" },
+              { target: 10,   suffix: "+ Yrs",  label: "Forbesganj में अनुभव" },
+            ].map(({ target, suffix, label }) => (
               <div key={label} className="flex flex-col items-center justify-center gap-1 bg-blue-50 py-6 px-4 text-center">
                 <p className="font-headline text-3xl font-black text-blue-700 md:text-4xl">
-                  <CountUp end={value} />{suffix}
+                  <CountUp target={target} suffix={suffix} />
                 </p>
                 <p className="text-xs font-semibold text-gray-500 leading-snug">{label}</p>
               </div>
