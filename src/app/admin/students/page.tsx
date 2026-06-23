@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { db } from "@/lib/firebase";
 import {
-  collection, getDocs, query, where, orderBy,
+  collection, getDocs, query, where,
 } from "firebase/firestore";
 import {
   getAllApplications, updateApplicationStatus,
@@ -271,11 +271,12 @@ export default function AdminStudentsPage() {
 
   useEffect(() => { if (authorized) load(); }, [authorized]);
 
-  // Direct client-SDK read — used as a fallback before the admin API / rules lockdown.
+  // Direct client-SDK read — used as a fallback when the Admin SDK backend is
+  // unavailable. Avoids a composite (role + createdAt) index by sorting in JS.
   async function loadStudentsClient(): Promise<StudentProfile[]> {
     const [usersSnap, apps] = await Promise.all([
-      getDocs(query(collection(db, "users"), where("role", "==", "student"), orderBy("createdAt", "desc"))),
-      getAllApplications(),
+      getDocs(query(collection(db, "users"), where("role", "==", "student"))),
+      getAllApplications().catch(() => [] as CourseApplication[]),
     ]);
     const appsByUserId: Record<string, CourseApplication[]> = {};
     apps.forEach(a => {
@@ -284,11 +285,18 @@ export default function AdminStudentsPage() {
         appsByUserId[a.userId].push(a);
       }
     });
-    return usersSnap.docs.map(d => ({
+    const list = usersSnap.docs.map(d => ({
       id: d.id,
       ...(d.data() as Omit<StudentProfile, "id" | "applications">),
       applications: appsByUserId[d.id] || [],
     }));
+    // Newest first, sorted client-side (no Firestore index needed).
+    list.sort((a, b) => {
+      const ta = typeof a.createdAt === "number" ? a.createdAt : 0;
+      const tb = typeof b.createdAt === "number" ? b.createdAt : 0;
+      return tb - ta;
+    });
+    return list;
   }
 
   // Ask the server why the Admin SDK is unavailable, so the office can see the
