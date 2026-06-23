@@ -4,6 +4,7 @@ import Script from "next/script";
 import "./globals.css";
 import { AuthProvider } from "@/components/auth-provider";
 import { FloatingContact } from "@/components/floating-contact";
+import { Analytics } from "@vercel/analytics/next";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 const BASE_URL = "https://sikshawallah.com";
@@ -117,6 +118,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           {children}
           <FloatingContact />
         </AuthProvider>
+        <Analytics />
         {GA_ID && (
           <>
             <Script
