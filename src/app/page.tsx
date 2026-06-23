@@ -9,7 +9,7 @@ import {
   ChevronDown, CreditCard, GraduationCap, MapPin,
   MessageCircle, Phone, ShieldCheck, Sparkles, Star, Users, X,
   Clock, Award, CheckCircle2,
-  Briefcase, BookMarked, ChevronUp, FileCheck2, FileText, ListChecks,
+  Briefcase, BookMarked, ChevronUp, FileText, ListChecks,
 } from "lucide-react";
 import { SiteNavbar } from "@/components/site-navbar";
 import { SiteFooter } from "@/components/site-footer";
@@ -799,142 +799,86 @@ export default function Home() {
       </section>
 
       {/* ── BSCC SECTION ── */}
-      <section id="bscc" className="py-24 bg-gradient-to-br from-[#003f9f] to-[#001f6b] text-white relative overflow-hidden">
-        <div className="pointer-events-none absolute -top-24 right-0 h-96 w-96 rounded-full bg-amber-400 opacity-10 blur-3xl" />
+      <section id="bscc" className="relative overflow-hidden bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] py-16 md:py-24 text-white">
+        {/* Same dot-grid as hero */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.07]"
+          style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+        <div className="pointer-events-none absolute -top-32 -right-24 h-[400px] w-[400px] rounded-full bg-amber-400 opacity-[0.10] blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-20 -left-16 h-64 w-64 rounded-full bg-blue-500 opacity-[0.12] blur-3xl" />
+
         <div className="container-shell relative">
-          {/* Banner */}
-          <AnimateIn type="zoom-in" className="mb-16 text-center">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 px-4 py-2 text-sm font-bold text-amber-300">
-              <CreditCard size={16} /> Bihar Government Scheme
-            </div>
-            <h2 className="font-headline text-4xl md:text-5xl font-extrabold">
-              Bihar Student Credit Card{" "}
-              <span className="text-amber-400">(BSCC) Loan Support</span>
-            </h2>
-            <p className="mt-4 max-w-2xl mx-auto text-blue-100 text-lg">
-              इस सरकारी योजना के माध्यम से अपनी <strong className="text-white">पढ़ाई, हॉस्टल और भोजन</strong> का खर्च आसानी से संभालें। BSCC के तहत ₹4 लाख तक का education loan — <strong className="text-amber-400">केवल 4% वार्षिक ब्याज</strong> पर। हम पूरी आवेदन प्रक्रिया में निःशुल्क मार्गदर्शन देते हैं।
-            </p>
-            <div className="mt-6">
-              <Link
-                href="/student-credit-card"
-                className="inline-flex items-center gap-2 rounded-xl bg-amber-400 px-7 py-3.5 font-extrabold text-gray-900 transition hover:bg-amber-300 shadow-lg shadow-amber-400/30"
-              >
-                Learn the Full BSCC Process <ArrowRight size={17} />
-              </Link>
-            </div>
-          </AnimateIn>
+          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
 
-          {/* BSCC Benefits Row */}
-          <div className="mb-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {[
-              ["Up to ₹4 Lakh Loan", "Covers tuition, hostel, food and study material"],
-              ["Only 4% Interest", "Just 1% for women and differently-abled students"],
-              ["50+ Eligible Courses", "Teaching, Medical, Para Medical, Law, Engineering, Pharmacy and more"],
-              ["No Collateral Needed", "No guarantor, no property mortgage required"],
-              ["Repay After Employment", "EMIs begin only after you complete your course and start earning"],
-            ].map(([title, desc]) => (
-              <div key={title as string} className="flex gap-3 rounded-xl border border-white/10 bg-white/5 p-4">
-                <div className="mt-0.5 flex-shrink-0 rounded-full bg-green-500 p-1">
-                  <Check size={13} />
-                </div>
-                <div>
-                  <p className="font-bold text-white text-sm">{title}</p>
-                  <p className="text-xs text-blue-200 mt-0.5">{desc}</p>
-                </div>
+            {/* ── LEFT: heading + benefits + CTA ── */}
+            <div>
+              {/* Badge */}
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/[0.10] px-4 py-2">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
+                <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Bihar Government Scheme</span>
               </div>
-            ))}
-          </div>
 
-          {/* BSCC Step-by-Step Process */}
-          <div className="mb-12 rounded-2xl border border-white/15 bg-white/5 p-7 backdrop-blur-sm">
-            <div className="mb-6 flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-400">
-                <ListChecks size={18} className="text-gray-900" />
-              </div>
-              <h3 className="font-headline text-2xl font-extrabold text-amber-400">How Your BSCC Loan Gets Approved — Step by Step</h3>
-            </div>
+              {/* Heading */}
+              <h2 className="font-headline text-[2rem] font-black leading-[1.1] tracking-tight md:text-[2.6rem]">
+                Bihar Student Credit Card{" "}
+                <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
+                  (BSCC) Loan Support
+                </span>
+              </h2>
+              <div className="mt-3 h-[3px] w-20 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent" />
 
-            <div className="grid gap-5 md:grid-cols-3">
-              {[
-                {
-                  num: "01",
-                  title: "Document Review at Siksha Wallah",
-                  location: "Our Office — College Chowk, Forbesganj",
-                  desc: "Bring your original documents to our office. Our counselling team carefully checks your eligibility, verifies every certificate and prepares a complete, error-free file for your BSCC application — ensuring nothing gets rejected later.",
-                  icon: FileCheck2,
-                  color: "text-blue-300",
-                },
-                {
-                  num: "02",
-                  title: "College Selection & Bonafide Certificate",
-                  location: "Your Chosen BSCC-Approved College",
-                  desc: "We help you shortlist the most suitable BSCC-approved college based on your course, fees and location. Once admission is confirmed, the college issues a Bonafide Certificate — an essential document for your BSCC application.",
-                  icon: GraduationCap,
-                  color: "text-green-300",
-                },
-                {
-                  num: "03",
-                  title: "DRCC Registration & Loan Approval",
-                  location: "District Registration & Counselling Centre (DRCC)",
-                  desc: "Your final application is submitted at the DRCC office in your district. The approved loan is credited directly into your bank account. Our team accompanies and supports you through every step of the DRCC process.",
-                  icon: BadgeCheck,
-                  color: "text-amber-300",
-                },
-              ].map(({ num, title, location, desc, icon: StepIcon, color }) => (
-                <div key={num} className="relative">
-                  {/* Connector line */}
-                  <div className="relative rounded-2xl border border-white/10 bg-white/5 p-5 h-full">
-                    <div className="flex items-center gap-3 mb-3">
-                      <span className="font-headline text-5xl font-extrabold text-white/10 leading-none">{num}</span>
-                      <div className={`flex h-9 w-9 items-center justify-center rounded-xl border border-white/20 bg-white/10 ${color}`}>
-                        <StepIcon size={18} />
-                      </div>
-                    </div>
-                    <h4 className="font-headline font-extrabold text-white text-base mb-1">{title}</h4>
-                    <p className={`text-xs font-semibold mb-3 ${color}`}>Location: {location}</p>
-                    <p className="text-sm text-blue-100 leading-relaxed">{desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-6 flex items-start gap-3 rounded-xl border border-green-500/30 bg-green-500/10 p-4">
-              <CheckCircle2 size={20} className="mt-0.5 flex-shrink-0 text-green-400" />
-              <p className="text-sm font-semibold text-green-200">
-                <strong className="text-green-300">100% Free Assistance:</strong> document preparation से लेकर DRCC approval तक — हमारी team पूरे BSCC application process में आपकी निःशुल्क सहायता करती है। कोई processing fee, कोई hidden charges नहीं।
+              <p className="mt-5 text-blue-100 leading-relaxed">
+                इस सरकारी योजना से अपनी <strong className="text-white">पढ़ाई, हॉस्टल और भोजन</strong> का खर्च संभालें। ₹4 लाख तक का loan — <strong className="text-amber-400">केवल 4% वार्षिक ब्याज</strong> पर। हम पूरी आवेदन प्रक्रिया में <strong className="text-white">निःशुल्क मार्गदर्शन</strong> देते हैं।
               </p>
-            </div>
-          </div>
 
-          <div className="grid gap-10 lg:grid-cols-2 items-start">
-            {/* Documents required for BSCC */}
-            <div className="space-y-4">
-              <h3 className="font-headline text-xl font-extrabold text-amber-400">Documents Required for BSCC Loan</h3>
-              {[
-                ["Aadhaar Card", "Student's original Aadhaar, linked with an active mobile number"],
-                ["10th & 12th Marksheet + Passing Certificate", "Originals along with two clear photocopies of each"],
-                ["Domicile Certificate", "Proof of Bihar state residence, issued by SDO/Circle Office"],
-                ["Family Income Certificate", "Annual family income should be below ₹4.5 Lakh"],
-                ["Bank Account Details", "Student's own savings account (SBI / BOI preferred)"],
-                ["College Bonafide Certificate", "Issued by your BSCC-approved enrolled college"],
-                ["Passport-Size Photographs", "4 recent colour photos on a white background"],
-                ["PAN Card (if available)", "Student's or parent's PAN for KYC verification"],
-              ].map(([doc, detail]) => (
-                <div key={doc as string} className="flex gap-3 rounded-xl border border-white/10 bg-white/5 p-3.5">
-                  <Check size={15} className="mt-0.5 flex-shrink-0 text-green-400" />
-                  <div>
-                    <p className="text-sm font-bold text-white">{doc}</p>
-                    <p className="text-xs text-blue-300 mt-0.5">{detail}</p>
+              {/* Benefit chips */}
+              <div className="mt-7 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {[
+                  { icon: CreditCard,   title: "Up to ₹4 Lakh Loan",      desc: "Tuition, hostel, food और study material" },
+                  { icon: BadgeCheck,   title: "Only 4% Interest",         desc: "Women के लिए सिर्फ 1% ब्याज" },
+                  { icon: GraduationCap,title: "50+ Eligible Courses",     desc: "Teaching, Medical, Law, Engineering और more" },
+                  { icon: ShieldCheck,  title: "No Collateral Needed",     desc: "कोई guarantor या property mortgage नहीं" },
+                  { icon: Clock,        title: "Repay After Employment",   desc: "Course पूरा होने के बाद EMI शुरू होती है" },
+                  { icon: CheckCircle2, title: "100% Free Assistance",     desc: "Document से DRCC approval तक — कोई fee नहीं" },
+                ].map(({ icon: Icon, title, desc }) => (
+                  <div key={title} className="flex items-start gap-3 rounded-xl border border-white/[0.10] bg-white/[0.05] p-3.5 hover:bg-white/[0.09] transition">
+                    <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-amber-400/[0.15]">
+                      <Icon size={15} className="text-amber-400" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-white">{title}</p>
+                      <p className="text-[11px] text-blue-300 mt-0.5 leading-snug">{desc}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+
+              {/* CTAs */}
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Link
+                  href="/student-credit-card"
+                  className="inline-flex items-center gap-2 rounded-xl bg-amber-400 px-6 py-3 font-extrabold text-gray-900 transition hover:bg-amber-300 shadow-lg shadow-amber-500/25 hover:-translate-y-0.5"
+                >
+                  Learn the Full BSCC Process <ArrowRight size={16} />
+                </Link>
+                <a
+                  href="https://wa.me/916203138576?text=नमस्ते!%20मुझे%20BSCC%20Loan%20के%20बारे%20में%20जानकारी%20चाहिए।%20Please%20help%20karein।"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-xl border-2 border-white/25 bg-white/[0.07] px-6 py-3 font-bold text-white transition hover:bg-white/[0.14] hover:-translate-y-0.5"
+                >
+                  <MessageCircle size={16} /> Ask on WhatsApp
+                </a>
+              </div>
             </div>
 
-            {/* Eligibility Checker */}
-            <div className="rounded-2xl border border-white/20 bg-white/10 p-7 backdrop-blur-xl">
-              <h3 className="font-headline text-xl font-extrabold mb-5">
-                Quick BSCC Eligibility Check
-              </h3>
+            {/* ── RIGHT: Eligibility Checker ── */}
+            <div className="rounded-2xl border border-white/20 bg-white/[0.07] p-7 backdrop-blur-sm">
+              <div className="mb-5 flex items-center gap-3">
+                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-amber-400">
+                  <CheckCircle2 size={18} className="text-gray-900" />
+                </div>
+                <h3 className="font-headline text-xl font-extrabold">Quick BSCC Eligibility Check</h3>
+              </div>
 
               {bsccEligible === null ? (
                 <form onSubmit={handleBsccCheck} className="space-y-4">
@@ -956,7 +900,7 @@ export default function Home() {
                       value={bsccIncome}
                       onChange={(e) => setBsccIncome(e.target.value)}
                       required
-                      className="w-full rounded-xl border border-white/30 bg-[#003f9f] px-4 py-3 text-white outline-none"
+                      className="w-full rounded-xl border border-white/30 bg-[#001850] px-4 py-3 text-white outline-none"
                     >
                       <option value="">Select annual family income</option>
                       <option value="below">Below ₹4.5 Lakh</option>
