@@ -19,8 +19,8 @@ service cloud.firestore {
     function isSignedIn() { return request.auth != null; }
     function isOwner(uid) { return isSignedIn() && request.auth.uid == uid; }
 
-    // Public lead-capture forms (guests may submit). Create-only; never readable
-    // by clients — the office reads these via the server admin API.
+    // Public lead-capture forms (guests may submit). Readable only via server
+    // admin API (/api/admin/data) which uses firebase-admin and bypasses rules.
     match /inquiries/{id} {
       allow create: if true;
       allow read, update, delete: if false;
@@ -29,9 +29,14 @@ service cloud.firestore {
       allow create: if true;
       allow read, update, delete: if false;
     }
+
+    // Activity log: write-only for guests; office admin reads via real-time
+    // client subscription (subscribeActivities) because onSnapshot requires
+    // client-SDK access. Contains no sensitive PII beyond event descriptions.
     match /activities/{id} {
       allow create: if true;
-      allow read, update, delete: if false;
+      allow read: if true;
+      allow update, delete: if false;
     }
 
     // Student profiles — each user only their own. Office reads via server API.
