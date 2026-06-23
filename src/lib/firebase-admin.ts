@@ -14,10 +14,17 @@ let cachedAuth: Auth | null = null;
 
 function getAdminApp(): App {
   if (getApps().length) return getApp();
-  const saJson = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
-  return saJson
-    ? initializeApp({ credential: cert(JSON.parse(saJson)) })
-    : initializeApp({ credential: applicationDefault() });
+  const saJson = process.env.FIREBASE_SERVICE_ACCOUNT_KEY?.trim();
+  if (saJson) {
+    const parsed = JSON.parse(saJson);
+    // Vercel sometimes stores private_key with escaped newlines (\\n instead of \n).
+    // Firebase Admin SDK requires actual newline characters in the PEM key.
+    if (parsed.private_key && !parsed.private_key.includes("\n")) {
+      parsed.private_key = parsed.private_key.replace(/\\n/g, "\n");
+    }
+    return initializeApp({ credential: cert(parsed) });
+  }
+  return initializeApp({ credential: applicationDefault() });
 }
 
 export function getAdminDb(): Firestore | null {
