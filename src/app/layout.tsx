@@ -6,7 +6,7 @@ import { AuthProvider } from "@/components/auth-provider";
 import { FloatingContact } from "@/components/floating-contact";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
-const BASE_URL = "https://sikshawallah.com";
+const BASE_URL = "https://www.sikshawallahfbg.in";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,40 +27,76 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "Siksha Wallah | Trusted Education Consultancy in Forbesganj, Bihar",
+    default: "Siksha Wallah | Bihar's Most Trusted Admission Consultancy – Forbesganj",
     template: "%s | Siksha Wallah",
   },
   description:
-    "Personalised admission guidance from Forbesganj's most trusted education consultancy. Choose the right course and college for B.Ed, D.El.Ed, Nursing, Pharmacy, Engineering, Management and more — with complete Bihar Student Credit Card (BSCC) loan support. 5,000+ students placed since 2015.",
+    "Forbesganj's #1 admission consultancy. Free career counselling for B.Ed, Nursing, MBBS, B.Tech, MBA, LLB & 50+ courses. Complete Bihar Student Credit Card (BSCC) loan support. 5,000+ students guided since 2015. Call: +91 62031 38576",
   keywords: [
+    "Siksha Wallah",
     "Siksha Wallah Forbesganj",
-    "college admission Bihar",
-    "B.Ed admission Araria",
-    "D.El.Ed admission Bihar",
-    "Bihar Student Credit Card",
-    "BSCC loan guide",
-    "nursing admission Forbesganj",
-    "career counselling Bihar",
-    "admission consultancy Forbesganj",
+    "admission consultancy Bihar",
+    "college admission Forbesganj",
+    "B.Ed admission Bihar",
+    "Nursing admission Bihar",
+    "MBBS admission Bihar",
     "B.Tech admission Bihar",
+    "MBA admission Bihar",
+    "Bihar Student Credit Card",
+    "BSCC loan support",
+    "free admission counselling Forbesganj",
+    "career counselling Bihar",
+    "D.El.Ed admission Bihar",
     "GNM ANM admission Bihar",
     "B.Pharma admission Bihar",
+    "education consultancy Araria",
+    "college guidance Bihar",
   ],
+  alternates: {
+    canonical: BASE_URL,
+  },
   openGraph: {
     type: "website",
     locale: "en_IN",
     url: BASE_URL,
     siteName: "Siksha Wallah",
-    title: "Siksha Wallah | Trusted Education Consultancy in Forbesganj, Bihar",
+    title: "Siksha Wallah | Bihar's Most Trusted Admission Consultancy",
     description:
-      "Personalised admission counselling for B.Ed, Nursing, Engineering, Management and 40+ courses. Free BSCC loan assistance. Trusted by 5,000+ families since 2015.",
+      "Free admission counselling for B.Ed, Nursing, MBBS, B.Tech, MBA & 50+ courses. Complete BSCC loan support. 5,000+ students guided. Forbesganj, Bihar.",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Siksha Wallah – Bihar's Most Trusted Education Consultancy, Forbesganj",
+        type: "image/jpeg",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Siksha Wallah | Trusted Education Consultancy in Forbesganj",
-    description: "Personalised admission counselling and free BSCC loan support. Trusted by 5,000+ families since 2015.",
+    title: "Siksha Wallah | Bihar's Most Trusted Admission Consultancy",
+    description:
+      "Free admission counselling for B.Ed, Nursing, MBBS, B.Tech, MBA & 50+ courses. BSCC loan support. 5,000+ students guided since 2015.",
+    images: ["/og-image.jpg"],
   },
-  robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+    other: [
+      { rel: "icon", url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { rel: "icon", url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+  },
 };
 
 export const viewport: Viewport = {
@@ -74,8 +110,10 @@ const localBusinessSchema = {
   "@type": "EducationalOrganization",
   name: "Siksha Wallah",
   description:
-    "Forbesganj's most trusted education consultancy since 2015. Personalised admission guidance for B.Ed, D.El.Ed, Nursing, Pharmacy, Engineering & Management courses, with complete Bihar Student Credit Card (BSCC) loan support.",
+    "Bihar's most trusted admission consultancy since 2015. Free career counselling for B.Ed, Nursing, MBBS, B.Tech, MBA, LLB & 50+ courses with complete BSCC loan support.",
   url: BASE_URL,
+  logo: `${BASE_URL}/icon-512.png`,
+  image: `${BASE_URL}/og-image.jpg`,
   telephone: ["+916203138576", "+917858062498"],
   address: {
     "@type": "PostalAddress",

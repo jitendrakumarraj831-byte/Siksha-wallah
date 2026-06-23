@@ -15,9 +15,9 @@ export const metadata: Metadata = {
     title: "Courses | Siksha Wallah Forbesganj",
     description:
       "Teaching, Medical, Technical — explore all professional courses with BSCC financing options.",
-    url: "https://sikshawallah.com/courses",
+    url: "https://www.sikshawallahfbg.in/courses",
   },
-  alternates: { canonical: "https://sikshawallah.com/courses" },
+  alternates: { canonical: "https://www.sikshawallahfbg.in/courses" },
 };
 
 export default function CoursesLayout({ children }: { children: React.ReactNode }) {
