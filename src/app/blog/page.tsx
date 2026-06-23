@@ -266,7 +266,7 @@ export default function BlogPage() {
               <span className="text-xs font-bold text-amber-700">Siksha Wallah — 100% Free Counselling</span>
             </div>
             <h2 className="font-headline text-2xl font-extrabold text-gray-900 md:text-3xl">
-              Need <span className="bg-gradient-to-r from-amber-500 to-orange-500 bg-clip-text text-transparent">personalised guidance</span> for your admission?
+              Need <span className="text-[#003f9f]">personalised guidance</span> for your admission?
             </h2>
             <p className="mx-auto mt-3 max-w-md text-gray-500">
               हमारे अनुभवी काउंसलर से बात करें — B.Ed, Nursing, MBA, BCA, BSCC loan, हर सवाल का सही जवाब।

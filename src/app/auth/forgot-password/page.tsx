@@ -40,8 +40,8 @@ export default function ForgotPasswordPage() {
       <section className="container-shell grid min-h-screen items-center gap-12 py-16 lg:grid-cols-2">
         <div>
           <p className="text-sm font-extrabold uppercase tracking-[.2em] text-[#1357e6]">Account Recovery</p>
-          <h1 className="mt-3 font-display text-4xl font-extrabold sm:text-5xl bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
-            Reset Your Password
+          <h1 className="mt-3 font-display text-4xl font-extrabold sm:text-5xl text-gray-900">
+            Reset Your <span className="text-[#003f9f]">Password</span>
           </h1>
           <p className="mt-5 max-w-xl text-lg leading-8 text-slate-600">
             अपना registered email address दर्ज करें — हम आपको password reset link भेजेंगे। कृपया अपने email का inbox (और spam folder) देखें।

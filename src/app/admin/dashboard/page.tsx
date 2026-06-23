@@ -107,13 +107,13 @@ function NoteCell({ inq, onSaved }: { inq: Inquiry; onSaved: (id: string, note: 
 /* ── Activity type meta ─────────────────────────────── */
 const ACTIVITY_META: Record<ActivityType, { icon: string; color: string; link?: string }> = {
   inquiry:        { icon: "📋", color: "bg-blue-50 border-blue-200 text-blue-800",       link: "/admin/dashboard" },
-  contact:        { icon: "📝", color: "bg-purple-50 border-purple-200 text-purple-800" },
+  contact:        { icon: "📝", color: "bg-blue-50 border-blue-200 text-blue-800" },
   registration:   { icon: "👤", color: "bg-green-50 border-green-200 text-green-800",    link: "/admin/students" },
   student_login:  { icon: "🔑", color: "bg-gray-50 border-gray-200 text-gray-700",       link: "/admin/students" },
   application:    { icon: "🎓", color: "bg-blue-50 border-blue-200 text-blue-800",       link: "/admin/applications" },
-  doc_upload:     { icon: "📄", color: "bg-teal-50 border-teal-200 text-teal-800",       link: "/admin/students" },
-  profile_update: { icon: "✏️",  color: "bg-orange-50 border-orange-200 text-orange-800", link: "/admin/students" },
-  whatsapp:       { icon: "📱", color: "bg-emerald-50 border-emerald-200 text-emerald-800" },
+  doc_upload:     { icon: "📄", color: "bg-blue-50 border-blue-200 text-blue-800",       link: "/admin/students" },
+  profile_update: { icon: "✏️",  color: "bg-amber-50 border-amber-200 text-amber-800", link: "/admin/students" },
+  whatsapp:       { icon: "📱", color: "bg-green-50 border-green-200 text-green-800" },
   bscc_check:     { icon: "🏦", color: "bg-amber-50 border-amber-200 text-amber-800" },
   course_view:    { icon: "📚", color: "bg-indigo-50 border-indigo-200 text-indigo-800" },
 };
@@ -287,17 +287,17 @@ export default function AdminDashboardPage() {
         <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
             { label: "Total Inquiries", value: totalInquiries, icon: Users, color: "blue", sub: "All time" },
-            { label: "Today's Inquiries", value: todayInquiries, icon: CalendarDays, color: "purple", sub: "New today" },
+            { label: "Today's Inquiries", value: todayInquiries, icon: CalendarDays, color: "blue", sub: "New today" },
             { label: "Pending Calls", value: pendingCalls, icon: Clock, color: "yellow", sub: "Need follow-up" },
             { label: "Admissions Done", value: admissionsConfirmed, icon: CheckCircle2, color: "green", sub: "Conversions" },
           ].map(({ label, value, icon: Icon, color, sub }) => {
             const bg: Record<string, string> = {
-              blue: "border-blue-100 bg-blue-50", purple: "border-purple-100 bg-purple-50",
-              yellow: "border-yellow-100 bg-yellow-50", green: "border-green-100 bg-green-50",
+              blue: "border-blue-100 bg-blue-50", amber: "border-amber-100 bg-amber-50",
+              yellow: "border-amber-100 bg-amber-50", green: "border-green-100 bg-green-50",
             };
             const txt: Record<string, string> = {
-              blue: "text-blue-600", purple: "text-purple-600",
-              yellow: "text-yellow-600", green: "text-green-600",
+              blue: "text-blue-600", amber: "text-amber-600",
+              yellow: "text-amber-600", green: "text-green-600",
             };
             return (
               <div key={label} className={`rounded-2xl border-2 bg-white p-5 shadow-sm ${bg[color].split(" ")[0]}`}>

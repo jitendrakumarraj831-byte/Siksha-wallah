@@ -20,7 +20,7 @@ import { adminFetchData, adminUpdate } from "@/lib/admin-api";
 const STATUS_META: Record<ApplicationStatus, { label: string; color: string; icon: string }> = {
   new:               { label: "New",               color: "bg-blue-100 text-blue-800 border-blue-200",    icon: "🆕" },
   contacted:         { label: "Contacted",          color: "bg-yellow-100 text-yellow-800 border-yellow-200", icon: "📞" },
-  documents_pending: { label: "Docs Pending",       color: "bg-orange-100 text-orange-800 border-orange-200", icon: "📄" },
+  documents_pending: { label: "Docs Pending",       color: "bg-amber-100 text-amber-800 border-amber-200", icon: "📄" },
   admission_done:    { label: "Admission Done",     color: "bg-green-100 text-green-800 border-green-200", icon: "✅" },
   not_interested:    { label: "Not Interested",     color: "bg-gray-100 text-gray-600 border-gray-200",   icon: "❌" },
 };
@@ -173,7 +173,7 @@ function AppCard({ app, onStatusChange, onNoteSaved, isNew }: {
                 </a>
                 {app.email && (
                   <a href={`mailto:${app.email}?subject=Siksha Wallah — ${app.course} Application&body=Dear ${app.fullName},%0A%0AThank you for applying for ${app.course}.`}
-                    className="flex items-center gap-1 rounded-lg bg-purple-500 px-3 py-1.5 text-xs font-bold text-white hover:bg-purple-600">
+                    className="flex items-center gap-1 rounded-lg bg-[#003f9f] px-3 py-1.5 text-xs font-bold text-white hover:bg-blue-700">
                     <Mail size={11} /> Email
                   </a>
                 )}
