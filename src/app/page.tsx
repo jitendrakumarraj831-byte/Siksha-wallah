@@ -829,9 +829,9 @@ export default function Home() {
             {[
               ["Up to ₹4 Lakh Loan", "Covers tuition, hostel, food and study material"],
               ["Only 4% Interest", "Just 1% for women and differently-abled students"],
-              ["40+ Eligible Courses", "B.Ed, Nursing, B.Tech, MBBS, Pharmacy and many more"],
+              ["50+ Eligible Courses", "Teaching, Medical, Para Medical, Law, Engineering, Pharmacy and more"],
               ["No Collateral Needed", "No guarantor, no property mortgage required"],
-              ["Repay After Job", "EMIs begin only after you complete your course and start earning"],
+              ["Repay After Employment", "EMIs begin only after you complete your course and start earning"],
             ].map(([title, desc]) => (
               <div key={title as string} className="flex gap-3 rounded-xl border border-white/10 bg-white/5 p-4">
                 <div className="mt-0.5 flex-shrink-0 rounded-full bg-green-500 p-1">

@@ -76,7 +76,7 @@ export default function StudentCreditCardPage() {
           </div>
           {/* Stat pills */}
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            {["Up to ₹4 Lakh", "Only 4% Interest", "40+ Eligible Courses"].map((pill) => (
+            {["Up to ₹4 Lakh", "Only 4% Interest", "50+ Eligible Courses"].map((pill) => (
               <span key={pill} className="rounded-full border border-white/20 bg-white/[0.07] px-4 py-2 text-xs font-semibold text-blue-100">
                 {pill}
               </span>
@@ -92,7 +92,7 @@ export default function StudentCreditCardPage() {
             {[
               ["Up to ₹4 Lakh Loan", "Covers tuition, hostel, food and study material"],
               ["Only 4% Interest", "Just 1% interest for women and differently-abled students"],
-              ["40+ Eligible Courses", "B.Ed, Nursing, B.Tech, MBBS, Pharmacy and many more"],
+              ["50+ Eligible Courses", "Teaching, Medical, Para Medical, Law, Engineering, Pharmacy and more"],
               ["No Collateral Needed", "No guarantor, no property mortgage required"],
               ["Repay After Employment", "EMI starts only after you complete your course and start earning"],
             ].map(([title, desc]) => (
