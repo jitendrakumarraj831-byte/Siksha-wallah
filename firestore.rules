@@ -26,12 +26,14 @@ service cloud.firestore {
     match /inquiries/{id} {
       allow create: if true;
       allow read: if true;
-      allow update, delete: if false;
+      allow update: if true;
+      allow delete: if false;
     }
     match /course_applications/{id} {
       allow create: if true;
       allow read: if true;
-      allow update, delete: if false;
+      allow update: if true;
+      allow delete: if false;
     }
 
     // Activity log: write-only for guests; office admin reads via real-time

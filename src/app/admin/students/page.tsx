@@ -17,7 +17,6 @@ import {
   getAllApplications, updateApplicationStatus,
   type CourseApplication, type ApplicationStatus,
 } from "@/services/application-service";
-import { adminUpdate } from "@/lib/admin-api";
 
 /* ── Types ─────────────────────────────────────── */
 interface StudentProfile {
@@ -386,7 +385,7 @@ export default function AdminStudentsPage() {
   }
 
   function handleAppStatusChange(appId: string, status: ApplicationStatus) {
-    adminUpdate("course_applications", appId, { status }, () => updateApplicationStatus(appId, status)).catch(() => {});
+    updateApplicationStatus(appId, status).catch(() => {});
     setStudents(prev => prev.map(s => ({
       ...s,
       applications: s.applications?.map(a => a.id === appId ? { ...a, status } : a),

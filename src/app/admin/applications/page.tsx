@@ -15,7 +15,6 @@ import {
   type CourseApplication,
   type ApplicationStatus,
 } from "@/services/application-service";
-import { adminFetchData, adminUpdate } from "@/lib/admin-api";
 
 const STATUS_META: Record<ApplicationStatus, { label: string; color: string; icon: string }> = {
   new:               { label: "New",               color: "bg-blue-100 text-blue-800 border-blue-200",    icon: "🆕" },
@@ -43,7 +42,7 @@ function NoteCell({ app, onSaved }: { app: CourseApplication; onSaved: (id: stri
   async function save() {
     if (!app.id) return;
     setSaving(true);
-    await adminUpdate("course_applications", app.id, { note: draft }, () => updateApplicationNote(app.id!, draft));
+    await updateApplicationNote(app.id!, draft);
     onSaved(app.id, draft);
     setSaving(false);
     setOpen(false);
@@ -228,7 +227,7 @@ export default function AdminApplicationsPage() {
   useEffect(() => {
     if (!authorized) return;
     setLoading(true);
-    adminFetchData("applications", getAllApplications)
+    getAllApplications()
       .then((data) => setApplications(data))
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -242,7 +241,7 @@ export default function AdminApplicationsPage() {
   }
 
   function handleStatusChange(id: string, status: ApplicationStatus) {
-    adminUpdate("course_applications", id, { status }, () => updateApplicationStatus(id, status)).catch(() => {});
+    updateApplicationStatus(id, status).catch(() => {});
     setApplications(prev => prev.map(a => a.id === id ? { ...a, status } : a));
   }
 

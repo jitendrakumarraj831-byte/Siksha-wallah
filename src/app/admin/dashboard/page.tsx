@@ -14,7 +14,6 @@ import {
   type Inquiry, type InquiryStatus,
 } from "@/services/inquiry-service";
 import { subscribeActivities, type Activity, type ActivityType } from "@/services/activity-service";
-import { adminFetchData, adminUpdate } from "@/lib/admin-api";
 
 /* ── helpers ─────────────────────────────────────────── */
 const STATUS_META: Record<InquiryStatus, { label: string; color: string }> = {
@@ -60,7 +59,7 @@ function NoteCell({ inq, onSaved }: { inq: Inquiry; onSaved: (id: string, note: 
     if (!inq.id) return;
     setSaving(true);
     try {
-      await adminUpdate("inquiries", inq.id, { note: draft }, () => updateInquiryNote(inq.id!, draft));
+      await updateInquiryNote(inq.id!, draft);
       onSaved(inq.id, draft);
       setOpen(false);
     } catch { /* noop */ }
@@ -161,7 +160,7 @@ export default function AdminDashboardPage() {
   async function loadInquiries() {
     setLoading(true);
     try {
-      setInquiries(await adminFetchData("inquiries", getAllInquiries));
+      setInquiries(await getAllInquiries());
       setError("");
     } catch {
       setError("Could not load inquiries. Check Firebase connection.");
@@ -172,7 +171,7 @@ export default function AdminDashboardPage() {
 
   async function handleStatusChange(id: string, status: InquiryStatus) {
     try {
-      await adminUpdate("inquiries", id, { status }, () => updateInquiryStatus(id, status));
+      await updateInquiryStatus(id, status);
       setInquiries(prev => prev.map(i => i.id === id ? { ...i, status } : i));
     } catch { alert("Status update failed. Please try again."); }
   }
