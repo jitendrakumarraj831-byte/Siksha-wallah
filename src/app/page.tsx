@@ -496,10 +496,15 @@ export default function Home() {
       <section id="courses" className="py-24 bg-gray-50">
         <div className="container-shell">
           <AnimateIn type="fade-up" className="text-center mb-12">
-            <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">All Major Streams Covered</p>
-            <h2 className="font-headline text-4xl md:text-5xl font-extrabold">Choose Your Stream</h2>
+            <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">Session 2026–27 · Admissions Open</p>
+            <h2 className="font-headline text-4xl md:text-5xl font-extrabold">
+              अपने भविष्य की{" "}
+              <span className="bg-gradient-to-r from-blue-700 to-indigo-600 bg-clip-text text-transparent">
+                दिशा चुनें
+              </span>
+            </h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto">
-              तीन प्रमुख streams — 40+ recognised courses — हर field में अनुभवी काउंसलर की निःशुल्क सहायता उपलब्ध।
+              Teaching, Medical, Para Medical, Law, Technical — 5 streams, 50+ courses · 200+ partner colleges · 100% free counselling
             </p>
           </AnimateIn>
 
