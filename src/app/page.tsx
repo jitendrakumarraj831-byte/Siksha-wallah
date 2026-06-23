@@ -130,44 +130,46 @@ export default function Home() {
               {/* Platform label pill */}
               <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/[0.1] px-4 py-2">
                 <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
-                <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Bihar&apos;s Most Trusted Education Consultancy</span>
+                <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Session 2026–27 &nbsp;·&nbsp; Free Counselling Open</span>
               </div>
 
-              {/* H1 */}
-              <h1 className="font-headline text-[2.5rem] font-black leading-[1.08] tracking-tight md:text-6xl lg:text-[4.2rem] lg:leading-[1.04]">
-                <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">
-                  The Right Course.
+              {/* H1 — 3-tier Hindi headline */}
+              <h1 className="font-headline font-black tracking-tight leading-[1.12]">
+                <span className="block text-[1.9rem] text-white/75 md:text-[2.8rem] lg:text-[3.2rem] [text-shadow:0_2px_16px_rgba(255,255,255,0.08)]">
+                  किस Course में है
                 </span>
-                <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent [filter:drop-shadow(0_4px_24px_rgba(251,191,36,0.45))]">
-                  The Right College.
+                <span className="block text-[3.2rem] md:text-[4.8rem] lg:text-[5.6rem] bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent [filter:drop-shadow(0_4px_28px_rgba(251,191,36,0.50))]">
+                  आपका Future?
                 </span>
-                <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">
-                  The Right Future.
+                <span className="block text-[1.7rem] text-white md:text-[2.4rem] lg:text-[2.8rem] [text-shadow:0_2px_16px_rgba(255,255,255,0.12)]">
+                  हम बताएंगे —{" "}
+                  <span className="bg-gradient-to-r from-amber-300 to-yellow-200 bg-clip-text text-transparent">मुफ़्त।</span>
                 </span>
               </h1>
 
               {/* Accent line */}
-              <div className="mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-40" />
+              <div className="mt-4 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-44" />
 
               {/* Course highlight pill */}
               <div className="mt-6 inline-flex flex-wrap items-center gap-2 rounded-2xl border border-amber-400/25 bg-amber-400/[0.08] px-5 py-3">
                 <GraduationCap size={16} className="flex-shrink-0 text-amber-400" />
                 <span className="text-sm font-semibold text-amber-100">
-                  B.Ed • D.El.Ed • Nursing • MBA • BCA • MCA
+                  B.Ed • Nursing • MBBS • LLB • B.Tech • MBA
                 </span>
                 <span className="rounded-full bg-gradient-to-r from-amber-400 to-orange-400 px-2.5 py-0.5 text-[11px] font-extrabold text-gray-900">
-                  + 40 more courses
+                  50+ Courses
                 </span>
               </div>
 
               {/* Sub-heading */}
-              <p className="mt-5 max-w-lg text-[1rem] leading-[1.8] text-blue-100 md:text-[1.06rem]">
-                Personalised admission counselling, smart college selection,{" "}
+              <p className="mt-5 max-w-lg text-[1rem] leading-[1.85] text-blue-100 md:text-[1.05rem]">
+                Teaching, Medical, Law, Engineering, Para Medical —{" "}
+                <strong className="font-extrabold text-white">50+ courses, 200+ verified colleges</strong>{" "}
+                aur{" "}
                 <strong className="bg-gradient-to-r from-amber-300 to-yellow-200 bg-clip-text text-transparent font-extrabold">
-                  complete BSCC loan assistance
+                  BSCC Loan support
                 </strong>{" "}
-                and dedicated career mentorship —{" "}
-                <strong className="font-extrabold text-white">all under one trusted roof.</strong>
+                — सब एक जगह, बिल्कुल निःशुल्क।
               </p>
 
               {/* CTA Buttons */}
@@ -178,7 +180,7 @@ export default function Home() {
                 >
                   <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
                   <Sparkles size={17} className="flex-shrink-0" />
-                  Book Free Counselling
+                  अभी Free Counselling लें
                   <ArrowRight size={16} className="flex-shrink-0 transition-transform duration-200 group-hover:translate-x-1" />
                 </a>
                 <a
@@ -188,17 +190,17 @@ export default function Home() {
                   className="flex items-center justify-center gap-2.5 rounded-2xl border-2 border-white/25 bg-white/[0.08] px-8 py-4 font-bold text-white backdrop-blur transition-all duration-200 hover:bg-white/[0.15] hover:-translate-y-1 hover:border-white/40 active:scale-[0.97]"
                 >
                   <MessageCircle size={17} />
-                  Chat on WhatsApp
+                  WhatsApp पर बात करें
                 </a>
               </div>
 
               {/* Trust line */}
               <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2">
                 {[
-                  "200+ Partner Colleges",
+                  "200+ Verified Colleges",
                   "5,000+ Successful Admissions",
                   "9+ Years of Experience",
-                  "100% Transparent Counselling",
+                  "100% Transparent · No Hidden Fee",
                 ].map((t, i, arr) => (
                   <span key={t} className="flex items-center gap-1.5 text-xs font-medium text-blue-300">
                     <Check size={11} className="text-amber-400" />
