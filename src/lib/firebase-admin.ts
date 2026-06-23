@@ -12,17 +12,52 @@ import { getAuth, type Auth } from "firebase-admin/auth";
 let cached: Firestore | null = null;
 let cachedAuth: Auth | null = null;
 
+// Robustly parse the service-account JSON from an env var. Vercel/CI paste
+// quirks we defend against:
+//  - surrounding single/double quotes around the whole value
+//  - the JSON base64-encoded (some setups encode to avoid newline issues)
+//  - private_key stored with escaped "\\n" instead of real newlines
+//  - literal newlines inside the JSON string that break JSON.parse
+function parseServiceAccount(raw: string): Record<string, any> {
+  let s = raw.trim();
+
+  // Strip a single pair of surrounding quotes if present.
+  if ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith("'") && s.endsWith("'"))) {
+    s = s.slice(1, -1).trim();
+  }
+
+  // If it doesn't look like JSON, try base64-decoding it.
+  if (!s.startsWith("{")) {
+    try {
+      const decoded = Buffer.from(s, "base64").toString("utf8").trim();
+      if (decoded.startsWith("{")) s = decoded;
+    } catch {
+      /* not base64 — fall through */
+    }
+  }
+
+  let parsed: Record<string, any>;
+  try {
+    parsed = JSON.parse(s);
+  } catch {
+    // JSON.parse fails when private_key contains real (unescaped) newlines.
+    // Re-escape control characters inside string literals, then retry.
+    parsed = JSON.parse(s.replace(/[\n\r\t]/g, (c) =>
+      c === "\n" ? "\\n" : c === "\r" ? "\\r" : "\\t"));
+  }
+
+  // Firebase Admin SDK needs real newlines in the PEM private key.
+  if (parsed.private_key && parsed.private_key.includes("\\n")) {
+    parsed.private_key = parsed.private_key.replace(/\\n/g, "\n");
+  }
+  return parsed;
+}
+
 function getAdminApp(): App {
   if (getApps().length) return getApp();
   const saJson = process.env.FIREBASE_SERVICE_ACCOUNT_KEY?.trim();
   if (saJson) {
-    const parsed = JSON.parse(saJson);
-    // Vercel sometimes stores private_key with escaped newlines (\\n instead of \n).
-    // Firebase Admin SDK requires actual newline characters in the PEM key.
-    if (parsed.private_key && !parsed.private_key.includes("\n")) {
-      parsed.private_key = parsed.private_key.replace(/\\n/g, "\n");
-    }
-    return initializeApp({ credential: cert(parsed) });
+    return initializeApp({ credential: cert(parseServiceAccount(saJson)) });
   }
   return initializeApp({ credential: applicationDefault() });
 }

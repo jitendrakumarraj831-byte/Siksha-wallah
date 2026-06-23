@@ -144,17 +144,29 @@ export const authService = {
     }
 
     // Fallback: Firebase built-in sender (slower but always works).
-    // Always use the canonical production URL so Firebase's authorized-domain
-    // check passes even on preview deployments like *.vercel.app.
     if (!auth) throw new Error('Firebase Auth not initialized');
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '')
-      || (typeof window !== 'undefined' ? window.location.origin : '');
+    // Use the canonical production domain — never window.location.origin, which
+    // on preview deployments (*.vercel.app) is NOT an authorized Firebase domain
+    // and triggers auth/unauthorized-continue-uri ("Configuration error").
+    const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://sikshawallahfbg.in')
+      .replace(/\/$/, '');
     try {
-      await sendPasswordResetEmail(auth, email, {
-        url: `${siteUrl}/auth/login`,
-        handleCodeInApp: true,
-      });
+      // First try with a continue URL back to the login page.
+      await sendPasswordResetEmail(auth, email, { url: `${siteUrl}/auth/login` });
     } catch (error: any) {
+      // If the continue URL's domain isn't authorized, retry with Firebase's
+      // default action handler (no custom URL) so the email still goes out.
+      if (
+        error?.code === 'auth/unauthorized-continue-uri' ||
+        error?.code === 'auth/invalid-continue-uri'
+      ) {
+        try {
+          await sendPasswordResetEmail(auth, email);
+          return;
+        } catch (e2: any) {
+          throw new Error(friendlyAuthError(e2.code));
+        }
+      }
       throw new Error(friendlyAuthError(error.code));
     }
   },

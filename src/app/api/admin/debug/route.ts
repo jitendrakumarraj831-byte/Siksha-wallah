@@ -10,8 +10,23 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const hasSaKey = !!process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
-  const saKeyLength = process.env.FIREBASE_SERVICE_ACCOUNT_KEY?.length ?? 0;
+  const rawKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
+  const hasSaKey = !!rawKey;
+  const saKeyLength = rawKey?.length ?? 0;
+
+  // Inspect the key shape without leaking secrets.
+  let keyShape: Record<string, any> = {};
+  if (rawKey) {
+    const trimmed = rawKey.trim();
+    keyShape = {
+      startsWith: trimmed.slice(0, 1),
+      looksLikeJson: trimmed.startsWith("{"),
+      hasEscapedNewlines: rawKey.includes("\\n"),
+      hasRealNewlines: /[\n\r]/.test(rawKey),
+      mentionsPrivateKey: rawKey.includes("private_key"),
+      mentionsClientEmail: rawKey.includes("client_email"),
+    };
+  }
 
   let sdkStatus = "not_initialized";
   let sdkError: string | null = null;
@@ -39,7 +54,9 @@ export async function GET(request: NextRequest) {
     env: {
       hasSaKey,
       saKeyLength,
+      keyShape,
       hasSessionSecret: !!process.env.ADMIN_SESSION_SECRET,
+      siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? null,
       nodeEnv: process.env.NODE_ENV,
     },
     session: { user: session.u },
