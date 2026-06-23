@@ -33,8 +33,20 @@ export async function sendMail(opts: {
   html: string;
   text: string;
 }): Promise<void> {
-  await getMailer().sendMail({
-    from: `"Siksha Wallah" <${EMAIL_FROM()}>`,
-    ...opts,
-  });
+  try {
+    await getMailer().sendMail({
+      from: `"Siksha Wallah" <${EMAIL_FROM()}>`,
+      ...opts,
+    });
+  } catch (err) {
+    console.error('[SMTP] sendMail failed — host=%s port=%s user=%s to=%s subject=%s error:',
+      process.env.SMTP_HOST,
+      process.env.SMTP_PORT,
+      process.env.SMTP_USER,
+      opts.to,
+      opts.subject,
+      err,
+    );
+    throw err;
+  }
 }
