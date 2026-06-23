@@ -7,37 +7,22 @@ import {
   Award, BadgeCheck, BookMarked, Briefcase, Building2, CheckCircle2,
   ChevronDown, ChevronUp, Clock, CreditCard, FileText, MessageCircle,
   ShieldCheck, Sparkles, Star, GraduationCap, Stethoscope, Cpu,
+  Activity, Scale,
 } from "lucide-react";
 import { SiteNavbar } from "@/components/site-navbar";
 import { SiteFooter } from "@/components/site-footer";
 import { streamTabs, colorMap, type StreamKey } from "@/lib/courses-data";
 
-/* ─── per-stream config ─────────────────────────────────────────────── */
-const SECTION_META: Record<StreamKey, {
-  id: string;
-  icon: React.ReactNode;
-  tagline: string;
+/* ─── per-stream metadata ─────────────────────────────────────────────── */
+const STREAM_META: Record<StreamKey, {
   approval: string;
-  approvalBadge: string;
+  tagline: string;
   partnerNote: string;
   partnerPoints: string[];
-  sectionBg: string;
-  headerBg: string;
-  headerText: string;
-  badgeBg: string;
-  borderColor: string;
-  pointBorder: string;
-  pointText: string;
-  checkColor: string;
-  tabActive: string;
-  tabBorder: string;
 }> = {
   teaching: {
-    id: "teaching",
-    icon: <GraduationCap size={20} />,
-    tagline: "Build a respected teaching career — qualify for Bihar STET / BTET and government school roles.",
     approval: "NCTE Approved",
-    approvalBadge: "bg-blue-600",
+    tagline: "Build a respected teaching career — qualify for Bihar STET / BTET and government school roles.",
     partnerNote: "हम केवल NCTE-Approved teacher training colleges के साथ काम करते हैं — Bihar (Patna, Purnea, Katihar) और West Bengal में।",
     partnerPoints: [
       "NCTE-approved B.Ed and D.El.Ed colleges across Patna, Purnea and Katihar",
@@ -45,47 +30,43 @@ const SECTION_META: Record<StreamKey, {
       "100% support for Bihar Student Credit Card (BSCC) loan application",
       "Regular and Distance mode — guidance for whichever suits your situation",
     ],
-    sectionBg: "bg-blue-50/40",
-    headerBg: "bg-gradient-to-r from-blue-700 to-indigo-700",
-    headerText: "text-blue-50",
-    badgeBg: "bg-blue-100 text-blue-700",
-    borderColor: "border-blue-200",
-    pointBorder: "border-blue-100",
-    pointText: "text-blue-800",
-    checkColor: "text-blue-500",
-    tabActive: "bg-blue-600 text-white border-blue-600",
-    tabBorder: "border-blue-600",
   },
   medical: {
-    id: "medical",
-    icon: <Stethoscope size={20} />,
+    approval: "INC / PCI / NMC Approved",
     tagline: "Begin your healthcare career — secure admission as a doctor, nurse or pharmacist.",
-    approval: "INC & PCI Approved",
-    approvalBadge: "bg-red-600",
-    partnerNote: "हम INC- और PCI-approved premier institutes के साथ partner हैं — Bangalore, Madhya Pradesh और West Bengal में।",
+    partnerNote: "हम INC, PCI और NMC-approved premier institutes के साथ partner हैं — Bangalore, MP, West Bengal और Bihar में।",
     partnerPoints: [
       "INC-approved Nursing colleges in Bangalore and West Bengal",
       "PCI-approved Pharmacy institutes in Madhya Pradesh",
-      "Trusted private medical institutes with hostel and mess facility",
-      "Full guidance for NEET counselling as well as direct admission routes",
+      "NMC-approved medical colleges for MBBS/BAMS through NEET",
+      "Full guidance for NEET counselling and direct admission routes",
     ],
-    sectionBg: "bg-red-50/40",
-    headerBg: "bg-gradient-to-r from-red-700 to-rose-700",
-    headerText: "text-red-50",
-    badgeBg: "bg-red-100 text-red-700",
-    borderColor: "border-red-200",
-    pointBorder: "border-red-100",
-    pointText: "text-red-800",
-    checkColor: "text-red-500",
-    tabActive: "bg-red-600 text-white border-red-600",
-    tabBorder: "border-red-600",
+  },
+  paramedical: {
+    approval: "University / State Council Approved",
+    tagline: "Specialized healthcare roles — physiotherapy, radiology, lab tech, OT — without NEET.",
+    partnerNote: "हम state-approved और university-affiliated para medical colleges के साथ काम करते हैं — Bihar, Jharkhand और Madhya Pradesh में।",
+    partnerPoints: [
+      "State-approved para medical degree and diploma colleges across Bihar",
+      "University-affiliated colleges in Jharkhand and MP",
+      "No NEET required — 12th Biology (PCB) is sufficient for all courses",
+      "100% BSCC loan support for eligible para medical courses",
+    ],
+  },
+  law: {
+    approval: "BCI Approved",
+    tagline: "Become an advocate, corporate lawyer or civil judge — Bihar's most respected career path.",
+    partnerNote: "हम BCI (Bar Council of India) approved top law colleges के साथ काम करते हैं — Patna, Jharkhand और अन्य राज्यों में।",
+    partnerPoints: [
+      "BCI-approved law colleges in Patna, Muzaffarpur and Bhagalpur",
+      "CLAT guidance for Chanakya National Law University (CNLU) Patna",
+      "Both 3-year LLB and 5-year integrated BA.LLB / BBA.LLB available",
+      "BSCC loan support available for eligible law students",
+    ],
   },
   technical: {
-    id: "technical",
-    icon: <Cpu size={20} />,
+    approval: "AICTE / UGC Approved",
     tagline: "Shape a future as an engineer, manager or IT professional — choose the right technical pathway.",
-    approval: "AICTE & UGC Approved",
-    approvalBadge: "bg-orange-600",
     partnerNote: "हम AICTE और UGC recognised top universities के साथ partner हैं — Engineering, Management और Computer Applications के लिए।",
     partnerPoints: [
       "AICTE-approved B.Tech and Polytechnic colleges across India",
@@ -93,20 +74,8 @@ const SECTION_META: Record<StreamKey, {
       "Complete JEE / DCECE counselling guidance included",
       "Distance mode also available through UGC-DEB approved programmes",
     ],
-    sectionBg: "bg-orange-50/40",
-    headerBg: "bg-gradient-to-r from-orange-600 to-amber-600",
-    headerText: "text-orange-50",
-    badgeBg: "bg-orange-100 text-orange-700",
-    borderColor: "border-orange-200",
-    pointBorder: "border-orange-100",
-    pointText: "text-orange-800",
-    checkColor: "text-orange-500",
-    tabActive: "bg-orange-600 text-white border-orange-600",
-    tabBorder: "border-orange-600",
   },
 };
-
-const STREAM_ORDER: StreamKey[] = ["teaching", "medical", "technical"];
 
 /* ─── Course Card ─────────────────────────────────────────────────────── */
 function CourseCard({
@@ -120,47 +89,53 @@ function CourseCard({
   isExpanded: boolean;
   onToggle: () => void;
 }) {
-  const colors = colorMap[streamTabs.find((s) => s.key === streamKey)!.color];
+  const tab = streamTabs.find((s) => s.key === streamKey)!;
+  const colors = colorMap[tab.color];
 
   return (
     <div
-      className={`group relative rounded-2xl border-2 bg-white shadow-sm transition-all duration-200 ${colors.card} ${
-        isExpanded ? "shadow-lg" : "border-gray-200"
+      className={`group relative rounded-2xl border bg-white overflow-hidden transition-all duration-200 ${
+        isExpanded
+          ? "border-gray-200 shadow-lg"
+          : "border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5"
       }`}
     >
+      {/* Colored top accent bar */}
+      <div className={`h-1.5 w-full bg-gradient-to-r ${colors.accentBar}`} />
+
       <div className="p-5 md:p-6">
-        {/* Top row */}
-        <div className="flex items-start justify-between gap-2">
-          <div className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ${colors.badge}`}>
-            <Award size={12} /> {course.name}
-          </div>
+        {/* Header row */}
+        <div className="flex items-start justify-between gap-2 mb-3">
+          <span className={`inline-flex items-center gap-1.5 text-xs font-black px-3 py-1 rounded-full ${colors.badge}`}>
+            <Award size={11} /> {course.name}
+          </span>
           {course.bscc && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-bold text-green-700">
-              <CreditCard size={10} /> BSCC
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-green-700 bg-green-50 border border-green-200 px-2.5 py-1 rounded-full">
+              <CreditCard size={9} /> BSCC Loan
             </span>
           )}
         </div>
 
-        <h3 className="mt-3 font-headline text-xl font-extrabold text-gray-900 leading-tight">
+        <h3 className="font-headline text-lg font-extrabold text-gray-900 leading-snug mb-4">
           {course.full}
         </h3>
 
-        <div className="mt-4 space-y-2 text-sm text-gray-600">
-          <div className="flex items-start gap-2">
-            <Clock size={14} className="mt-0.5 flex-shrink-0 text-gray-400" />
-            <span><strong className="text-gray-800">Duration:</strong> {course.duration}</span>
+        {/* Info chips */}
+        <div className="flex flex-wrap gap-2 mb-3">
+          <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-100 rounded-lg px-2.5 py-1.5 text-xs text-gray-600">
+            <Clock size={11} className="text-gray-400" /> {course.duration}
           </div>
-          <div className="flex items-start gap-2">
-            <CheckCircle2 size={14} className="mt-0.5 flex-shrink-0 text-gray-400" />
-            <span><strong className="text-gray-800">Eligibility:</strong> {course.eligibility}</span>
-          </div>
-          <div className="flex items-start gap-2">
-            <CreditCard size={14} className="mt-0.5 flex-shrink-0 text-gray-400" />
-            <span><strong className="text-gray-800">Approx. Fee:</strong> {course.fee}</span>
+          <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-100 rounded-lg px-2.5 py-1.5 text-xs text-gray-600">
+            <CreditCard size={11} className="text-gray-400" /> {course.fee}
           </div>
         </div>
 
-        {/* Expanded details */}
+        <p className="text-xs text-gray-500 leading-relaxed">
+          <span className="font-semibold text-gray-700">Eligibility: </span>
+          {course.eligibility}
+        </p>
+
+        {/* ── Expanded details ── */}
         {isExpanded && (
           <div className="mt-5 space-y-4 border-t border-gray-100 pt-4">
             <div className="rounded-xl bg-blue-50 border border-blue-100 p-3">
@@ -242,20 +217,22 @@ function CourseCard({
               <div className="rounded-xl bg-green-50 border border-green-200 p-3 flex items-start gap-2">
                 <CreditCard size={15} className="mt-0.5 flex-shrink-0 text-green-600" />
                 <p className="text-xs text-green-700 font-semibold">
-                  Eligible for the Bihar Student Credit Card (BSCC) — secure up to ₹4 Lakh education loan at just 4% interest. Our team guides you through the complete BSCC application, end to end.
+                  Eligible for Bihar Student Credit Card (BSCC) — up to ₹4 Lakh education loan at 4% interest. Our team guides you through the complete application, end to end.
                 </p>
               </div>
             )}
           </div>
         )}
 
-        {/* Buttons */}
+        {/* Action buttons */}
         <div className="mt-5 flex flex-col gap-2">
           <button
             onClick={onToggle}
             className="flex w-full items-center justify-center gap-1.5 rounded-xl border-2 border-gray-200 py-2.5 text-sm font-bold text-gray-700 transition hover:border-gray-300 hover:bg-gray-50"
           >
-            {isExpanded ? <><ChevronUp size={15} /> Hide Details</> : <><ChevronDown size={15} /> View Career Scope & Mode</>}
+            {isExpanded
+              ? <><ChevronUp size={15} /> Hide Details</>
+              : <><ChevronDown size={15} /> View Career Scope & Details</>}
           </button>
           <a
             href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(course.name)}%20(${encodeURIComponent(course.full)})%20के%20बारे%20में%20जानकारी%20चाहिए।%20Fees%20aur%20admission%20process%20batayein।`}
@@ -279,124 +256,179 @@ function CourseCard({
   );
 }
 
+/* ─── Stream Picker Card ──────────────────────────────────────────────── */
+function StreamCard({
+  tab,
+  isActive,
+  onClick,
+}: {
+  tab: (typeof streamTabs)[0];
+  isActive: boolean;
+  onClick: () => void;
+}) {
+  const colors = colorMap[tab.color];
+  const Icon = tab.icon;
+
+  return (
+    <button
+      onClick={onClick}
+      className={`flex flex-col items-center gap-2.5 min-w-[120px] sm:min-w-[130px] px-4 py-5 rounded-2xl border-2 transition-all duration-200 cursor-pointer ${
+        isActive
+          ? `bg-gradient-to-br ${colors.gradient} text-white border-transparent shadow-lg ${colors.shadow} scale-105`
+          : "bg-white border-gray-100 hover:border-gray-200 hover:shadow-md hover:-translate-y-0.5"
+      }`}
+    >
+      <div
+        className={`flex h-12 w-12 items-center justify-center rounded-xl transition-all ${
+          isActive ? "bg-white/20" : colors.icon
+        }`}
+      >
+        <Icon size={22} />
+      </div>
+      <div className="text-center">
+        <p className={`text-xs font-extrabold leading-tight ${isActive ? "text-white" : "text-gray-800"}`}>
+          {tab.label}
+        </p>
+        <p className={`mt-1 text-[10px] font-semibold ${isActive ? "text-white/80" : "text-gray-400"}`}>
+          {tab.courses.length} courses
+        </p>
+      </div>
+      {isActive && (
+        <span className="rounded-full bg-white/25 px-2.5 py-0.5 text-[10px] font-black text-white">
+          ✓ Selected
+        </span>
+      )}
+    </button>
+  );
+}
+
 /* ─── Main page ──────────────────────────────────────────────────────── */
 function CoursesInner() {
   const searchParams = useSearchParams();
+  const [activeStream, setActiveStream] = useState<StreamKey>("teaching");
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<StreamKey>("teaching");
-  const sectionRefs = useRef<Record<StreamKey, HTMLElement | null>>({
-    teaching: null,
-    medical: null,
-    technical: null,
-  });
+  const contentRef = useRef<HTMLElement | null>(null);
   const tabBarRef = useRef<HTMLDivElement>(null);
 
-  /* scroll → update active tab */
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveTab(entry.target.id as StreamKey);
-          }
-        });
-      },
-      { rootMargin: "-40% 0px -55% 0px", threshold: 0 },
-    );
-    STREAM_ORDER.forEach((key) => {
-      const el = sectionRefs.current[key];
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
-  }, []);
-
-  /* ?stream= param from hero marquee */
+  /* ?stream= param from hero / external link */
   useEffect(() => {
     const s = searchParams.get("stream") as StreamKey | null;
-    if (s && STREAM_ORDER.includes(s)) {
-      setTimeout(() => scrollToSection(s), 200);
-    }
+    const validKeys = streamTabs.map((t) => t.key);
+    if (s && validKeys.includes(s)) setActiveStream(s);
   }, [searchParams]);
 
-  function scrollToSection(key: StreamKey) {
-    const el = sectionRefs.current[key];
-    if (!el) return;
-    const tabH = tabBarRef.current?.offsetHeight ?? 64;
-    const top = el.getBoundingClientRect().top + window.scrollY - tabH - 16;
-    window.scrollTo({ top, behavior: "smooth" });
+  /* Reset expanded card when stream changes */
+  useEffect(() => {
+    setExpandedCard(null);
+  }, [activeStream]);
+
+  function handleStreamSelect(key: StreamKey) {
+    setActiveStream(key);
+    /* Scroll to content on mobile when picking from the visual picker */
+    if (contentRef.current && window.scrollY < 300) {
+      const tabH = tabBarRef.current?.offsetHeight ?? 64;
+      const top = contentRef.current.getBoundingClientRect().top + window.scrollY - tabH - 16;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
   }
+
+  const activeTab = streamTabs.find((t) => t.key === activeStream)!;
+  const meta = STREAM_META[activeStream];
+  const colors = colorMap[activeTab.color];
+
+  const totalCourses = streamTabs.reduce((s, t) => s + t.courses.length, 0);
 
   return (
     <main className="bg-white text-gray-900">
       <SiteNavbar />
 
-      {/* ── HERO ── */}
+      {/* ── HERO ──────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] text-white py-16 md:py-24">
-        {/* Dot-grid */}
-        <div className="pointer-events-none absolute inset-0 opacity-[0.07]"
-          style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
-        {/* Glow orbs */}
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.07]"
+          style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }}
+        />
         <div className="pointer-events-none absolute -top-40 -right-32 h-[480px] w-[480px] rounded-full bg-amber-400 opacity-[0.10] blur-3xl" />
         <div className="pointer-events-none absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-blue-500 opacity-[0.13] blur-3xl" />
+
         <div className="container-shell text-center">
-          {/* Label pill */}
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/[0.1] px-4 py-2">
             <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
-            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Explore Courses</span>
+            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Session 2026–27</span>
           </div>
-          {/* H1 */}
+
           <h1 className="font-headline text-[2.5rem] font-black leading-[1.08] tracking-tight md:text-6xl lg:text-[4rem]">
             <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">Choose the Right Course</span>
             <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">for a Confident Career</span>
           </h1>
           <div className="mx-auto mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-40" />
+
           <p className="mt-6 max-w-2xl mx-auto text-blue-100 text-lg">
-            Teaching, Medical, Nursing, Pharmacy, Engineering और Management — हर stream में 19+ verified courses, अनुभवी काउंसलर के साथ।
+            Teaching, Medical, Para Medical, Law, Engineering और Management —{" "}
+            <span className="font-bold text-white">{totalCourses}+ verified courses</span>, अनुभवी काउंसलर के साथ।
           </p>
-          {/* Quick jump */}
+
+          {/* Stream stats row */}
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            {STREAM_ORDER.map((key) => {
-              const meta = SECTION_META[key];
-              return (
-                <button
-                  key={key}
-                  onClick={() => scrollToSection(key)}
-                  className="inline-flex items-center gap-2 rounded-2xl border-2 border-white/25 bg-white/[0.08] px-5 py-3 text-sm font-bold text-white backdrop-blur transition hover:bg-white/[0.15] hover:-translate-y-0.5"
-                >
-                  {meta.icon}
-                  {streamTabs.find((s) => s.key === key)!.label}
-                </button>
-              );
-            })}
+            {streamTabs.map(({ key, label, icon: Icon, courses, color }) => (
+              <button
+                key={key}
+                onClick={() => handleStreamSelect(key)}
+                className="inline-flex items-center gap-2 rounded-2xl border-2 border-white/20 bg-white/[0.08] px-4 py-2.5 text-sm font-bold text-white backdrop-blur transition hover:bg-white/[0.16] hover:-translate-y-0.5"
+              >
+                <Icon size={15} />
+                <span className="hidden sm:inline">{label}</span>
+                <span className="sm:hidden">{key === "paramedical" ? "Para Med" : label.split(" ")[0]}</span>
+                <span className="rounded-full bg-white/20 px-1.5 py-0.5 text-[10px] font-black">{courses.length}</span>
+              </button>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── STICKY TAB BAR ── */}
-      <div
-        ref={tabBarRef}
-        className="sticky top-0 z-40 bg-white border-b border-gray-200 shadow-sm"
-      >
+      {/* ── STREAM PICKER (visual cards) ──────────────────────────── */}
+      <section className="bg-gray-50 border-b border-gray-100 py-8">
         <div className="container-shell">
-          <div className="flex overflow-x-auto no-scrollbar">
-            {STREAM_ORDER.map((key) => {
-              const meta = SECTION_META[key];
-              const isActive = activeTab === key;
+          <p className="text-center text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-5">
+            अपना Stream चुनें
+          </p>
+          <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1 justify-start sm:justify-center">
+            {streamTabs.map((tab) => (
+              <StreamCard
+                key={tab.key}
+                tab={tab}
+                isActive={activeStream === tab.key}
+                onClick={() => handleStreamSelect(tab.key)}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── STICKY COMPACT TAB BAR ────────────────────────────────── */}
+      <div ref={tabBarRef} className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
+        <div className="container-shell py-2">
+          <div className="flex gap-1.5 overflow-x-auto no-scrollbar py-1">
+            {streamTabs.map(({ key, label, shortLabel, icon: Icon, color, courses }) => {
+              const isActive = activeStream === key;
+              const c = colorMap[color];
               return (
                 <button
                   key={key}
-                  onClick={() => scrollToSection(key)}
-                  className={`flex shrink-0 items-center gap-2 border-b-[3px] px-5 py-4 text-sm font-bold transition-all ${
+                  onClick={() => setActiveStream(key)}
+                  className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-xs font-bold transition-all duration-200 ${
                     isActive
-                      ? `${meta.tabBorder} text-gray-900`
-                      : "border-transparent text-gray-500 hover:text-gray-800"
+                      ? `bg-gradient-to-r ${c.gradient} text-white shadow-sm`
+                      : "text-gray-500 hover:text-gray-800 hover:bg-gray-100"
                   }`}
                 >
-                  {meta.icon}
-                  <span className="hidden sm:inline">{streamTabs.find((s) => s.key === key)!.label}</span>
-                  <span className="sm:hidden">{key === "teaching" ? "Teaching" : key === "medical" ? "Medical" : "Technical"}</span>
-                  <span className={`ml-1 rounded-full px-1.5 py-0.5 text-[10px] font-extrabold ${isActive ? meta.badgeBg : "bg-gray-100 text-gray-500"}`}>
-                    {streamTabs.find((s) => s.key === key)!.courses.length}
+                  <Icon size={13} />
+                  <span className="hidden sm:inline">{label}</span>
+                  <span className="sm:hidden">{shortLabel}</span>
+                  <span className={`rounded-full px-1.5 py-0.5 text-[9px] font-black ${
+                    isActive ? "bg-white/25 text-white" : "bg-gray-100 text-gray-400"
+                  }`}>
+                    {courses.length}
                   </span>
                 </button>
               );
@@ -405,98 +437,131 @@ function CoursesInner() {
         </div>
       </div>
 
-      {/* ── 3 STREAM SECTIONS ── */}
-      {STREAM_ORDER.map((key) => {
-        const tab = streamTabs.find((s) => s.key === key)!;
-        const meta = SECTION_META[key];
+      {/* ── ACTIVE STREAM CONTENT ─────────────────────────────────── */}
+      <section
+        ref={contentRef}
+        className={`py-12 md:py-18 ${colors.sectionBg} transition-all duration-300`}
+      >
+        <div className="container-shell">
 
-        return (
-          <section
-            key={key}
-            id={key}
-            ref={(el) => { sectionRefs.current[key] = el; }}
-            className={`py-14 md:py-20 ${meta.sectionBg}`}
-          >
-            <div className="container-shell">
-
-              {/* Section header */}
-              <div className={`mb-8 rounded-2xl ${meta.headerBg} p-7 text-white shadow-lg`}>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className={`inline-flex items-center gap-1 rounded-full ${meta.approvalBadge} bg-opacity-30 border border-white/30 px-3 py-1 text-xs font-bold text-white`}>
-                        <BadgeCheck size={12} /> {meta.approval}
-                      </span>
-                    </div>
-                    <h2 className="font-headline text-2xl md:text-3xl font-extrabold">
-                      {tab.label}
-                    </h2>
-                    <p className={`mt-1 text-sm ${meta.headerText} opacity-90`}>{meta.tagline}</p>
-                  </div>
-                  <div className="flex flex-col items-start sm:items-end gap-1 shrink-0">
-                    <span className="text-4xl font-black">{tab.courses.length}</span>
-                    <span className="text-xs font-semibold opacity-80">Verified Courses</span>
-                  </div>
+          {/* Stream header card */}
+          <div className={`mb-8 rounded-2xl bg-gradient-to-r ${colors.gradient} p-7 text-white shadow-xl`}>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 border border-white/30 px-3 py-1 text-xs font-bold text-white">
+                    <BadgeCheck size={12} /> {meta.approval}
+                  </span>
                 </div>
+                <h2 className="font-headline text-2xl md:text-3xl font-extrabold flex items-center gap-3">
+                  {(() => { const Icon = activeTab.icon; return <Icon size={28} className="opacity-90" />; })()}
+                  {activeTab.label}
+                </h2>
+                <p className="mt-1.5 text-sm text-white/85 max-w-xl">{meta.tagline}</p>
               </div>
-
-              {/* Partner banner */}
-              <div className={`mb-8 rounded-2xl border-2 ${meta.borderColor} bg-white p-5`}>
-                <div className="flex flex-col sm:flex-row sm:items-start gap-3">
-                  <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl ${meta.approvalBadge} text-white`}>
-                    <Building2 size={18} />
-                  </div>
-                  <div className="flex-1">
-                    <p className={`text-sm ${meta.pointText} mb-3`}>{meta.partnerNote}</p>
-                    <div className="grid gap-2 sm:grid-cols-2">
-                      {meta.partnerPoints.map((pt, i) => (
-                        <div key={i} className={`flex items-start gap-2 rounded-lg bg-gray-50 border ${meta.pointBorder} px-3 py-2 text-xs ${meta.pointText} font-medium`}>
-                          <CheckCircle2 size={12} className={`mt-0.5 flex-shrink-0 ${meta.checkColor}`} /> {pt}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Course cards grid */}
-              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {tab.courses.map((course) => (
-                  <CourseCard
-                    key={course.name}
-                    course={course}
-                    streamKey={key}
-                    isExpanded={expandedCard === `${key}-${course.name}`}
-                    onToggle={() =>
-                      setExpandedCard(
-                        expandedCard === `${key}-${course.name}` ? null : `${key}-${course.name}`,
-                      )
-                    }
-                  />
-                ))}
-              </div>
-
-              {/* Section bottom CTA */}
-              <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border-2 border-dashed border-gray-200 bg-white px-6 py-5">
-                <div>
-                  <p className="font-bold text-gray-800">Looking for admission in {tab.label}?</p>
-                  <p className="text-sm text-gray-500">हमारे अनुभवी counsellors आपके अंक, बजट और लक्ष्य के अनुसार सही college चुनने में मदद करेंगे — पूरी प्रक्रिया 100% निःशुल्क।</p>
-                </div>
-                <a
-                  href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(tab.label)}%20के%20लिए%20admission%20guidance%20चाहिए।%20Please%20help%20karein।`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-green-500 px-6 py-3 text-sm font-extrabold text-white transition hover:bg-green-600"
-                >
-                  <MessageCircle size={16} /> Speak to a Counsellor
-                </a>
+              <div className="flex flex-col items-start sm:items-end gap-1 shrink-0">
+                <span className="text-5xl font-black">{activeTab.courses.length}</span>
+                <span className="text-xs font-semibold text-white/70">Verified Courses</span>
               </div>
             </div>
-          </section>
-        );
-      })}
+          </div>
 
-      {/* ── FINAL CTA ── */}
+          {/* Partner info banner */}
+          <div className={`mb-8 rounded-2xl border-2 ${colors.pointBorder} bg-white p-5 shadow-sm`}>
+            <div className="flex flex-col sm:flex-row sm:items-start gap-3">
+              <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${colors.gradient} text-white`}>
+                <Building2 size={18} />
+              </div>
+              <div className="flex-1">
+                <p className={`text-sm ${colors.pointText} mb-3`}>{meta.partnerNote}</p>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {meta.partnerPoints.map((pt, i) => (
+                    <div
+                      key={i}
+                      className={`flex items-start gap-2 rounded-lg bg-gray-50 border ${colors.pointBorder} px-3 py-2 text-xs ${colors.pointText} font-medium`}
+                    >
+                      <CheckCircle2 size={12} className={`mt-0.5 flex-shrink-0 ${colors.checkColor}`} /> {pt}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Course cards grid */}
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {activeTab.courses.map((course) => (
+              <CourseCard
+                key={course.name}
+                course={course}
+                streamKey={activeStream}
+                isExpanded={expandedCard === `${activeStream}-${course.name}`}
+                onToggle={() =>
+                  setExpandedCard(
+                    expandedCard === `${activeStream}-${course.name}`
+                      ? null
+                      : `${activeStream}-${course.name}`,
+                  )
+                }
+              />
+            ))}
+          </div>
+
+          {/* Bottom stream CTA */}
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border-2 border-dashed border-gray-200 bg-white px-6 py-5">
+            <div>
+              <p className="font-bold text-gray-800">Looking for admission in {activeTab.label}?</p>
+              <p className="text-sm text-gray-500">
+                हमारे अनुभवी counsellors आपके अंक, बजट और लक्ष्य के अनुसार सही college चुनने में मदद करेंगे — पूरी प्रक्रिया 100% निःशुल्क।
+              </p>
+            </div>
+            <a
+              href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(activeTab.label)}%20के%20लिए%20admission%20guidance%20चाहिए।%20Please%20help%20karein।`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-green-500 px-6 py-3 text-sm font-extrabold text-white transition hover:bg-green-600"
+            >
+              <MessageCircle size={16} /> Speak to a Counsellor
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ── OTHER STREAMS QUICK LINKS ─────────────────────────────── */}
+      <section className="bg-gray-900 py-10">
+        <div className="container-shell">
+          <p className="text-center text-xs font-bold uppercase tracking-widest text-gray-400 mb-6">
+            Explore Other Streams
+          </p>
+          <div className="flex flex-wrap justify-center gap-3">
+            {streamTabs
+              .filter((t) => t.key !== activeStream)
+              .map(({ key, label, icon: Icon, color, courses }) => {
+                const c = colorMap[color];
+                return (
+                  <button
+                    key={key}
+                    onClick={() => {
+                      setActiveStream(key);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
+                    className="flex items-center gap-2.5 rounded-2xl border border-gray-700 bg-gray-800 px-5 py-3 text-sm font-bold text-gray-200 transition hover:bg-gray-700 hover:text-white hover:border-gray-500"
+                  >
+                    <span className={`flex h-7 w-7 items-center justify-center rounded-lg ${c.icon}`}>
+                      <Icon size={14} />
+                    </span>
+                    {label}
+                    <span className="rounded-full bg-gray-700 px-2 py-0.5 text-[10px] font-black text-gray-300">
+                      {courses.length}
+                    </span>
+                  </button>
+                );
+              })}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FINAL CTA ─────────────────────────────────────────────── */}
       <section className="bg-gradient-to-r from-emerald-700 to-teal-700 py-14 text-white text-center">
         <div className="container-shell">
           <h2 className="font-headline text-3xl font-extrabold mb-3">
