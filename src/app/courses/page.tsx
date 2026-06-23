@@ -256,6 +256,26 @@ function CourseCard({
   );
 }
 
+/* ─── Stream Picker helpers ───────────────────────────────────────────── */
+const STREAM_TAGLINES: Record<StreamKey, string> = {
+  teaching:    "Govt Teacher बनें",
+  medical:     "Doctor · Nurse · Pharma",
+  paramedical: "Lab · Physio · Radiology",
+  law:         "Advocate · Judge · Legal",
+  technical:   "Engineer · IT · MBA",
+};
+
+function getGlowColor(color: string): string {
+  const glows: Record<string, string> = {
+    blue:   "rgba(59,130,246,0.40)",
+    red:    "rgba(239,68,68,0.40)",
+    teal:   "rgba(20,184,166,0.40)",
+    purple: "rgba(147,51,234,0.40)",
+    orange: "rgba(249,115,22,0.40)",
+  };
+  return glows[color] ?? "rgba(255,255,255,0.18)";
+}
+
 /* ─── Stream Picker Card ──────────────────────────────────────────────── */
 function StreamCard({
   tab,
@@ -272,32 +292,53 @@ function StreamCard({
   return (
     <button
       onClick={onClick}
-      className={`flex flex-col items-center gap-2.5 min-w-[120px] sm:min-w-[130px] px-4 py-5 rounded-2xl border-2 transition-all duration-200 cursor-pointer ${
+      style={isActive ? { boxShadow: `0 0 0 2px rgba(255,255,255,0.22), 0 20px 48px -8px ${getGlowColor(tab.color)}` } : undefined}
+      className={`group relative flex w-[calc(50%-8px)] sm:w-48 flex-col items-start gap-0 overflow-hidden rounded-2xl border transition-all duration-300 cursor-pointer text-left ${
         isActive
-          ? `bg-gradient-to-br ${colors.gradient} text-white border-transparent shadow-lg ${colors.shadow} scale-105`
-          : "bg-white border-gray-100 hover:border-gray-200 hover:shadow-md hover:-translate-y-0.5"
+          ? "bg-white/[0.18] border-white/30 -translate-y-2 scale-[1.03]"
+          : "border-white/[0.10] bg-white/[0.05] hover:bg-white/[0.12] hover:border-white/[0.22] hover:-translate-y-1.5 hover:shadow-xl"
       }`}
     >
-      <div
-        className={`flex h-12 w-12 items-center justify-center rounded-xl transition-all ${
-          isActive ? "bg-white/20" : colors.icon
-        }`}
-      >
-        <Icon size={22} />
+      {/* Colored top accent bar */}
+      <div className={`h-[3px] w-full bg-gradient-to-r ${colors.accentBar} ${isActive ? "opacity-100" : "opacity-50 group-hover:opacity-80"} transition-opacity`} />
+
+      <div className="flex flex-col gap-3 p-5 w-full">
+        {/* Icon circle */}
+        <div className={`flex h-12 w-12 items-center justify-center rounded-xl transition-all ${
+          isActive
+            ? `bg-gradient-to-br ${colors.gradient} shadow-lg`
+            : "bg-white/[0.08] group-hover:bg-white/[0.14]"
+        }`}>
+          <Icon size={22} className={isActive ? "text-white" : "text-gray-300 group-hover:text-white"} />
+        </div>
+
+        {/* Labels */}
+        <div>
+          <p className={`text-sm font-extrabold leading-tight ${isActive ? "text-white" : "text-gray-100 group-hover:text-white"}`}>
+            {tab.label}
+          </p>
+          <p className={`mt-0.5 text-[11px] font-medium ${isActive ? "text-white/70" : "text-gray-500 group-hover:text-gray-400"}`}>
+            {STREAM_TAGLINES[tab.key as StreamKey]}
+          </p>
+        </div>
+
+        {/* Footer row */}
+        <div className="flex items-center justify-between">
+          <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold ${
+            isActive
+              ? `bg-gradient-to-r ${colors.gradient} text-white shadow-sm`
+              : "bg-white/[0.08] text-gray-400 group-hover:bg-white/[0.14] group-hover:text-gray-200"
+          }`}>
+            {tab.courses.length} Courses
+          </span>
+          {isActive && (
+            <span className="flex items-center gap-1 text-[10px] font-bold text-amber-300">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
+              Active
+            </span>
+          )}
+        </div>
       </div>
-      <div className="text-center">
-        <p className={`text-xs font-extrabold leading-tight ${isActive ? "text-white" : "text-gray-800"}`}>
-          {tab.label}
-        </p>
-        <p className={`mt-1 text-[10px] font-semibold ${isActive ? "text-white/80" : "text-gray-400"}`}>
-          {tab.courses.length} courses
-        </p>
-      </div>
-      {isActive && (
-        <span className="rounded-full bg-white/25 px-2.5 py-0.5 text-[10px] font-black text-white">
-          ✓ Selected
-        </span>
-      )}
     </button>
   );
 }
@@ -386,13 +427,58 @@ function CoursesInner() {
         </div>
       </section>
 
-      {/* ── STREAM PICKER (visual cards) ──────────────────────────── */}
-      <section className="bg-gray-50 border-b border-gray-100 py-8">
-        <div className="container-shell">
-          <p className="text-center text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-5">
-            अपना Stream चुनें
-          </p>
-          <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1 justify-start sm:justify-center">
+      {/* ── STREAM PICKER ─────────────────────────────────────────── */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] py-16 md:py-24">
+        {/* Dot grid — identical to hero */}
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.07]"
+          style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }}
+        />
+        {/* Glow orbs — identical to hero */}
+        <div className="pointer-events-none absolute -top-40 -right-32 h-[480px] w-[480px] rounded-full bg-amber-400 opacity-[0.10] blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-blue-500 opacity-[0.13] blur-3xl" />
+        {/* Extra centre glow for depth */}
+        <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-96 w-96 rounded-full bg-indigo-600 opacity-[0.08] blur-[80px]" />
+
+        <div className="container-shell relative text-center">
+
+          {/* Session badge */}
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/[0.10] px-4 py-2">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
+            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Session 2026–27 &nbsp;·&nbsp; Admissions Open</span>
+          </div>
+
+          {/* Heading */}
+          <h2 className="font-headline text-[2rem] font-black leading-[1.1] tracking-tight text-white md:text-5xl">
+            अपने भविष्य की{" "}
+            <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
+              दिशा चुनें
+            </span>
+          </h2>
+
+          {/* Underline accent — same as hero */}
+          <div className="mx-auto mt-3 h-[3px] w-24 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-36" />
+
+          {/* Stats row */}
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm font-semibold text-blue-100">
+            <span className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+              50+ Courses
+            </span>
+            <span className="hidden sm:block h-4 w-px bg-white/20" />
+            <span className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+              200+ Partner Colleges
+            </span>
+            <span className="hidden sm:block h-4 w-px bg-white/20" />
+            <span className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+              100% Free Counselling
+            </span>
+          </div>
+
+          {/* Stream cards */}
+          <div className="mt-10 flex flex-wrap justify-center gap-3 md:gap-4">
             {streamTabs.map((tab) => (
               <StreamCard
                 key={tab.key}
@@ -402,6 +488,11 @@ function CoursesInner() {
               />
             ))}
           </div>
+
+          {/* Helper hint */}
+          <p className="mt-7 text-xs text-blue-300/70">
+            किसी भी stream पर click करें — courses, fees और career scope तुरंत दिखेगा
+          </p>
         </div>
       </section>
 
