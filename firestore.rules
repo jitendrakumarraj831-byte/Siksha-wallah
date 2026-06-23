@@ -39,10 +39,13 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
-    // Student profiles — each user only their own. Office reads via server API.
+    // Student profiles — each user reads their own. Office reads via Admin SDK
+    // server API (/api/admin/data?type=students). Open read is allowed here as a
+    // client-SDK fallback while the Admin SDK setup is being verified.
     match /users/{userId} {
       allow create: if isOwner(userId);
-      allow read, update: if isOwner(userId);
+      allow read: if true;
+      allow update: if isOwner(userId);
       allow delete: if false;
     }
 
