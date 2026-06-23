@@ -178,8 +178,8 @@ export default function ApplyPage() {
                 <CheckCircle2 size={56} className="text-green-500" />
               </div>
             </div>
-            <h1 className="font-headline text-3xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent mb-2">
-              Application Submitted Successfully
+            <h1 className="font-headline text-3xl font-extrabold text-gray-900 mb-2">
+              Application <span className="text-green-600">Submitted</span> Successfully!
             </h1>
             <p className="text-gray-600 mb-4">
               आपका आवेदन हमें प्राप्त हो गया है। हमारा एक अनुभवी counsellor <strong>30 मिनट के भीतर</strong> आपको call या WhatsApp पर संपर्क करेगा।
@@ -231,11 +231,12 @@ export default function ApplyPage() {
               <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Online Admission Application</span>
             </div>
             {/* H1 */}
-            <h1 className="font-headline text-[2.5rem] font-black leading-[1.08] tracking-tight md:text-6xl lg:text-[4rem]">
-              <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">Start Your Admission Journey</span>
-              <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">in Just 3 Simple Steps</span>
+            <h1 className="font-headline font-black tracking-tight leading-[1.1]">
+              <span className="block text-[1.5rem] md:text-[2.2rem] lg:text-[2.6rem] text-white/80">सिर्फ़ 3 Steps में</span>
+              <span className="block text-[2.8rem] md:text-[4.2rem] lg:text-[5rem] bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Admission शुरू करें।</span>
+              <span className="block text-[1.4rem] md:text-[1.9rem] lg:text-[2.2rem] text-white">पहली Counselling <span className="text-amber-300 font-extrabold">बिल्कुल मुफ़्त।</span></span>
             </h1>
-            <div className="mx-auto mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-40" />
+            <div className="mx-auto mt-4 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-40" />
             <p className="mt-6 max-w-xl mx-auto text-blue-100 leading-relaxed">
               अपनी जानकारी भरें — हमारी अनुभवी counselling team आपको सही course, सही college और (यदि eligible हो तो) BSCC loan तक पूरी guidance देगी।
             </p>
@@ -673,7 +674,7 @@ export default function ApplyPage() {
                       <button
                         type="submit"
                         disabled={loading}
-                        className="flex-[2] flex items-center justify-center gap-2 rounded-xl bg-[#dc143c] py-4 font-extrabold text-white hover:bg-red-700 transition disabled:opacity-60 shadow-lg shadow-red-200 active:scale-95"
+                        className="flex-[2] flex items-center justify-center gap-2 rounded-xl bg-[#003f9f] py-4 font-extrabold text-white hover:bg-blue-700 transition disabled:opacity-60 shadow-lg shadow-blue-200 active:scale-95"
                       >
                         {loading
                           ? <Loader size={18} className="animate-spin" />

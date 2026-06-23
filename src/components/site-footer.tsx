@@ -31,7 +31,7 @@ const PHONES = [
 export function SiteFooter() {
   return (
     <footer className="bg-gray-950 text-gray-400" aria-label="Site footer">
-      <div className="bg-gradient-to-r from-primary-blue via-blue-700 to-cyan-700 py-8">
+      <div className="bg-gradient-to-r from-[#001f6b] via-[#003f9f] to-[#0060c7] py-8">
         <div className="container-shell flex flex-col items-center gap-4 text-center sm:flex-row sm:justify-between sm:text-left">
           <div>
             <p className="font-headline text-xl font-extrabold text-white">Free Career Counselling — Speak to an Admission Expert Today</p>

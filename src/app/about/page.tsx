@@ -57,13 +57,14 @@ export default function AboutPage() {
             <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">About Siksha Wallah</span>
           </div>
           {/* H1 */}
-          <h1 className="font-headline text-[2.5rem] font-black leading-[1.08] tracking-tight md:text-6xl lg:text-[4rem]">
-            <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">Your Family&apos;s Trusted</span>
-            <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Admission Partner</span>
+          <h1 className="font-headline font-black tracking-tight leading-[1.1]">
+            <span className="block text-[1.6rem] md:text-[2.4rem] lg:text-[2.8rem] text-white/80">Forbesganj का सबसे</span>
+            <span className="block text-[2.8rem] md:text-[4.2rem] lg:text-[5rem] bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">भरोसेमंद Admission Partner</span>
+            <span className="block text-[1.5rem] md:text-[2rem] lg:text-[2.4rem] text-white">2015 से आपके परिवार के साथ।</span>
           </h1>
-          <div className="mx-auto mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-40" />
-          <p className="mt-6 max-w-2xl mx-auto text-lg text-blue-100 leading-relaxed">
-            9+ वर्षों से Bihar के विद्यार्थियों और उनके परिवारों को सही कोर्स, सही कॉलेज और एक सुरक्षित career की दिशा में मार्गदर्शन कर रहे हैं — पूरी पारदर्शिता और ईमानदारी के साथ।
+          <div className="mx-auto mt-4 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-40" />
+          <p className="mt-6 max-w-2xl mx-auto text-base text-blue-100 leading-relaxed">
+            9+ वर्षों से Bihar के विद्यार्थियों और परिवारों को सही Course, सही College और एक सुरक्षित Career की राह दिखाते आ रहे हैं — 100% पारदर्शिता और बिना किसी hidden charge के।
           </p>
           {/* CTAs */}
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
@@ -218,11 +219,14 @@ export default function AboutPage() {
       </section>
 
       {/* Journey Timeline */}
-      <section className="py-20 bg-gray-900 text-white">
-        <div className="container-shell">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] py-20 text-white">
+        {/* dot-grid */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.07]"
+          style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+        <div className="container-shell relative">
           <div className="text-center mb-12">
-            <p className="text-sm font-bold uppercase tracking-widest text-amber-400 mb-2">Our Journey</p>
-            <h2 className="font-headline text-4xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">A 9-year journey of trust and results</h2>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-amber-400 mb-2">Our Journey</p>
+            <h2 className="font-headline text-4xl font-extrabold text-white">9 साल का भरोसा, <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">हज़ारों सफल Admissions</span></h2>
           </div>
           <div className="relative max-w-2xl mx-auto">
             <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-white/10" />
@@ -232,9 +236,9 @@ export default function AboutPage() {
                   <div className="absolute left-0 flex h-12 w-12 items-center justify-center rounded-full bg-primary-blue font-headline font-extrabold text-sm text-white border-2 border-amber-400">
                     {year.slice(2)}
                   </div>
-                  <div className="flex-1 rounded-xl border border-white/10 bg-white/5 p-4">
+                  <div className="flex-1 rounded-xl border border-white/[0.1] bg-white/[0.05] p-4 backdrop-blur-sm">
                     <p className="text-xs font-bold text-amber-400 mb-1">{year}</p>
-                    <p className="text-sm text-gray-300 leading-relaxed">{event}</p>
+                    <p className="text-sm text-blue-100 leading-relaxed">{event}</p>
                   </div>
                 </div>
               ))}
