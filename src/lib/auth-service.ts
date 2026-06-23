@@ -133,12 +133,12 @@ export const authService = {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
-      if (res.ok) return;
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success !== false) return; // custom email sent
       if (res.status === 400 || res.status === 429) {
-        const data = await res.json().catch(() => ({}));
         throw new Error(data.error || 'Could not send reset email. Please try again.');
       }
-      // 5xx = SMTP not configured — fall through to Firebase fallback
+      // 5xx or { success: false, useFirebase: true } → fall through to Firebase
     } catch (err: any) {
       if (err.message && !err.message.includes('fetch')) throw err;
     }
@@ -222,11 +222,12 @@ export const authService = {
           name: user.displayName ?? 'Student',
         }),
       });
-      if (res.ok) return;
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success !== false) return; // custom email sent
       if (res.status === 400 || res.status === 429) {
-        const data = await res.json().catch(() => ({}));
         throw new Error(data.error || 'Failed to send verification email.');
       }
+      // 5xx or { success: false, useFirebase: true } → fall through to Firebase
     } catch (err: any) {
       if (err.message && !err.message.includes('fetch')) throw err;
     }
