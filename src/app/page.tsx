@@ -564,7 +564,7 @@ export default function Home() {
             </div>
           )}
           {activeStream === "medical" && (
-            <div className="mb-8 rounded-2xl border-2 border-red-200 bg-gradient-to-r from-red-50 to-pink-50 p-6">
+            <div className="mb-8 rounded-2xl border-2 border-red-200 bg-gradient-to-r from-red-50 to-red-100 p-6">
               <div className="flex flex-col sm:flex-row sm:items-start gap-4">
                 <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-red-600 text-white shadow-md">
                   <Building2 size={22} />

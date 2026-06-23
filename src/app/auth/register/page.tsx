@@ -99,7 +99,7 @@ export default function RegisterPage() {
             ].map(
               (feature) => (
                 <p key={feature} className="flex gap-2">
-                  <CheckCircle2 size={18} className="text-emerald-500" />
+                  <CheckCircle2 size={18} className="text-green-500" />
                   {feature}
                 </p>
               )

@@ -169,8 +169,8 @@ function CourseCard({
             </div>
 
             <div className="flex items-start gap-2">
-              <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100">
-                <FileText size={13} className="text-purple-600" />
+              <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
+                <FileText size={13} className="text-blue-600" />
               </div>
               <div>
                 <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Entrance Exam</p>
@@ -269,8 +269,8 @@ function getGlowColor(color: string): string {
   const glows: Record<string, string> = {
     blue:   "rgba(59,130,246,0.40)",
     red:    "rgba(239,68,68,0.40)",
-    teal:   "rgba(20,184,166,0.40)",
-    purple: "rgba(147,51,234,0.40)",
+    green:  "rgba(34,197,94,0.40)",
+    amber:  "rgba(251,191,36,0.40)",
     orange: "rgba(249,115,22,0.40)",
   };
   return glows[color] ?? "rgba(255,255,255,0.18)";
@@ -653,12 +653,12 @@ function CoursesInner() {
       </section>
 
       {/* ── FINAL CTA ─────────────────────────────────────────────── */}
-      <section className="bg-gradient-to-r from-emerald-700 to-teal-700 py-14 text-white text-center">
+      <section className="bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] py-14 text-white text-center">
         <div className="container-shell">
           <h2 className="font-headline text-3xl font-extrabold mb-3">
             Still confused about which course is right for you?
           </h2>
-          <p className="text-emerald-100 mb-7 max-w-xl mx-auto">
+          <p className="text-blue-100 mb-7 max-w-xl mx-auto">
             हमारे अनुभवी काउंसलर आपके अंक, बजट और career लक्ष्यों को समझकर सबसे उपयुक्त course और college की सलाह देंगे — पूरी प्रक्रिया 100% निःशुल्क।
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
