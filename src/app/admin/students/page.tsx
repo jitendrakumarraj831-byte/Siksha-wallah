@@ -17,7 +17,7 @@ import {
   getAllApplications, updateApplicationStatus,
   type CourseApplication, type ApplicationStatus,
 } from "@/services/application-service";
-import { adminFetchData, adminUpdate } from "@/lib/admin-api";
+import { adminUpdate } from "@/lib/admin-api";
 
 /* ── Types ─────────────────────────────────────── */
 interface StudentProfile {
@@ -257,6 +257,7 @@ export default function AdminStudentsPage() {
   const [students, setStudents] = useState<StudentProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [diag, setDiag] = useState<string>("");
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState<"" | "has_app" | "no_app" | "admission_done" | "bscc">("");
 
@@ -290,34 +291,80 @@ export default function AdminStudentsPage() {
     }));
   }
 
+  // Ask the server why the Admin SDK is unavailable, so the office can see the
+  // real reason on-screen instead of a generic "rules" message.
+  async function fetchDiagnosis(): Promise<string> {
+    try {
+      const res = await fetch("/api/admin/debug", { cache: "no-store" });
+      const j = await res.json().catch(() => null);
+      if (!j) return "Diagnostic endpoint unreachable.";
+      if (j.ok) return "Admin backend OK.";
+      const ks = j.env?.keyShape || {};
+      const parts: string[] = [];
+      parts.push(`Admin SDK: ${j.sdkStatus || "unknown"}`);
+      if (j.sdkError) parts.push(`Error: ${j.sdkError}`);
+      parts.push(`Service-account key present: ${j.env?.hasSaKey ? "yes" : "NO — not set in Vercel"}`);
+      if (j.env?.hasSaKey) {
+        parts.push(`Key length: ${j.env?.saKeyLength}`);
+        parts.push(`Looks like JSON: ${ks.looksLikeJson ? "yes" : "no"}`);
+        parts.push(`Has private_key field: ${ks.mentionsPrivateKey ? "yes" : "NO"}`);
+        parts.push(`Has client_email field: ${ks.mentionsClientEmail ? "yes" : "NO"}`);
+      }
+      return parts.join(" • ");
+    } catch (e) {
+      return e instanceof Error ? e.message : "Could not run diagnosis.";
+    }
+  }
+
   async function load() {
     setLoading(true);
     setError("");
+    setDiag("");
     try {
-      // Prefer the cookie-gated admin API (firebase-admin); fall back to client read.
-      const studentList = await adminFetchData<StudentProfile[]>("students", loadStudentsClient);
-      setStudents(studentList);
-    } catch {
-      setError("Could not load full student profiles. If Firestore rules are locked, ensure the admin backend (firebase-admin) is configured — see SECURITY.md.");
-      // Last resort: derive student rows from application data only.
+      // Try the cookie-gated admin API directly so we can read the real status.
+      const res = await fetch("/api/admin/data?type=students", { cache: "no-store" });
+      if (res.ok) {
+        const json = await res.json();
+        if (json?.success) {
+          setStudents(json.data as StudentProfile[]);
+          return;
+        }
+      }
+      // Server API failed — capture why, then try the client-SDK fallback.
+      const reason = await fetchDiagnosis();
       try {
-        const apps = await getAllApplications();
-        const seen = new Set<string>();
-        const fallback: StudentProfile[] = [];
-        apps.forEach(a => {
-          if (a.userId && !seen.has(a.userId)) {
-            seen.add(a.userId);
-            fallback.push({
-              id: a.userId,
-              name: a.fullName,
-              email: a.email || "—",
-              phone: a.mobile,
-              applications: apps.filter(x => x.userId === a.userId),
-            });
-          }
-        });
-        setStudents(fallback);
-      } catch {}
+        const studentList = await loadStudentsClient();
+        setStudents(studentList);
+        if (studentList.length === 0) {
+          setError("Admin backend unavailable and no students readable via client.");
+          setDiag(reason);
+        }
+      } catch {
+        setError("Could not load student profiles. The admin backend (firebase-admin) is not working.");
+        setDiag(reason);
+        // Last resort: derive student rows from application data only.
+        try {
+          const apps = await getAllApplications();
+          const seen = new Set<string>();
+          const fallback: StudentProfile[] = [];
+          apps.forEach(a => {
+            if (a.userId && !seen.has(a.userId)) {
+              seen.add(a.userId);
+              fallback.push({
+                id: a.userId,
+                name: a.fullName,
+                email: a.email || "—",
+                phone: a.mobile,
+                applications: apps.filter(x => x.userId === a.userId),
+              });
+            }
+          });
+          setStudents(fallback);
+        } catch {}
+      }
+    } catch {
+      setError("Could not load student profiles.");
+      setDiag(await fetchDiagnosis());
     } finally {
       setLoading(false);
     }
@@ -432,13 +479,18 @@ export default function AdminStudentsPage() {
           ))}
         </div>
 
-        {/* Error */}
+        {/* Error + live diagnosis */}
         {error && (
           <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
-            <p className="font-bold flex items-center gap-2"><AlertCircle size={16} /> Firestore Rules Update Required</p>
-            <p className="mt-1 text-xs">
-              Firebase console → Firestore → Rules → paste rules from <code className="bg-amber-100 px-1 rounded">firestore.rules</code> file in project root → Publish.
-              यह एक बार करना होगा, फिर सब काम करेगा।
+            <p className="font-bold flex items-center gap-2"><AlertCircle size={16} /> Admin backend issue</p>
+            <p className="mt-1 text-xs">{error}</p>
+            {diag && (
+              <p className="mt-2 rounded-lg bg-amber-100 px-2 py-1.5 text-xs font-mono text-amber-900 break-words">
+                🔍 {diag}
+              </p>
+            )}
+            <p className="mt-2 text-xs">
+              Fix: Vercel → Settings → Environment Variables → <code className="bg-amber-100 px-1 rounded">FIREBASE_SERVICE_ACCOUNT_KEY</code> me poori service-account JSON file paste karein → Redeploy.
             </p>
           </div>
         )}
