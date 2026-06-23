@@ -272,31 +272,42 @@ function StreamCard({
   return (
     <button
       onClick={onClick}
-      className={`flex flex-col items-center gap-2.5 min-w-[120px] sm:min-w-[130px] px-4 py-5 rounded-2xl border-2 transition-all duration-200 cursor-pointer ${
+      className={`group relative flex w-[calc(50%-8px)] sm:w-44 flex-col items-center gap-3 overflow-hidden rounded-2xl border p-5 transition-all duration-300 cursor-pointer ${
         isActive
-          ? `bg-gradient-to-br ${colors.gradient} text-white border-transparent shadow-lg ${colors.shadow} scale-105`
-          : "bg-white border-gray-100 hover:border-gray-200 hover:shadow-md hover:-translate-y-0.5"
+          ? `bg-gradient-to-br ${colors.gradient} border-transparent shadow-2xl ${colors.shadow} scale-[1.04] -translate-y-1`
+          : "border-white/10 bg-white/[0.06] hover:bg-white/[0.12] hover:border-white/20 hover:-translate-y-1"
       }`}
     >
-      <div
-        className={`flex h-12 w-12 items-center justify-center rounded-xl transition-all ${
-          isActive ? "bg-white/20" : colors.icon
-        }`}
-      >
-        <Icon size={22} />
+      {/* Glow overlay on active */}
+      {isActive && (
+        <div className="pointer-events-none absolute inset-0 rounded-2xl bg-white/10" />
+      )}
+
+      {/* Icon circle */}
+      <div className={`relative flex h-14 w-14 items-center justify-center rounded-2xl transition-all ${
+        isActive ? "bg-white/25" : colors.icon
+      }`}>
+        <Icon size={26} className={isActive ? "text-white" : ""} />
       </div>
-      <div className="text-center">
-        <p className={`text-xs font-extrabold leading-tight ${isActive ? "text-white" : "text-gray-800"}`}>
+
+      {/* Label + count */}
+      <div className="relative text-center">
+        <p className={`text-sm font-extrabold leading-snug ${isActive ? "text-white" : "text-gray-200"}`}>
           {tab.label}
         </p>
-        <p className={`mt-1 text-[10px] font-semibold ${isActive ? "text-white/80" : "text-gray-400"}`}>
-          {tab.courses.length} courses
-        </p>
-      </div>
-      {isActive && (
-        <span className="rounded-full bg-white/25 px-2.5 py-0.5 text-[10px] font-black text-white">
-          ✓ Selected
+        <span className={`mt-2 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold ${
+          isActive ? "bg-white/25 text-white" : "bg-white/10 text-gray-400"
+        }`}>
+          {tab.courses.length} Courses
         </span>
+      </div>
+
+      {/* Active pulse dot */}
+      {isActive && (
+        <div className="relative flex items-center gap-1.5 text-[11px] font-bold text-white/80">
+          <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
+          Viewing Now
+        </div>
       )}
     </button>
   );
@@ -386,13 +397,40 @@ function CoursesInner() {
         </div>
       </section>
 
-      {/* ── STREAM PICKER (visual cards) ──────────────────────────── */}
-      <section className="bg-gray-50 border-b border-gray-100 py-8">
-        <div className="container-shell">
-          <p className="text-center text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-5">
-            अपना Stream चुनें
-          </p>
-          <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1 justify-start sm:justify-center">
+      {/* ── STREAM PICKER ─────────────────────────────────────────── */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-gray-950 via-slate-900 to-gray-900 py-14 md:py-18">
+        {/* Subtle grid overlay */}
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.035]"
+          style={{
+            backgroundImage:
+              "linear-gradient(to right,#fff 1px,transparent 1px),linear-gradient(to bottom,#fff 1px,transparent 1px)",
+            backgroundSize: "52px 52px",
+          }}
+        />
+        {/* Ambient glow blobs */}
+        <div className="pointer-events-none absolute -top-24 left-1/4 h-64 w-64 rounded-full bg-amber-500 opacity-[0.06] blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-16 right-1/4 h-48 w-48 rounded-full bg-blue-500 opacity-[0.08] blur-3xl" />
+
+        <div className="container-shell relative">
+          {/* Heading */}
+          <div className="mb-10 text-center">
+            <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/10 px-4 py-1.5 text-[11px] font-bold tracking-widest text-amber-400 mb-4">
+              ✦&nbsp; {streamTabs.length} Streams &nbsp;·&nbsp; {totalCourses}+ Courses &nbsp;·&nbsp; Free Counselling
+            </span>
+            <h2 className="font-headline text-3xl md:text-4xl font-black text-white leading-tight">
+              किस Field में है{" "}
+              <span className="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
+                आपका Future?
+              </span>
+            </h2>
+            <p className="mt-3 mx-auto max-w-md text-sm text-gray-400">
+              नीचे अपना stream चुनें — courses, fees और career की पूरी जानकारी एक click में पाएं, बिल्कुल मुफ़्त।
+            </p>
+          </div>
+
+          {/* Stream cards — flex-wrap so 5th card centres itself on mobile */}
+          <div className="flex flex-wrap justify-center gap-4">
             {streamTabs.map((tab) => (
               <StreamCard
                 key={tab.key}
