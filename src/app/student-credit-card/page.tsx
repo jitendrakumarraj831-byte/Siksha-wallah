@@ -86,7 +86,7 @@ export default function StudentCreditCardPage() {
       </section>
 
       {/* ── BSCC BENEFITS ── */}
-      <section className="py-16 bg-gradient-to-br from-[#134e4a] to-[#0f766e] text-white">
+      <section className="py-16 bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] text-white">
         <div className="container-shell">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {[
@@ -111,7 +111,7 @@ export default function StudentCreditCardPage() {
       </section>
 
       {/* ── STEP-BY-STEP PROCESS ── */}
-      <section className="py-20 bg-gradient-to-br from-[#134e4a] to-[#0f766e] text-white">
+      <section className="py-20 bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] text-white">
         <div className="container-shell">
           <div className="mb-10 rounded-2xl border border-white/15 bg-white/5 p-7 backdrop-blur-sm">
             <div className="mb-6 flex items-center gap-3">
@@ -196,7 +196,7 @@ export default function StudentCreditCardPage() {
             </div>
 
             {/* Eligibility Checker */}
-            <div id="eligibility-checker" className="rounded-2xl border border-teal-200 bg-teal-50/10 p-7 backdrop-blur-xl">
+            <div id="eligibility-checker" className="rounded-2xl border border-blue-200 bg-blue-50/10 p-7 backdrop-blur-xl">
               <h3 className="font-headline text-xl font-extrabold mb-5">Quick BSCC Eligibility Check</h3>
 
               {bsccEligible === null ? (
@@ -219,7 +219,7 @@ export default function StudentCreditCardPage() {
                       value={bsccIncome}
                       onChange={(e) => setBsccIncome(e.target.value)}
                       required
-                      className="w-full rounded-xl border border-white/30 bg-teal-900 px-4 py-3 text-white outline-none"
+                      className="w-full rounded-xl border border-white/30 bg-blue-900 px-4 py-3 text-white outline-none"
                     >
                       <option value="">Select annual family income</option>
                       <option value="below">Below ₹4.5 Lakh</option>
@@ -287,7 +287,7 @@ export default function StudentCreditCardPage() {
         <div className="container-shell">
           <div className="text-center mb-12">
             <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">Get Admission-Ready</p>
-            <h2 className="font-headline text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Your Admission Documents Checklist</h2>
+            <h2 className="font-headline text-4xl md:text-5xl font-extrabold text-gray-900">Your Admission <span className="text-primary-blue">Documents</span> Checklist</h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto">
               इस interactive checklist का उपयोग करके अपनी application तैयार करें। हर document को tick करते जाएँ — और original के साथ 2 photocopies लेकर हमारे office में आएँ।
             </p>
@@ -296,7 +296,7 @@ export default function StudentCreditCardPage() {
           <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr] items-start">
             {/* Interactive Checklist */}
             <div className="rounded-2xl border-2 border-gray-100 bg-gray-50 overflow-hidden">
-              <div className="flex items-center justify-between bg-teal-700 px-6 py-4">
+              <div className="flex items-center justify-between bg-[#003f9f] px-6 py-4">
                 <div className="flex items-center gap-2 text-white">
                   <ListChecks size={20} />
                   <span className="font-headline font-extrabold text-lg">Document Checklist</span>
@@ -388,7 +388,7 @@ export default function StudentCreditCardPage() {
                   </div>
                 ))}
 
-                <div className="rounded-xl bg-teal-700 p-4 text-white flex items-center justify-between gap-4 flex-wrap">
+                <div className="rounded-xl bg-[#003f9f] p-4 text-white flex items-center justify-between gap-4 flex-wrap">
                   <div>
                     <p className="font-bold text-sm">All documents ready? Let&apos;s move forward.</p>
                     <p className="text-xs text-blue-200">हम Forbesganj office में सभी documents की निःशुल्क verification करते हैं।</p>
@@ -397,7 +397,7 @@ export default function StudentCreditCardPage() {
                     href="https://wa.me/916203138576?text=नमस्ते!%20मैंने%20सभी%20admission%20documents%20collect%20कर%20लिए%20हैं।%20आगे%20का%20process%20बताएं।"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-shrink-0 flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-teal-700 hover:bg-teal-50 transition"
+                    className="flex-shrink-0 flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-[#003f9f] hover:bg-blue-50 transition"
                   >
                     <MessageCircle size={15} /> Share on WhatsApp
                   </a>
@@ -474,13 +474,13 @@ export default function StudentCreditCardPage() {
       </section>
 
       {/* ── BOTTOM CTA → CONTACT ── */}
-      <section className="py-20 bg-gradient-to-r from-teal-700 to-cyan-700 text-white">
+      <section className="py-20 bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] text-white">
         <div className="container-shell text-center">
           <CheckCircle2 size={52} className="mx-auto mb-5 text-green-400" />
           <h2 className="font-headline text-3xl md:text-4xl font-extrabold mb-3 bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
             Documents Ready? Let&apos;s Begin Your BSCC Application
           </h2>
-          <p className="text-teal-100 max-w-xl mx-auto mb-8 text-lg">
+          <p className="text-blue-100 max-w-xl mx-auto mb-8 text-lg">
             अगला कदम उठाएं — हमारे office में visit करें या एक call कर लें। हमारी team पूरी application को आपके साथ बैठकर तैयार करेगी।
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

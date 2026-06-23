@@ -171,7 +171,7 @@ export default function ApplyPage() {
     return (
       <>
         <SiteNavbar />
-        <main className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50 flex items-center justify-center px-4 py-16">
+        <main className="min-h-screen bg-green-50 flex items-center justify-center px-4 py-16">
           <div className="w-full max-w-lg text-center">
             <div className="mb-6 flex justify-center">
               <div className="flex h-24 w-24 items-center justify-center rounded-full bg-green-100">

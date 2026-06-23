@@ -69,14 +69,14 @@ export default function LoginChoicePage() {
           {/* ── Student Login ── */}
           <Link
             href="/auth/login"
-            className="group relative flex flex-col rounded-2xl border-2 border-white/20 bg-white/10 p-8 backdrop-blur-xl shadow-2xl hover:bg-white/20 hover:border-emerald-400/60 transition-all hover:-translate-y-1"
+            className="group relative flex flex-col rounded-2xl border-2 border-white/20 bg-white/10 p-8 backdrop-blur-xl shadow-2xl hover:bg-white/20 hover:border-blue-400/60 transition-all hover:-translate-y-1"
           >
             {/* Icon */}
-            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#064e3b]/60 border border-white/20">
-              <BookOpen size={32} className="text-emerald-400" />
+            <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-900/60 border border-white/20">
+              <BookOpen size={32} className="text-blue-400" />
             </div>
 
-            <div className="mb-1 inline-flex w-fit items-center gap-1.5 rounded-full bg-emerald-400/20 border border-emerald-400/30 px-3 py-1 text-xs font-bold text-emerald-300">
+            <div className="mb-1 inline-flex w-fit items-center gap-1.5 rounded-full bg-blue-400/20 border border-blue-400/30 px-3 py-1 text-xs font-bold text-blue-300">
               FOR STUDENTS
             </div>
 
@@ -90,12 +90,12 @@ export default function LoginChoicePage() {
             <div className="mt-6 space-y-1.5 text-xs font-semibold text-blue-300">
               {["Track every admission application in real time", "Upload and manage your documents securely", "Stay updated on BSCC loan and payment status"].map(f => (
                 <p key={f} className="flex items-center gap-1.5">
-                  <span className="text-emerald-400">✓</span> {f}
+                  <span className="text-amber-400">✓</span> {f}
                 </p>
               ))}
             </div>
 
-            <div className="mt-6 flex items-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 font-bold text-white group-hover:bg-emerald-400 transition">
+            <div className="mt-6 flex items-center gap-2 rounded-xl bg-[#003f9f] px-5 py-3 font-bold text-white group-hover:bg-blue-700 transition">
               Sign in to My Dashboard <ArrowRight size={16} className="transition group-hover:translate-x-1" />
             </div>
           </Link>

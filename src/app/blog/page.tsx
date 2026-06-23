@@ -15,15 +15,15 @@ import { blogArticles } from "@/lib/blog-data";
 const CATEGORIES = [
   { key: "all",       label: "All Articles",        icon: BookOpen,      color: "from-blue-500 to-indigo-600"   },
   { key: "Teaching",  label: "Teaching Careers",    icon: GraduationCap, color: "from-blue-500 to-blue-700"     },
-  { key: "Medical",   label: "Medical & Nursing",   icon: Stethoscope,   color: "from-red-500 to-rose-600"      },
-  { key: "Technical", label: "Engineering & Tech",  icon: Cpu,           color: "from-violet-500 to-purple-700" },
+  { key: "Medical",   label: "Medical & Nursing",   icon: Stethoscope,   color: "from-red-500 to-red-700"       },
+  { key: "Technical", label: "Engineering & Tech",  icon: Cpu,           color: "from-blue-500 to-blue-700"    },
   { key: "Finance",   label: "Loans & Scholarships", icon: Wallet,       color: "from-amber-500 to-orange-600"  },
 ];
 
 const CATEGORY_STYLES: Record<string, { badge: string; bar: string }> = {
   Teaching:  { badge: "bg-blue-100 text-blue-800",   bar: "from-blue-500 to-blue-700"     },
-  Medical:   { badge: "bg-red-100 text-red-800",     bar: "from-red-500 to-rose-600"      },
-  Technical: { badge: "bg-violet-100 text-violet-800", bar: "from-violet-500 to-purple-700" },
+  Medical:   { badge: "bg-red-100 text-red-800",     bar: "from-red-500 to-red-700"       },
+  Technical: { badge: "bg-blue-100 text-blue-800",   bar: "from-blue-500 to-blue-700"     },
   Finance:   { badge: "bg-amber-100 text-amber-800", bar: "from-amber-500 to-orange-600"  },
 };
 

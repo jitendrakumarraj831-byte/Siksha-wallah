@@ -150,7 +150,7 @@ export default function DashboardPage() {
             { label: "Total Applications",    value: applications.length, icon: ClipboardList, color: "text-[#003f9f]", bg: "bg-blue-50" },
             { label: "Awaiting Counsellor",   value: pending,              icon: Clock,          color: "text-yellow-700", bg: "bg-yellow-50" },
             { label: "Admissions Confirmed",  value: done,                 icon: CheckCircle2,   color: "text-green-700", bg: "bg-green-50" },
-            { label: "Profile Status",        value: userProfile?.profileComplete ? "Complete" : "Setup Now", icon: User, color: "text-purple-700", bg: "bg-purple-50" },
+            { label: "Profile Status",        value: userProfile?.profileComplete ? "Complete" : "Setup Now", icon: User, color: "text-blue-700", bg: "bg-blue-50" },
           ].map(({ label, value, icon: Icon, color, bg }) => (
             <div key={label} className={`rounded-2xl border-2 border-gray-100 ${bg} p-4`}>
               <Icon size={22} className={`${color} mb-2`} />
@@ -238,7 +238,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Help & Contact */}
-        <div className="rounded-2xl bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-100 p-6">
+        <div className="rounded-2xl bg-green-50 border-2 border-green-100 p-6">
           <h3 className="font-headline text-lg font-extrabold text-gray-900 mb-1">Need help with your admission?</h3>
           <p className="text-sm text-gray-600 mb-4">Speak directly with an experienced counsellor — free and confidential.</p>
           <div className="flex flex-wrap gap-3">

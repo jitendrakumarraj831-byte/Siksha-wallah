@@ -166,7 +166,7 @@ export default function CourseDetailPage() {
 
                 <div className="rounded-lg bg-slate-50 p-4">
                   <div className="flex items-center gap-3">
-                    <Users size={24} className="text-purple-600" />
+                    <Users size={24} className="text-blue-600" />
                     <div>
                       <p className="text-sm text-slate-600">Seats Filled</p>
                       <p className="font-bold text-slate-900">

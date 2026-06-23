@@ -30,7 +30,7 @@ const MAX_FILE_SIZE_MB = 5;
 
 function getFileIcon(mimeType?: string) {
   if (!mimeType) return <FileText size={22} className="text-blue-500" />;
-  if (mimeType.startsWith('image/')) return <FileImage size={22} className="text-purple-500" />;
+  if (mimeType.startsWith('image/')) return <FileImage size={22} className="text-blue-500" />;
   if (mimeType === 'application/pdf') return <File size={22} className="text-red-500" />;
   return <FileText size={22} className="text-blue-500" />;
 }

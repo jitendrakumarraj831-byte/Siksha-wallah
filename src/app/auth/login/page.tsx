@@ -68,10 +68,10 @@ export default function StudentLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#064e3b] via-[#065f46] to-[#047857] flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] flex items-center justify-center px-4 py-12">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-emerald-300 opacity-10 blur-3xl" />
-        <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-teal-300 opacity-10 blur-3xl" />
+        <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-amber-300 opacity-10 blur-3xl" />
+        <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-blue-300 opacity-10 blur-3xl" />
       </div>
 
       <div className="relative w-full max-w-4xl">
@@ -97,7 +97,7 @@ export default function StudentLoginPage() {
               <span className="text-amber-400">Student Dashboard</span>
             </h1>
 
-            <p className="text-emerald-100 leading-relaxed mb-8">
+            <p className="text-blue-100 leading-relaxed mb-8">
               अपनी admission application, documents और counsellor के साथ हुई हर बातचीत — सब एक सुरक्षित जगह पर देखें और track करें।
             </p>
 
@@ -108,7 +108,7 @@ export default function StudentLoginPage() {
                 [CreditCard, "View BSCC loan status, fee receipts and payments"],
                 [Bell,       "Receive timely alerts on college deadlines and updates"],
               ].map(([Icon, text], i) => (
-                <div key={i} className="flex items-center gap-3 text-sm text-emerald-100">
+                <div key={i} className="flex items-center gap-3 text-sm text-blue-100">
                   {/* @ts-ignore */}
                   <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-white/10">
                     <Icon size={16} className="text-amber-400" />
@@ -119,13 +119,13 @@ export default function StudentLoginPage() {
             </div>
 
             <div className="mt-8 pt-6 border-t border-white/20 space-y-2">
-              <p className="text-sm text-emerald-200">
+              <p className="text-sm text-blue-200">
                 Are you a counsellor or office staff member?{" "}
                 <Link href="/admin/login" className="font-bold text-amber-400 hover:text-amber-300 underline">
                   Counsellor Portal →
                 </Link>
               </p>
-              <p className="text-sm text-emerald-200">
+              <p className="text-sm text-blue-200">
                 Don&apos;t have an account yet?{" "}
                 <Link href="/auth/register" className="font-bold text-amber-400 hover:text-amber-300 underline">
                   Create a free account →
@@ -141,7 +141,7 @@ export default function StudentLoginPage() {
                 <ShieldCheck size={13} /> SECURE LOGIN
               </div>
               <h2 className="font-headline text-2xl font-extrabold text-white">Welcome Back</h2>
-              <p className="mt-1 text-sm text-emerald-200">Sign in with your email and password</p>
+              <p className="mt-1 text-sm text-blue-200">Sign in with your email and password</p>
             </div>
 
             {error && (
@@ -179,11 +179,11 @@ export default function StudentLoginPage() {
 
             <form onSubmit={handleEmailLogin} className="space-y-4">
               <div>
-                <label htmlFor="email-input" className="mb-1.5 block text-sm font-semibold text-emerald-100">
+                <label htmlFor="email-input" className="mb-1.5 block text-sm font-semibold text-blue-100">
                   Email Address
                 </label>
                 <div className="relative">
-                  <Mail size={16} className="absolute left-3.5 top-3.5 text-emerald-300" />
+                  <Mail size={16} className="absolute left-3.5 top-3.5 text-blue-300" />
                   <input
                     id="email-input"
                     type="email"
@@ -191,17 +191,17 @@ export default function StudentLoginPage() {
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     placeholder="yourname@email.com"
-                    className="w-full rounded-xl border border-white/30 bg-white/10 pl-10 pr-4 py-3.5 text-sm text-white placeholder-emerald-300 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/30 transition"
+                    className="w-full rounded-xl border border-white/30 bg-white/10 pl-10 pr-4 py-3.5 text-sm text-white placeholder-blue-300 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/30 transition"
                   />
                 </div>
               </div>
 
               <div>
-                <label htmlFor="password-input" className="mb-1.5 block text-sm font-semibold text-emerald-100">
+                <label htmlFor="password-input" className="mb-1.5 block text-sm font-semibold text-blue-100">
                   Password
                 </label>
                 <div className="relative">
-                  <Lock size={16} className="absolute left-3.5 top-3.5 text-emerald-300" />
+                  <Lock size={16} className="absolute left-3.5 top-3.5 text-blue-300" />
                   <input
                     id="password-input"
                     type={showPass ? "text" : "password"}
@@ -209,13 +209,13 @@ export default function StudentLoginPage() {
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     placeholder="Enter your password"
-                    className="w-full rounded-xl border border-white/30 bg-white/10 pl-10 pr-12 py-3.5 text-sm text-white placeholder-emerald-300 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/30 transition"
+                    className="w-full rounded-xl border border-white/30 bg-white/10 pl-10 pr-12 py-3.5 text-sm text-white placeholder-blue-300 outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/30 transition"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPass(!showPass)}
                     aria-label={showPass ? "Hide password" : "Show password"}
-                    className="absolute right-3.5 top-3.5 text-emerald-300 hover:text-white transition"
+                    className="absolute right-3.5 top-3.5 text-blue-300 hover:text-white transition"
                   >
                     {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
@@ -238,7 +238,7 @@ export default function StudentLoginPage() {
             </form>
 
             <div className="mt-5 rounded-xl border border-white/20 bg-white/5 p-4 text-center">
-              <p className="text-sm text-emerald-200">
+              <p className="text-sm text-blue-200">
                 New to Siksha Wallah?{" "}
                 <Link href="/auth/register" className="font-bold text-amber-400 hover:text-amber-300 underline">
                   <UserPlus size={13} className="inline mr-1" />Create a free account
@@ -247,7 +247,7 @@ export default function StudentLoginPage() {
             </div>
 
             <div className="mt-4 text-center">
-              <Link href="/" className="text-sm text-emerald-300 hover:text-white transition">
+              <Link href="/" className="text-sm text-blue-300 hover:text-white transition">
                 ← Back to Home
               </Link>
             </div>
