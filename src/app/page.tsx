@@ -1888,9 +1888,9 @@ export default function Home() {
             </div>
             </AnimateIn>
 
-            {/* Right — accordion */}
-            <AnimateIn type="fade-left" delay={100} className="order-1 lg:order-2">
-            <div>
+            {/* Right — question slider (NO AnimateIn wrapper: opacity-animation conflicts
+                with the horizontal scroll container and was hiding the cards on mobile) */}
+            <div className="order-1 lg:order-2">
               <p className="mb-3 flex items-center gap-1.5 text-xs font-semibold text-gray-400">
                 <ArrowRight size={13} className="text-[#003f9f]" /> Swipe करें · किसी भी सवाल पर tap करके पूरा जवाब देखें
               </p>
@@ -1907,10 +1907,6 @@ export default function Home() {
                   return (
                     <button
                       key={i}
-                      onPointerDown={(e) => {
-                        // Fire immediately on touch (no 300ms delay, no scroll suppression)
-                        if (e.pointerType === "touch") { e.currentTarget.releasePointerCapture(e.pointerId); setOpenFaq(i); }
-                      }}
                       onClick={() => setOpenFaq(i)}
                       style={{ touchAction: "manipulation" }}
                       className={`group flex w-[80%] flex-shrink-0 snap-start flex-col rounded-2xl border-2 ${s.border} bg-white p-5 text-left shadow-sm transition hover:-translate-y-1 hover:shadow-lg sm:w-[300px]`}
@@ -1932,7 +1928,6 @@ export default function Home() {
                 })}
               </div>
             </div>
-            </AnimateIn>
           </div>
 
         </div>
