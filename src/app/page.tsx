@@ -1155,8 +1155,8 @@ export default function Home() {
             </p>
           </AnimateIn>
 
-          {/* Category tabs display */}
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 mb-8">
+          {/* Mobile: horizontal snap-carousel · Desktop: grid */}
+          <div className="no-scrollbar -mx-4 mb-8 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
             {([
               {
                 category: "Teaching Colleges",
@@ -1255,7 +1255,7 @@ export default function Home() {
                 approval: "MCI / State Approved",
               },
             ] as const).map(({ category, icon: Icon, color, iconBg, count, countColor, colleges, approval }) => (
-              <AnimateIn key={category} type="fade-up">
+              <AnimateIn key={category} type="fade-up" className="w-[78%] shrink-0 snap-start sm:w-auto">
                 <div className={`rounded-2xl border-2 ${color} p-5 h-full`}>
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
