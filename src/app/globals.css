@@ -55,12 +55,15 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
-  overflow-x: clip;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 body {
   margin: 0;
-  max-width: 100%;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
   color: var(--gray-900);
   background:
     radial-gradient(circle at top, rgba(0, 63, 159, 0.06), transparent 30%),
