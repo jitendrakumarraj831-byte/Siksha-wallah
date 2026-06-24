@@ -190,6 +190,16 @@ export default function DashboardPage() {
                             <span className="font-bold">Counsellor Note:</span> {app.note}
                           </div>
                         )}
+                        {app.availableDocs && (app.availableDocs as string[]).length > 0 && (
+                          <div className="mt-2 rounded-lg bg-green-50 border border-green-100 px-3 py-2 text-xs">
+                            <p className="font-bold text-green-800 mb-1">📋 आपके Documents ({(app.availableDocs as string[]).length}):</p>
+                            <div className="flex flex-wrap gap-1">
+                              {(app.availableDocs as string[]).map((d) => (
+                                <span key={d} className="rounded bg-green-100 px-1.5 py-0.5 text-green-800 font-semibold">{d.split(" (")[0]}</span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                       <p className="flex-shrink-0 text-xs text-gray-400">
                         {formatDate(app.createdAt)}

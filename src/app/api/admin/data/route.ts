@@ -32,21 +32,38 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ success: true, data: snap.docs.map((d) => ({ id: d.id, ...serialize(d.data()) })) });
       }
       case "students": {
-        const [usersSnap, appsSnap] = await Promise.all([
+        const [usersSnap, appsSnap, docsSnap] = await Promise.all([
           db.collection("users").where("role", "==", "student").get(),
           db.collection("course_applications").get(),
+          db.collection("documents").get(),
         ]);
         const apps = appsSnap.docs.map((d) => ({ id: d.id, ...serialize(d.data()) })) as any[];
         const appsByUser: Record<string, any[]> = {};
         for (const a of apps) {
           if (a.userId) (appsByUser[a.userId] ||= []).push(a);
         }
+        const docsByUser: Record<string, any[]> = {};
+        for (const d of docsSnap.docs) {
+          const data = serialize(d.data()) as any;
+          if (data.uid) (docsByUser[data.uid] ||= []).push({ id: d.id, ...data });
+        }
         const students = usersSnap.docs.map((d) => ({
           id: d.id,
           ...serialize(d.data()),
           applications: appsByUser[d.id] || [],
+          documents: docsByUser[d.id] || [],
         }));
         return NextResponse.json({ success: true, data: students });
+      }
+      case "documents": {
+        const uid = request.nextUrl.searchParams.get("uid");
+        let snap;
+        if (uid) {
+          snap = await db.collection("documents").where("uid", "==", uid).orderBy("uploadedAt", "desc").get();
+        } else {
+          snap = await db.collection("documents").orderBy("uploadedAt", "desc").limit(500).get();
+        }
+        return NextResponse.json({ success: true, data: snap.docs.map((d) => ({ id: d.id, ...serialize(d.data()) })) });
       }
       default:
         return NextResponse.json({ error: "Unknown data type" }, { status: 400 });
