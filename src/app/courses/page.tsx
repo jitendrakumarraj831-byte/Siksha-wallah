@@ -321,7 +321,6 @@ function StreamSlider({ tab }: { tab: typeof streamTabs[0] }) {
 
 /* ─── Main Page ──────────────────────────────────────────────────── */
 export default function CoursesPage() {
-  const totalCourses = streamTabs.reduce((s, t) => s + t.courses.length, 0);
 
   return (
     <main className="bg-white text-gray-900">
@@ -343,7 +342,7 @@ export default function CoursesPage() {
           <h1 className="font-headline font-black leading-[1.08] tracking-tight">
             <span className="block text-white text-3xl md:text-5xl">Choose Your Career Stream</span>
             <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent text-4xl md:text-6xl mt-1">
-              {totalCourses}+ Verified Courses
+              50+ Verified Courses
             </span>
           </h1>
           <div className="mx-auto mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent" />
@@ -375,7 +374,7 @@ export default function CoursesPage() {
           {/* Stats */}
           <div className="mt-8 flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm text-blue-200 font-semibold">
             {[
-              `${totalCourses}+ Verified Courses`,
+              "50+ Verified Courses",
               "200+ Partner Colleges",
               "100% Free Counselling",
               "5,000+ Students Guided",
