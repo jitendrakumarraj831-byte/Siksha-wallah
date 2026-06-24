@@ -1797,8 +1797,8 @@ export default function Home() {
 
           <div className="grid gap-12 lg:grid-cols-[1fr_1.8fr] items-start">
             {/* Left — contact strip */}
-            <AnimateIn type="fade-right">
-            <div className="sticky top-24">
+            <AnimateIn type="fade-right" className="order-2 lg:order-1">
+            <div className="lg:sticky lg:top-24">
               <div className="rounded-2xl bg-[#003f9f] p-6 text-white mb-6">
                 <p className="font-headline text-lg font-extrabold mb-1">Prefer to speak in person?</p>
                 <p className="text-blue-200 text-sm mb-5">Didn&apos;t find your answer here? Our counsellors are just one call away — free, friendly and honest.</p>
@@ -1819,8 +1819,8 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-              {/* Category quick links */}
-              <div className="rounded-2xl border border-gray-200 bg-white p-5">
+              {/* Category quick links — desktop only (non-interactive labels) */}
+              <div className="hidden lg:block rounded-2xl border border-gray-200 bg-white p-5">
                 <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Browse by Topic</p>
                 <div className="space-y-2">
                   {[
@@ -1841,7 +1841,7 @@ export default function Home() {
             </AnimateIn>
 
             {/* Right — accordion */}
-            <AnimateIn type="fade-left" delay={100}>
+            <AnimateIn type="fade-left" delay={100} className="order-1 lg:order-2">
             <div className="space-y-3">
               {faqs.map(({ q, a }, i) => (
                 <div key={i} className={`rounded-2xl border-2 overflow-hidden transition-all ${openFaq === i ? "border-[#003f9f] shadow-md" : "border-gray-200 bg-white"}`}>
