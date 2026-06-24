@@ -25,8 +25,6 @@ const STEPS = ["Name", "Mobile", "Course", "Qualify"];
 
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-  const [activeStream, setActiveStream] = useState<StreamKey>("teaching");
-  const [expandedCard, setExpandedCard] = useState<string | null>(null);
   const [checkedDocs, setCheckedDocs] = useState<Record<string, boolean>>({});
   const [bsccEligible, setBsccEligible] = useState<null | boolean>(null);
   const [bsccIncome, setBsccIncome] = useState("");
@@ -38,8 +36,6 @@ export default function Home() {
   const [formData, setFormData] = useState({ name: "", mobile: "", course: "", district: "" });
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  const stream = streamTabs.find((s) => s.key === activeStream)!;
-  const colors = colorMap[stream.color];
 
   function handleBsccCheck(e: React.FormEvent) {
     e.preventDefault();
@@ -497,329 +493,119 @@ export default function Home() {
       </div>
 
       {/* ── COURSES SECTION ── */}
-      <section id="courses" className="py-24 bg-gray-50">
-        <div className="container-shell">
-          <AnimateIn type="fade-up" className="text-center mb-12">
-            <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">Session 2026–27 · Admissions Open</p>
-            <h2 className="font-headline text-4xl md:text-5xl font-extrabold">
-              अपने भविष्य की{" "}
-              <span className="bg-gradient-to-r from-blue-700 to-indigo-600 bg-clip-text text-transparent">
-                दिशा चुनें
-              </span>
-            </h2>
-            <p className="mt-3 text-gray-500 max-w-xl mx-auto">
-              Teaching, Medical, Para Medical, Law, Technical — 5 streams, 50+ courses · 200+ partner colleges · 100% free counselling
-            </p>
-          </AnimateIn>
+      <section id="courses" className="py-16 bg-gray-50 overflow-hidden">
+        <AnimateIn type="fade-up" className="text-center mb-10 container-shell">
+          <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">Session 2026–27 · Admissions Open</p>
+          <h2 className="font-headline text-4xl md:text-5xl font-extrabold">
+            अपने भविष्य की{" "}
+            <span className="bg-gradient-to-r from-blue-700 to-indigo-600 bg-clip-text text-transparent">
+              दिशा चुनें
+            </span>
+          </h2>
+          <p className="mt-3 text-gray-500 max-w-xl mx-auto">
+            5 streams · 50+ courses · 200+ partner colleges · 100% free counselling
+          </p>
+        </AnimateIn>
 
-          {/* Stream Tabs */}
-          <div className="mb-10 flex flex-wrap justify-center gap-3">
-            {streamTabs.map(({ key, label, icon: Icon, color }) => {
-              const c = colorMap[color];
-              const isActive = activeStream === key;
-              return (
-                <button
-                  key={key}
-                  onClick={() => setActiveStream(key)}
-                  className={`flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold border-2 transition-all ${
-                    isActive
-                      ? `${c.active} text-white border-transparent shadow-lg`
-                      : "border-gray-200 bg-white text-gray-700 hover:border-gray-300"
-                  }`}
+        {/* Per-stream auto-sliders */}
+        {streamTabs.map((tab, idx) => {
+          const c = colorMap[tab.color];
+          const Icon = tab.icon;
+          const speedClass = idx % 3 === 0 ? "course-marquee" : idx % 3 === 1 ? "course-marquee-slow" : "course-marquee-fast";
+          const cards = [...tab.courses, ...tab.courses]; // duplicate for seamless loop
+          return (
+            <div key={tab.key} className="mb-8">
+              {/* Stream label row */}
+              <div className="container-shell flex items-center gap-3 mb-3">
+                <div className={`flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br ${c.gradient} text-white shadow-sm`}>
+                  <Icon size={17} />
+                </div>
+                <span className="font-headline text-base font-extrabold text-gray-900">{tab.label}</span>
+                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold text-white bg-gradient-to-r ${c.gradient}`}>
+                  {tab.courses.length} courses
+                </span>
+                <Link
+                  href={`/courses#${tab.key}`}
+                  className="ml-auto text-xs font-bold text-blue-600 hover:underline flex items-center gap-1"
                 >
-                  <Icon size={18} />
-                  {label}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Partnered Colleges Banner */}
-          {activeStream === "teaching" && (
-            <div className="mb-8 rounded-2xl border-2 border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 p-6">
-              <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white shadow-md">
-                  <Building2 size={22} />
-                </div>
-                <div className="flex-1">
-                  <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <h3 className="font-headline text-lg font-extrabold text-blue-900">Our Approved Teaching Partner Colleges</h3>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-blue-600 px-2.5 py-0.5 text-xs font-bold text-white"><BadgeCheck size={11} /> NCTE Approved</span>
-                  </div>
-                  <p className="text-sm text-blue-800 leading-relaxed mb-3">
-                    हम केवल <strong>NCTE (National Council for Teacher Education)-approved</strong> teacher training colleges के साथ काम करते हैं — Bihar (Patna, Purnea, Katihar) सहित अन्य राज्यों में।
-                  </p>
-                  <div className="grid gap-2 sm:grid-cols-2">
-                    {[
-                      "NCTE-approved B.Ed and D.El.Ed colleges in Patna, Purnea and Katihar",
-                      "NCTE-recognised teacher training institutions in other states",
-                      "Complete Bihar Student Credit Card (BSCC) loan support",
-                      "Guidance for both Regular and Distance Mode programmes",
-                    ].map((point, i) => (
-                      <div key={i} className="flex items-start gap-2 rounded-lg bg-white/70 border border-blue-100 px-3 py-2 text-xs text-blue-800 font-medium">
-                        <CheckCircle2 size={13} className="mt-0.5 flex-shrink-0 text-blue-500" /> {point}
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                  सभी देखें <ArrowRight size={13} />
+                </Link>
               </div>
-            </div>
-          )}
-          {activeStream === "medical" && (
-            <div className="mb-8 rounded-2xl border-2 border-red-200 bg-gradient-to-r from-red-50 to-red-100 p-6">
-              <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-red-600 text-white shadow-md">
-                  <Building2 size={22} />
-                </div>
-                <div className="flex-1">
-                  <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <h3 className="font-headline text-lg font-extrabold text-red-900">Our Approved Medical & Nursing Partner Colleges</h3>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-red-600 px-2.5 py-0.5 text-xs font-bold text-white"><BadgeCheck size={11} /> INC & PCI Approved</span>
-                  </div>
-                  <p className="text-sm text-red-800 leading-relaxed mb-3">
-                    हम <strong>INC (Indian Nursing Council) और PCI (Pharmacy Council of India) approved</strong> premier institutes के साथ काम करते हैं — Bangalore, Madhya Pradesh, West Bengal और अन्य राज्यों में।
-                  </p>
-                  <div className="grid gap-2 sm:grid-cols-2">
-                    {[
-                      "INC-approved Nursing colleges in Bangalore and West Bengal",
-                      "PCI-approved Pharmacy institutes in Madhya Pradesh and other states",
-                      "Trusted private medical colleges with hostel facilities",
-                      "Full support for NEET counselling as well as direct admission",
-                    ].map((point, i) => (
-                      <div key={i} className="flex items-start gap-2 rounded-lg bg-white/70 border border-red-100 px-3 py-2 text-xs text-red-800 font-medium">
-                        <CheckCircle2 size={13} className="mt-0.5 flex-shrink-0 text-red-500" /> {point}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-          {activeStream === "technical" && (
-            <div className="mb-8 rounded-2xl border-2 border-orange-200 bg-gradient-to-r from-orange-50 to-amber-50 p-6">
-              <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-orange-600 text-white shadow-md">
-                  <Building2 size={22} />
-                </div>
-                <div className="flex-1">
-                  <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <h3 className="font-headline text-lg font-extrabold text-orange-900">Our Approved Engineering & Management Partner Colleges</h3>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-orange-600 px-2.5 py-0.5 text-xs font-bold text-white"><BadgeCheck size={11} /> AICTE & UGC Recognised</span>
-                  </div>
-                  <p className="text-sm text-orange-800 leading-relaxed mb-3">
-                    हम <strong>AICTE (All India Council for Technical Education) और UGC-recognised</strong> top universities के साथ काम करते हैं — Engineering, Management और Computer Applications courses के लिए।
-                  </p>
-                  <div className="grid gap-2 sm:grid-cols-2">
-                    {[
-                      "AICTE-approved B.Tech and Polytechnic colleges across India",
-                      "UGC-recognised universities for BCA, MCA, BBA and MBA",
-                      "Complete JEE / DCECE counselling guidance included",
-                      "UGC-DEB approved Distance Mode options also available",
-                    ].map((point, i) => (
-                      <div key={i} className="flex items-start gap-2 rounded-lg bg-white/70 border border-orange-100 px-3 py-2 text-xs text-orange-800 font-medium">
-                        <CheckCircle2 size={13} className="mt-0.5 flex-shrink-0 text-orange-500" /> {point}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
 
-          {/* Course Cards Grid */}
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {stream.courses.map((course) => {
-              const isExpanded = expandedCard === course.name;
-              return (
-                <div
-                  key={course.name}
-                  className={`group relative rounded-2xl border-2 bg-white shadow-sm transition-all ${colors.card} ${isExpanded ? "border-opacity-100 shadow-lg" : "border-gray-200"}`}
-                >
-                  {/* Card Header — always visible */}
-                  <div className="p-6">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ${colors.badge}`}>
-                        <Award size={12} /> {course.name}
-                      </div>
-                      {course.bscc && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-1 text-xs font-bold text-green-700">
-                          <CreditCard size={10} /> BSCC
-                        </span>
-                      )}
-                    </div>
-
-                    <h3 className="mt-3 font-headline text-xl font-extrabold text-gray-900 leading-tight">{course.full}</h3>
-
-                    {/* Core facts — always shown */}
-                    <div className="mt-4 space-y-2.5 text-sm text-gray-600">
-                      <div className="flex items-start gap-2">
-                        <Clock size={14} className="mt-0.5 flex-shrink-0 text-gray-400" />
-                        <span><strong className="text-gray-800">Duration:</strong> {course.duration}</span>
-                      </div>
-                      <div className="flex items-start gap-2">
-                        <CheckCircle2 size={14} className="mt-0.5 flex-shrink-0 text-gray-400" />
-                        <span><strong className="text-gray-800">Eligibility:</strong> {course.eligibility}</span>
-                      </div>
-                      <div className="flex items-start gap-2">
-                        <CreditCard size={14} className="mt-0.5 flex-shrink-0 text-gray-400" />
-                        <span><strong className="text-gray-800">Approx. Fee:</strong> {course.fee}</span>
-                      </div>
-                    </div>
-
-                    {/* Expanded Details */}
-                    {isExpanded && (
-                      <div className="mt-5 space-y-4 border-t border-gray-100 pt-4">
-
-                        {/* Key Highlights */}
-                        <div className="rounded-xl bg-blue-50 border border-blue-100 p-3">
-                          <div className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-blue-600">
-                            <Star size={12} /> Key Highlights
+              {/* Edge fades + slider */}
+              <div className="relative">
+                <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-16 bg-gradient-to-r from-gray-50 to-transparent" />
+                <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-16 bg-gradient-to-l from-gray-50 to-transparent" />
+                <div className={`flex w-max gap-4 px-2 ${speedClass}`}>
+                  {cards.map((course, i) => {
+                    const slug = getCourseSlug(course.name);
+                    return (
+                      <div
+                        key={`${course.name}-${i}`}
+                        className="flex-shrink-0 w-[230px] rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden"
+                      >
+                        <div className={`h-1.5 bg-gradient-to-r ${c.accentBar}`} />
+                        <div className="p-4">
+                          <div className="flex items-center justify-between gap-2 mb-2">
+                            <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-black ${c.badge}`}>
+                              {course.name}
+                            </span>
+                            {course.bscc && (
+                              <span className="text-[10px] font-bold text-green-700 bg-green-50 border border-green-200 px-1.5 py-0.5 rounded-full">BSCC</span>
+                            )}
                           </div>
-                          <ul className="space-y-1">
-                            {course.highlights.map((h, i) => (
-                              <li key={i} className="flex items-start gap-1.5 text-xs text-blue-800">
-                                <CheckCircle2 size={12} className="mt-0.5 flex-shrink-0 text-blue-500" /> {h}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-
-                        {/* Hindi Description */}
-                        <div className="rounded-xl bg-amber-50 border border-amber-200 p-3">
-                          <div className="mb-1.5 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-600">
-                            <Sparkles size={12} /> हिंदी में जानें
+                          <p className="text-xs font-extrabold text-gray-900 leading-snug mb-2 line-clamp-2">{course.full}</p>
+                          <div className="flex gap-1.5 mb-3 flex-wrap">
+                            <span className="flex items-center gap-1 text-[10px] text-gray-500 bg-gray-50 border border-gray-100 rounded-lg px-1.5 py-0.5">
+                              <Clock size={9} /> {course.duration}
+                            </span>
+                            <span className="flex items-center gap-1 text-[10px] text-gray-500 bg-gray-50 border border-gray-100 rounded-lg px-1.5 py-0.5">
+                              <CreditCard size={9} /> {course.fee}
+                            </span>
                           </div>
-                          <p className="text-sm leading-relaxed text-amber-900">{course.hindiDesc}</p>
-                        </div>
-
-                        {/* Salary */}
-                        <div className="flex items-start gap-2">
-                          <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-green-100">
-                            <Award size={13} className="text-green-600" />
-                          </div>
-                          <div>
-                            <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Expected Salary</p>
-                            <p className="text-sm font-bold text-green-700">{course.salary}</p>
-                          </div>
-                        </div>
-
-                        {/* Entrance Exam */}
-                        <div className="flex items-start gap-2">
-                          <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
-                            <FileText size={13} className="text-blue-600" />
-                          </div>
-                          <div>
-                            <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Entrance Exam</p>
-                            <p className="text-sm leading-relaxed text-gray-700">{course.entranceExam}</p>
-                          </div>
-                        </div>
-
-                        {/* Govt Jobs */}
-                        <div className="flex items-start gap-2">
-                          <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-red-100">
-                            <ShieldCheck size={13} className="text-red-600" />
-                          </div>
-                          <div>
-                            <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Government Jobs</p>
-                            <p className="text-sm leading-relaxed text-gray-700">{course.govtJobs}</p>
-                          </div>
-                        </div>
-
-                        {/* Top Colleges */}
-                        <div>
-                          <div className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">
-                            <Building2 size={12} /> Top Colleges
-                          </div>
-                          <div className="flex flex-wrap gap-1.5">
-                            {course.topColleges.map((c, i) => (
-                              <span key={i} className="rounded-lg bg-gray-100 px-2 py-1 text-xs font-semibold text-gray-700">{c}</span>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Career Scope */}
-                        <div>
-                          <div className="mb-1.5 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">
-                            <Briefcase size={12} /> Career Scope
-                          </div>
-                          <p className="text-sm leading-relaxed text-gray-700">{course.careerScope}</p>
-                        </div>
-
-                        {/* Study Mode */}
-                        <div>
-                          <div className="mb-1.5 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">
-                            <BookMarked size={12} /> Study Mode
-                          </div>
-                          <p className="text-sm leading-relaxed text-gray-700">{course.mode}</p>
-                        </div>
-
-                        {/* BSCC */}
-                        {course.bscc && (
-                          <div className="rounded-xl bg-green-50 border border-green-200 p-3 flex items-start gap-2">
-                            <CreditCard size={15} className="mt-0.5 flex-shrink-0 text-green-600" />
-                            <p className="text-xs text-green-700 font-semibold">Eligible for the Bihar Student Credit Card (BSCC) — secure up to ₹4 Lakh education loan at just 4% interest. Our team provides complete, step-by-step BSCC application support.</p>
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Toggle + CTA */}
-                    <div className="mt-5 flex flex-col gap-2">
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => setExpandedCard(isExpanded ? null : course.name)}
-                          className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border-2 border-gray-200 py-2.5 text-sm font-bold text-gray-700 transition hover:border-gray-300 hover:bg-gray-50"
-                        >
-                          {isExpanded ? (
-                            <><ChevronUp size={15} /> Show Less</>
-                          ) : (
-                            <><ChevronDown size={15} /> Career Scope</>
-                          )}
-                        </button>
-                        {(() => {
-                          const slug = getCourseSlug(course.name);
-                          return slug ? (
+                          <p className="text-[10px] font-bold text-green-700 mb-3">{course.salary}</p>
+                          <div className="flex gap-1.5">
                             <Link
-                              href={`/courses/${slug}`}
-                              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border-2 border-blue-200 bg-blue-50 py-2.5 text-sm font-bold text-[#003f9f] transition hover:bg-blue-100"
+                              href={`/apply?course=${encodeURIComponent(course.name)}`}
+                              className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-[#dc143c] py-2 text-[11px] font-bold text-white hover:bg-red-700 transition"
                             >
-                              <BookOpen size={15} /> Full Details
+                              <GraduationCap size={10} /> Apply
                             </Link>
-                          ) : null;
-                        })()}
+                            {slug ? (
+                              <Link
+                                href={`/courses/${slug}`}
+                                className={`flex flex-1 items-center justify-center gap-1 rounded-lg py-2 text-[11px] font-bold text-white transition bg-gradient-to-r ${c.gradient}`}
+                              >
+                                Details
+                              </Link>
+                            ) : (
+                              <a
+                                href={`https://wa.me/916203138576?text=नमस्ते!%20${encodeURIComponent(course.name)}%20के%20बारे%20में%20जानकारी%20चाहिए।`}
+                                target="_blank" rel="noopener noreferrer"
+                                className="flex flex-1 items-center justify-center gap-1 rounded-lg border border-green-400 py-2 text-[11px] font-bold text-green-700 hover:bg-green-500 hover:text-white transition"
+                              >
+                                <MessageCircle size={10} /> Enquire
+                              </a>
+                            )}
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex gap-2">
-                        <Link
-                          href={`/apply?course=${encodeURIComponent(course.name)}`}
-                          className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#dc143c] py-2.5 text-sm font-bold text-white transition hover:bg-red-700"
-                        >
-                          <GraduationCap size={15} /> Apply Now
-                        </Link>
-                        <a
-                          href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(course.name)}%20(${encodeURIComponent(course.full)})%20के%20बारे%20में%20जानकारी%20चाहिए।%20Fees%20aur%20admission%20process%20batayein।`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold text-white transition ${colors.btn}`}
-                        >
-                          <MessageCircle size={15} /> Enquire
-                        </a>
-                      </div>
-                    </div>
-                  </div>
+                    );
+                  })}
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            </div>
+          );
+        })}
 
-          {/* View All Courses CTA */}
-          <div className="mt-12 text-center">
-            <Link
-              href="/courses"
-              className="inline-flex items-center gap-2 rounded-xl bg-primary-blue px-8 py-4 font-extrabold text-white shadow-lg shadow-blue-200 transition hover:-translate-y-0.5 hover:bg-blue-700"
-            >
-              Explore All Courses <ArrowRight size={18} />
-            </Link>
-          </div>
+        {/* CTA */}
+        <div className="mt-8 text-center container-shell">
+          <Link
+            href="/courses"
+            className="inline-flex items-center gap-2 rounded-xl bg-primary-blue px-8 py-4 font-extrabold text-white shadow-lg shadow-blue-200 transition hover:-translate-y-0.5 hover:bg-blue-700"
+          >
+            Explore All Courses <ArrowRight size={18} />
+          </Link>
         </div>
       </section>
 
