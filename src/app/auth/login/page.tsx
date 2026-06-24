@@ -7,7 +7,7 @@ import { authService } from "@/lib/auth-service";
 import { saveActivity } from "@/services/activity-service";
 import {
   GraduationCap, Lock, Mail, AlertCircle, Loader, ArrowRight,
-  Eye, EyeOff, UserPlus,
+  Eye, EyeOff,
 } from "lucide-react";
 
 function LoginForm() {
@@ -172,20 +172,6 @@ function LoginForm() {
               </button>
             </form>
 
-            <div className="mt-5 rounded-xl border border-white/20 bg-white/5 p-4 text-center">
-              <p className="text-sm text-blue-200">
-                New to Siksha Wallah?{" "}
-                <Link href="/auth/register" className="font-bold text-amber-400 hover:text-amber-300 underline">
-                  <UserPlus size={13} className="inline mr-1" />Create a free account
-                </Link>
-              </p>
-            </div>
-
-            <div className="mt-4 text-center">
-              <Link href="/" className="text-sm text-blue-300 hover:text-white transition">
-                ← Back to Home
-              </Link>
-            </div>
           </div>
         </div>
       </div>

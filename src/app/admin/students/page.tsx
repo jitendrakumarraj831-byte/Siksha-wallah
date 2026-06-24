@@ -507,19 +507,21 @@ export default function AdminStudentsPage() {
           </button>
         </div>
 
-        {/* Stats */}
+        {/* Stats — click to filter */}
         <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-5">
           {[
-            { label: "Total Registered", value: stats.total,        color: "text-[#003f9f]" },
-            { label: "With Applications",value: stats.withApps,    color: "text-blue-700" },
-            { label: "Total Apps",        value: stats.totalApps,   color: "text-blue-700" },
-            { label: "Admission Done",    value: stats.admissionDone, color: "text-green-700" },
-            { label: "BSCC Requested",   value: stats.bscc,         color: "text-amber-700" },
+            { label: "Total Registered", value: stats.total,          color: "text-[#003f9f]", filter: "" as const },
+            { label: "With Applications",value: stats.withApps,       color: "text-blue-700",  filter: "has_app" as const },
+            { label: "Total Apps",        value: stats.totalApps,     color: "text-blue-700",  filter: "" as const },
+            { label: "Admission Done",    value: stats.admissionDone, color: "text-green-700", filter: "admission_done" as const },
+            { label: "BSCC Requested",   value: stats.bscc,           color: "text-amber-700", filter: "bscc" as const },
           ].map(s => (
-            <div key={s.label} className="rounded-2xl border-2 border-gray-100 bg-white p-4 text-center shadow-sm">
+            <button key={s.label} onClick={() => setFilterStatus(s.filter)}
+              className="rounded-2xl border-2 border-gray-100 bg-white p-4 text-center shadow-sm transition hover:border-[#003f9f] hover:shadow-md active:scale-95 cursor-pointer w-full">
               <p className={`font-headline text-3xl font-extrabold ${s.color}`}>{s.value}</p>
               <p className="text-xs font-semibold text-gray-400 mt-1">{s.label}</p>
-            </div>
+              <p className="text-[10px] text-gray-300 mt-0.5">देखें →</p>
+            </button>
           ))}
         </div>
 

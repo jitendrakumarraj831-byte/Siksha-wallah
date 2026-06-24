@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -99,6 +99,8 @@ export default function AdminDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [filterStatus, setFilterStatus] = useState<"" | InquiryStatus>("");
+  const [filterToday, setFilterToday] = useState(false);
+  const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const cached = localStorage.getItem("sw_admin_session");
@@ -157,9 +159,17 @@ export default function AdminDashboardPage() {
   const pendingCount = inquiries.filter(i => !i.status || i.status === "pending").length;
   const doneCount    = inquiries.filter(i => i.status === "admission_done").length;
 
-  const filtered = useMemo(() => inquiries.filter(inq =>
-    !filterStatus || (inq.status || "pending") === filterStatus
-  ), [inquiries, filterStatus]);
+  const filtered = useMemo(() => inquiries.filter(inq => {
+    const statusMatch = !filterStatus || (inq.status || "pending") === filterStatus;
+    const todayMatch = !filterToday || isToday(inq.createdAt);
+    return statusMatch && todayMatch;
+  }), [inquiries, filterStatus, filterToday]);
+
+  function setStatFilter(status: "" | InquiryStatus, today = false) {
+    setFilterStatus(status);
+    setFilterToday(today);
+    setTimeout(() => listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+  }
 
   if (authorized === null) return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50">
@@ -200,18 +210,19 @@ export default function AdminDashboardPage() {
 
       <main className="mx-auto max-w-5xl px-4 py-8">
 
-        {/* Stats */}
+        {/* Stats — click to filter the list below */}
         <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
           {[
-            { label: "कुल Inquiries", value: total,        icon: Users,         color: "blue" },
-            { label: "आज की",         value: todayCount,   icon: Clock,         color: "amber" },
-            { label: "Call बाकी",      value: pendingCount, icon: Phone,         color: "red" },
-            { label: "Admission हुई", value: doneCount,    icon: CheckCircle2,  color: "green" },
-          ].map(({ label, value, icon: Icon, color }) => {
+            { label: "कुल Inquiries", value: total,        icon: Users,        color: "blue",  action: () => setStatFilter("") },
+            { label: "आज की",         value: todayCount,   icon: Clock,        color: "amber", action: () => setStatFilter("", true) },
+            { label: "Call बाकी",     value: pendingCount, icon: Phone,        color: "red",   action: () => setStatFilter("pending") },
+            { label: "Admission हुई", value: doneCount,    icon: CheckCircle2, color: "green", action: () => setStatFilter("admission_done") },
+          ].map(({ label, value, icon: Icon, color, action }) => {
             const bg:  Record<string,string> = { blue:"bg-blue-50",  amber:"bg-amber-50",  red:"bg-red-50",  green:"bg-green-50" };
             const txt: Record<string,string> = { blue:"text-blue-600",amber:"text-amber-600",red:"text-red-600",green:"text-green-600" };
             return (
-              <div key={label} className="rounded-2xl border-2 border-gray-100 bg-white p-4 shadow-sm">
+              <button key={label} onClick={action}
+                className="rounded-2xl border-2 border-gray-100 bg-white p-4 shadow-sm text-left transition hover:border-[#003f9f] hover:shadow-md active:scale-95 cursor-pointer w-full">
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-xs font-semibold text-gray-500">{label}</p>
@@ -221,7 +232,8 @@ export default function AdminDashboardPage() {
                     <Icon size={20} className={txt[color]} />
                   </div>
                 </div>
-              </div>
+                <p className="mt-1.5 text-[10px] text-gray-400">क्लिक करें देखने के लिए →</p>
+              </button>
             );
           })}
         </div>
@@ -237,7 +249,7 @@ export default function AdminDashboardPage() {
         <div className="mb-4 flex flex-wrap items-center gap-3">
           <select
             value={filterStatus}
-            onChange={e => setFilterStatus(e.target.value as "" | InquiryStatus)}
+            onChange={e => { setFilterStatus(e.target.value as "" | InquiryStatus); setFilterToday(false); }}
             className="rounded-xl border-2 border-gray-200 px-3 py-2 text-sm font-semibold text-gray-700 outline-none focus:border-[#003f9f]"
           >
             <option value="">सभी दिखाएं</option>
@@ -245,6 +257,11 @@ export default function AdminDashboardPage() {
             <option value="called">Call हो गई</option>
             <option value="admission_done">Admission Done</option>
           </select>
+          {filterToday && (
+            <button onClick={() => setFilterToday(false)} className="flex items-center gap-1.5 rounded-xl border-2 border-amber-300 bg-amber-50 px-3 py-2 text-sm font-bold text-amber-700">
+              आज की ✕
+            </button>
+          )}
           <span className="text-sm text-gray-400">{filtered.length} / {total} दिख रहे हैं</span>
           <button onClick={loadInquiries} className="ml-auto flex items-center gap-2 rounded-xl border-2 border-gray-200 px-4 py-2 text-sm font-bold text-gray-600 hover:border-[#003f9f] hover:text-[#003f9f] transition">
             <RefreshCw size={13} className={loading ? "animate-spin" : ""} /> Refresh
@@ -252,7 +269,7 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Inquiry List */}
-        <div className="rounded-2xl border-2 border-gray-100 bg-white shadow-sm overflow-hidden">
+        <div ref={listRef} className="rounded-2xl border-2 border-gray-100 bg-white shadow-sm overflow-hidden">
           <div className="border-b border-gray-100 bg-gray-50 px-5 py-3">
             <h2 className="font-extrabold text-gray-800">📋 Student Inquiries</h2>
           </div>
