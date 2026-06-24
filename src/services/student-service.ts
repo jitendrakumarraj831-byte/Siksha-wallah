@@ -5,7 +5,7 @@ import {
   query,
   where,
   getDocs,
-  updateDoc,
+  setDoc,
   addDoc,
   getDoc,
   deleteDoc,
@@ -51,11 +51,12 @@ export const studentService = {
 
   async updateProfile(uid: string, updates: Partial<StudentProfile>): Promise<void> {
     try {
-      await updateDoc(doc(db, 'users', uid), {
+      await setDoc(doc(db, 'users', uid), {
         ...updates,
+        uid,
         updatedAt: Date.now(),
         profileComplete: true,
-      });
+      }, { merge: true });
     } catch (error: any) {
       throw new Error(`Failed to update profile: ${error.message}`);
     }

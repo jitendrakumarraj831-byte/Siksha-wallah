@@ -101,9 +101,10 @@ export const authService = {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      updateDoc(doc(db, 'users', user.uid), {
+      setDoc(doc(db, 'users', user.uid), {
         lastLogin: Date.now(),
-      }).catch(() => {});
+        uid: user.uid,
+      }, { merge: true }).catch(() => {});
 
       return user;
     } catch (error: any) {
@@ -193,7 +194,7 @@ export const authService = {
   // Update user profile
   async updateUserProfile(uid: string, updates: Partial<UserProfile>): Promise<void> {
     try {
-      await updateDoc(doc(db, 'users', uid), updates);
+      await setDoc(doc(db, 'users', uid), { ...updates, uid }, { merge: true });
     } catch (error: any) {
       throw new Error(error.message || 'Failed to update profile');
     }
