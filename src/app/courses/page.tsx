@@ -128,6 +128,7 @@ function StreamSlider({ tab }: { tab: typeof streamTabs[0] }) {
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
+  const [paused, setPaused] = useState(false);
   const dragStart = useRef<{ x: number; scrollLeft: number } | null>(null);
   const movedRef = useRef(false);
   const colors = colorMap[tab.color];
@@ -140,6 +141,22 @@ function StreamSlider({ tab }: { tab: typeof streamTabs[0] }) {
     if (!el) return;
     el.scrollBy({ left: dir === "left" ? -CARD_WIDTH * 2 : CARD_WIDTH * 2, behavior: "smooth" });
   }
+
+  // Auto-slide left → right; loops back at the end. Pauses on hover, touch
+  // and while dragging.
+  useEffect(() => {
+    if (paused) return;
+    const id = setInterval(() => {
+      const el = scrollRef.current;
+      if (!el || el.scrollWidth - el.clientWidth <= 1) return;
+      if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 8) {
+        el.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        el.scrollBy({ left: CARD_WIDTH, behavior: "smooth" });
+      }
+    }, 3500);
+    return () => clearInterval(id);
+  }, [paused, CARD_WIDTH]);
 
   const updateArrows = useCallback(() => {
     const el = scrollRef.current;
@@ -252,6 +269,10 @@ function StreamSlider({ tab }: { tab: typeof streamTabs[0] }) {
             onPointerUp={onPointerUp}
             onPointerLeave={onPointerUp}
             onClickCapture={(e) => { if (movedRef.current) { e.preventDefault(); e.stopPropagation(); } }}
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+            onTouchStart={() => setPaused(true)}
+            onTouchEnd={() => setPaused(false)}
             className="flex gap-4 overflow-x-auto pb-3 select-none"
             style={{
               scrollbarWidth: "none",
