@@ -79,7 +79,7 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
                 <Link href="/auth/login" className="rounded-xl border-2 border-[#003f9f] px-4 py-2 text-sm font-bold text-[#003f9f] hover:bg-[#003f9f] hover:text-white transition">
                   🎓 Student Login
                 </Link>
-                <Link href="/auth/register" className="rounded-xl bg-[#dc143c] px-4 py-2 text-sm font-bold text-white hover:bg-red-700 transition">
+                <Link href="/apply" className="rounded-xl bg-[#dc143c] px-4 py-2 text-sm font-bold text-white hover:bg-red-700 transition">
                   Apply Now →
                 </Link>
               </>
@@ -123,7 +123,7 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
                     <Link href="/auth/login" onClick={() => setOpen(false)} className="rounded-xl border-2 border-[#003f9f] px-4 py-2.5 text-center font-bold text-[#003f9f]">
                       🎓 Student Login
                     </Link>
-                    <Link href="/auth/register" onClick={() => setOpen(false)} className="rounded-xl bg-[#dc143c] px-4 py-2.5 text-center font-bold text-white">
+                    <Link href="/apply" onClick={() => setOpen(false)} className="rounded-xl bg-[#dc143c] px-4 py-2.5 text-center font-bold text-white">
                       Apply Now →
                     </Link>
                   </>
@@ -181,7 +181,7 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
         </div>
 
         <div className="container-shell mt-8 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs md:flex-row md:justify-between">
-          <p>© 2026 Siksha Wallah. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Siksha Wallah. All rights reserved.</p>
           <p>
             <Link href="/admin/login" className="hover:text-white transition">🏢 Office Login</Link>
             {" · "}

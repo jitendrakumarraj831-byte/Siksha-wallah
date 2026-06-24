@@ -1,6 +1,7 @@
 "use client";
 
-import { PortalShell } from "@/components/portal-shell";
+import { SiteNavbar } from "@/components/site-navbar";
+import { SiteFooter } from "@/components/site-footer";
 import { ReviewsCarousel } from "@/components/reviews-carousel";
 import {
   GraduationCap, Users, Award, BadgeCheck, MapPin, Phone,
@@ -11,10 +12,10 @@ import { successStories } from "@/lib/reviews-data";
 
 const team = [
   {
-    name: "Rajesh Kumar Sah",
+    name: "Rajesh Kr. Sah",
     role: "Founder & Chief Admission Counsellor",
     phone: "6203138576",
-    exp: "9+ Years",
+    exp: "11+ Years",
     specialization: "B.Ed • D.El.Ed • BSCC • All Streams",
     bio: "Forbesganj के सबसे अनुभवी Admission Counsellor में से एक। 2015 से अब तक 5,000+ students और उनके परिवारों को सही college और सुरक्षित career की राह दिखाई है। Bihar Student Credit Card (BSCC), B.Ed और Nursing admissions में गहरी विशेषज्ञता।",
   },
@@ -36,14 +37,16 @@ const trustPoints = [
   ["200+ Approved Colleges", "Bihar, Jharkhand, UP और देश के top NCTE/INC/PCI/AICTE-approved colleges के साथ सीधा संपर्क।"],
   ["Regular और Distance — दोनों", "आपकी सुविधा और लक्ष्य के अनुसार Regular या Distance — दोनों options में पूर्ण मार्गदर्शन।"],
   ["Admission के बाद भी साथ", "Hostel, uniform, documentation — admission confirm होने के बाद भी हम आपके साथ खड़े रहते हैं।"],
-  ["9+ वर्षों का सिद्ध अनुभव", "2015 से Araria क्षेत्र के परिवारों का भरोसा — हजारों सफल admissions का इतिहास।"],
+  ["11+ वर्षों का सिद्ध अनुभव", "2015 से Araria क्षेत्र के परिवारों का भरोसा — हजारों सफल admissions का इतिहास।"],
   ["सभी Streams एक ही जगह", "Teaching, Medical, Nursing, Pharmacy, Engineering, Management — हर stream के लिए एक specialist counsellor।"],
   ["WhatsApp पर त्वरित Response", "कभी भी, कोई भी सवाल — WhatsApp पर message करें, हमारी team जल्द से जल्द जवाब देती है।"],
 ];
 
 export default function AboutPage() {
   return (
-    <PortalShell>
+    <>
+      <SiteNavbar />
+      <main>
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] py-20 text-white">
         {/* Dot-grid */}
@@ -66,7 +69,7 @@ export default function AboutPage() {
           </h1>
           <div className="mx-auto mt-4 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-40" />
           <p className="mt-6 max-w-2xl mx-auto text-base text-blue-100 leading-relaxed">
-            9+ वर्षों से Bihar के विद्यार्थियों और परिवारों को सही Course, सही College और एक सुरक्षित Career की राह दिखाते आ रहे हैं — 100% पारदर्शिता और बिना किसी hidden charge के।
+            11+ वर्षों से Bihar के विद्यार्थियों और परिवारों को सही Course, सही College और एक सुरक्षित Career की राह दिखाते आ रहे हैं — 100% पारदर्शिता और बिना किसी hidden charge के।
           </p>
           {/* CTAs */}
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
@@ -89,7 +92,7 @@ export default function AboutPage() {
           {/* Stats */}
           <div className="mt-10 grid grid-cols-3 gap-6 border-t border-white/[0.08] pt-8 max-w-lg mx-auto">
             {[
-              ["9+", "Years of Experience"],
+              ["11+", "Years of Experience"],
               ["5,000+", "Students Guided"],
               ["200+", "Partner Colleges"],
             ].map(([n, l]) => (
@@ -115,10 +118,10 @@ export default function AboutPage() {
                 2015 में, Forbesganj और आसपास के गाँवों के हजारों students और उनके माता-पिता के पास न सही जानकारी थी, न कोई भरोसेमंद मार्गदर्शक। महंगे private agents झूठे वादे करते थे, hidden charges वसूलते थे — और एक होनहार student का भविष्य अंधेरे में चला जाता था।
               </p>
               <p className="text-gray-600 leading-relaxed mb-4">
-                इसी कमी को दूर करने के लिए Rajesh Kumar Sah ने एक स्पष्ट संकल्प के साथ Siksha Wallah की नींव रखी: <strong className="text-gray-900">&ldquo;हर student और परिवार को 100% ईमानदार, पारदर्शी और निःशुल्क मार्गदर्शन।&rdquo;</strong> आज हम Araria जिले की #1 trusted education consultancy के रूप में जाने जाते हैं।
+                इसी कमी को दूर करने के लिए Rajesh Kr. Sah ने एक स्पष्ट संकल्प के साथ Siksha Wallah की नींव रखी: <strong className="text-gray-900">&ldquo;हर student और परिवार को 100% ईमानदार, पारदर्शी और निःशुल्क मार्गदर्शन।&rdquo;</strong> आज हम Araria जिले की #1 trusted education consultancy के रूप में जाने जाते हैं।
               </p>
               <p className="text-gray-600 leading-relaxed">
-                हम केवल admission नहीं दिलाते — हम <strong className="text-gray-900">सही career और एक सुरक्षित भविष्य की नींव</strong> तैयार करते हैं। B.Ed से MBBS तक, D.El.Ed से MBA तक — हर stream में अनुभवी विशेषज्ञ, और कोई छिपा शुल्क ��हीं।
+                हम केवल admission नहीं दिलाते — हम <strong className="text-gray-900">सही career और एक सुरक्षित भविष्य की नींव</strong> तैयार करते हैं। B.Ed से MBBS तक, D.El.Ed से MBA तक — हर stream में अनुभवी विशेषज्ञ, और कोई छिपा शुल्क नहीं।
               </p>
               <div className="mt-6 rounded-xl bg-amber-50 border-2 border-amber-200 p-5">
                 <p className="text-sm font-bold text-amber-800">
@@ -133,7 +136,7 @@ export default function AboutPage() {
                 { icon: Target, color: "bg-primary-blue", title: "Our Mission", desc: "Bihar के हर student और परिवार को quality education का सही रास्ता दिखाना — बिना किसी hidden charge और बिना किसी झूठे वादे के।" },
                 { icon: Heart, color: "bg-[#dc143c]", title: "Our Vision", desc: "Forbesganj को एक ऐसा education hub बनाना जहाँ से students देश के top colleges और सम्मानजनक careers तक आसानी से पहुँचें।" },
                 { icon: ShieldCheck, color: "bg-green-600", title: "Our Values", desc: "पारदर्शिता, ईमानदारी और हर परिवार के साथ खड़े रहने की प्रतिबद्धता — यही Siksha Wallah की पहचान है।" },
-                { icon: Award, color: "bg-amber-500", title: "Our Expertise", desc: "B.Ed, Nursing, Pharmacy, Engineering, Management — सभी streams में 9+ वर्षों का सिद्ध अनुभव और हजारों सफल admissions।" },
+                { icon: Award, color: "bg-amber-500", title: "Our Expertise", desc: "B.Ed, Nursing, Pharmacy, Engineering, Management — सभी streams में 11+ वर्षों का सिद्ध अनुभव और हजारों सफल admissions।" },
               ].map(({ icon: Icon, color, title, desc }) => (
                 <div key={title} className="rounded-2xl border-2 border-blue-100 bg-blue-50 p-5 hover:shadow-md transition">
                   <div className={`mb-3 inline-flex h-11 w-11 items-center justify-center rounded-xl ${color} text-white`}>
@@ -239,7 +242,7 @@ export default function AboutPage() {
         <div className="container-shell relative">
           <div className="text-center mb-12">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-amber-400 mb-2">Our Journey</p>
-            <h2 className="font-headline text-4xl font-extrabold text-white">9 साल का भरोसा, <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">हज़ारों सफल Admissions</span></h2>
+            <h2 className="font-headline text-4xl font-extrabold text-white">11 साल का भरोसा, <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">हज़ारों सफल Admissions</span></h2>
           </div>
           <div className="relative max-w-2xl mx-auto">
             <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-white/10" />
@@ -300,6 +303,8 @@ export default function AboutPage() {
         title="सफल छात्रों की प्रेरणादायक कहानियाँ"
         subtitle="हमारे साथ admission पाने वाले 5,000+ students के असली अनुभव सुनें।"
       />
-    </PortalShell>
+      </main>
+      <SiteFooter />
+    </>
   );
 }
