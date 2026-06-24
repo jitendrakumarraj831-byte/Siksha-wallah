@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { saveInquiry } from "@/services/inquiry-service";
 import { saveActivity } from "@/services/activity-service";
 import {
@@ -197,34 +197,72 @@ function CourseDetailModal({
 function HomeStreamSlider({ tab, onOpen }: { tab: typeof streamTabs[0]; onOpen: (course: Course, key: StreamKey) => void }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [atStart, setAtStart] = useState(true);
-  const [atEnd, setAtEnd] = useState(false);
+  const [atEnd, setAtEnd] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
+  const [paused, setPaused] = useState(false);
   const dragStart = useRef<{ x: number; scrollLeft: number } | null>(null);
+  const movedRef = useRef(false);
   const c = colorMap[tab.color];
   const Icon = tab.icon;
   const CARD_W = 244 + 16;
+
+  const updateArrows = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const scrollable = el.scrollWidth - el.clientWidth > 1;
+    setAtStart(el.scrollLeft <= 8);
+    setAtEnd(!scrollable || el.scrollLeft + el.clientWidth >= el.scrollWidth - 8);
+  }, []);
+
+  // Measure on mount and keep arrow / fade states correct on resize.
+  useEffect(() => {
+    updateArrows();
+    const el = scrollRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(updateArrows);
+    ro.observe(el);
+    window.addEventListener("resize", updateArrows);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", updateArrows);
+    };
+  }, [updateArrows]);
+
+  // Auto-slide left → right; loops back to start at the end. Pauses on
+  // hover, touch and while dragging.
+  useEffect(() => {
+    if (paused) return;
+    const id = setInterval(() => {
+      const el = scrollRef.current;
+      if (!el || el.scrollWidth - el.clientWidth <= 1) return;
+      if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 8) {
+        el.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        el.scrollBy({ left: CARD_W, behavior: "smooth" });
+      }
+    }, 3000);
+    return () => clearInterval(id);
+  }, [paused, CARD_W]);
 
   function scroll(dir: "left" | "right") {
     const el = scrollRef.current;
     if (!el) return;
     el.scrollBy({ left: dir === "left" ? -CARD_W * 2 : CARD_W * 2, behavior: "smooth" });
   }
-  function onScroll() {
-    const el = scrollRef.current;
-    if (!el) return;
-    setAtStart(el.scrollLeft <= 8);
-    setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 8);
-  }
   const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse") return; // touch devices use native momentum scrolling
     const el = scrollRef.current;
     if (!el) return;
     setIsDragging(true);
+    movedRef.current = false;
     dragStart.current = { x: e.clientX, scrollLeft: el.scrollLeft };
     el.setPointerCapture(e.pointerId);
   }, []);
   const onPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     if (!dragStart.current || !scrollRef.current) return;
-    scrollRef.current.scrollLeft = dragStart.current.scrollLeft - (e.clientX - dragStart.current.x);
+    const dx = e.clientX - dragStart.current.x;
+    if (Math.abs(dx) > 5) movedRef.current = true;
+    scrollRef.current.scrollLeft = dragStart.current.scrollLeft - dx;
   }, []);
   const onPointerUp = useCallback(() => { setIsDragging(false); dragStart.current = null; }, []);
 
@@ -279,19 +317,26 @@ function HomeStreamSlider({ tab, onOpen }: { tab: typeof streamTabs[0]; onOpen: 
         <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-10 bg-gradient-to-l from-white/60 to-transparent" />
         <div
           ref={scrollRef}
-          onScroll={onScroll}
+          onScroll={updateArrows}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerLeave={onPointerUp}
+          onClickCapture={(e) => { if (movedRef.current) { e.preventDefault(); e.stopPropagation(); } }}
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          onTouchStart={() => setPaused(true)}
+          onTouchEnd={() => setPaused(false)}
           className="flex gap-4 overflow-x-auto px-4 pb-2 select-none"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none", cursor: isDragging ? "grabbing" : "grab" }}
         >
           {tab.courses.map((course) => (
-            <button
+            <div
               key={course.name}
-              type="button"
-              onClick={() => !isDragging && onOpen(course, tab.key as StreamKey)}
+              role="button"
+              tabIndex={0}
+              onClick={() => onOpen(course, tab.key as StreamKey)}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onOpen(course, tab.key as StreamKey); } }}
               className="flex-shrink-0 w-[220px] rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all text-left cursor-pointer"
             >
               <div className={`h-1.5 bg-gradient-to-r ${c.accentBar}`} />
@@ -306,11 +351,25 @@ function HomeStreamSlider({ tab, onOpen }: { tab: typeof streamTabs[0]; onOpen: 
                   <span className="flex items-center gap-1 text-[10px] text-gray-500 bg-gray-50 border border-gray-100 rounded-lg px-1.5 py-0.5"><CreditCard size={9} /> {course.fee}</span>
                 </div>
                 <p className="text-[10px] font-bold text-green-700 mb-3">{course.salary}</p>
-                <div className={`flex items-center justify-center gap-1 rounded-lg bg-gradient-to-r ${c.gradient} py-2 text-[11px] font-bold text-white`}>
-                  <BookOpen size={11} /> Details देखें
+                {/* Apply Now + More Details */}
+                <div className="grid grid-cols-2 gap-1.5">
+                  <Link
+                    href={`/apply?course=${encodeURIComponent(course.name)}`}
+                    onClick={(e) => e.stopPropagation()}
+                    className="flex items-center justify-center gap-1 rounded-lg bg-[#dc143c] py-2 text-[11px] font-bold text-white hover:bg-red-700 transition"
+                  >
+                    <GraduationCap size={11} /> Apply Now
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); onOpen(course, tab.key as StreamKey); }}
+                    className={`flex items-center justify-center gap-1 rounded-lg bg-gradient-to-r ${c.gradient} py-2 text-[11px] font-bold text-white`}
+                  >
+                    <BookOpen size={11} /> More Details
+                  </button>
                 </div>
               </div>
-            </button>
+            </div>
           ))}
         </div>
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import {
   ChevronLeft, ChevronRight, Clock, CreditCard, CheckCircle2,
   MessageCircle, GraduationCap, ArrowRight, Phone,
@@ -126,9 +126,11 @@ function CourseCard({ course, streamKey }: { course: Course; streamKey: StreamKe
 function StreamSlider({ tab }: { tab: typeof streamTabs[0] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [atStart, setAtStart] = useState(true);
-  const [atEnd, setAtEnd] = useState(false);
+  const [atEnd, setAtEnd] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
+  const [paused, setPaused] = useState(false);
   const dragStart = useRef<{ x: number; scrollLeft: number } | null>(null);
+  const movedRef = useRef(false);
   const colors = colorMap[tab.color];
   const Icon = tab.icon;
 
@@ -140,18 +142,51 @@ function StreamSlider({ tab }: { tab: typeof streamTabs[0] }) {
     el.scrollBy({ left: dir === "left" ? -CARD_WIDTH * 2 : CARD_WIDTH * 2, behavior: "smooth" });
   }
 
-  function onScroll() {
+  // Auto-slide left → right; loops back at the end. Pauses on hover, touch
+  // and while dragging.
+  useEffect(() => {
+    if (paused) return;
+    const id = setInterval(() => {
+      const el = scrollRef.current;
+      if (!el || el.scrollWidth - el.clientWidth <= 1) return;
+      if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 8) {
+        el.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        el.scrollBy({ left: CARD_WIDTH, behavior: "smooth" });
+      }
+    }, 3500);
+    return () => clearInterval(id);
+  }, [paused, CARD_WIDTH]);
+
+  const updateArrows = useCallback(() => {
     const el = scrollRef.current;
     if (!el) return;
+    const scrollable = el.scrollWidth - el.clientWidth > 1;
     setAtStart(el.scrollLeft <= 8);
-    setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 8);
-  }
+    setAtEnd(!scrollable || el.scrollLeft + el.clientWidth >= el.scrollWidth - 8);
+  }, []);
 
-  /* ── Touch / mouse drag ── */
+  // Measure on mount and keep arrow / fade states correct on resize.
+  useEffect(() => {
+    updateArrows();
+    const el = scrollRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(updateArrows);
+    ro.observe(el);
+    window.addEventListener("resize", updateArrows);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", updateArrows);
+    };
+  }, [updateArrows]);
+
+  /* ── Mouse drag (touch uses native momentum scrolling) ── */
   const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse") return;
     const el = scrollRef.current;
     if (!el) return;
     setIsDragging(true);
+    movedRef.current = false;
     dragStart.current = { x: e.clientX, scrollLeft: el.scrollLeft };
     el.setPointerCapture(e.pointerId);
   }, []);
@@ -159,6 +194,7 @@ function StreamSlider({ tab }: { tab: typeof streamTabs[0] }) {
   const onPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     if (!dragStart.current || !scrollRef.current) return;
     const dx = e.clientX - dragStart.current.x;
+    if (Math.abs(dx) > 5) movedRef.current = true;
     scrollRef.current.scrollLeft = dragStart.current.scrollLeft - dx;
   }, []);
 
@@ -227,12 +263,17 @@ function StreamSlider({ tab }: { tab: typeof streamTabs[0] }) {
 
           <div
             ref={scrollRef}
-            onScroll={onScroll}
+            onScroll={updateArrows}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
             onPointerUp={onPointerUp}
             onPointerLeave={onPointerUp}
-            className="flex gap-4 overflow-x-auto pb-3 scroll-smooth select-none"
+            onClickCapture={(e) => { if (movedRef.current) { e.preventDefault(); e.stopPropagation(); } }}
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+            onTouchStart={() => setPaused(true)}
+            onTouchEnd={() => setPaused(false)}
+            className="flex gap-4 overflow-x-auto pb-3 select-none"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
