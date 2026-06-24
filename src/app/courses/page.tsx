@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useRef, useState, useCallback } from "react";
 import {
   ChevronLeft, ChevronRight, Clock, CreditCard, CheckCircle2,
   MessageCircle, GraduationCap, ArrowRight, Phone,
@@ -127,6 +127,8 @@ function StreamSlider({ tab }: { tab: typeof streamTabs[0] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStart = useRef<{ x: number; scrollLeft: number } | null>(null);
   const colors = colorMap[tab.color];
   const Icon = tab.icon;
 
@@ -144,6 +146,26 @@ function StreamSlider({ tab }: { tab: typeof streamTabs[0] }) {
     setAtStart(el.scrollLeft <= 8);
     setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 8);
   }
+
+  /* ── Touch / mouse drag ── */
+  const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setIsDragging(true);
+    dragStart.current = { x: e.clientX, scrollLeft: el.scrollLeft };
+    el.setPointerCapture(e.pointerId);
+  }, []);
+
+  const onPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragStart.current || !scrollRef.current) return;
+    const dx = e.clientX - dragStart.current.x;
+    scrollRef.current.scrollLeft = dragStart.current.scrollLeft - dx;
+  }, []);
+
+  const onPointerUp = useCallback(() => {
+    setIsDragging(false);
+    dragStart.current = null;
+  }, []);
 
   return (
     <section className={`py-10 ${colors.sectionBg}`} id={tab.key}>
@@ -206,8 +228,16 @@ function StreamSlider({ tab }: { tab: typeof streamTabs[0] }) {
           <div
             ref={scrollRef}
             onScroll={onScroll}
-            className="flex gap-4 overflow-x-auto pb-3 scroll-smooth"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
+            onPointerLeave={onPointerUp}
+            className="flex gap-4 overflow-x-auto pb-3 scroll-smooth select-none"
+            style={{
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+              cursor: isDragging ? "grabbing" : "grab",
+            }}
           >
             {tab.courses.map(course => (
               <CourseCard key={course.name} course={course} streamKey={tab.key as StreamKey} />
