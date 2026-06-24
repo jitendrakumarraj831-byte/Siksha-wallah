@@ -293,6 +293,15 @@ const PARTNER_COLLEGES: CollegeCategory[] = [
   },
 ];
 
+/* ─── FAQ card styling by topic group ───────────────────────────────────── */
+function getFaqStyle(i: number) {
+  if (i < 4)  return { label: "Counselling",     bar: "from-blue-600 to-indigo-600",  border: "border-blue-200",   tag: "bg-blue-100 text-blue-700",     text: "text-blue-700" };
+  if (i < 9)  return { label: "Course Selection", bar: "from-green-600 to-emerald-600", border: "border-green-200",  tag: "bg-green-100 text-green-700",   text: "text-green-700" };
+  if (i < 12) return { label: "Admission",        bar: "from-sky-600 to-blue-700",     border: "border-sky-200",    tag: "bg-sky-100 text-sky-700",       text: "text-sky-700" };
+  if (i < 15) return { label: "BSCC Loan",        bar: "from-amber-500 to-orange-600", border: "border-amber-200",  tag: "bg-amber-100 text-amber-700",   text: "text-amber-700" };
+  return            { label: "Fees & Expenses",  bar: "from-indigo-600 to-purple-600", border: "border-indigo-200", tag: "bg-indigo-100 text-indigo-700", text: "text-indigo-700" };
+}
+
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [checkedDocs, setCheckedDocs] = useState<Record<string, boolean>>({});
@@ -1842,64 +1851,116 @@ export default function Home() {
 
             {/* Right — accordion */}
             <AnimateIn type="fade-left" delay={100} className="order-1 lg:order-2">
-            <div className="space-y-3">
-              {faqs.map(({ q, a }, i) => {
-                const open = openFaq === i;
-                return (
-                <div
-                  key={i}
-                  className={`group overflow-hidden rounded-2xl border transition-all duration-300 ${
-                    open
-                      ? "border-transparent bg-white shadow-xl shadow-blue-900/10 ring-1 ring-[#003f9f]/25"
-                      : "border-gray-200 bg-white hover:border-[#003f9f]/40 hover:shadow-md"
-                  }`}
-                >
-                  <button
-                    onClick={() => setOpenFaq(open ? null : i)}
-                    className="flex w-full items-center justify-between gap-3 px-4 py-4 text-left md:px-5"
-                  >
-                    <div className="flex items-center gap-3.5">
-                      <span
-                        className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl text-sm font-black transition-all duration-300 ${
-                          open
-                            ? "bg-gradient-to-br from-[#003f9f] to-indigo-600 text-white shadow-lg shadow-blue-500/30"
-                            : "bg-blue-50 text-[#003f9f] group-hover:bg-blue-100"
-                        }`}
-                      >
-                        {i + 1}
-                      </span>
-                      <span
-                        className={`font-headline text-[15px] font-bold leading-snug transition-colors ${
-                          open ? "text-[#003f9f]" : "text-gray-900"
-                        }`}
-                      >
-                        {q}
-                      </span>
-                    </div>
-                    <span
-                      className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full transition-all duration-300 ${
-                        open
-                          ? "rotate-180 bg-[#003f9f] text-white"
-                          : "bg-gray-100 text-gray-500 group-hover:bg-blue-100 group-hover:text-[#003f9f]"
-                      }`}
+            <div>
+              <p className="mb-3 flex items-center gap-1.5 text-xs font-semibold text-gray-400">
+                <ArrowRight size={13} className="text-[#003f9f]" /> Swipe करें · किसी भी सवाल पर tap करके पूरा जवाब देखें
+              </p>
+              <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 lg:mx-0 lg:px-0">
+                {faqs.map(({ q }, i) => {
+                  const s = getFaqStyle(i);
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => setOpenFaq(i)}
+                      className={`group flex w-[80%] flex-shrink-0 snap-start flex-col rounded-2xl border-2 ${s.border} bg-white p-5 text-left shadow-sm transition hover:-translate-y-1 hover:shadow-lg sm:w-[300px]`}
                     >
-                      <ChevronDown size={16} />
-                    </span>
-                  </button>
-                  {/* Smooth expand/collapse */}
-                  <div className={`grid transition-all duration-300 ease-out ${open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
-                    <div className="overflow-hidden">
-                      <div className="mx-4 mb-4 whitespace-pre-line rounded-xl border-l-4 border-amber-400 bg-blue-50/60 px-4 py-3.5 text-sm leading-relaxed text-gray-600 md:mx-5 md:mb-5">
-                        {a}
+                      <div className="mb-3 flex items-center justify-between gap-2">
+                        <span className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${s.bar} text-sm font-black text-white shadow`}>
+                          {i + 1}
+                        </span>
+                        <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold ${s.tag}`}>{s.label}</span>
                       </div>
-                    </div>
-                  </div>
-                </div>
-                );
-              })}
+                      <p className="line-clamp-3 flex-1 font-headline text-base font-bold leading-snug text-gray-900">
+                        {q}
+                      </p>
+                      <span className={`mt-4 inline-flex items-center gap-1 text-xs font-bold transition-all group-hover:gap-2 ${s.text}`}>
+                        पूरा जवाब पढ़ें <ArrowRight size={13} />
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
             </AnimateIn>
           </div>
+
+          {/* ── Big Q&A Modal ── */}
+          {openFaq !== null && faqs[openFaq] && (() => {
+            const s = getFaqStyle(openFaq);
+            return (
+            <div
+              className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 backdrop-blur-sm sm:items-center"
+              onClick={() => setOpenFaq(null)}
+            >
+              <div
+                className="relative max-h-[88vh] w-full max-w-xl overflow-hidden rounded-2xl bg-white shadow-2xl"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Header */}
+                <div className={`flex items-start justify-between gap-3 bg-gradient-to-r ${s.bar} p-5 text-white`}>
+                  <div className="flex items-start gap-3">
+                    <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-white/20 text-base font-black">
+                      {openFaq + 1}
+                    </span>
+                    <div>
+                      <span className="mb-1 inline-block rounded-full bg-white/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+                        {s.label}
+                      </span>
+                      <h3 className="font-headline text-lg font-extrabold leading-snug">{faqs[openFaq].q}</h3>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setOpenFaq(null)}
+                    aria-label="Close"
+                    className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white/20 transition hover:bg-white/30"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+
+                {/* Answer */}
+                <div className="max-h-[55vh] overflow-y-auto p-6">
+                  <p className="whitespace-pre-line text-[15px] leading-relaxed text-gray-700">{faqs[openFaq].a}</p>
+                </div>
+
+                {/* Footer CTAs */}
+                <div className="flex flex-col gap-2.5 border-t border-gray-100 p-5 sm:flex-row">
+                  <a
+                    href={`https://wa.me/916203138576?text=${encodeURIComponent(`नमस्ते! मेरा सवाल है: ${faqs[openFaq].q}`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-green-500 px-5 py-3 font-bold text-white transition hover:bg-green-600"
+                  >
+                    <MessageCircle size={16} /> और पूछें — WhatsApp
+                  </a>
+                  <a
+                    href="tel:+916203138576"
+                    className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary-blue px-5 py-3 font-bold text-white transition hover:bg-blue-700"
+                  >
+                    <Phone size={16} /> Counsellor को Call करें
+                  </a>
+                </div>
+
+                {/* Prev / Next navigation */}
+                <div className="flex items-center justify-between border-t border-gray-100 px-5 py-3">
+                  <button
+                    onClick={() => setOpenFaq(openFaq > 0 ? openFaq - 1 : faqs.length - 1)}
+                    className="flex items-center gap-1 text-xs font-bold text-gray-500 transition hover:text-[#003f9f]"
+                  >
+                    <ChevronDown size={14} className="rotate-90" /> पिछला
+                  </button>
+                  <span className="text-[11px] font-semibold text-gray-400">{openFaq + 1} / {faqs.length}</span>
+                  <button
+                    onClick={() => setOpenFaq(openFaq < faqs.length - 1 ? openFaq + 1 : 0)}
+                    className="flex items-center gap-1 text-xs font-bold text-gray-500 transition hover:text-[#003f9f]"
+                  >
+                    अगला <ChevronDown size={14} className="-rotate-90" />
+                  </button>
+                </div>
+              </div>
+            </div>
+            );
+          })()}
         </div>
       </section>
 
