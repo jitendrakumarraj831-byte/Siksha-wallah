@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { authService } from '@/lib/auth-service';
 import { saveActivity } from '@/services/activity-service';
@@ -8,6 +9,7 @@ import { PortalShell } from '@/components/portal-shell';
 import { Mail, Lock, User, Phone, AlertCircle, CheckCircle2, Loader, ArrowRight } from 'lucide-react';
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -18,6 +20,22 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [countdown, setCountdown] = useState(3);
+
+  useEffect(() => {
+    if (!success) return;
+    const timer = setInterval(() => {
+      setCountdown(c => {
+        if (c <= 1) {
+          clearInterval(timer);
+          router.push('/auth/login');
+          return 0;
+        }
+        return c - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [success, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -78,15 +96,19 @@ export default function RegisterPage() {
             <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
               <CheckCircle2 size={36} className="text-green-600" />
             </div>
-            <h1 className="font-headline text-2xl font-extrabold text-gray-900">Registration Successful</h1>
+            <h1 className="font-headline text-2xl font-extrabold text-gray-900">Account Created!</h1>
             <p className="mt-3 text-slate-600 leading-relaxed">
-              Your account has been created successfully. You can now sign in to access your student dashboard.
+              आपका account successfully बन गया है। Login page पर redirect हो रहे हैं…
             </p>
+            <div className="mt-6 flex h-14 w-14 mx-auto items-center justify-center rounded-full bg-[#003f9f] text-white font-extrabold text-2xl">
+              {countdown}
+            </div>
+            <p className="mt-3 text-sm text-slate-400">{countdown} second{countdown !== 1 ? 's' : ''} में redirect होंगे</p>
             <Link
               href="/auth/login"
-              className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#003f9f] px-6 py-4 font-extrabold text-white transition hover:bg-blue-700"
+              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#003f9f] px-6 py-3.5 font-extrabold text-white transition hover:bg-blue-700"
             >
-              Go To Login <ArrowRight size={18} />
+              अभी Login करें <ArrowRight size={18} />
             </Link>
           </div>
         </section>
