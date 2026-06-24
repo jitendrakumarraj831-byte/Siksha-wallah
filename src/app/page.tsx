@@ -1843,27 +1843,60 @@ export default function Home() {
             {/* Right — accordion */}
             <AnimateIn type="fade-left" delay={100} className="order-1 lg:order-2">
             <div className="space-y-3">
-              {faqs.map(({ q, a }, i) => (
-                <div key={i} className={`rounded-2xl border-2 overflow-hidden transition-all ${openFaq === i ? "border-[#003f9f] shadow-md" : "border-gray-200 bg-white"}`}>
+              {faqs.map(({ q, a }, i) => {
+                const open = openFaq === i;
+                return (
+                <div
+                  key={i}
+                  className={`group overflow-hidden rounded-2xl border transition-all duration-300 ${
+                    open
+                      ? "border-transparent bg-white shadow-xl shadow-blue-900/10 ring-1 ring-[#003f9f]/25"
+                      : "border-gray-200 bg-white hover:border-[#003f9f]/40 hover:shadow-md"
+                  }`}
+                >
                   <button
-                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                    className="flex w-full items-start justify-between gap-4 px-6 py-5 text-left transition hover:bg-blue-50/50"
+                    onClick={() => setOpenFaq(open ? null : i)}
+                    className="flex w-full items-center justify-between gap-3 px-4 py-4 text-left md:px-5"
                   >
-                    <div className="flex items-start gap-3">
-                      <span className={`mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-[10px] font-extrabold ${openFaq === i ? "bg-[#003f9f] text-white" : "bg-gray-100 text-gray-500"}`}>
+                    <div className="flex items-center gap-3.5">
+                      <span
+                        className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl text-sm font-black transition-all duration-300 ${
+                          open
+                            ? "bg-gradient-to-br from-[#003f9f] to-indigo-600 text-white shadow-lg shadow-blue-500/30"
+                            : "bg-blue-50 text-[#003f9f] group-hover:bg-blue-100"
+                        }`}
+                      >
                         {i + 1}
                       </span>
-                      <span className="font-headline font-bold text-base text-gray-900 leading-snug">{q}</span>
+                      <span
+                        className={`font-headline text-[15px] font-bold leading-snug transition-colors ${
+                          open ? "text-[#003f9f]" : "text-gray-900"
+                        }`}
+                      >
+                        {q}
+                      </span>
                     </div>
-                    <ChevronDown size={20} className={`flex-shrink-0 mt-0.5 text-[#003f9f] transition-transform duration-200 ${openFaq === i ? "rotate-180" : ""}`} />
+                    <span
+                      className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full transition-all duration-300 ${
+                        open
+                          ? "rotate-180 bg-[#003f9f] text-white"
+                          : "bg-gray-100 text-gray-500 group-hover:bg-blue-100 group-hover:text-[#003f9f]"
+                      }`}
+                    >
+                      <ChevronDown size={16} />
+                    </span>
                   </button>
-                  {openFaq === i && (
-                    <div className="px-6 pb-5 pt-0 text-gray-600 text-sm leading-relaxed border-t border-blue-100 bg-blue-50/30">
-                      <div className="pt-4 whitespace-pre-line">{a}</div>
+                  {/* Smooth expand/collapse */}
+                  <div className={`grid transition-all duration-300 ease-out ${open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+                    <div className="overflow-hidden">
+                      <div className="mx-4 mb-4 whitespace-pre-line rounded-xl border-l-4 border-amber-400 bg-blue-50/60 px-4 py-3.5 text-sm leading-relaxed text-gray-600 md:mx-5 md:mb-5">
+                        {a}
+                      </div>
                     </div>
-                  )}
+                  </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
             </AnimateIn>
           </div>
