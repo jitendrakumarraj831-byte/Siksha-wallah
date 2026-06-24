@@ -1,18 +1,18 @@
-'use client';
-
-import { useParams } from 'next/navigation';
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { SiteNavbar } from '@/components/site-navbar';
 import { SiteFooter } from '@/components/site-footer';
 import { COURSE_ID_MAP, colorMap, streamTabs } from '@/lib/courses-data';
-import { saveActivity } from '@/services/activity-service';
-import { useEffect } from 'react';
+import { CourseViewTracker } from '@/components/course-view-tracker';
+import { TrackedWhatsAppLink } from '@/components/tracked-whatsapp-link';
 import {
   ArrowLeft, Clock, CreditCard, CheckCircle2, Star, Sparkles,
   Award, Building2, Briefcase, BookMarked, ShieldCheck, FileText,
-  MessageCircle, AlertCircle,
+  MessageCircle,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+
+const BASE_URL = 'https://www.sikshawallahfbg.in';
 
 // ── Course-specific required documents ───────────────────────────────────────
 const COURSE_DOCS: Record<string, string[]> = {
@@ -60,41 +60,54 @@ const COURSE_DOCS: Record<string, string[]> = {
   llm:          ['Aadhaar Card', '10th Marksheet', '12th Marksheet', 'Graduation Marksheet', 'LLB Marksheet', 'Passport Photo', 'Caste Certificate (if applicable)'],
 };
 
-export default function CourseDetailPage() {
-  const params = useParams();
-  const courseId = params.courseId as string;
+// ── Static generation: pre-render every known course slug ─────────────────────
+export function generateStaticParams() {
+  return Object.keys(COURSE_ID_MAP).map((courseId) => ({ courseId }));
+}
+
+// ── Per-course SEO metadata ───────────────────────────────────────────────────
+export async function generateMetadata(
+  { params }: { params: Promise<{ courseId: string }> }
+): Promise<Metadata> {
+  const { courseId } = await params;
   const entry = COURSE_ID_MAP[courseId];
-
-  useEffect(() => {
-    if (entry) {
-      saveActivity({
-        type: 'course_view',
-        title: `Course Detail: ${entry.course.name}`,
-        description: `${entry.course.full} detail page viewed`,
-        course: entry.course.name,
-        page: `/courses/${courseId}`,
-      });
-    }
-  }, [courseId, entry]);
-
   if (!entry) {
-    return (
-      <>
-        <SiteNavbar />
-        <div className="flex min-h-[70vh] items-center justify-center">
-          <div className="text-center">
-            <AlertCircle className="mx-auto text-red-500 mb-4" size={48} />
-            <h1 className="text-xl font-bold text-slate-800">Course not found</h1>
-            <p className="mt-2 text-slate-500">This course page doesn&apos;t exist or has been moved.</p>
-            <Link href="/courses">
-              <Button className="mt-6">Explore All Courses</Button>
-            </Link>
-          </div>
-        </div>
-        <SiteFooter />
-      </>
-    );
+    return {
+      title: 'Course Not Found',
+      robots: { index: false, follow: true },
+    };
   }
+  const { course } = entry;
+  const title = `${course.name} Admission in Bihar — Fees, Eligibility & Career`;
+  const description =
+    `${course.full} (${course.name}) admission in Bihar. ${course.duration} · Fee ${course.fee} · Eligibility: ${course.eligibility}. Free counselling${course.bscc ? ' + BSCC loan support' : ''}.`
+      .slice(0, 180);
+  const url = `${BASE_URL}/courses/${courseId}`;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `/courses/${courseId}` },
+    openGraph: {
+      title: `${title} | Siksha Wallah`,
+      description,
+      url,
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${title} | Siksha Wallah`,
+      description,
+    },
+  };
+}
+
+export default async function CourseDetailPage(
+  { params }: { params: Promise<{ courseId: string }> }
+) {
+  const { courseId } = await params;
+  const entry = COURSE_ID_MAP[courseId];
+  if (!entry) notFound();
 
   const { course, stream } = entry;
   const tab = streamTabs.find(s => s.key === stream)!;
@@ -102,8 +115,28 @@ export default function CourseDetailPage() {
   const requiredDocs = COURSE_DOCS[courseId] ?? ['Aadhaar Card', '10th Marksheet', '12th Marksheet', 'Passport Photo'];
   const waMsg = `नमस्ते! मुझे ${course.name} (${course.full}) के बारे में जानकारी चाहिए। Fees aur admission process batayein।`;
 
+  // ── Course structured data for rich results ──
+  const courseSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Course',
+    name: `${course.name} — ${course.full}`,
+    description: course.careerScope,
+    provider: {
+      '@type': 'EducationalOrganization',
+      name: 'Siksha Wallah',
+      sameAs: BASE_URL,
+    },
+    educationalCredentialAwarded: course.full,
+    timeRequired: course.duration,
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }}
+      />
+      <CourseViewTracker courseId={courseId} name={course.name} full={course.full} />
       <SiteNavbar />
       {/* Hero banner */}
       <div className={`bg-gradient-to-r ${colors.gradient} py-10 text-white`}>
@@ -258,15 +291,14 @@ export default function CourseDetailPage() {
                 >
                   Apply for {course.name} →
                 </Link>
-                <a
+                <TrackedWhatsAppLink
                   href={`https://wa.me/916203138576?text=${encodeURIComponent(waMsg)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => saveActivity({ type: 'whatsapp', title: `WhatsApp — ${course.name}`, description: `Enquiry from course detail page`, page: `/courses/${courseId}` })}
+                  course={course.name}
+                  page={`/courses/${courseId}`}
                   className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-green-500 py-3 text-sm font-bold text-green-700 transition hover:bg-green-500 hover:text-white"
                 >
                   <MessageCircle size={15} /> WhatsApp Enquiry
-                </a>
+                </TrackedWhatsAppLink>
                 {course.bscc && (
                   <Link
                     href="/contact"

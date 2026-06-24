@@ -16,312 +16,110 @@ import { SiteFooter } from "@/components/site-footer";
 import { CountUp } from "@/components/count-up";
 import { AnimateIn } from "@/components/animate-in";
 import { ReviewsCarousel } from "@/components/reviews-carousel";
-import { streamTabs, colorMap, faqs, getCourseSlug, type StreamKey, type Course } from "@/lib/courses-data";
+import { streamTabs, colorMap, faqs, type StreamKey } from "@/lib/courses-data";
 import { successStories } from "@/lib/reviews-data";
 
-/* ─── Course Detail Modal ─────────────────────────────────────────── */
-function CourseDetailModal({
-  course, streamKey, onClose,
-}: { course: Course; streamKey: StreamKey; onClose: () => void }) {
-  const tab = streamTabs.find(s => s.key === streamKey)!;
-  const c = colorMap[tab.color];
-  const slug = getCourseSlug(course.name);
 
-  return (
-    <div
-      className="fixed inset-0 z-[999] flex items-end sm:items-center justify-center p-0 sm:p-4"
-      onClick={onClose}
-    >
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+/* ─── Homepage Stream Cards ───────────────────────────────────────── */
+const STREAM_DESCRIPTIONS: Record<StreamKey, string> = {
+  teaching:    "B.Ed, D.El.Ed, B.P.Ed & M.Ed — सरकारी शिक्षक बनें। STET / CTET के साथ एक guaranteed teaching career।",
+  medical:     "MBBS, Nursing, Pharmacy और more — Doctor, Nurse या Pharmacist बनने का पूरा रास्ता।",
+  paramedical: "Lab, Physiotherapy, OT, Radiology — बिना NEET के healthcare में strong career।",
+  law:         "LLB, BA.LLB, BBA.LLB & LLM — Advocate, Judge या Corporate Lawyer बनें।",
+  technical:   "B.Tech, Polytechnic, BCA, MBA और more — Engineering, IT और Management courses।",
+};
 
-      {/* Panel */}
-      <div
-        className="relative w-full sm:max-w-lg max-h-[92vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl bg-white shadow-2xl"
-        onClick={e => e.stopPropagation()}
-      >
-        {/* Colored header */}
-        <div className={`bg-gradient-to-r ${c.gradient} p-6 rounded-t-3xl sm:rounded-t-3xl`}>
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/30 transition"
-            aria-label="Close"
-          >
-            <X size={18} />
-          </button>
-          <div className="flex items-center gap-3 mb-3">
-            <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-black bg-white/20 text-white border border-white/30`}>
-              {tab.label}
-            </span>
-            {course.bscc && (
-              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-white bg-green-600/80 border border-green-400/40 px-2.5 py-1 rounded-full">
-                <CreditCard size={10} /> BSCC Eligible
-              </span>
-            )}
-          </div>
-          <h2 className="font-headline text-2xl font-extrabold text-white leading-snug">{course.full}</h2>
-          <p className="mt-1 text-white/70 text-sm font-bold">{course.name}</p>
-        </div>
-
-        {/* Body */}
-        <div className="p-5 space-y-4">
-          {/* Quick facts */}
-          <div className="grid grid-cols-3 gap-3">
-            {[
-              { label: "Duration", value: course.duration, icon: Clock },
-              { label: "Approx. Fee", value: course.fee, icon: CreditCard },
-              { label: "Salary", value: course.salary, icon: Award },
-            ].map(({ label, value, icon: Icon }) => (
-              <div key={label} className="rounded-xl bg-gray-50 border border-gray-100 p-3 text-center">
-                <Icon size={14} className="mx-auto mb-1 text-gray-400" />
-                <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">{label}</p>
-                <p className="text-xs font-extrabold text-gray-800 mt-0.5 leading-snug">{value}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Eligibility */}
-          <div className="rounded-xl border border-blue-100 bg-blue-50 p-4">
-            <p className="text-xs font-bold uppercase tracking-wider text-blue-500 mb-1.5">Eligibility</p>
-            <p className="text-sm text-blue-900 leading-relaxed">{course.eligibility}</p>
-          </div>
-
-          {/* Hindi Description */}
-          <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
-            <div className="flex items-center gap-1.5 mb-1.5 text-xs font-bold uppercase tracking-wider text-amber-600">
-              <Sparkles size={12} /> हिंदी में जानें
-            </div>
-            <p className="text-sm leading-relaxed text-amber-900">{course.hindiDesc}</p>
-          </div>
-
-          {/* Key Highlights */}
-          <div className="rounded-xl border border-green-100 bg-green-50 p-4">
-            <div className="flex items-center gap-1.5 mb-2 text-xs font-bold uppercase tracking-wider text-green-600">
-              <Star size={12} /> Key Highlights
-            </div>
-            <ul className="space-y-1.5">
-              {course.highlights.map((h, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-green-900">
-                  <CheckCircle2 size={13} className="mt-0.5 flex-shrink-0 text-green-500" /> {h}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Entrance Exam + Govt Jobs */}
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <div className="rounded-xl bg-gray-50 border border-gray-100 p-4">
-              <div className="flex items-center gap-1.5 mb-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">
-                <FileText size={12} /> Entrance Exam
-              </div>
-              <p className="text-sm leading-relaxed text-gray-700">{course.entranceExam}</p>
-            </div>
-            <div className="rounded-xl bg-gray-50 border border-gray-100 p-4">
-              <div className="flex items-center gap-1.5 mb-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">
-                <ShieldCheck size={12} /> Govt Jobs
-              </div>
-              <p className="text-sm leading-relaxed text-gray-700">{course.govtJobs}</p>
-            </div>
-          </div>
-
-          {/* Career Scope */}
-          <div className="rounded-xl bg-gray-50 border border-gray-100 p-4">
-            <div className="flex items-center gap-1.5 mb-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">
-              <Briefcase size={12} /> Career Scope
-            </div>
-            <p className="text-sm leading-relaxed text-gray-700">{course.careerScope}</p>
-          </div>
-
-          {/* Top Colleges */}
-          <div>
-            <div className="flex items-center gap-1.5 mb-2 text-xs font-bold uppercase tracking-wider text-gray-400">
-              <Building2 size={12} /> Top Colleges
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {course.topColleges.map((col, i) => (
-                <span key={i} className="rounded-lg bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700">{col}</span>
-              ))}
-            </div>
-          </div>
-
-          {/* Study Mode */}
-          <div className="rounded-xl bg-gray-50 border border-gray-100 p-4">
-            <div className="flex items-center gap-1.5 mb-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">
-              <BookMarked size={12} /> Study Mode
-            </div>
-            <p className="text-sm leading-relaxed text-gray-700">{course.mode}</p>
-          </div>
-
-          {/* BSCC */}
-          {course.bscc && (
-            <div className="rounded-xl bg-green-50 border border-green-200 p-4 flex items-start gap-2">
-              <CreditCard size={16} className="mt-0.5 flex-shrink-0 text-green-600" />
-              <p className="text-sm text-green-700 font-semibold leading-relaxed">
-                Bihar Student Credit Card (BSCC) के लिए eligible — ₹4 Lakh तक education loan सिर्फ 4% interest पर। हमारी team complete BSCC application support देती है।
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* Sticky CTA footer */}
-        <div className="sticky bottom-0 bg-white border-t border-gray-100 p-4 flex gap-3">
-          <Link
-            href={`/apply?course=${encodeURIComponent(course.name)}`}
-            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#dc143c] py-3.5 font-extrabold text-white hover:bg-red-700 transition shadow-lg shadow-red-200"
-          >
-            <GraduationCap size={18} /> Apply Now
-          </Link>
-          {slug ? (
-            <Link
-              href={`/courses/${slug}`}
-              className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3.5 font-extrabold text-white transition bg-gradient-to-r ${c.gradient} shadow-lg`}
-            >
-              Full Details <ArrowRight size={16} />
-            </Link>
-          ) : (
-            <a
-              href={`https://wa.me/916203138576?text=नमस्ते!%20${encodeURIComponent(course.name)}%20(${encodeURIComponent(course.full)})%20के%20बारे%20में%20जानकारी%20चाहिए।`}
-              target="_blank" rel="noopener noreferrer"
-              className="flex flex-1 items-center justify-center gap-2 rounded-xl border-2 border-green-500 py-3.5 font-extrabold text-green-700 hover:bg-green-500 hover:text-white transition"
-            >
-              <MessageCircle size={18} /> WhatsApp
-            </a>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ─── Home page tabbed course explorer ───────────────────────────── */
-function HomeCourseExplorer({ onOpen }: { onOpen: (course: Course, key: StreamKey) => void }) {
-  const [activeKey, setActiveKey] = useState<StreamKey>(streamTabs[0].key as StreamKey);
-  const tab = streamTabs.find((t) => t.key === activeKey)!;
-  const c = colorMap[tab.color];
-  const Icon = tab.icon;
-
+function StreamCards() {
   return (
     <div className="container-shell">
-      {/* ── Stream tabs ── */}
-      <div className="mb-8 flex flex-wrap justify-center gap-2 md:gap-3">
-        {streamTabs.map((t) => {
-          const tc = colorMap[t.color];
-          const active = t.key === activeKey;
-          const TabIcon = t.icon;
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {streamTabs.map((tab) => {
+          const c = colorMap[tab.color];
+          const Icon = tab.icon;
           return (
-            <button
-              key={t.key}
-              type="button"
-              onClick={() => setActiveKey(t.key as StreamKey)}
-              aria-pressed={active}
-              className={`flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-bold transition-all duration-200 ${
-                active
-                  ? `bg-gradient-to-r ${tc.gradient} text-white shadow-lg scale-105`
-                  : "bg-white text-gray-600 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 hover:-translate-y-0.5"
-              }`}
-            >
-              <TabIcon size={16} />
-              {t.shortLabel}
-              <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-extrabold ${active ? "bg-white/25 text-white" : "bg-gray-100 text-gray-500"}`}>
-                {t.courses.length}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* ── Course grid ── */}
-      <AnimateIn key={activeKey} type="fade-up">
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {tab.courses.map((course) => (
             <div
-              key={course.name}
-              role="button"
-              tabIndex={0}
-              onClick={() => onOpen(course, tab.key as StreamKey)}
-              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onOpen(course, tab.key as StreamKey); } }}
-              className="group relative flex flex-col rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden transition-all duration-300 cursor-pointer text-left hover:-translate-y-1.5 hover:shadow-2xl hover:border-transparent"
+              key={tab.key}
+              className="group relative flex flex-col rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl"
             >
-              {/* ── Colored header band ── */}
-              <div className={`relative overflow-hidden bg-gradient-to-br ${c.gradient} p-4`}>
-                {/* Watermark stream icon */}
-                <Icon className="pointer-events-none absolute -right-3 -top-3 text-white/15 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6" size={76} />
-                <div className="relative flex items-center justify-between gap-2">
-                  <span className="inline-flex items-center rounded-full border border-white/30 bg-white/20 px-2.5 py-1 text-[11px] font-black text-white backdrop-blur-sm">
-                    {course.name}
-                  </span>
-                  {course.bscc && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-green-500/90 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm">
-                      <CreditCard size={9} /> BSCC Loan
-                    </span>
-                  )}
+              {/* Icon + course count */}
+              <div className="flex items-center justify-between">
+                <div className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${c.gradient} text-white shadow-md`}>
+                  <Icon size={26} />
                 </div>
-                <h3 className="relative mt-2.5 min-h-[2.5rem] text-sm font-extrabold leading-snug text-white line-clamp-2">
-                  {course.full}
-                </h3>
+                <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-extrabold ${c.badge}`}>
+                  {tab.courses.length} Courses
+                </span>
               </div>
 
-              {/* ── Body ── */}
-              <div className="flex flex-1 flex-col p-4">
-                {/* Duration + fee */}
-                <div className="mb-3 flex flex-wrap gap-1.5">
-                  <span className="flex items-center gap-1 rounded-lg border border-gray-100 bg-gray-50 px-2 py-1 text-[10px] font-semibold text-gray-600"><Clock size={10} className="text-gray-400" /> {course.duration}</span>
-                  <span className="flex items-center gap-1 rounded-lg border border-gray-100 bg-gray-50 px-2 py-1 text-[10px] font-semibold text-gray-600"><CreditCard size={10} className="text-gray-400" /> {course.fee}</span>
-                </div>
+              {/* Title + short description */}
+              <h3 className="mt-4 font-headline text-lg font-extrabold text-gray-900">{tab.label}</h3>
+              <p className="mt-1.5 flex-1 text-sm leading-relaxed text-gray-500">
+                {STREAM_DESCRIPTIONS[tab.key as StreamKey]}
+              </p>
 
-                {/* Key highlight */}
-                <div className="mb-3 flex items-start gap-1.5 text-[11px] leading-snug text-gray-600">
-                  <CheckCircle2 size={13} className={`mt-0.5 flex-shrink-0 ${c.checkColor}`} />
-                  <span className="line-clamp-2">{course.highlights[0]}</span>
-                </div>
+              {/* Primary CTA: Explore Courses */}
+              <Link
+                href={`/courses#${tab.key}`}
+                className={`mt-5 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r ${c.gradient} py-3 text-sm font-extrabold text-white shadow-sm transition-all group-hover:gap-2.5`}
+              >
+                <BookOpen size={16} /> Explore Courses
+                <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
+              </Link>
 
-                {/* Salary highlight — students' #1 concern */}
-                <div className="mb-4 flex items-center gap-2 rounded-xl border border-green-100 bg-green-50 px-3 py-2">
-                  <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-green-100">
-                    <TrendingUp size={13} className="text-green-600" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-[9px] font-bold uppercase tracking-wide text-green-500">Expected Salary</p>
-                    <p className="truncate text-[11px] font-extrabold leading-tight text-green-700">{course.salary}</p>
-                  </div>
-                </div>
-
-                {/* Apply Now + More Details */}
-                <div className="mt-auto grid grid-cols-2 gap-2">
-                  <Link
-                    href={`/apply?course=${encodeURIComponent(course.name)}`}
-                    onClick={(e) => e.stopPropagation()}
-                    className="flex items-center justify-center gap-1 rounded-lg bg-[#dc143c] py-2.5 text-[11px] font-bold text-white shadow-sm transition hover:bg-red-700"
-                  >
-                    <GraduationCap size={12} /> Apply Now
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={(e) => { e.stopPropagation(); onOpen(course, tab.key as StreamKey); }}
-                    className={`flex items-center justify-center gap-1 rounded-lg bg-gradient-to-r ${c.gradient} py-2.5 text-[11px] font-bold text-white shadow-sm transition group-hover:gap-1.5`}
-                  >
-                    <BookOpen size={12} /> Details
-                    <ArrowRight size={11} className="transition-transform group-hover:translate-x-0.5" />
-                  </button>
-                </div>
+              {/* Lead-gen preserved: Apply Now + WhatsApp */}
+              <div className="mt-2 grid grid-cols-2 gap-2">
+                <Link
+                  href="/apply"
+                  className="flex items-center justify-center gap-1.5 rounded-xl bg-[#dc143c] py-2.5 text-xs font-bold text-white transition hover:bg-red-700"
+                >
+                  <GraduationCap size={13} /> Apply Now
+                </Link>
+                <a
+                  href={`https://wa.me/916203138576?text=${encodeURIComponent(`नमस्ते! मुझे ${tab.label} के courses के बारे में जानकारी चाहिए।`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-1.5 rounded-xl border-2 border-green-500 py-2.5 text-xs font-bold text-green-700 transition hover:bg-green-500 hover:text-white"
+                >
+                  <MessageCircle size={13} /> WhatsApp
+                </a>
               </div>
             </div>
-          ))}
-        </div>
-      </AnimateIn>
+          );
+        })}
 
-      {/* ── View all for this stream ── */}
-      <div className="mt-8 text-center">
-        <Link
-          href={`/courses#${tab.key}`}
-          className="inline-flex items-center gap-1.5 text-sm font-bold text-gray-700 underline-offset-4 transition hover:text-gray-900 hover:underline"
-        >
-          View all {tab.shortLabel} courses <ArrowRight size={14} />
-        </Link>
+        {/* 6th cell — "help choosing" keeps the grid balanced and adds lead-gen */}
+        <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border-2 border-dashed border-blue-200 bg-blue-50/50 p-6 text-center">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white shadow-md">
+            <Sparkles size={26} />
+          </div>
+          <div>
+            <h3 className="font-headline text-lg font-extrabold text-gray-900">कौन सा course सही है?</h3>
+            <p className="mt-1.5 text-sm leading-relaxed text-gray-500">
+              हमारे counsellor से बात करें — आपकी marks, budget और goal के हिसाब से सही course चुनें।
+            </p>
+          </div>
+          <div className="grid w-full grid-cols-2 gap-2">
+            <Link
+              href="/apply"
+              className="flex items-center justify-center gap-1.5 rounded-xl bg-[#dc143c] py-2.5 text-xs font-bold text-white transition hover:bg-red-700"
+            >
+              <GraduationCap size={13} /> Apply Now
+            </Link>
+            <a
+              href={`https://wa.me/916203138576?text=${encodeURIComponent("नमस्ते! मुझे सही course choose करने में guidance चाहिए।")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-1.5 rounded-xl border-2 border-green-500 py-2.5 text-xs font-bold text-green-700 transition hover:bg-green-500 hover:text-white"
+            >
+              <MessageCircle size={13} /> WhatsApp
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
+
 
 /* ─── Multi-step Form ─────────────────────────────── */
 const STEPS = ["Name", "Mobile", "Course", "Qualify"];
@@ -329,7 +127,6 @@ const STEPS = ["Name", "Mobile", "Course", "Qualify"];
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [checkedDocs, setCheckedDocs] = useState<Record<string, boolean>>({});
-  const [modalCourse, setModalCourse] = useState<{ course: Course; streamKey: StreamKey } | null>(null);
   const [bsccEligible, setBsccEligible] = useState<null | boolean>(null);
   const [bsccIncome, setBsccIncome] = useState("");
   const [bsccBihar, setBsccBihar] = useState("");
@@ -339,7 +136,15 @@ export default function Home() {
   const [step, setStep] = useState(0);
   const [formData, setFormData] = useState({ name: "", mobile: "", course: "", district: "" });
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [formError, setFormError] = useState("");
 
+  function isStepValid() {
+    if (step === 0) return formData.name.trim().length >= 2;
+    if (step === 1) return /^\d{10}$/.test(formData.mobile);
+    if (step === 2) return formData.course.trim() !== "";
+    if (step === 3) return formData.district.trim() !== "";
+    return true;
+  }
 
   function handleBsccCheck(e: React.FormEvent) {
     e.preventDefault();
@@ -359,6 +164,16 @@ export default function Home() {
   }
 
   function nextStep() {
+    if (!isStepValid()) {
+      setFormError(
+        step === 0 ? "कृपया अपना पूरा नाम दर्ज करें।" :
+        step === 1 ? "कृपया एक सही 10-अंकों का mobile number दर्ज करें।" :
+        step === 2 ? "कृपया एक course चुनें।" :
+        "कृपया अपना ज़िला चुनें।"
+      );
+      return;
+    }
+    setFormError("");
     if (step < STEPS.length - 1) setStep(step + 1);
     else {
       setFormSubmitted(true);
@@ -391,15 +206,6 @@ export default function Home() {
     <main className="bg-white text-gray-900">
 
       <SiteNavbar />
-
-      {/* ── Course Detail Modal ── */}
-      {modalCourse && (
-        <CourseDetailModal
-          course={modalCourse.course}
-          streamKey={modalCourse.streamKey}
-          onClose={() => setModalCourse(null)}
-        />
-      )}
 
       {/* ── HERO ── */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] text-white">
@@ -594,7 +400,7 @@ export default function Home() {
                         </label>
                         <input
                           value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          onChange={(e) => { setFormError(""); setFormData({ ...formData, name: e.target.value }); }}
                           placeholder="अपना पूरा नाम दर्ज करें"
                           autoComplete="name"
                           className="w-full rounded-xl border border-white/20 bg-white/[0.12] px-4 py-3.5 text-white placeholder-blue-300/60 outline-none transition focus:border-amber-400 focus:bg-white/[0.18] focus:ring-2 focus:ring-amber-400/25"
@@ -608,7 +414,7 @@ export default function Home() {
                         </label>
                         <input
                           value={formData.mobile}
-                          onChange={(e) => setFormData({ ...formData, mobile: e.target.value.replace(/\D/g, "").slice(0, 10) })}
+                          onChange={(e) => { setFormError(""); setFormData({ ...formData, mobile: e.target.value.replace(/\D/g, "").slice(0, 10) }); }}
                           type="tel"
                           inputMode="numeric"
                           placeholder="Your 10-digit mobile number"
@@ -635,6 +441,13 @@ export default function Home() {
                             <option>MBBS</option><option>BDS</option><option>B.Sc Nursing</option>
                             <option>GNM</option><option>ANM</option><option>B.Pharma</option>
                             <option>D.Pharma</option><option>BMLT</option>
+                          </optgroup>
+                          <optgroup label="Para Medical (पैरामेडिकल)">
+                            <option>BPT</option><option>BMLT</option><option>DMLT</option>
+                            <option>BOT</option><option>B.Sc Biotechnology</option>
+                          </optgroup>
+                          <optgroup label="Law (कानून)">
+                            <option>LLB</option><option>BA.LLB</option><option>BBA.LLB</option><option>LLM</option>
                           </optgroup>
                           <optgroup label="Engineering, IT & Management">
                             <option>B.Tech</option><option>Polytechnic</option><option>ITI</option>
@@ -673,10 +486,16 @@ export default function Home() {
                       </>
                     )}
 
+                    {formError && (
+                      <p className="flex items-center gap-1.5 text-sm font-semibold text-amber-300">
+                        <X size={14} className="flex-shrink-0" /> {formError}
+                      </p>
+                    )}
+
                     <div className="flex gap-2 pt-1">
                       {step > 0 && (
                         <button
-                          onClick={() => setStep(step - 1)}
+                          onClick={() => { setFormError(""); setStep(step - 1); }}
                           className="flex-1 rounded-xl border border-white/25 py-3.5 text-sm font-semibold text-white transition hover:bg-white/10 active:scale-[0.97]"
                         >
                           ← Back
@@ -820,17 +639,7 @@ export default function Home() {
           </p>
         </AnimateIn>
 
-        <HomeCourseExplorer
-          onOpen={(course, key) => setModalCourse({ course, streamKey: key })}
-        />
-
-        {modalCourse && (
-          <CourseDetailModal
-            course={modalCourse.course}
-            streamKey={modalCourse.streamKey}
-            onClose={() => setModalCourse(null)}
-          />
-        )}
+        <StreamCards />
 
         <div className="mt-6 text-center container-shell">
           <Link
@@ -1077,7 +886,7 @@ export default function Home() {
               },
               {
                 icon: Award,       border: "border-l-amber-500",  iconBg: "bg-amber-50",  iconColor: "text-amber-600",
-                title: "9+ साल का अनुभव",
+                title: "11+ साल का अनुभव",
                 desc: "Forbesganj में 11 साल से active — 5,000+ परिवारों का भरोसा, बिना किसी complaint के।",
               },
             ].map(({ icon: Icon, border, iconBg, iconColor, title, desc }, i) => (
