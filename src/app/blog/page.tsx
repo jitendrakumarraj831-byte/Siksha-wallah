@@ -35,14 +35,8 @@ export default function BlogPage() {
     ? blogArticles
     : blogArticles.filter((a) => a.category === activeCategory);
 
-  // When "all" is selected: show first article of each category as featured.
-  // When a specific category is selected: show only first article as featured.
-  const featuredList = activeCategory === "all"
-    ? CATEGORIES.filter((c) => c.key !== "all").map((c) =>
-        blogArticles.find((a) => a.category === c.key)
-      ).filter(Boolean) as typeof blogArticles
-    : filtered.slice(0, 1);
-
+  // Only manually marked articles (featured: true) appear in the featured section.
+  const featuredList = filtered.filter((a) => a.featured);
   const featuredSlugs = new Set(featuredList.map((a) => a.slug));
   const rest = filtered.filter((a) => !featuredSlugs.has(a.slug));
 
