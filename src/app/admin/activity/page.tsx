@@ -63,11 +63,21 @@ export default function ActivityPage() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    const session = localStorage.getItem("sw_admin_session");
-    const user = localStorage.getItem("sw_admin_user");
-    if (!session) { router.replace("/admin/login"); return; }
-    setAuthorized(true);
-    setAdminUser(user || "Admin");
+    const cached = localStorage.getItem("sw_admin_session");
+    const cachedUser = localStorage.getItem("sw_admin_user");
+    if (cached) {
+      setAuthorized(true);
+      setAdminUser(cachedUser || "Admin");
+      return;
+    }
+    fetch("/api/admin/data?type=ping", { credentials: "include" })
+      .then(async (res) => {
+        if (res.status === 401) { router.replace("/admin/login"); return; }
+        localStorage.setItem("sw_admin_session", "1");
+        setAuthorized(true);
+        setAdminUser("Admin");
+      })
+      .catch(() => { router.replace("/admin/login"); });
   }, [router]);
 
   useEffect(() => {

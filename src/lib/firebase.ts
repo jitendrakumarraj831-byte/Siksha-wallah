@@ -1,7 +1,7 @@
 
 import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
 import { getFirestore, Firestore } from "firebase/firestore";
-import { getAuth, Auth } from "firebase/auth";
+import { getAuth, Auth, browserLocalPersistence, setPersistence } from "firebase/auth";
 import { getStorage, FirebaseStorage } from "firebase/storage";
 
 const firebaseConfig = {
@@ -28,6 +28,10 @@ try {
   if (firebaseConfig.apiKey) {
     auth = getAuth(app);
     storage = getStorage(app);
+    // Explicitly persist auth state in localStorage so session survives page refreshes.
+    if (typeof window !== "undefined") {
+      setPersistence(auth, browserLocalPersistence).catch(() => {});
+    }
   }
 } catch (error) {
   console.error("Firebase initialization error:", error);
