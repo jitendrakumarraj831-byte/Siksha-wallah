@@ -169,7 +169,7 @@ export default function DashboardPage() {
             {[
               { href: '/dashboard/profile',   icon: User,        label: 'My Profile',  bg: 'bg-blue-500',   light: 'bg-blue-50'   },
               { href: '/courses',             icon: GraduationCap,label: 'Courses',    bg: 'bg-violet-500', light: 'bg-violet-50' },
-              { href: '/dashboard/documents', icon: FileText,    label: 'Documents',   bg: 'bg-green-500',  light: 'bg-green-50'  },
+              { href: '/dashboard/documents', icon: FileText,    label: 'Required Docs', bg: 'bg-green-500',  light: 'bg-green-50'  },
             ].map(({ href, icon: Icon, label, bg, light }) => (
               <Link key={href} href={href}
                 className={`group flex flex-col items-center gap-2.5 rounded-2xl ${light} border border-transparent p-4 text-center transition hover:shadow-md hover:border-gray-200`}>
