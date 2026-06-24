@@ -40,10 +40,10 @@ export async function GET(request: NextRequest) {
     if (!db) return NextResponse.json({ error: "DB unavailable" }, { status: 503 });
 
     // Query 1: applications explicitly linked to this user's UID
+    // No orderBy here — composite index not guaranteed; we sort in JS below
     const byUid = await db
       .collection("course_applications")
       .where("userId", "==", uid)
-      .orderBy("createdAt", "desc")
       .get();
 
     const seenIds = new Set<string>();
@@ -60,7 +60,6 @@ export async function GET(request: NextRequest) {
       const byEmail = await db
         .collection("course_applications")
         .where("email", "==", caller.email)
-        .orderBy("createdAt", "desc")
         .get();
 
       for (const d of byEmail.docs) {
