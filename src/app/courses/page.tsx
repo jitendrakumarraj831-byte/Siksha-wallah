@@ -204,7 +204,7 @@ function StreamSlider({ tab }: { tab: typeof streamTabs[0] }) {
   }, []);
 
   return (
-    <section className={`py-10 ${colors.sectionBg}`} id={tab.key}>
+    <section className={`py-10 ${colors.sectionBg} scroll-mt-20`} id={tab.key}>
       <div className="container-shell">
 
         {/* Stream header */}
