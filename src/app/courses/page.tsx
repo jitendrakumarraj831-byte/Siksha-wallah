@@ -27,7 +27,15 @@ function CourseCard({ course, streamKey }: { course: Course; streamKey: StreamKe
   const slug = getCourseSlug(course.name);
 
   return (
-    <div className="flex-shrink-0 w-[272px] sm:w-[288px] flex flex-col rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200">
+    <div className="group relative flex-shrink-0 w-[272px] sm:w-[288px] flex flex-col rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200 cursor-pointer">
+      {/* Whole-card click → course details (stretched link). Action buttons below sit above this via z-index. */}
+      {slug && (
+        <Link
+          href={`/courses/${slug}`}
+          aria-label={`${course.name} — ${course.full} की पूरी details देखें`}
+          className="absolute inset-0 z-10"
+        />
+      )}
       {/* Top accent */}
       <div className={`h-1.5 bg-gradient-to-r ${colors.accentBar}`} />
 
@@ -81,8 +89,8 @@ function CourseCard({ course, streamKey }: { course: Course; streamKey: StreamKe
           <p className="text-xs font-extrabold text-green-700">{course.salary}</p>
         </div>
 
-        {/* Action buttons */}
-        <div className="flex flex-col gap-1.5 mt-auto">
+        {/* Action buttons — raised above the stretched card link */}
+        <div className="relative z-20 flex flex-col gap-1.5 mt-auto">
           <div className="flex gap-1.5">
             <Link
               href={`/apply?course=${encodeURIComponent(course.name)}`}
