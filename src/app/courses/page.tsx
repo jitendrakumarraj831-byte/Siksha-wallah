@@ -1,259 +1,120 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect, useRef, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRef, useState } from "react";
 import {
-  Award, BadgeCheck, BookMarked, Briefcase, Building2, CheckCircle2,
-  ChevronDown, ChevronUp, Clock, CreditCard, FileText, MessageCircle,
-  ShieldCheck, Sparkles, Star, GraduationCap,
+  ChevronLeft, ChevronRight, Clock, CreditCard, CheckCircle2,
+  MessageCircle, GraduationCap, ArrowRight, Phone,
 } from "lucide-react";
 import { SiteNavbar } from "@/components/site-navbar";
 import { SiteFooter } from "@/components/site-footer";
-import { streamTabs, colorMap, getCourseSlug, type StreamKey } from "@/lib/courses-data";
+import { streamTabs, colorMap, getCourseSlug, type StreamKey, type Course } from "@/lib/courses-data";
 import { saveActivity } from "@/services/activity-service";
 
-/* ─── per-stream metadata ─────────────────────────────────────────────── */
-const STREAM_META: Record<StreamKey, {
-  approval: string;
-  tagline: string;
-  partnerNote: string;
-  partnerPoints: string[];
-}> = {
-  teaching: {
-    approval: "NCTE Approved",
-    tagline: "Build a respected teaching career — qualify for Bihar STET / BTET and government school roles.",
-    partnerNote: "हम केवल NCTE-Approved teacher training colleges के साथ काम करते हैं — Bihar (Patna, Purnea, Katihar) और West Bengal में।",
-    partnerPoints: [
-      "NCTE-approved B.Ed and D.El.Ed colleges across Patna, Purnea and Katihar",
-      "NCTE-recognised institutions in West Bengal for wider choice",
-      "100% support for Bihar Student Credit Card (BSCC) loan application",
-      "Regular and Distance mode — guidance for whichever suits your situation",
-    ],
-  },
-  medical: {
-    approval: "INC / PCI / NMC Approved",
-    tagline: "Begin your healthcare career — secure admission as a doctor, nurse or pharmacist.",
-    partnerNote: "हम INC, PCI और NMC-approved premier institutes के साथ partner हैं — Bangalore, MP, West Bengal और Bihar में।",
-    partnerPoints: [
-      "INC-approved Nursing colleges in Bangalore and West Bengal",
-      "PCI-approved Pharmacy institutes in Madhya Pradesh",
-      "NMC-approved medical colleges for MBBS/BAMS through NEET",
-      "Full guidance for NEET counselling and direct admission routes",
-    ],
-  },
-  paramedical: {
-    approval: "University / State Council Approved",
-    tagline: "Specialized healthcare roles — physiotherapy, radiology, lab tech, OT — without NEET.",
-    partnerNote: "हम state-approved और university-affiliated para medical colleges के साथ काम करते हैं — Bihar, Jharkhand और Madhya Pradesh में।",
-    partnerPoints: [
-      "State-approved para medical degree and diploma colleges across Bihar",
-      "University-affiliated colleges in Jharkhand and MP",
-      "No NEET required — 12th Biology (PCB) is sufficient for all courses",
-      "100% BSCC loan support for eligible para medical courses",
-    ],
-  },
-  law: {
-    approval: "BCI Approved",
-    tagline: "Become an advocate, corporate lawyer or civil judge — Bihar's most respected career path.",
-    partnerNote: "हम BCI (Bar Council of India) approved top law colleges के साथ काम करते हैं — Patna, Jharkhand और अन्य राज्यों में।",
-    partnerPoints: [
-      "BCI-approved law colleges in Patna, Muzaffarpur and Bhagalpur",
-      "CLAT guidance for Chanakya National Law University (CNLU) Patna",
-      "Both 3-year LLB and 5-year integrated BA.LLB / BBA.LLB available",
-      "BSCC loan support available for eligible law students",
-    ],
-  },
-  technical: {
-    approval: "AICTE / UGC Approved",
-    tagline: "Shape a future as an engineer, manager or IT professional — choose the right technical pathway.",
-    partnerNote: "हम AICTE और UGC recognised top universities के साथ partner हैं — Engineering, Management और Computer Applications के लिए।",
-    partnerPoints: [
-      "AICTE-approved B.Tech and Polytechnic colleges across India",
-      "UGC-recognised universities for BCA, MCA, BBA and MBA",
-      "Complete JEE / DCECE counselling guidance included",
-      "Distance mode also available through UGC-DEB approved programmes",
-    ],
-  },
+/* ─── per-stream taglines ─────────────────────────────────────────── */
+const STREAM_TAGLINES: Record<StreamKey, string> = {
+  teaching:    "सरकारी Teacher बनें — Bihar STET / CTET के साथ guaranteed career",
+  medical:     "Doctor · Nurse · Pharmacist — NEET से लेकर direct admission तक",
+  paramedical: "Lab · Physio · OT · Radiology — बिना NEET के healthcare career",
+  law:         "Advocate · Judge · Corporate Lawyer — BCI Approved colleges",
+  technical:   "Engineer · Software Developer · MBA — AICTE / UGC Approved",
 };
 
-/* ─── Course Card ─────────────────────────────────────────────────────── */
-function CourseCard({
-  course,
-  streamKey,
-  isExpanded,
-  onToggle,
-}: {
-  course: (typeof streamTabs)[0]["courses"][0];
-  streamKey: StreamKey;
-  isExpanded: boolean;
-  onToggle: () => void;
-}) {
-  const tab = streamTabs.find((s) => s.key === streamKey)!;
+/* ─── Course Card (inside slider) ────────────────────────────────── */
+function CourseCard({ course, streamKey }: { course: Course; streamKey: StreamKey }) {
+  const tab = streamTabs.find(s => s.key === streamKey)!;
   const colors = colorMap[tab.color];
+  const slug = getCourseSlug(course.name);
 
   return (
-    <div
-      className={`group relative rounded-2xl border bg-white overflow-hidden transition-all duration-200 ${
-        isExpanded
-          ? "border-gray-200 shadow-lg"
-          : "border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5"
-      }`}
-    >
-      {/* Colored top accent bar */}
-      <div className={`h-1.5 w-full bg-gradient-to-r ${colors.accentBar}`} />
+    <div className="flex-shrink-0 w-[272px] sm:w-[288px] flex flex-col rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200">
+      {/* Top accent */}
+      <div className={`h-1.5 bg-gradient-to-r ${colors.accentBar}`} />
 
-      <div className="p-5 md:p-6">
-        {/* Header row */}
-        <div className="flex items-start justify-between gap-2 mb-3">
-          <span className={`inline-flex items-center gap-1.5 text-xs font-black px-3 py-1 rounded-full ${colors.badge}`}>
-            <Award size={11} /> {course.name}
+      <div className="flex flex-col flex-1 p-5">
+        {/* Badges */}
+        <div className="flex items-center justify-between gap-2 mb-3">
+          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-black ${colors.badge}`}>
+            {course.name}
           </span>
           {course.bscc && (
-            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-green-700 bg-green-50 border border-green-200 px-2.5 py-1 rounded-full">
-              <CreditCard size={9} /> BSCC Loan
+            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded-full">
+              <CreditCard size={8} /> BSCC
             </span>
           )}
         </div>
 
-        <h3 className="font-headline text-lg font-extrabold text-gray-900 leading-snug mb-4">
+        {/* Full name */}
+        <h3 className="font-headline text-sm font-extrabold text-gray-900 leading-snug mb-3">
           {course.full}
         </h3>
 
-        {/* Info chips */}
-        <div className="flex flex-wrap gap-2 mb-3">
-          <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-100 rounded-lg px-2.5 py-1.5 text-xs text-gray-600">
-            <Clock size={11} className="text-gray-400" /> {course.duration}
-          </div>
-          <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-100 rounded-lg px-2.5 py-1.5 text-xs text-gray-600">
-            <CreditCard size={11} className="text-gray-400" /> {course.fee}
-          </div>
+        {/* Duration + Fee */}
+        <div className="flex flex-wrap gap-1.5 mb-3">
+          <span className="flex items-center gap-1 text-[11px] text-gray-500 bg-gray-50 border border-gray-100 rounded-lg px-2 py-1">
+            <Clock size={10} className="text-gray-400" /> {course.duration}
+          </span>
+          <span className="flex items-center gap-1 text-[11px] text-gray-500 bg-gray-50 border border-gray-100 rounded-lg px-2 py-1">
+            <CreditCard size={10} className="text-gray-400" /> {course.fee}
+          </span>
         </div>
 
-        <p className="text-xs text-gray-500 leading-relaxed">
-          <span className="font-semibold text-gray-700">Eligibility: </span>
+        {/* Eligibility */}
+        <p className="text-[11px] text-gray-500 leading-relaxed mb-3 line-clamp-2">
+          <span className="font-semibold text-gray-600">Eligibility: </span>
           {course.eligibility}
         </p>
 
-        {/* ── Expanded details ── */}
-        {isExpanded && (
-          <div className="mt-5 space-y-4 border-t border-gray-100 pt-4">
-            <div className="rounded-xl bg-blue-50 border border-blue-100 p-3">
-              <div className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-blue-600">
-                <Star size={12} /> Key Highlights
-              </div>
-              <ul className="space-y-1">
-                {course.highlights.map((h, i) => (
-                  <li key={i} className="flex items-start gap-1.5 text-xs text-blue-800">
-                    <CheckCircle2 size={12} className="mt-0.5 flex-shrink-0 text-blue-500" /> {h}
-                  </li>
-                ))}
-              </ul>
-            </div>
+        {/* Top 3 highlights */}
+        <ul className="space-y-1 mb-4 flex-1">
+          {course.highlights.slice(0, 3).map((h, i) => (
+            <li key={i} className="flex items-start gap-1.5 text-[11px] text-gray-600">
+              <CheckCircle2 size={11} className={`mt-0.5 flex-shrink-0 ${colors.checkColor}`} />
+              {h}
+            </li>
+          ))}
+        </ul>
 
-            <div className="rounded-xl bg-amber-50 border border-amber-200 p-3">
-              <div className="mb-1.5 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-600">
-                <Sparkles size={12} /> हिंदी में जानें
-              </div>
-              <p className="text-sm leading-relaxed text-amber-900">{course.hindiDesc}</p>
-            </div>
-
-            <div className="flex items-start gap-2">
-              <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-green-100">
-                <Award size={13} className="text-green-600" />
-              </div>
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Expected Salary</p>
-                <p className="text-sm font-bold text-green-700">{course.salary}</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-2">
-              <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100">
-                <FileText size={13} className="text-blue-600" />
-              </div>
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Entrance Exam</p>
-                <p className="text-sm leading-relaxed text-gray-700">{course.entranceExam}</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-2">
-              <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-red-100">
-                <ShieldCheck size={13} className="text-red-600" />
-              </div>
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Government Jobs</p>
-                <p className="text-sm leading-relaxed text-gray-700">{course.govtJobs}</p>
-              </div>
-            </div>
-
-            <div>
-              <div className="mb-2 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">
-                <Building2 size={12} /> Top Colleges
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                {course.topColleges.map((c, i) => (
-                  <span key={i} className="rounded-lg bg-gray-100 px-2 py-1 text-xs font-semibold text-gray-700">{c}</span>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <div className="mb-1.5 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">
-                <Briefcase size={12} /> Career Scope
-              </div>
-              <p className="text-sm leading-relaxed text-gray-700">{course.careerScope}</p>
-            </div>
-
-            <div>
-              <div className="mb-1.5 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">
-                <BookMarked size={12} /> Study Mode
-              </div>
-              <p className="text-sm leading-relaxed text-gray-700">{course.mode}</p>
-            </div>
-
-            {course.bscc && (
-              <div className="rounded-xl bg-green-50 border border-green-200 p-3 flex items-start gap-2">
-                <CreditCard size={15} className="mt-0.5 flex-shrink-0 text-green-600" />
-                <p className="text-xs text-green-700 font-semibold">
-                  Eligible for Bihar Student Credit Card (BSCC) — up to ₹4 Lakh education loan at 4% interest. Our team guides you through the complete application, end to end.
-                </p>
-              </div>
-            )}
-          </div>
-        )}
+        {/* Salary */}
+        <div className="mb-4 rounded-lg bg-gray-50 border border-gray-100 px-3 py-2">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-0.5">Expected Salary</p>
+          <p className="text-xs font-extrabold text-green-700">{course.salary}</p>
+        </div>
 
         {/* Action buttons */}
-        <div className="mt-5 flex flex-col gap-2">
-          {/* Primary row: Apply + Details */}
-          <div className="flex gap-2">
+        <div className="flex flex-col gap-1.5 mt-auto">
+          <div className="flex gap-1.5">
             <Link
               href={`/apply?course=${encodeURIComponent(course.name)}`}
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#dc143c] py-2.5 text-sm font-bold text-white transition hover:bg-red-700"
+              className="flex flex-1 items-center justify-center gap-1 rounded-xl bg-[#dc143c] py-2.5 text-xs font-bold text-white hover:bg-red-700 transition"
             >
-              <GraduationCap size={14} /> Apply Now
+              <GraduationCap size={12} /> Apply
             </Link>
-            <button
-              onClick={onToggle}
-              className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl border-2 py-2.5 text-sm font-bold transition ${
-                isExpanded
-                  ? 'border-gray-300 bg-gray-50 text-gray-700'
-                  : 'border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50'
-              }`}
-            >
-              {isExpanded ? <><ChevronUp size={14} /> Less</> : <><ChevronDown size={14} /> Details</>}
-            </button>
+            {slug ? (
+              <Link
+                href={`/courses/${slug}`}
+                className={`flex flex-1 items-center justify-center gap-1 rounded-xl py-2.5 text-xs font-bold text-white transition bg-gradient-to-r ${colors.gradient}`}
+              >
+                Details <ArrowRight size={11} />
+              </Link>
+            ) : (
+              <a
+                href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(course.name)}%20के%20बारे%20में%20जानकारी%20चाहिए।`}
+                target="_blank" rel="noopener noreferrer"
+                onClick={() => saveActivity({ type: 'whatsapp', title: `💬 WhatsApp — ${course.name}`, description: course.full, page: '/courses' })}
+                className="flex flex-1 items-center justify-center gap-1 rounded-xl border-2 border-green-500 py-2.5 text-xs font-bold text-green-700 hover:bg-green-500 hover:text-white transition"
+              >
+                <MessageCircle size={11} /> Enquire
+              </a>
+            )}
           </div>
-          {/* Secondary: WhatsApp */}
           <a
-            href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(course.name)}%20(${encodeURIComponent(course.full)})%20के%20बारे%20में%20जानकारी%20चाहिए।%20Fees%20aur%20admission%20process%20batayein।`}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => saveActivity({ type: 'whatsapp', title: `💬 WhatsApp — Course: ${course.name}`, description: `Enquiry for ${course.full}`, page: '/courses' })}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-green-500 py-2.5 text-sm font-bold text-green-700 transition hover:bg-green-500 hover:text-white"
+            href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(course.name)}%20(${encodeURIComponent(course.full)})%20के%20बारे%20में%20fees%20aur%20admission%20की%20जानकारी%20चाहिए।`}
+            target="_blank" rel="noopener noreferrer"
+            onClick={() => saveActivity({ type: 'whatsapp', title: `💬 WhatsApp — ${course.name}`, description: course.full, page: '/courses' })}
+            className="flex items-center justify-center gap-1.5 rounded-xl border border-green-200 bg-green-50 py-2 text-[11px] font-bold text-green-700 hover:bg-green-500 hover:text-white transition"
           >
-            <MessageCircle size={15} /> WhatsApp पर पूछें
+            <MessageCircle size={11} /> WhatsApp पर पूछें
           </a>
         </div>
       </div>
@@ -261,271 +122,221 @@ function CourseCard({
   );
 }
 
-/* ─── Main page ──────────────────────────────────────────────────────── */
-function CoursesInner() {
-  const searchParams = useSearchParams();
-  const [activeStream, setActiveStream] = useState<StreamKey>("teaching");
-  const [expandedCard, setExpandedCard] = useState<string | null>(null);
-  const contentRef = useRef<HTMLElement | null>(null);
-  const tabBarRef = useRef<HTMLDivElement>(null);
+/* ─── Stream Slider Section ───────────────────────────────────────── */
+function StreamSlider({ tab }: { tab: typeof streamTabs[0] }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [atStart, setAtStart] = useState(true);
+  const [atEnd, setAtEnd] = useState(false);
+  const colors = colorMap[tab.color];
+  const Icon = tab.icon;
 
-  /* ?stream= param from hero / external link */
-  useEffect(() => {
-    const s = searchParams.get("stream") as StreamKey | null;
-    const validKeys = streamTabs.map((t) => t.key);
-    if (s && validKeys.includes(s)) setActiveStream(s);
-  }, [searchParams]);
+  const CARD_WIDTH = 288 + 16; // card width + gap
 
-  /* Reset expanded card when stream changes */
-  useEffect(() => {
-    setExpandedCard(null);
-  }, [activeStream]);
-
-  function handleStreamSelect(key: StreamKey) {
-    setActiveStream(key);
-    /* Scroll to content on mobile when picking from the visual picker */
-    if (contentRef.current && window.scrollY < 300) {
-      const tabH = tabBarRef.current?.offsetHeight ?? 64;
-      const top = contentRef.current.getBoundingClientRect().top + window.scrollY - tabH - 16;
-      window.scrollTo({ top, behavior: "smooth" });
-    }
+  function scroll(dir: "left" | "right") {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir === "left" ? -CARD_WIDTH * 2 : CARD_WIDTH * 2, behavior: "smooth" });
   }
 
-  const activeTab = streamTabs.find((t) => t.key === activeStream)!;
-  const meta = STREAM_META[activeStream];
-  const colors = colorMap[activeTab.color];
+  function onScroll() {
+    const el = scrollRef.current;
+    if (!el) return;
+    setAtStart(el.scrollLeft <= 8);
+    setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 8);
+  }
 
+  return (
+    <section className={`py-10 ${colors.sectionBg}`} id={tab.key}>
+      <div className="container-shell">
+
+        {/* Stream header */}
+        <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
+          <div className="flex items-center gap-3">
+            <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${colors.gradient} text-white shadow-md`}>
+              <Icon size={22} />
+            </div>
+            <div>
+              <h2 className="font-headline text-xl font-extrabold text-gray-900">{tab.label}</h2>
+              <p className="text-xs text-gray-500 max-w-xs">{STREAM_TAGLINES[tab.key as StreamKey]}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-extrabold text-white bg-gradient-to-r ${colors.gradient}`}>
+              {tab.courses.length} Courses
+            </span>
+            {/* Scroll arrows */}
+            <button
+              onClick={() => scroll("left")}
+              disabled={atStart}
+              aria-label="Scroll left"
+              className={`flex h-9 w-9 items-center justify-center rounded-full border-2 transition ${
+                atStart
+                  ? "border-gray-200 text-gray-300 cursor-not-allowed"
+                  : "border-gray-300 text-gray-700 hover:border-gray-500 hover:bg-white shadow-sm"
+              }`}
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <button
+              onClick={() => scroll("right")}
+              disabled={atEnd}
+              aria-label="Scroll right"
+              className={`flex h-9 w-9 items-center justify-center rounded-full border-2 transition ${
+                atEnd
+                  ? "border-gray-200 text-gray-300 cursor-not-allowed"
+                  : `border-gray-300 text-gray-700 hover:text-white hover:bg-gradient-to-br ${colors.gradient} hover:border-transparent shadow-sm`
+              }`}
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
+        </div>
+
+        {/* Slider */}
+        <div className="relative">
+          {/* Left fade */}
+          {!atStart && (
+            <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-12 bg-gradient-to-r from-white/80 to-transparent" />
+          )}
+          {/* Right fade */}
+          {!atEnd && (
+            <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-12 bg-gradient-to-l from-white/80 to-transparent" />
+          )}
+
+          <div
+            ref={scrollRef}
+            onScroll={onScroll}
+            className="flex gap-4 overflow-x-auto pb-3 scroll-smooth"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            {tab.courses.map(course => (
+              <CourseCard key={course.name} course={course} streamKey={tab.key as StreamKey} />
+            ))}
+
+            {/* End CTA card */}
+            <div className={`flex-shrink-0 w-[220px] flex flex-col items-center justify-center gap-4 rounded-2xl bg-gradient-to-br ${colors.gradient} p-6 text-center text-white shadow-sm`}>
+              <Icon size={32} className="opacity-80" />
+              <div>
+                <p className="font-extrabold text-sm leading-snug">और भी courses देखें?</p>
+                <p className="text-[11px] text-white/75 mt-1">हमारे counsellor से बात करें</p>
+              </div>
+              <a
+                href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(tab.label)}%20के%20लिए%20admission%20guidance%20चाहिए।`}
+                target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-1.5 rounded-xl bg-white/20 border border-white/40 px-4 py-2 text-xs font-bold hover:bg-white/30 transition"
+              >
+                <MessageCircle size={13} /> WhatsApp
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Scroll hint (mobile only) */}
+        <p className="mt-2 text-center text-[11px] text-gray-400 sm:hidden">
+          ← Swipe to explore all {tab.courses.length} courses →
+        </p>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Main Page ──────────────────────────────────────────────────── */
+export default function CoursesPage() {
   const totalCourses = streamTabs.reduce((s, t) => s + t.courses.length, 0);
 
   return (
     <main className="bg-white text-gray-900">
       <SiteNavbar />
 
-      {/* ── HERO ──────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] text-white py-16 md:py-24">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.07]"
-          style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }}
-        />
-        <div className="pointer-events-none absolute -top-40 -right-32 h-[480px] w-[480px] rounded-full bg-amber-400 opacity-[0.10] blur-3xl" />
+      {/* ── HERO ──────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] text-white py-14 md:py-20">
+        <div className="pointer-events-none absolute inset-0 opacity-[0.07]"
+          style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+        <div className="pointer-events-none absolute -top-40 -right-32 h-[480px] w-[480px] rounded-full bg-amber-400 opacity-10 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-blue-500 opacity-[0.13] blur-3xl" />
 
         <div className="container-shell text-center">
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/[0.1] px-4 py-2">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/10 px-4 py-2">
             <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
-            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Session 2026–27</span>
+            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Session 2026–27 · Admissions Open</span>
           </div>
 
-          <h1 className="font-headline text-[2.5rem] font-black leading-[1.08] tracking-tight md:text-6xl lg:text-[4rem]">
-            <span className="block text-white [text-shadow:0_2px_20px_rgba(255,255,255,0.15)]">Choose the Right Course</span>
-            <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">for a Confident Career</span>
+          <h1 className="font-headline font-black leading-[1.08] tracking-tight">
+            <span className="block text-white text-3xl md:text-5xl">Choose Your Career Stream</span>
+            <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent text-4xl md:text-6xl mt-1">
+              {totalCourses}+ Verified Courses
+            </span>
           </h1>
-          <div className="mx-auto mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-40" />
+          <div className="mx-auto mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent" />
 
-          <p className="mt-6 max-w-2xl mx-auto text-blue-100 text-lg">
-            Teaching, Medical, Para Medical, Law, Engineering और Management —{" "}
-            <span className="font-bold text-white">{totalCourses}+ verified courses</span>, अनुभवी काउंसलर के साथ।
+          <p className="mt-5 text-blue-100 text-base max-w-xl mx-auto">
+            Teaching, Medical, Para Medical, Law, और Technical — सभी streams एक जगह।
+            हर course पर <span className="font-bold text-white">Free Counselling + BSCC Loan Guidance</span>।
           </p>
 
-          {/* Stream stats row */}
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            {streamTabs.map(({ key, label, icon: Icon, courses, color }) => (
-              <button
-                key={key}
-                onClick={() => handleStreamSelect(key)}
-                className="inline-flex items-center gap-2 rounded-2xl border-2 border-white/20 bg-white/[0.08] px-4 py-2.5 text-sm font-bold text-white backdrop-blur transition hover:bg-white/[0.16] hover:-translate-y-0.5"
-              >
-                <Icon size={15} />
-                <span className="hidden sm:inline">{label}</span>
-                <span className="sm:hidden">{key === "paramedical" ? "Para Med" : label.split(" ")[0]}</span>
-                <span className="rounded-full bg-white/20 px-1.5 py-0.5 text-[10px] font-black">{courses.length}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── STICKY COMPACT TAB BAR ────────────────────────────────── */}
-      <div ref={tabBarRef} className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
-        <div className="container-shell py-2">
-          <div className="flex gap-1.5 overflow-x-auto no-scrollbar py-1">
+          {/* Stream jump links */}
+          <div className="mt-8 flex flex-wrap justify-center gap-2">
             {streamTabs.map(({ key, label, shortLabel, icon: Icon, color, courses }) => {
-              const isActive = activeStream === key;
               const c = colorMap[color];
               return (
-                <button
+                <a
                   key={key}
-                  onClick={() => setActiveStream(key)}
-                  className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-xs font-bold transition-all duration-200 ${
-                    isActive
-                      ? `bg-gradient-to-r ${c.gradient} text-white shadow-sm`
-                      : "text-gray-500 hover:text-gray-800 hover:bg-gray-100"
-                  }`}
+                  href={`#${key}`}
+                  className={`inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/[0.08] px-4 py-2.5 text-sm font-bold text-white backdrop-blur transition hover:bg-white/[0.18] hover:-translate-y-0.5 active:translate-y-0`}
                 >
-                  <Icon size={13} />
+                  <Icon size={15} />
                   <span className="hidden sm:inline">{label}</span>
                   <span className="sm:hidden">{shortLabel}</span>
-                  <span className={`rounded-full px-1.5 py-0.5 text-[9px] font-black ${
-                    isActive ? "bg-white/25 text-white" : "bg-gray-100 text-gray-400"
-                  }`}>
-                    {courses.length}
-                  </span>
-                </button>
+                  <span className="rounded-full bg-white/20 px-1.5 py-0.5 text-[10px] font-black">{courses.length}</span>
+                </a>
               );
             })}
           </div>
-        </div>
-      </div>
 
-      {/* ── ACTIVE STREAM CONTENT ─────────────────────────────────── */}
-      <section
-        ref={contentRef}
-        className={`py-12 md:py-18 ${colors.sectionBg} transition-all duration-300`}
-      >
-        <div className="container-shell">
-
-          {/* Stream header card */}
-          <div className={`mb-8 rounded-2xl bg-gradient-to-r ${colors.gradient} p-7 text-white shadow-xl`}>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 border border-white/30 px-3 py-1 text-xs font-bold text-white">
-                    <BadgeCheck size={12} /> {meta.approval}
-                  </span>
-                </div>
-                <h2 className="font-headline text-2xl md:text-3xl font-extrabold flex items-center gap-3">
-                  {(() => { const Icon = activeTab.icon; return <Icon size={28} className="opacity-90" />; })()}
-                  {activeTab.label}
-                </h2>
-                <p className="mt-1.5 text-sm text-white/85 max-w-xl">{meta.tagline}</p>
-              </div>
-              <div className="flex flex-col items-start sm:items-end gap-1 shrink-0">
-                <span className="text-5xl font-black">{activeTab.courses.length}</span>
-                <span className="text-xs font-semibold text-white/70">Verified Courses</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Partner info banner */}
-          <div className={`mb-8 rounded-2xl border-2 ${colors.pointBorder} bg-white p-5 shadow-sm`}>
-            <div className="flex flex-col sm:flex-row sm:items-start gap-3">
-              <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${colors.gradient} text-white`}>
-                <Building2 size={18} />
-              </div>
-              <div className="flex-1">
-                <p className={`text-sm ${colors.pointText} mb-3`}>{meta.partnerNote}</p>
-                <div className="grid gap-2 sm:grid-cols-2">
-                  {meta.partnerPoints.map((pt, i) => (
-                    <div
-                      key={i}
-                      className={`flex items-start gap-2 rounded-lg bg-gray-50 border ${colors.pointBorder} px-3 py-2 text-xs ${colors.pointText} font-medium`}
-                    >
-                      <CheckCircle2 size={12} className={`mt-0.5 flex-shrink-0 ${colors.checkColor}`} /> {pt}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Course cards grid */}
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {activeTab.courses.map((course) => (
-              <CourseCard
-                key={course.name}
-                course={course}
-                streamKey={activeStream}
-                isExpanded={expandedCard === `${activeStream}-${course.name}`}
-                onToggle={() =>
-                  setExpandedCard(
-                    expandedCard === `${activeStream}-${course.name}`
-                      ? null
-                      : `${activeStream}-${course.name}`,
-                  )
-                }
-              />
+          {/* Stats */}
+          <div className="mt-8 flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm text-blue-200 font-semibold">
+            {[
+              `${totalCourses}+ Verified Courses`,
+              "200+ Partner Colleges",
+              "100% Free Counselling",
+              "5,000+ Students Guided",
+            ].map(s => (
+              <span key={s} className="flex items-center gap-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-amber-400" /> {s}
+              </span>
             ))}
           </div>
-
-          {/* Bottom stream CTA */}
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border-2 border-dashed border-gray-200 bg-white px-6 py-5">
-            <div>
-              <p className="font-bold text-gray-800">Looking for admission in {activeTab.label}?</p>
-              <p className="text-sm text-gray-500">
-                हमारे अनुभवी counsellors आपके अंक, बजट और लक्ष्य के अनुसार सही college चुनने में मदद करेंगे — पूरी प्रक्रिया 100% निःशुल्क।
-              </p>
-            </div>
-            <a
-              href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(activeTab.label)}%20के%20लिए%20admission%20guidance%20चाहिए।%20Please%20help%20karein।`}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => saveActivity({ type: 'whatsapp', title: `💬 WhatsApp — Stream: ${activeTab.label}`, description: `Stream-level counselling enquiry`, page: '/courses' })}
-              className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-green-500 px-6 py-3 text-sm font-extrabold text-white transition hover:bg-green-600"
-            >
-              <MessageCircle size={16} /> Speak to a Counsellor
-            </a>
-          </div>
         </div>
       </section>
 
-      {/* ── OTHER STREAMS QUICK LINKS ─────────────────────────────── */}
-      <section className="bg-gray-900 py-10">
-        <div className="container-shell">
-          <p className="text-center text-xs font-bold uppercase tracking-widest text-gray-400 mb-6">
-            Explore Other Streams
-          </p>
-          <div className="flex flex-wrap justify-center gap-3">
-            {streamTabs
-              .filter((t) => t.key !== activeStream)
-              .map(({ key, label, icon: Icon, color, courses }) => {
-                const c = colorMap[color];
-                return (
-                  <button
-                    key={key}
-                    onClick={() => {
-                      setActiveStream(key);
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                    }}
-                    className="flex items-center gap-2.5 rounded-2xl border border-gray-700 bg-gray-800 px-5 py-3 text-sm font-bold text-gray-200 transition hover:bg-gray-700 hover:text-white hover:border-gray-500"
-                  >
-                    <span className={`flex h-7 w-7 items-center justify-center rounded-lg ${c.icon}`}>
-                      <Icon size={14} />
-                    </span>
-                    {label}
-                    <span className="rounded-full bg-gray-700 px-2 py-0.5 text-[10px] font-black text-gray-300">
-                      {courses.length}
-                    </span>
-                  </button>
-                );
-              })}
-          </div>
-        </div>
-      </section>
+      {/* ── 5 STREAM SLIDERS ──────────────────────────────────── */}
+      {streamTabs.map((tab, i) => (
+        <StreamSlider key={tab.key} tab={tab} />
+      ))}
 
-      {/* ── FINAL CTA ─────────────────────────────────────────────── */}
+      {/* ── FINAL CTA ──────────────────────────────────────────── */}
       <section className="bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] py-14 text-white text-center">
         <div className="container-shell">
-          <h2 className="font-headline text-3xl font-extrabold mb-3">
-            Still confused about which course is right for you?
+          <h2 className="font-headline text-2xl md:text-3xl font-extrabold mb-3">
+            कौन सा course सही है — अभी जानें
           </h2>
-          <p className="text-blue-100 mb-7 max-w-xl mx-auto">
-            हमारे अनुभवी काउंसलर आपके अंक, बजट और career लक्ष्यों को समझकर सबसे उपयुक्त course और college की सलाह देंगे — पूरी प्रक्रिया 100% निःशुल्क।
+          <p className="text-blue-100 mb-7 max-w-xl mx-auto text-sm">
+            हमारे counsellors आपकी marks, budget और career goal के हिसाब से सही course और college suggest करेंगे — पूरी process 100% free।
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a
-              href="https://wa.me/916203138576?text=नमस्ते!%20मुझे%20सही%20course%20choose%20करने%20में%20guidance%20चाहिए।%20Please%20help%20karein।"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-400 px-7 py-4 font-extrabold text-gray-900 transition hover:bg-amber-300"
+              href="https://wa.me/916203138576?text=नमस्ते!%20मुझे%20सही%20course%20choose%20करने%20में%20guidance%20चाहिए।"
+              target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-400 px-7 py-4 font-extrabold text-gray-900 hover:bg-amber-300 transition"
             >
-              <MessageCircle size={18} /> Get Free Course Counselling
+              <MessageCircle size={18} /> Free Counselling — WhatsApp
             </a>
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white/40 bg-white/10 px-7 py-4 font-bold text-white transition hover:bg-white/20"
+            <a
+              href="tel:+916203138576"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-white/40 bg-white/10 px-7 py-4 font-bold text-white hover:bg-white/20 transition"
             >
-              Visit Our Office →
-            </Link>
+              <Phone size={18} /> Call +91 62031 38576
+            </a>
           </div>
         </div>
       </section>
@@ -534,22 +345,13 @@ function CoursesInner() {
 
       {/* Floating WhatsApp */}
       <a
-        href="https://wa.me/916203138576?text=नमस्ते!%20मुझे%20Siksha%20Wallah%20से%20admission%20guidance%20चाहिए।%20Please%20contact%20karein।"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-lg shadow-green-500/40 transition hover:bg-green-600 hover:scale-110"
+        href="https://wa.me/916203138576?text=नमस्ते!%20मुझे%20course%20admission%20के%20बारे%20में%20guidance%20चाहिए।"
+        target="_blank" rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-lg shadow-green-500/40 hover:bg-green-600 hover:scale-110 transition"
         aria-label="WhatsApp"
       >
         <MessageCircle size={26} />
       </a>
     </main>
-  );
-}
-
-export default function CoursesPage() {
-  return (
-    <Suspense fallback={null}>
-      <CoursesInner />
-    </Suspense>
   );
 }
