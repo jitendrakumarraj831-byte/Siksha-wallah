@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, useRef, useEffect } from "react";
-import { createPortal } from "react-dom";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { saveInquiry } from "@/services/inquiry-service";
 import { saveActivity } from "@/services/activity-service";
 import {
@@ -307,49 +306,42 @@ export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
   const faqSliderRef = useRef<HTMLDivElement>(null);
+  const autoSlideTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const userInteracting = useRef(false);
 
-  // Portal needs the DOM to exist (avoids SSR mismatch)
   useEffect(() => setMounted(true), []);
 
-  // Auto-slide for the FAQ question carousel — pauses on interaction & when a Q&A modal is open
+  // Lock body scroll when modal is open (prevents iOS safari modal issues)
   useEffect(() => {
-    const slider = faqSliderRef.current;
-    if (!slider) return;
-
-    let timer: ReturnType<typeof setInterval> | null = null;
-    let paused = false;
-
-    const step = () => {
-      if (paused || openFaq !== null) return;
-      const card = slider.querySelector("button") as HTMLElement | null;
-      const cardWidth = card?.offsetWidth ?? 280;
-      const gap = 16;
-      const maxScroll = slider.scrollWidth - slider.clientWidth - 2;
-      const next = slider.scrollLeft + cardWidth + gap;
-      slider.scrollTo({ left: next >= maxScroll ? 0 : next, behavior: "smooth" });
-    };
-
-    const start = () => {
-      if (timer) clearInterval(timer);
-      timer = setInterval(step, 3200);
-    };
-    const pause = () => { paused = true; };
-    const resume = () => { paused = false; };
-
-    start();
-    // Pause while the user is actively touching/dragging, resume shortly after
-    slider.addEventListener("touchstart", pause, { passive: true });
-    slider.addEventListener("touchend", () => setTimeout(resume, 2500), { passive: true });
-    slider.addEventListener("mouseenter", pause);
-    slider.addEventListener("mouseleave", resume);
-
-    return () => {
-      if (timer) clearInterval(timer);
-      slider.removeEventListener("touchstart", pause);
-      slider.removeEventListener("mouseenter", pause);
-      slider.removeEventListener("mouseleave", resume);
-    };
+    if (openFaq !== null) {
+      document.body.style.setProperty("overflow", "hidden", "important");
+    } else {
+      document.body.style.removeProperty("overflow");
+    }
+    return () => { document.body.style.removeProperty("overflow"); };
   }, [openFaq]);
+
+  const startAutoSlide = useCallback(() => {
+    if (autoSlideTimer.current) clearInterval(autoSlideTimer.current);
+    autoSlideTimer.current = setInterval(() => {
+      const slider = faqSliderRef.current;
+      if (!slider || userInteracting.current) return;
+      const card = slider.querySelector("button") as HTMLElement | null;
+      const cardWidth = (card?.offsetWidth ?? 280) + 16; // +gap
+      const maxScroll = slider.scrollWidth - slider.clientWidth - 2;
+      // instant scroll so mobile doesn't suppress taps during animation
+      slider.scrollLeft = slider.scrollLeft + cardWidth >= maxScroll ? 0 : slider.scrollLeft + cardWidth;
+    }, 3000);
+  }, []);
+
+  useEffect(() => {
+    if (openFaq !== null) {
+      if (autoSlideTimer.current) clearInterval(autoSlideTimer.current);
+      return;
+    }
+    startAutoSlide();
+    return () => { if (autoSlideTimer.current) clearInterval(autoSlideTimer.current); };
+  }, [openFaq, startAutoSlide]);
   const [checkedDocs, setCheckedDocs] = useState<Record<string, boolean>>({});
   const [bsccEligible, setBsccEligible] = useState<null | boolean>(null);
   const [bsccIncome, setBsccIncome] = useState("");
@@ -429,6 +421,7 @@ export default function Home() {
   }
 
   return (
+    <>
     <main className="bg-white text-gray-900">
 
       <SiteNavbar />
@@ -1901,13 +1894,25 @@ export default function Home() {
               <p className="mb-3 flex items-center gap-1.5 text-xs font-semibold text-gray-400">
                 <ArrowRight size={13} className="text-[#003f9f]" /> Swipe करें · किसी भी सवाल पर tap करके पूरा जवाब देखें
               </p>
-              <div ref={faqSliderRef} className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 lg:mx-0 lg:px-0">
+              <div
+                ref={faqSliderRef}
+                className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 lg:mx-0 lg:px-0"
+                onTouchStart={() => { userInteracting.current = true; }}
+                onTouchEnd={() => { setTimeout(() => { userInteracting.current = false; }, 2000); }}
+                onMouseEnter={() => { userInteracting.current = true; }}
+                onMouseLeave={() => { userInteracting.current = false; }}
+              >
                 {faqs.map(({ q }, i) => {
                   const s = getFaqStyle(i);
                   return (
                     <button
                       key={i}
+                      onPointerDown={(e) => {
+                        // Fire immediately on touch (no 300ms delay, no scroll suppression)
+                        if (e.pointerType === "touch") { e.currentTarget.releasePointerCapture(e.pointerId); setOpenFaq(i); }
+                      }}
                       onClick={() => setOpenFaq(i)}
+                      style={{ touchAction: "manipulation" }}
                       className={`group flex w-[80%] flex-shrink-0 snap-start flex-col rounded-2xl border-2 ${s.border} bg-white p-5 text-left shadow-sm transition hover:-translate-y-1 hover:shadow-lg sm:w-[300px]`}
                     >
                       <div className="mb-3 flex items-center justify-between gap-2">
@@ -2128,11 +2133,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── FAQ Q&A Modal (portaled to <body> so fixed positioning is never trapped) ── */}
-      {mounted && openFaq !== null && faqs[openFaq] && createPortal(
+      <SiteFooter />
+    </main>
+
+    {/* ── FAQ Q&A Modal — sibling of <main> so NO ancestor has overflow/clip/contain/transform ── */}
+    {mounted && openFaq !== null && faqs[openFaq] && (
         <div
-          className="fixed inset-0 z-[100] flex items-end justify-center bg-black/60 p-4 backdrop-blur-sm sm:items-center"
           onClick={() => setOpenFaq(null)}
+          style={{
+            position: "fixed", inset: 0, zIndex: 9999,
+            display: "flex", alignItems: "flex-end", justifyContent: "center",
+            padding: "16px", backgroundColor: "rgba(0,0,0,0.65)",
+            WebkitBackdropFilter: "blur(4px)", backdropFilter: "blur(4px)",
+          }}
         >
           <div
             className="relative max-h-[88vh] w-full max-w-xl overflow-hidden rounded-2xl bg-white shadow-2xl"
@@ -2200,11 +2213,8 @@ export default function Home() {
               </button>
             </div>
           </div>
-        </div>,
-        document.body
+        </div>
       )}
-
-      <SiteFooter />
-    </main>
+    </>
   );
 }
