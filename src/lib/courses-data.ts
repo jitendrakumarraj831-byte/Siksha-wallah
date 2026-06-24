@@ -795,3 +795,59 @@ export const faqs = [
     a: "नहीं! Siksha Wallah की काउंसलिंग, course guidance, BSCC application सहायता, और college selection — सब बिल्कुल निःशुल्क है। हम सीधे colleges के साथ काम करते हैं। कोई बिचौलिया नहीं, कोई छिपा हुआ शुल्क नहीं। अगर कोई हमारे नाम पर पैसे मांगे तो तुरंत हमसे संपर्क करें।",
   },
 ];
+
+// ── Course ID → Course data map ───────────────────────────────────────────────
+export const COURSE_ID_MAP: Record<string, { course: Course; stream: StreamKey }> = {
+  // Teaching
+  'bed':          { course: teachingCourses[0], stream: 'teaching' },
+  'deled':        { course: teachingCourses[1], stream: 'teaching' },
+  'bped':         { course: teachingCourses[2], stream: 'teaching' },
+  'med':          { course: teachingCourses[3], stream: 'teaching' },
+  // Medical
+  'mbbs':         { course: medicalCourses[0], stream: 'medical' },
+  'bams':         { course: medicalCourses[1], stream: 'medical' },
+  'bds':          { course: medicalCourses[2], stream: 'medical' },
+  'bsc-nursing':  { course: medicalCourses[3], stream: 'medical' },
+  'gnm':          { course: medicalCourses[4], stream: 'medical' },
+  'anm':          { course: medicalCourses[5], stream: 'medical' },
+  'dpharma':      { course: medicalCourses[6], stream: 'medical' },
+  'bmlt':         { course: medicalCourses[7], stream: 'medical' },
+  'bpharma':      { course: medicalCourses[8], stream: 'medical' },
+  // Technical
+  'btech':        { course: technicalCourses[0], stream: 'technical' },
+  'polytechnic':  { course: technicalCourses[1], stream: 'technical' },
+  'iti':          { course: technicalCourses[2], stream: 'technical' },
+  'bca':          { course: technicalCourses[3], stream: 'technical' },
+  'mca':          { course: technicalCourses[4], stream: 'technical' },
+  'bba':          { course: technicalCourses[5], stream: 'technical' },
+  'mba':          { course: technicalCourses[6], stream: 'technical' },
+  // Paramedical
+  'bpt':          { course: paramedicalCourses[0],  stream: 'paramedical' },
+  'bott':         { course: paramedicalCourses[1],  stream: 'paramedical' },
+  'brit':         { course: paramedicalCourses[2],  stream: 'paramedical' },
+  'bmlt-para':    { course: paramedicalCourses[3],  stream: 'paramedical' },
+  'bot':          { course: paramedicalCourses[4],  stream: 'paramedical' },
+  'bsc-biotech':  { course: paramedicalCourses[5],  stream: 'paramedical' },
+  'hospital-mgmt':{ course: paramedicalCourses[6],  stream: 'paramedical' },
+  'dmlt':         { course: paramedicalCourses[7],  stream: 'paramedical' },
+  'dota':         { course: paramedicalCourses[8],  stream: 'paramedical' },
+  'dmr':          { course: paramedicalCourses[9],  stream: 'paramedical' },
+  'opt':          { course: paramedicalCourses[10], stream: 'paramedical' },
+  'ofcg':         { course: paramedicalCourses[11], stream: 'paramedical' },
+  'dresser':      { course: paramedicalCourses[12], stream: 'paramedical' },
+  // Law
+  'llb':          { course: lawCourses[0], stream: 'law' },
+  'ba-llb':       { course: lawCourses[1], stream: 'law' },
+  'bba-llb':      { course: lawCourses[2], stream: 'law' },
+  'llm':          { course: lawCourses[3], stream: 'law' },
+};
+
+// Helper: resolve course name to its URL slug
+export function getCourseSlug(name: string): string | null {
+  const lower = name.toLowerCase().replace(/[\s.]/g, '');
+  for (const [slug, entry] of Object.entries(COURSE_ID_MAP)) {
+    const cn = entry.course.name.toLowerCase().replace(/[\s.]/g, '');
+    if (cn === lower || slug === lower) return slug;
+  }
+  return null;
+}
