@@ -301,6 +301,7 @@ export default function Home() {
   const [bsccBihar, setBsccBihar] = useState("");
   const [bsccAge, setBsccAge] = useState("");
   const [selectedCollege, setSelectedCollege] = useState<CollegeCategory | null>(null);
+  const [loanAmount, setLoanAmount] = useState(200000);
 
   // Multi-step form
   const [step, setStep] = useState(0);
@@ -1161,18 +1162,57 @@ export default function Home() {
                 इस सरकारी योजना से अपनी <strong className="text-white">पढ़ाई, हॉस्टल और भोजन</strong> का खर्च संभालें। ₹4 लाख तक का loan — <strong className="text-amber-400">केवल 4% वार्षिक ब्याज</strong> पर। हम पूरी आवेदन प्रक्रिया में <strong className="text-white">निःशुल्क मार्गदर्शन</strong> देते हैं।
               </p>
 
-              {/* Highlight stat cards — visual punch */}
-              <div className="mt-7 grid grid-cols-3 gap-3">
-                {[
-                  { big: "₹4L", sub: "तक का Loan" },
-                  { big: "4%", sub: "ब्याज (Women 1%)" },
-                  { big: "₹0", sub: "Collateral" },
-                ].map(({ big, sub }) => (
-                  <div key={sub} className="rounded-2xl border border-amber-400/25 bg-gradient-to-b from-amber-400/[0.14] to-transparent p-4 text-center">
-                    <p className="font-headline text-2xl font-black text-amber-400 md:text-3xl">{big}</p>
-                    <p className="mt-1 text-[11px] font-semibold leading-tight text-blue-200">{sub}</p>
+              {/* Interactive Loan Calculator — live savings */}
+              <div className="mt-7 rounded-2xl border border-amber-400/30 bg-white/[0.06] p-5 shadow-lg shadow-black/10">
+                <div className="mb-1 flex items-center gap-2">
+                  <CreditCard size={15} className="text-amber-400" />
+                  <span className="text-xs font-extrabold uppercase tracking-wider text-amber-300">Loan Savings Calculator</span>
+                </div>
+                <div className="flex items-end justify-between">
+                  <span className="text-sm font-semibold text-blue-200">मुझे चाहिए:</span>
+                  <span className="font-headline text-3xl font-black text-amber-400">
+                    ₹{loanAmount.toLocaleString("en-IN")}
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min={50000}
+                  max={400000}
+                  step={10000}
+                  value={loanAmount}
+                  onChange={(e) => setLoanAmount(Number(e.target.value))}
+                  aria-label="Loan amount selector"
+                  className="mt-3 w-full cursor-pointer accent-amber-400"
+                />
+                <div className="mt-1 flex justify-between text-[10px] font-medium text-blue-300">
+                  <span>₹50,000</span>
+                  <span>₹4,00,000</span>
+                </div>
+
+                <div className="mt-4 grid grid-cols-2 gap-3">
+                  <div className="rounded-xl border border-amber-400/20 bg-amber-400/[0.10] p-3 text-center">
+                    <p className="text-[11px] font-semibold text-blue-200">BSCC ब्याज @4%/yr</p>
+                    <p className="font-headline text-lg font-black text-amber-400">
+                      ₹{Math.round(loanAmount * 0.04).toLocaleString("en-IN")}
+                    </p>
                   </div>
-                ))}
+                  <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3 text-center">
+                    <p className="text-[11px] font-semibold text-blue-200">Normal Bank @11%/yr</p>
+                    <p className="font-headline text-lg font-black text-red-300 line-through decoration-2">
+                      ₹{Math.round(loanAmount * 0.11).toLocaleString("en-IN")}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-3 flex items-center justify-center gap-1.5 rounded-xl bg-green-500/15 py-2.5 text-center">
+                  <CheckCircle2 size={15} className="text-green-400" />
+                  <p className="text-xs font-bold text-green-300">
+                    आप हर साल लगभग ₹{Math.round(loanAmount * 0.07).toLocaleString("en-IN")} बचाते हैं!
+                  </p>
+                </div>
+                <p className="mt-2 text-center text-[10px] text-blue-300/70">
+                  * Women applicants के लिए सिर्फ 1% ब्याज — और भी ज्यादा बचत
+                </p>
               </div>
 
               {/* Benefit chips */}
