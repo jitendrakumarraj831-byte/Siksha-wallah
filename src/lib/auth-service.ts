@@ -7,7 +7,6 @@ import {
   signOut,
   sendPasswordResetEmail,
   confirmPasswordReset,
-  sendEmailVerification,
   User,
   updateProfile,
 } from 'firebase/auth';
@@ -85,9 +84,8 @@ export const authService = {
         lastLogin: Date.now(),
       } satisfies UserProfile);
 
-      // Send branded welcome + verification emails (non-blocking)
+      // Send welcome email (non-blocking)
       fireEmail('/api/auth/welcome', { name, email: user.email ?? email });
-      fireEmail('/api/auth/send-verification', { name, email: user.email ?? email });
 
       return user;
     } catch (error: any) {
@@ -207,36 +205,4 @@ export const authService = {
     return auth.currentUser;
   },
 
-  // Resend email verification — tries Titan SMTP route, falls back to Firebase.
-  async sendVerificationEmail(): Promise<void> {
-    if (!auth) throw new Error('Firebase Auth not initialized');
-    const user = auth.currentUser;
-    if (!user) throw new Error('No authenticated user');
-
-    try {
-      const res = await fetch('/api/auth/send-verification', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: user.email ?? '',
-          name: user.displayName ?? 'Student',
-        }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (res.ok && data.success !== false) return; // custom email sent
-      if (res.status === 400 || res.status === 429) {
-        throw new Error(data.error || 'Failed to send verification email.');
-      }
-      // 5xx or { success: false, useFirebase: true } → fall through to Firebase
-    } catch (err: any) {
-      if (err.message && !err.message.includes('fetch')) throw err;
-    }
-
-    // Fallback: Firebase built-in
-    try {
-      await sendEmailVerification(user);
-    } catch (error: any) {
-      throw new Error(error.message || 'Failed to send verification email');
-    }
-  },
 };

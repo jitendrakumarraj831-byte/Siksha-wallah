@@ -4,22 +4,34 @@ import { useEffect, useState, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
-  GraduationCap, LogOut, Loader, Users, Phone, CheckCircle2,
-  MessageCircle, Filter, Clock, AlertCircle, RefreshCw,
-  TrendingUp, BookOpen, LayoutDashboard, StickyNote, X, Save,
-  CalendarDays, BarChart3,
+  GraduationCap, LogOut, Loader, Users, Phone,
+  CheckCircle2, MessageCircle, Filter, Clock,
+  AlertCircle, RefreshCw, CalendarDays, StickyNote,
+  X, Save, LayoutDashboard, Activity,
 } from "lucide-react";
 import {
   getAllInquiries, updateInquiryStatus, updateInquiryNote,
   type Inquiry, type InquiryStatus,
 } from "@/services/inquiry-service";
-import { subscribeActivities, type Activity, type ActivityType } from "@/services/activity-service";
+import { subscribeActivities, type Activity as ActivityItem, type ActivityType } from "@/services/activity-service";
 
-/* ── helpers ─────────────────────────────────────────── */
 const STATUS_META: Record<InquiryStatus, { label: string; color: string }> = {
   pending:        { label: "Pending",        color: "bg-yellow-100 text-yellow-800 border-yellow-200" },
   called:         { label: "Called",         color: "bg-blue-100 text-blue-800 border-blue-200" },
   admission_done: { label: "Admission Done", color: "bg-green-100 text-green-800 border-green-200" },
+};
+
+const ACTIVITY_META: Record<ActivityType, { icon: string; label: string }> = {
+  registration:   { icon: "👤", label: "Student Registrations" },
+  student_login:  { icon: "🔑", label: "Student Logins" },
+  course_view:    { icon: "📚", label: "Course Views" },
+  application:    { icon: "🎓", label: "Applications Submitted" },
+  whatsapp:       { icon: "💬", label: "WhatsApp Clicks" },
+  call_click:     { icon: "📞", label: "Call Clicks" },
+  inquiry:        { icon: "📋", label: "Inquiries" },
+  contact:        { icon: "📝", label: "Contact Form" },
+  doc_upload:     { icon: "📄", label: "Document Uploads" },
+  profile_update: { icon: "✏️",  label: "Profile Updates" },
 };
 
 function toDate(ts: any): Date | null {
@@ -42,13 +54,16 @@ function isToday(ts: any): boolean {
     d.getFullYear() === today.getFullYear();
 }
 
-function getQualification(inq: Inquiry): string {
-  if (inq.qualification) return inq.qualification;
-  if (inq.message?.startsWith("Qualification:")) return inq.message.replace("Qualification:", "").trim();
-  return inq.message || "—";
+function timeAgo(ts: any): string {
+  const d = ts?.toDate ? ts.toDate() : ts ? new Date(ts) : null;
+  if (!d) return "";
+  const diff = Math.floor((Date.now() - d.getTime()) / 1000);
+  if (diff < 60) return `${diff}s ago`;
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  return `${Math.floor(diff / 86400)}d ago`;
 }
 
-/* ── Note inline editor ─────────────────────────────── */
 function NoteCell({ inq, onSaved }: { inq: Inquiry; onSaved: (id: string, note: string) => void }) {
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState(inq.note || "");
@@ -59,7 +74,7 @@ function NoteCell({ inq, onSaved }: { inq: Inquiry; onSaved: (id: string, note: 
     if (!inq.id) return;
     setSaving(true);
     try {
-      await updateInquiryNote(inq.id!, draft);
+      await updateInquiryNote(inq.id, draft);
       onSaved(inq.id, draft);
       setOpen(false);
     } catch { /* noop */ }
@@ -103,31 +118,6 @@ function NoteCell({ inq, onSaved }: { inq: Inquiry; onSaved: (id: string, note: 
   );
 }
 
-/* ── Activity type meta ─────────────────────────────── */
-const ACTIVITY_META: Record<ActivityType, { icon: string; color: string; link?: string }> = {
-  inquiry:        { icon: "📋", color: "bg-blue-50 border-blue-200 text-blue-800",       link: "/admin/dashboard" },
-  contact:        { icon: "📝", color: "bg-blue-50 border-blue-200 text-blue-800" },
-  registration:   { icon: "👤", color: "bg-green-50 border-green-200 text-green-800",    link: "/admin/students" },
-  student_login:  { icon: "🔑", color: "bg-gray-50 border-gray-200 text-gray-700",       link: "/admin/students" },
-  application:    { icon: "🎓", color: "bg-blue-50 border-blue-200 text-blue-800",       link: "/admin/applications" },
-  doc_upload:     { icon: "📄", color: "bg-blue-50 border-blue-200 text-blue-800",       link: "/admin/students" },
-  profile_update: { icon: "✏️",  color: "bg-amber-50 border-amber-200 text-amber-800", link: "/admin/students" },
-  whatsapp:       { icon: "📱", color: "bg-green-50 border-green-200 text-green-800" },
-  bscc_check:     { icon: "🏦", color: "bg-amber-50 border-amber-200 text-amber-800" },
-  course_view:    { icon: "📚", color: "bg-indigo-50 border-indigo-200 text-indigo-800" },
-};
-
-function timeAgo(ts: any): string {
-  const d = ts?.toDate ? ts.toDate() : ts ? new Date(ts) : null;
-  if (!d) return "";
-  const diff = Math.floor((Date.now() - d.getTime()) / 1000);
-  if (diff < 60) return `${diff}s ago`;
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-  return `${Math.floor(diff / 86400)}d ago`;
-}
-
-/* ── Main page ──────────────────────────────────────── */
 export default function AdminDashboardPage() {
   const router = useRouter();
   const [authorized, setAuthorized] = useState<boolean | null>(null);
@@ -135,12 +125,9 @@ export default function AdminDashboardPage() {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [activities, setActivities] = useState<Activity[]>([]);
-
-  const [filterCourse, setFilterCourse] = useState("");
+  const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [filterStatus, setFilterStatus] = useState<"" | InquiryStatus>("");
 
-  // Auth check — client-only
   useEffect(() => {
     const session = localStorage.getItem("sw_admin_session");
     const user = localStorage.getItem("sw_admin_user");
@@ -152,8 +139,7 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     if (!authorized) return;
     loadInquiries();
-    // Real-time activity feed — updates live as events arrive
-    const unsub = subscribeActivities(50, setActivities);
+    const unsub = subscribeActivities(100, setActivities);
     return () => unsub();
   }, [authorized]);
 
@@ -187,31 +173,25 @@ export default function AdminDashboardPage() {
     router.replace("/admin/login");
   }
 
-  /* ── derived stats ── */
   const totalInquiries     = inquiries.length;
   const todayInquiries     = inquiries.filter(i => isToday(i.createdAt)).length;
   const pendingCalls       = inquiries.filter(i => !i.status || i.status === "pending").length;
-  const admissionsConfirmed = inquiries.filter(i => i.status === "admission_done").length;
+  const admissionsDone     = inquiries.filter(i => i.status === "admission_done").length;
 
-  // Course breakdown (top 6)
-  const courseBreakdown = useMemo(() => {
-    const map: Record<string, number> = {};
-    inquiries.forEach(i => { if (i.course) map[i.course] = (map[i.course] || 0) + 1; });
-    return Object.entries(map).sort((a, b) => b[1] - a[1]).slice(0, 6);
-  }, [inquiries]);
-
-  const maxCourseCount = courseBreakdown[0]?.[1] || 1;
-
-  const uniqueCourses = useMemo(
-    () => [...new Set(inquiries.map(i => i.course).filter(Boolean))].sort(),
-    [inquiries]
-  );
+  // Activity summary counts (today)
+  const activitySummary = useMemo(() => {
+    const tracked: ActivityType[] = ['registration', 'student_login', 'course_view', 'application', 'whatsapp', 'call_click'];
+    return tracked.map(type => ({
+      type,
+      ...ACTIVITY_META[type],
+      total: activities.filter(a => a.type === type).length,
+      today: activities.filter(a => a.type === type && isToday(a.createdAt)).length,
+    }));
+  }, [activities]);
 
   const filtered = useMemo(() => inquiries.filter(inq => {
-    const matchCourse = !filterCourse || inq.course === filterCourse;
-    const matchStatus = !filterStatus || (inq.status || "pending") === filterStatus;
-    return matchCourse && matchStatus;
-  }), [inquiries, filterCourse, filterStatus]);
+    return !filterStatus || (inq.status || "pending") === filterStatus;
+  }), [inquiries, filterStatus]);
 
   if (authorized === null) return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50">
@@ -222,7 +202,7 @@ export default function AdminDashboardPage() {
   return (
     <div className="min-h-screen bg-gray-50">
 
-      {/* ── Top Nav ── */}
+      {/* Top Nav */}
       <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 shadow-sm backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="flex items-center gap-3">
@@ -237,22 +217,22 @@ export default function AdminDashboardPage() {
 
           <nav className="hidden items-center gap-1 sm:flex">
             <Link href="/admin/dashboard" className="rounded-lg bg-blue-50 px-3 py-2 text-sm font-bold text-[#003f9f]">
-              Inquiries
-            </Link>
-            <Link href="/admin/applications" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">
-              Applications
+              Dashboard
             </Link>
             <Link href="/admin/students" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">
               Students
             </Link>
+            <Link href="/admin/applications" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">
+              Applications
+            </Link>
             <Link href="/admin/activity" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">
-              Activity Log
+              Website Activity
             </Link>
           </nav>
 
           <div className="flex items-center gap-3">
             <span className="hidden text-sm font-semibold text-gray-600 sm:block">
-              Welcome, {adminUser}
+              {adminUser}
             </span>
             <button
               onClick={handleLogout}
@@ -266,41 +246,26 @@ export default function AdminDashboardPage() {
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
 
-        {/* ── Page header ── */}
-        <div className="mb-6 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <div className="flex items-center gap-2 text-sm font-semibold text-gray-400 mb-1">
-              <LayoutDashboard size={13} /> Office Dashboard
-            </div>
-            <h1 className="font-headline text-3xl font-extrabold text-gray-900">Student Inquiries</h1>
-            <p className="text-sm text-gray-500 mt-0.5">Homepage form leads — manage follow-up calls & admissions</p>
+        {/* Page header */}
+        <div className="mb-6">
+          <div className="flex items-center gap-2 text-sm font-semibold text-gray-400 mb-1">
+            <LayoutDashboard size={13} /> Office Dashboard
           </div>
-          <Link
-            href="/admin/students"
-            className="mt-3 sm:mt-0 inline-flex items-center gap-2 rounded-xl border-2 border-[#003f9f] px-5 py-2.5 text-sm font-bold text-[#003f9f] hover:bg-[#003f9f] hover:text-white transition"
-          >
-            <Users size={15} /> Registered Students →
-          </Link>
+          <h1 className="font-headline text-3xl font-extrabold text-gray-900">Dashboard</h1>
         </div>
 
-        {/* ── Summary Widgets ── */}
+        {/* Summary Widgets */}
         <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { label: "Total Inquiries", value: totalInquiries, icon: Users, color: "blue", sub: "All time" },
-            { label: "Today's Inquiries", value: todayInquiries, icon: CalendarDays, color: "blue", sub: "New today" },
-            { label: "Pending Calls", value: pendingCalls, icon: Clock, color: "yellow", sub: "Need follow-up" },
-            { label: "Admissions Done", value: admissionsConfirmed, icon: CheckCircle2, color: "green", sub: "Conversions" },
+            { label: "Total Students", value: activities.filter(a => a.type === 'registration').length, icon: Users, color: "blue", sub: "Registered accounts" },
+            { label: "Total Applications", value: totalInquiries, icon: CalendarDays, color: "blue", sub: "All inquiries" },
+            { label: "Today's Applications", value: todayInquiries, icon: Clock, color: "yellow", sub: "New today" },
+            { label: "Website Visitors", value: activities.length, icon: Activity, color: "green", sub: "Tracked events" },
           ].map(({ label, value, icon: Icon, color, sub }) => {
-            const bg: Record<string, string> = {
-              blue: "border-blue-100 bg-blue-50", amber: "border-amber-100 bg-amber-50",
-              yellow: "border-amber-100 bg-amber-50", green: "border-green-100 bg-green-50",
-            };
-            const txt: Record<string, string> = {
-              blue: "text-blue-600", amber: "text-amber-600",
-              yellow: "text-amber-600", green: "text-green-600",
-            };
+            const bg: Record<string, string> = { blue: "bg-blue-50", yellow: "bg-amber-50", green: "bg-green-50" };
+            const txt: Record<string, string> = { blue: "text-blue-600", yellow: "text-amber-600", green: "text-green-600" };
             return (
-              <div key={label} className={`rounded-2xl border-2 bg-white p-5 shadow-sm ${bg[color].split(" ")[0]}`}>
+              <div key={label} className="rounded-2xl border-2 border-gray-100 bg-white p-5 shadow-sm">
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">{label}</p>
@@ -316,31 +281,30 @@ export default function AdminDashboardPage() {
           })}
         </div>
 
-        {/* ── Course Breakdown ── */}
-        {courseBreakdown.length > 0 && (
-          <div className="mb-6 rounded-2xl border-2 border-gray-100 bg-white p-5 shadow-sm">
-            <div className="mb-4 flex items-center gap-2">
-              <BarChart3 size={16} className="text-[#003f9f]" />
-              <p className="font-bold text-gray-800">Course-wise Inquiries</p>
-            </div>
-            <div className="space-y-2.5">
-              {courseBreakdown.map(([course, count]) => (
-                <div key={course} className="flex items-center gap-3">
-                  <p className="w-32 truncate text-xs font-semibold text-gray-600 sm:w-44">{course}</p>
-                  <div className="flex-1 rounded-full bg-gray-100 h-2.5 overflow-hidden">
-                    <div
-                      className="h-full rounded-full bg-[#003f9f] transition-all"
-                      style={{ width: `${(count / maxCourseCount) * 100}%` }}
-                    />
-                  </div>
-                  <span className="w-6 text-right text-xs font-bold text-gray-700">{count}</span>
+        {/* Website Activity Summary */}
+        <div className="mb-6 rounded-2xl border-2 border-gray-100 bg-white p-5 shadow-sm">
+          <h2 className="mb-4 font-bold text-gray-800 flex items-center gap-2">
+            <Activity size={16} className="text-[#003f9f]" />
+            Website Activity
+          </h2>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {activitySummary.map(({ type, icon, label, total, today }) => (
+              <div key={type} className="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 px-4 py-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">{icon}</span>
+                  <span className="text-sm font-semibold text-gray-700">{label}</span>
                 </div>
-              ))}
-            </div>
+                <div className="text-right">
+                  <p className="text-base font-extrabold text-gray-900">{total}</p>
+                  {today > 0 && (
+                    <p className="text-xs text-green-600 font-semibold">+{today} today</p>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
-        )}
+        </div>
 
-        {/* ── Error ── */}
         {error && (
           <div className="mb-5 flex gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
             <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
@@ -348,19 +312,11 @@ export default function AdminDashboardPage() {
           </div>
         )}
 
-        {/* ── Filters ── */}
+        {/* Filters */}
         <div className="mb-4 flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-1.5 text-sm font-semibold text-gray-500">
             <Filter size={13} /> Filter:
           </div>
-          <select
-            value={filterCourse}
-            onChange={e => setFilterCourse(e.target.value)}
-            className="rounded-xl border-2 border-gray-200 px-3 py-2 text-sm font-semibold text-gray-700 outline-none focus:border-[#003f9f] transition"
-          >
-            <option value="">All Courses</option>
-            {uniqueCourses.map(c => <option key={c} value={c}>{c}</option>)}
-          </select>
           <select
             value={filterStatus}
             onChange={e => setFilterStatus(e.target.value as "" | InquiryStatus)}
@@ -379,8 +335,12 @@ export default function AdminDashboardPage() {
           </button>
         </div>
 
-        {/* ── Inquiry Cards ── */}
+        {/* Inquiry Table */}
         <div className="rounded-2xl border-2 border-gray-100 bg-white shadow-sm overflow-hidden">
+          <div className="border-b border-gray-100 px-5 py-4">
+            <h2 className="font-bold text-gray-800">Student Inquiries</h2>
+            <p className="text-xs text-gray-400 mt-0.5">Showing {filtered.length} of {totalInquiries} total</p>
+          </div>
           {loading ? (
             <div className="flex items-center justify-center py-20">
               <Loader size={32} className="animate-spin text-[#003f9f]" />
@@ -389,10 +349,6 @@ export default function AdminDashboardPage() {
             <div className="py-20 text-center">
               <Users size={36} className="mx-auto mb-3 text-gray-300" />
               <p className="font-semibold text-gray-500">No inquiries found</p>
-              <p className="mt-1 text-sm text-gray-400">Submit a test inquiry from the homepage to see data here.</p>
-              <Link href="/" className="mt-4 inline-block rounded-xl bg-[#003f9f] px-6 py-2.5 text-sm font-bold text-white hover:bg-blue-700 transition">
-                Go to Homepage →
-              </Link>
             </div>
           ) : (
             <div className="divide-y divide-gray-100">
@@ -401,9 +357,8 @@ export default function AdminDashboardPage() {
                 const { label, color } = STATUS_META[st];
                 return (
                   <div key={inq.id} className="flex flex-wrap items-start gap-3 px-4 py-4 hover:bg-blue-50/20 transition">
-                    {/* Left: avatar + name */}
                     <div className="flex items-center gap-3 min-w-[160px] flex-1">
-                      <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#003f9f] font-headline font-extrabold text-sm text-white">
+                      <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#003f9f] font-bold text-sm text-white">
                         {inq.fullName?.[0]?.toUpperCase() || "?"}
                       </div>
                       <div className="min-w-0">
@@ -412,15 +367,13 @@ export default function AdminDashboardPage() {
                       </div>
                     </div>
 
-                    {/* Course + Qualification */}
                     <div className="min-w-[120px]">
                       <span className="rounded-lg bg-blue-50 px-2 py-0.5 text-xs font-bold text-blue-800">
                         {inq.course || "—"}
                       </span>
-                      <p className="mt-1 text-xs text-gray-400">{getQualification(inq)}</p>
+                      <p className="mt-1 text-xs text-gray-400">{inq.qualification || inq.message || "—"}</p>
                     </div>
 
-                    {/* Status */}
                     <div className="flex-shrink-0">
                       <select
                         value={st}
@@ -433,12 +386,10 @@ export default function AdminDashboardPage() {
                       </select>
                     </div>
 
-                    {/* Note */}
                     <div className="flex-shrink-0">
                       <NoteCell inq={inq} onSaved={handleNoteSaved} />
                     </div>
 
-                    {/* Actions */}
                     <div className="flex items-center gap-2 flex-shrink-0 ml-auto">
                       <a
                         href={`tel:+91${inq.mobile}`}
@@ -447,7 +398,7 @@ export default function AdminDashboardPage() {
                         <Phone size={11} /> {inq.mobile}
                       </a>
                       <a
-                        href={`https://wa.me/91${inq.mobile}?text=Hello%20${encodeURIComponent(inq.fullName)}%2C%20I%20am%20calling%20from%20Siksha%20Wallah%20regarding%20your%20inquiry%20for%20${encodeURIComponent(inq.course || "admission")}.`}
+                        href={`https://wa.me/91${inq.mobile}?text=Hello%20${encodeURIComponent(inq.fullName)}%2C%20I%20am%20from%20Siksha%20Wallah%20regarding%20your%20inquiry%20for%20${encodeURIComponent(inq.course || "admission")}.`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1 rounded-lg bg-[#25D366] px-3 py-1.5 text-xs font-bold text-white hover:bg-green-500 transition"
@@ -462,11 +413,7 @@ export default function AdminDashboardPage() {
           )}
         </div>
 
-        <p className="mt-3 text-center text-xs text-gray-400">
-          Showing {filtered.length} of {totalInquiries} total inquiries
-        </p>
-
-        {/* ── Live Activity Feed ── */}
+        {/* Live Activity Feed */}
         <div className="mt-10">
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -474,13 +421,10 @@ export default function AdminDashboardPage() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
                 <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500" />
               </span>
-              <h2 className="font-headline text-lg font-extrabold text-gray-900">Live Website Activity</h2>
+              <h2 className="font-headline text-lg font-extrabold text-gray-900">Live Activity Feed</h2>
               <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-bold text-gray-500">{activities.length}</span>
             </div>
-            <Link
-              href="/admin/activity"
-              className="text-xs font-bold text-[#003f9f] hover:underline"
-            >
+            <Link href="/admin/activity" className="text-xs font-bold text-[#003f9f] hover:underline">
               View Full Log →
             </Link>
           </div>
@@ -488,32 +432,20 @@ export default function AdminDashboardPage() {
           {activities.length === 0 ? (
             <div className="rounded-2xl border-2 border-dashed border-gray-200 py-12 text-center text-gray-400">
               <p className="text-sm font-semibold">No activity yet</p>
-              <p className="text-xs mt-1">Activities will appear here in real-time as visitors use the website</p>
+              <p className="text-xs mt-1">Activities appear here in real-time as visitors use the website</p>
             </div>
           ) : (
             <div className="space-y-2">
-              {activities.slice(0, 15).map(act => {
-                const meta = ACTIVITY_META[act.type] || { icon: "📌", color: "bg-gray-50 border-gray-200 text-gray-700" };
+              {activities.slice(0, 20).map(act => {
+                const meta = ACTIVITY_META[act.type] || { icon: "📌", label: act.type };
                 return (
-                  <div key={act.id} className={`flex items-start gap-3 rounded-xl border px-4 py-3 ${meta.color}`}>
+                  <div key={act.id} className="flex items-start gap-3 rounded-xl border border-gray-100 bg-white px-4 py-3">
                     <span className="text-lg leading-none mt-0.5">{meta.icon}</span>
                     <div className="flex-1 min-w-0">
-                      <p className="font-bold text-sm">{act.title}</p>
-                      <p className="text-xs mt-0.5 opacity-80 truncate">{act.description}</p>
-                      {act.mobile && (
-                        <a href={`tel:+91${act.mobile}`} className="mt-1 inline-flex items-center gap-1 text-xs font-bold underline opacity-70 hover:opacity-100">
-                          <Phone size={10} /> {act.mobile}
-                        </a>
-                      )}
+                      <p className="font-bold text-sm text-gray-800">{act.title}</p>
+                      <p className="text-xs mt-0.5 text-gray-500 truncate">{act.description}</p>
                     </div>
-                    <div className="flex-shrink-0 text-right flex flex-col items-end gap-1">
-                      <span className="text-xs opacity-60 whitespace-nowrap">{timeAgo(act.createdAt)}</span>
-                      {meta.link && (
-                        <Link href={meta.link} className="text-xs font-bold underline opacity-70 hover:opacity-100">
-                          View →
-                        </Link>
-                      )}
-                    </div>
+                    <span className="flex-shrink-0 text-xs text-gray-400 whitespace-nowrap">{timeAgo(act.createdAt)}</span>
                   </div>
                 );
               })}

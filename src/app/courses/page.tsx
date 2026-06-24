@@ -246,10 +246,10 @@ function CourseCard({
           </a>
           {course.bscc && (
             <Link
-              href="/student-credit-card"
+              href="/contact"
               className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-green-500 py-2.5 text-sm font-bold text-green-700 transition hover:bg-green-500 hover:text-white"
             >
-              <CreditCard size={15} /> Check BSCC Loan Eligibility →
+              <CreditCard size={15} /> Ask About BSCC Loan →
             </Link>
           )}
         </div>

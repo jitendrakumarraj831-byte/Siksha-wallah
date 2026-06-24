@@ -8,7 +8,6 @@ import { GraduationCap, Phone, Menu, X, ChevronRight, MessageCircle } from "luci
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/courses", label: "Courses" },
-  { href: "/student-credit-card", label: "BSCC Loan" },
   { href: "/blog", label: "Career Guidance" },
   { href: "/about", label: "About Us" },
   { href: "/contact", label: "Contact" },
@@ -56,7 +55,7 @@ export function SiteNavbar({ transparent = false }: { transparent?: boolean }) {
                 SIKSHA<span className="text-primary-red">WALLAH</span>
               </span>
               <span className={`text-[11px] font-semibold ${isTransparent ? "text-blue-100" : "text-gray-500"}`}>
-                Trusted Admission & BSCC Guidance
+                Trusted Admission Consultancy
               </span>
             </div>
           </Link>

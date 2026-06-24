@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 
 const navLinks = [
   ["Courses", "/courses"],
-  ["BSCC Guide", "/student-credit-card"],
   ["About Us", "/about"],
   ["Contact", "/contact"],
 ];
@@ -153,7 +152,7 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
           <div>
             <p className="mb-3 font-bold text-white">Quick Links</p>
             <div className="flex flex-col gap-2 text-sm">
-              {[["Courses", "/courses"], ["BSCC Guide", "/student-credit-card"], ["About Us", "/about"], ["Contact", "/contact"]].map(([label, href]) => (
+              {[["Courses", "/courses"], ["About Us", "/about"], ["Contact", "/contact"]].map(([label, href]) => (
                 <Link key={href} href={href} className="hover:text-white transition">{label}</Link>
               ))}
             </div>
@@ -162,7 +161,7 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
           <div>
             <p className="mb-3 font-bold text-white">Student Portal</p>
             <div className="flex flex-col gap-2 text-sm">
-              {[["Login", "/auth/login"], ["Register", "/auth/register"], ["Dashboard", "/dashboard"], ["My Documents", "/dashboard/documents"]].map(([label, href]) => (
+              {[["Login", "/auth/login"], ["Register", "/auth/register"], ["My Dashboard", "/dashboard"], ["My Documents", "/dashboard/documents"]].map(([label, href]) => (
                 <Link key={href} href={href} className="hover:text-white transition">{label}</Link>
               ))}
             </div>

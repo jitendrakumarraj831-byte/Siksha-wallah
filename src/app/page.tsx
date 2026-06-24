@@ -50,9 +50,9 @@ export default function Home() {
       bsccIncome === "below";
     setBsccEligible(eligible);
     saveActivity({
-      type: "bscc_check",
+      type: "course_view",
       title: "BSCC Eligibility Checked",
-      description: eligible ? "✅ Eligible — Bihar resident, age ≤25, income below 4.5L" : "❌ Not eligible",
+      description: eligible ? "Eligible — Bihar resident, age ≤25, income below 4.5L" : "Not eligible",
       page: "/",
       meta: { bihar: bsccBihar, age: bsccAge, income: bsccIncome, result: eligible ? "eligible" : "not_eligible" },
     });
@@ -859,10 +859,10 @@ export default function Home() {
               {/* CTAs */}
               <div className="mt-7 flex flex-wrap gap-3">
                 <Link
-                  href="/student-credit-card"
+                  href="/apply"
                   className="inline-flex items-center gap-2 rounded-xl bg-amber-400 px-6 py-3 font-extrabold text-gray-900 transition hover:bg-amber-300 shadow-lg shadow-amber-500/25 hover:-translate-y-0.5"
                 >
-                  Learn the Full BSCC Process <ArrowRight size={16} />
+                  Book Free Counselling <ArrowRight size={16} />
                 </Link>
                 <a
                   href="https://wa.me/916203138576?text=नमस्ते!%20मुझे%20BSCC%20Loan%20के%20बारे%20में%20जानकारी%20चाहिए।%20Please%20help%20karein।"

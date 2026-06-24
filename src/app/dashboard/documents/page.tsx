@@ -13,16 +13,10 @@ import {
 } from 'lucide-react';
 
 const DOC_TYPES = [
-  { value: 'mark_sheet',       label: 'Marksheet (10th / 12th / Graduation)' },
-  { value: 'certificate',      label: 'Passing / Migration / Transfer Certificate' },
-  { value: 'id_proof',         label: 'ID Proof (Aadhaar or PAN)' },
-  { value: 'domicile',         label: 'Domicile / Residence Certificate' },
-  { value: 'income_cert',      label: 'Family Income Certificate' },
-  { value: 'caste_cert',       label: 'Caste Certificate' },
-  { value: 'photo',            label: 'Passport-Size Photograph' },
-  { value: 'admission_letter', label: 'Admission Letter / Bonafide Certificate' },
-  { value: 'bscc_docs',        label: 'BSCC Loan-Related Document' },
-  { value: 'other',            label: 'Other Supporting Document' },
+  { value: 'aadhaar',    label: 'Aadhaar Card' },
+  { value: 'marksheet',  label: 'Marksheet (10th / 12th / Graduation)' },
+  { value: 'photo',      label: 'Passport-Size Photograph' },
+  { value: 'other',      label: 'Other Document' },
 ];
 
 const ACCEPTED_TYPES = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
