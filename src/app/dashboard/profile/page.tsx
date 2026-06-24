@@ -65,7 +65,9 @@ export default function ProfilePage() {
         userId: user.uid,
         page: '/dashboard/profile',
       }).catch(() => {});
+      // Redirect to dashboard after 1.5s so student sees 100% completion
       setSuccess('Profile updated successfully.');
+      setTimeout(() => router.push('/dashboard'), 1500);
     } catch (err: any) {
       setError(err.message);
     } finally {
