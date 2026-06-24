@@ -1835,7 +1835,7 @@ export default function Home() {
           </div>
 
           {/* Office timing */}
-          <p className="mt-8 text-xs text-red-200/80">
+          <p className="mt-8 text-xs text-blue-200/80">
             <Clock size={11} className="inline mr-1" />
             Office Hours: Monday–Saturday, 9:00 AM – 6:00 PM &nbsp;|&nbsp; Forbesganj, Araria, Bihar
           </p>
