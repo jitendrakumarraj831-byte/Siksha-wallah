@@ -1,7 +1,7 @@
 import { db } from "@/lib/firebase";
 import {
-  collection, addDoc, serverTimestamp, query, orderBy, where,
-  getDocs, doc, updateDoc, onSnapshot, Unsubscribe,
+  collection, addDoc, serverTimestamp, query, where,
+  getDocs, doc, updateDoc, onSnapshot, Unsubscribe, orderBy,
 } from "firebase/firestore";
 
 export type ApplicationStatus = "new" | "contacted" | "documents_pending" | "admission_done" | "not_interested";
@@ -79,9 +79,15 @@ export async function updateApplicationNote(id: string, note: string) {
 
 export async function getApplicationsByUser(userId: string): Promise<CourseApplication[]> {
   try {
-    const q = query(collection(db, COL), where("userId", "==", userId), orderBy("createdAt", "desc"));
+    // No orderBy — avoids composite index requirement; sort in caller if needed
+    const q = query(collection(db, COL), where("userId", "==", userId));
     const snap = await getDocs(q);
-    return snap.docs.map(d => ({ id: d.id, ...d.data() })) as CourseApplication[];
+    const apps = snap.docs.map(d => ({ id: d.id, ...d.data() })) as CourseApplication[];
+    return apps.sort((a, b) => {
+      const ta = a.createdAt?.toMillis ? a.createdAt.toMillis() : (a.createdAt ?? 0);
+      const tb = b.createdAt?.toMillis ? b.createdAt.toMillis() : (b.createdAt ?? 0);
+      return tb - ta;
+    });
   } catch {
     return [];
   }
