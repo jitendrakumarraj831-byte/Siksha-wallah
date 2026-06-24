@@ -12,7 +12,7 @@ import { successStories } from "@/lib/reviews-data";
 
 const team = [
   {
-    name: "Rajesh Kumar Sah",
+    name: "Rajesh Kr. Sah",
     role: "Founder & Chief Admission Counsellor",
     phone: "6203138576",
     exp: "11+ Years",
@@ -118,7 +118,7 @@ export default function AboutPage() {
                 2015 में, Forbesganj और आसपास के गाँवों के हजारों students और उनके माता-पिता के पास न सही जानकारी थी, न कोई भरोसेमंद मार्गदर्शक। महंगे private agents झूठे वादे करते थे, hidden charges वसूलते थे — और एक होनहार student का भविष्य अंधेरे में चला जाता था।
               </p>
               <p className="text-gray-600 leading-relaxed mb-4">
-                इसी कमी को दूर करने के लिए Rajesh Kumar Sah ने एक स्पष्ट संकल्प के साथ Siksha Wallah की नींव रखी: <strong className="text-gray-900">&ldquo;हर student और परिवार को 100% ईमानदार, पारदर्शी और निःशुल्क मार्गदर्शन।&rdquo;</strong> आज हम Araria जिले की #1 trusted education consultancy के रूप में जाने जाते हैं।
+                इसी कमी को दूर करने के लिए Rajesh Kr. Sah ने एक स्पष्ट संकल्प के साथ Siksha Wallah की नींव रखी: <strong className="text-gray-900">&ldquo;हर student और परिवार को 100% ईमानदार, पारदर्शी और निःशुल्क मार्गदर्शन।&rdquo;</strong> आज हम Araria जिले की #1 trusted education consultancy के रूप में जाने जाते हैं।
               </p>
               <p className="text-gray-600 leading-relaxed">
                 हम केवल admission नहीं दिलाते — हम <strong className="text-gray-900">सही career और एक सुरक्षित भविष्य की नींव</strong> तैयार करते हैं। B.Ed से MBBS तक, D.El.Ed से MBA तक — हर stream में अनुभवी विशेषज्ञ, और कोई छिपा शुल्क नहीं।
