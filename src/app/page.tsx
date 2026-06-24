@@ -672,9 +672,9 @@ export default function Home() {
       <section id="popular-courses" className="py-14 md:py-20 bg-white">
         <div className="container-shell">
           <AnimateIn type="fade-up" className="text-center mb-10">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-red-200 bg-red-50 px-4 py-2">
-              <TrendingUp size={13} className="text-red-500" />
-              <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-red-600">Most Sought-After Courses 2026–27</span>
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-2">
+              <TrendingUp size={13} className="text-blue-600" />
+              <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-blue-700">Most Enrolled Courses 2026–27</span>
             </div>
             <h2 className="font-headline text-3xl md:text-5xl font-extrabold text-gray-900">
               Popular{" "}
@@ -687,121 +687,110 @@ export default function Home() {
             </p>
           </AnimateIn>
 
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 md:gap-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 md:gap-4">
             {([
               {
                 name: "B.Ed",
                 shortDesc: "Bachelor of Education — सरकारी शिक्षक बनें",
                 stream: "teaching",
                 icon: BookMarked,
-                gradient: "from-blue-600 to-indigo-600",
+                gradient: "from-blue-700 to-indigo-700",
                 badge: "bg-blue-100 text-blue-700",
-                seats: "Seats Filling Fast",
               },
               {
                 name: "D.El.Ed",
                 shortDesc: "Diploma — Primary teacher की guaranteed career",
                 stream: "teaching",
                 icon: GraduationCap,
-                gradient: "from-indigo-600 to-purple-600",
-                badge: "bg-indigo-100 text-indigo-700",
-                seats: "Open Now",
+                gradient: "from-blue-600 to-blue-800",
+                badge: "bg-blue-100 text-blue-800",
               },
               {
                 name: "ANM",
                 shortDesc: "Auxiliary Nursing — 10+2 के बाद healthcare",
                 stream: "medical",
                 icon: Stethoscope,
-                gradient: "from-rose-500 to-pink-600",
-                badge: "bg-rose-100 text-rose-700",
-                seats: "High Demand",
+                gradient: "from-blue-500 to-indigo-600",
+                badge: "bg-indigo-100 text-indigo-700",
               },
               {
                 name: "GNM",
                 shortDesc: "General Nursing — Govt hospital jobs",
                 stream: "medical",
                 icon: Stethoscope,
-                gradient: "from-red-500 to-rose-600",
-                badge: "bg-red-100 text-red-700",
-                seats: "Seats Filling Fast",
+                gradient: "from-indigo-600 to-blue-800",
+                badge: "bg-blue-100 text-blue-700",
               },
               {
                 name: "B.Sc Nursing",
                 shortDesc: "4-year degree — Nursing में highest scope",
                 stream: "medical",
                 icon: Stethoscope,
-                gradient: "from-pink-600 to-red-500",
-                badge: "bg-pink-100 text-pink-700",
-                seats: "Open Now",
+                gradient: "from-blue-800 to-indigo-900",
+                badge: "bg-indigo-100 text-indigo-800",
               },
               {
                 name: "D.Pharma",
                 shortDesc: "Diploma Pharmacy — खुद की medical shop खोलें",
                 stream: "medical",
                 icon: FlaskConical,
-                gradient: "from-green-600 to-teal-600",
-                badge: "bg-green-100 text-green-700",
-                seats: "Open Now",
+                gradient: "from-indigo-500 to-blue-700",
+                badge: "bg-blue-100 text-blue-700",
               },
               {
                 name: "B.Tech",
                 shortDesc: "Engineering — IT, Civil, Mechanical, ECE",
                 stream: "technical",
                 icon: Cpu,
-                gradient: "from-orange-500 to-amber-500",
-                badge: "bg-orange-100 text-orange-700",
-                seats: "Open Now",
+                gradient: "from-amber-500 to-amber-700",
+                badge: "bg-amber-100 text-amber-800",
               },
               {
                 name: "Polytechnic",
                 shortDesc: "3-year Diploma — Govt jobs & industry",
                 stream: "technical",
                 icon: Cpu,
-                gradient: "from-amber-500 to-yellow-500",
+                gradient: "from-amber-600 to-orange-600",
                 badge: "bg-amber-100 text-amber-700",
-                seats: "Open Now",
               },
               {
                 name: "ITI",
                 shortDesc: "Industrial Training — Trade certificate & jobs",
                 stream: "technical",
                 icon: Briefcase,
-                gradient: "from-yellow-500 to-orange-400",
-                badge: "bg-yellow-100 text-yellow-700",
-                seats: "Open Now",
+                gradient: "from-amber-400 to-amber-600",
+                badge: "bg-amber-100 text-amber-700",
               },
               {
                 name: "LLB",
                 shortDesc: "Law degree — Advocate, Judge, Corporate",
                 stream: "law",
                 icon: Scale,
-                gradient: "from-slate-600 to-gray-700",
-                badge: "bg-slate-100 text-slate-700",
-                seats: "Limited Seats",
+                gradient: "from-[#001850] to-[#003590]",
+                badge: "bg-blue-100 text-blue-800",
               },
-            ] as const).map(({ name, shortDesc, stream, icon: Icon, gradient, badge, seats }) => (
+            ] as const).map(({ name, shortDesc, stream, icon: Icon, gradient, badge }) => (
               <AnimateIn key={name} type="zoom-in">
                 <div className="group flex flex-col rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl overflow-hidden h-full">
-                  {/* Color header */}
-                  <div className={`bg-gradient-to-br ${gradient} p-4 flex items-center justify-between`}>
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20">
-                      <Icon size={20} className="text-white" />
+                  {/* Brand-palette header */}
+                  <div className={`bg-gradient-to-br ${gradient} p-4 flex items-center justify-center`}>
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/20">
+                      <Icon size={22} className="text-white" />
                     </div>
-                    <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold text-white">{seats}</span>
                   </div>
                   {/* Content */}
                   <div className="flex flex-1 flex-col p-3 md:p-4">
-                    <h3 className="font-headline text-base md:text-lg font-extrabold text-gray-900">{name}</h3>
-                    <p className="mt-1 flex-1 text-[11px] md:text-xs text-gray-500 leading-snug">{shortDesc}</p>
+                    <h3 className="font-headline text-sm md:text-base font-extrabold text-gray-900">{name}</h3>
+                    <p className="mt-1 flex-1 text-xs text-gray-500 leading-snug">{shortDesc}</p>
                     <a
                       href={`/apply?course=${encodeURIComponent(name)}`}
-                      className={`mt-3 flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r ${gradient} py-2 text-xs font-extrabold text-white shadow-sm transition hover:opacity-90`}
+                      className="mt-3 flex items-center justify-center gap-1.5 rounded-xl bg-primary-blue py-2 text-xs font-extrabold text-white shadow-sm transition hover:bg-blue-700"
                     >
-                      Apply Now <ArrowRight size={12} />
+                      Free Counselling <ArrowRight size={11} />
                     </a>
                     <a
                       href={`/courses#${stream}`}
-                      className={`mt-1.5 flex items-center justify-center gap-1 rounded-xl border py-1.5 text-[11px] font-semibold transition hover:bg-gray-50 ${badge} border-current/20`}
+                      className={`mt-1.5 flex items-center justify-center gap-1 rounded-xl border py-1.5 text-xs font-semibold transition hover:opacity-80 ${badge}`}
                     >
                       <BookOpen size={11} /> Details
                     </a>
@@ -818,6 +807,159 @@ export default function Home() {
             >
               सभी 50+ Courses देखें <ArrowRight size={16} />
             </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ── ADMISSION PROCESS ── */}
+      <section id="admission-process" className="py-16 md:py-20 bg-gray-50">
+        <div className="container-shell">
+          <AnimateIn type="fade-up" className="text-center mb-10">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-2">
+              <ListChecks size={13} className="text-blue-600" />
+              <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-blue-700">Simple · Transparent · Guided</span>
+            </div>
+            <h2 className="font-headline text-3xl md:text-5xl font-extrabold text-gray-900">
+              Admission Process —{" "}
+              <span className="bg-gradient-to-r from-blue-700 to-indigo-600 bg-clip-text text-transparent">4 Easy Steps</span>
+            </h2>
+            <p className="mt-3 text-gray-500 max-w-xl mx-auto text-sm md:text-base">
+              पहली call से admission confirm होने तक — हम हर step पर आपके साथ हैं।
+            </p>
+          </AnimateIn>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {([
+              { step: "01", icon: Phone,       title: "Free Counselling Call",        desc: "Call या WhatsApp करें — पहली बातचीत बिल्कुल निःशुल्क। हम आपकी situation समझेंगे।",         accent: "bg-blue-600",    ring: "ring-blue-200"  },
+              { step: "02", icon: FileText,    title: "Profile Review",               desc: "Marks, बजट, stream और career goal बताएँ — हम आपके लिए सही options निकालेंगे।",             accent: "bg-indigo-600",  ring: "ring-indigo-200"},
+              { step: "03", icon: Building2,   title: "College Selection",            desc: "NCTE / INC / AICTE approved verified colleges की personalised shortlist ready होगी।",       accent: "bg-amber-500",   ring: "ring-amber-200" },
+              { step: "04", icon: BadgeCheck,  title: "Admission Confirmation",       desc: "Documents से DRCC तक — हर step पर हम साथ हैं। Seat confirm होने तक full support।",         accent: "bg-blue-800",    ring: "ring-blue-200"  },
+            ] as const).map(({ step, icon: StepIcon, title, desc, accent, ring }, i) => (
+              <AnimateIn key={step} type="zoom-in" delay={i * 80}>
+                <div className="relative h-full rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md hover:-translate-y-0.5">
+                  {i < 3 && (
+                    <div className="absolute hidden lg:block -right-2.5 top-8 z-10">
+                      <ArrowRight size={18} className="text-gray-300" />
+                    </div>
+                  )}
+                  <div className="mb-4 flex items-center gap-3">
+                    <span className="font-headline text-5xl font-black text-gray-100 leading-none select-none">{step}</span>
+                    <div className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl ${accent} ring-4 ${ring}`}>
+                      <StepIcon size={18} className="text-white" />
+                    </div>
+                  </div>
+                  <h3 className="font-headline text-base font-extrabold text-gray-900 mb-2">{title}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
+                </div>
+              </AnimateIn>
+            ))}
+          </div>
+
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <a
+              href="/apply"
+              className="inline-flex items-center gap-2 rounded-xl bg-primary-blue px-7 py-3.5 font-extrabold text-white shadow-lg shadow-blue-200 transition hover:bg-blue-700 hover:-translate-y-0.5"
+            >
+              <GraduationCap size={16} /> Start My Admission
+            </a>
+            <a
+              href="https://wa.me/916203138576?text=%E0%A4%A8%E0%A4%AE%E0%A4%B8%E0%A5%8D%E0%A4%A4%E0%A5%87!%20%E0%A4%AE%E0%A5%81%E0%A4%9D%E0%A5%87%20admission%20guidance%20%E0%A4%9A%E0%A4%BE%E0%A4%B9%E0%A4%BF%E0%A4%8F%E0%A5%A4"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-xl border-2 border-blue-200 px-7 py-3.5 font-bold text-blue-700 transition hover:border-blue-400 hover:bg-blue-50"
+            >
+              <MessageCircle size={16} /> WhatsApp पर पूछें
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ── WHY US ── */}
+      <section id="why-us" className="py-16 md:py-24 bg-white">
+        <div className="container-shell">
+
+          {/* Heading */}
+          <AnimateIn type="fade-up" className="text-center mb-10">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-2">
+              <span className="h-2 w-2 rounded-full bg-blue-500" />
+              <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-blue-600">हम क्यों अलग हैं</span>
+            </div>
+            <h2 className="font-headline text-[2rem] font-black leading-tight tracking-tight text-gray-900 md:text-5xl">
+              Admission नहीं —{" "}
+              <span className="bg-gradient-to-r from-blue-700 to-indigo-600 bg-clip-text text-transparent">
+                एक सुरक्षित भविष्य
+              </span>
+            </h2>
+            <p className="mt-3 max-w-xl mx-auto text-gray-500">
+              हज़ारों Bihar के students ने Siksha Wallah पर भरोसा किया — क्योंकि हम सिर्फ college नहीं, सही दिशा देते हैं।
+            </p>
+          </AnimateIn>
+
+          {/* ── Stats Strip ── */}
+          <AnimateIn type="fade-up" delay={60}>
+          <div className="mb-12 grid grid-cols-2 md:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-blue-100 shadow-sm">
+            {[
+              { target: 5000, suffix: "+",      label: "Successful Admissions" },
+              { target: 200,  suffix: "+",      label: "Partner Colleges" },
+              { target: 2,    suffix: " Cr+",   label: "BSCC Loans Sanctioned" },
+              { target: 11,   suffix: "+ Yrs",  label: "Forbesganj में अनुभव" },
+            ].map(({ target, suffix, label }) => (
+              <div key={label} className="flex flex-col items-center justify-center gap-1 bg-blue-50 py-6 px-4 text-center">
+                <p className="font-headline text-3xl font-black text-blue-700 md:text-4xl">
+                  <CountUp target={target} suffix={suffix} />
+                </p>
+                <p className="text-xs font-semibold text-gray-500 leading-snug">{label}</p>
+              </div>
+            ))}
+          </div>
+          </AnimateIn>
+
+          {/* ── 6 USP Cards ── */}
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              {
+                icon: ShieldCheck, border: "border-l-blue-500",   iconBg: "bg-blue-50",   iconColor: "text-blue-600",
+                title: "निःशुल्क काउंसेलिंग",
+                desc: "Call से लेकर admission confirm होने तक — कोई charge नहीं, कोई hidden fee नहीं। पहला कदम बिल्कुल मुफ़्त।",
+              },
+              {
+                icon: Building2,   border: "border-l-green-500",  iconBg: "bg-green-50",  iconColor: "text-green-600",
+                title: "200+ Verified Colleges",
+                desc: "सिर्फ NCTE, INC, AICTE, BCI और PCI approved institutes — किसी unverified college में admission नहीं।",
+              },
+              {
+                icon: CreditCard,  border: "border-l-amber-500",  iconBg: "bg-amber-50",  iconColor: "text-amber-600",
+                title: "BSCC Loan Experts",
+                desc: "₹2 Cr+ loans sanctioned — document preparation से DRCC approval तक हमारी team पूरी तरह साथ है।",
+              },
+              {
+                icon: BadgeCheck,  border: "border-l-blue-500",   iconBg: "bg-blue-50",   iconColor: "text-blue-600",
+                title: "पारदर्शी Fee Structure",
+                desc: "पहले दिन से सब कुछ clear — कोई surprise नहीं, कोई बाद में अचानक fee नहीं। 100% transparent process।",
+              },
+              {
+                icon: Users,       border: "border-l-indigo-500", iconBg: "bg-indigo-50", iconColor: "text-indigo-600",
+                title: "Personal Counsellor",
+                desc: "एक call — एक dedicated counsellor — admission confirm होने तक वही एक व्यक्ति आपके साथ रहेगा।",
+              },
+              {
+                icon: Award,       border: "border-l-amber-500",  iconBg: "bg-amber-50",  iconColor: "text-amber-600",
+                title: "11+ साल का अनुभव",
+                desc: "Forbesganj में 11 साल से active — 5,000+ परिवारों का भरोसा, बिना किसी complaint के।",
+              },
+            ].map(({ icon: Icon, border, iconBg, iconColor, title, desc }, i) => (
+              <AnimateIn key={title} type="zoom-in" delay={i * 60}>
+              <div className={`group flex gap-4 rounded-2xl border-2 border-gray-100 border-l-4 ${border} bg-white p-5 shadow-sm transition hover:shadow-md hover:-translate-y-0.5`}>
+                <div className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl ${iconBg}`}>
+                  <Icon size={20} className={iconColor} />
+                </div>
+                <div>
+                  <h3 className="font-headline text-base font-extrabold text-gray-900">{title}</h3>
+                  <p className="mt-1 text-sm text-gray-500 leading-relaxed">{desc}</p>
+                </div>
+              </div>
+              </AnimateIn>
+            ))}
           </div>
         </div>
       </section>
@@ -987,171 +1129,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── WHY US ── */}
-      <section id="why-us" className="py-16 md:py-24 bg-white">
-        <div className="container-shell">
-
-          {/* Heading */}
-          <AnimateIn type="fade-up" className="text-center mb-10">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-2">
-              <span className="h-2 w-2 rounded-full bg-blue-500" />
-              <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-blue-600">हम क्यों अलग हैं</span>
-            </div>
-            <h2 className="font-headline text-[2rem] font-black leading-tight tracking-tight text-gray-900 md:text-5xl">
-              Admission नहीं —{" "}
-              <span className="bg-gradient-to-r from-blue-700 to-indigo-600 bg-clip-text text-transparent">
-                एक सुरक्षित भविष्य
-              </span>
-            </h2>
-            <p className="mt-3 max-w-xl mx-auto text-gray-500">
-              हज़ारों Bihar के students ने Siksha Wallah पर भरोसा किया — क्योंकि हम सिर्फ college नहीं, सही दिशा देते हैं।
-            </p>
-          </AnimateIn>
-
-          {/* ── Stats Strip ── */}
-          <AnimateIn type="fade-up" delay={60}>
-          <div className="mb-12 grid grid-cols-2 md:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-blue-100 shadow-sm">
-            {[
-              { target: 5000, suffix: "+",      label: "Successful Admissions" },
-              { target: 200,  suffix: "+",      label: "Partner Colleges" },
-              { target: 2,    suffix: " Cr+",   label: "BSCC Loans Sanctioned" },
-              { target: 11,   suffix: "+ Yrs",  label: "Forbesganj में अनुभव" },
-            ].map(({ target, suffix, label }) => (
-              <div key={label} className="flex flex-col items-center justify-center gap-1 bg-blue-50 py-6 px-4 text-center">
-                <p className="font-headline text-3xl font-black text-blue-700 md:text-4xl">
-                  <CountUp target={target} suffix={suffix} />
-                </p>
-                <p className="text-xs font-semibold text-gray-500 leading-snug">{label}</p>
-              </div>
-            ))}
-          </div>
-          </AnimateIn>
-
-          {/* ── 6 USP Cards ── */}
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-14">
-            {[
-              {
-                icon: ShieldCheck, border: "border-l-blue-500",   iconBg: "bg-blue-50",   iconColor: "text-blue-600",
-                title: "निःशुल्क काउंसेलिंग",
-                desc: "Call से लेकर admission confirm होने तक — कोई charge नहीं, कोई hidden fee नहीं। पहला कदम बिल्कुल मुफ़्त।",
-              },
-              {
-                icon: Building2,   border: "border-l-green-500",  iconBg: "bg-green-50",  iconColor: "text-green-600",
-                title: "200+ Verified Colleges",
-                desc: "सिर्फ NCTE, INC, AICTE, BCI और PCI approved institutes — किसी unverified college में admission नहीं।",
-              },
-              {
-                icon: CreditCard,  border: "border-l-amber-500",  iconBg: "bg-amber-50",  iconColor: "text-amber-600",
-                title: "BSCC Loan Experts",
-                desc: "₹2 Cr+ loans sanctioned — document preparation से DRCC approval तक हमारी team पूरी तरह साथ है।",
-              },
-              {
-                icon: BadgeCheck,  border: "border-l-blue-500",   iconBg: "bg-blue-50",   iconColor: "text-blue-600",
-                title: "पारदर्शी Fee Structure",
-                desc: "पहले दिन से सब कुछ clear — कोई surprise नहीं, कोई बाद में अचानक fee नहीं। 100% transparent process।",
-              },
-              {
-                icon: Users,       border: "border-l-red-500",    iconBg: "bg-red-50",    iconColor: "text-red-600",
-                title: "Personal Counsellor",
-                desc: "एक call — एक dedicated counsellor — admission confirm होने तक वही एक व्यक्ति आपके साथ रहेगा।",
-              },
-              {
-                icon: Award,       border: "border-l-amber-500",  iconBg: "bg-amber-50",  iconColor: "text-amber-600",
-                title: "11+ साल का अनुभव",
-                desc: "Forbesganj में 11 साल से active — 5,000+ परिवारों का भरोसा, बिना किसी complaint के।",
-              },
-            ].map(({ icon: Icon, border, iconBg, iconColor, title, desc }, i) => (
-              <AnimateIn key={title} type="zoom-in" delay={i * 60}>
-              <div className={`group flex gap-4 rounded-2xl border-2 border-gray-100 border-l-4 ${border} bg-white p-5 shadow-sm transition hover:shadow-md hover:-translate-y-0.5`}>
-                <div className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl ${iconBg}`}>
-                  <Icon size={20} className={iconColor} />
-                </div>
-                <div>
-                  <h3 className="font-headline text-base font-extrabold text-gray-900">{title}</h3>
-                  <p className="mt-1 text-sm text-gray-500 leading-relaxed">{desc}</p>
-                </div>
-              </div>
-              </AnimateIn>
-            ))}
-          </div>
-
-          {/* ── 4-Step Process ── */}
-          <AnimateIn type="fade-up" delay={80}>
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] p-8 md:p-12 text-white">
-            {/* dot grid */}
-            <div className="pointer-events-none absolute inset-0 opacity-[0.06]"
-              style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
-            <div className="pointer-events-none absolute -top-16 -right-16 h-48 w-48 rounded-full bg-amber-400 opacity-[0.08] blur-3xl" />
-
-            <div className="relative mb-8 text-center">
-              <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/10 px-4 py-1.5 text-xs font-bold tracking-widest text-amber-300">
-                ✦ Simple Process
-              </span>
-              <h3 className="mt-3 font-headline text-2xl font-extrabold md:text-3xl">
-                Admission कैसे होता है —{" "}
-                <span className="bg-gradient-to-r from-amber-400 to-yellow-300 bg-clip-text text-transparent">4 Simple Steps</span>
-              </h3>
-            </div>
-
-            <div className="relative grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                { step: "01", icon: Phone,        title: "Call या WhatsApp करें",            desc: "पहली बातचीत बिल्कुल निःशुल्क। हम आपकी situation समझेंगे।",             color: "text-blue-300",  bg: "bg-blue-500/20" },
-                { step: "02", icon: FileText,     title: "अपनी Profile Share करें",          desc: "Marks, बजट, stream और career goal बताएँ — हम सही options निकालेंगे।", color: "text-green-300", bg: "bg-green-500/20" },
-                { step: "03", icon: Building2,    title: "Verified College Options पा���ँ",    desc: "आपके लिए NCTE/INC/AICTE approved colleges की shortlist ready होगी।",   color: "text-amber-300", bg: "bg-amber-500/20" },
-                { step: "04", icon: BadgeCheck,   title: "Admission Confirm करें",           desc: "Documents से DRCC तक — हर step पर हम साथ। Seat confirm होने तक।",    color: "text-red-300",   bg: "bg-red-500/20"  },
-              ].map(({ step, icon: StepIcon, title, desc, color, bg }, i) => (
-                <div key={step} className="relative">
-                  {i < 3 && (
-                    <div className="absolute hidden lg:flex items-center -right-2 top-7 z-10">
-                      <ArrowRight size={16} className="text-white/20" />
-                    </div>
-                  )}
-                  <div className="h-full rounded-xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm">
-                    <div className="mb-3 flex items-center gap-3">
-                      <span className="font-headline text-4xl font-black text-white/10 leading-none">{step}</span>
-                      <div className={`flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 ${bg}`}>
-                        <StepIcon size={17} className={color} />
-                      </div>
-                    </div>
-                    <h4 className="font-headline font-extrabold text-white text-sm leading-snug mb-1.5">{title}</h4>
-                    <p className="text-xs text-blue-200 leading-relaxed">{desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="relative mt-7 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-xl border border-white/10 bg-white/5 px-6 py-4">
-              <p className="text-sm font-semibold text-blue-100">
-                अभी शुरू करें — <strong className="text-white">पहली call बिल्कुल free है।</strong>
-              </p>
-              <a
-                href="https://wa.me/916203138576?text=नमस्ते!%20मुझे%20admission%20guidance%20चाहिए।%20Please%20help%20karein।"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-shrink-0 inline-flex items-center gap-2 rounded-xl bg-amber-400 px-5 py-2.5 text-sm font-extrabold text-gray-900 transition hover:bg-amber-300"
-              >
-                <MessageCircle size={15} /> WhatsApp पर बात करें
-              </a>
-            </div>
-          </div>
-          </AnimateIn>
-        </div>
-      </section>
-
-      {/* ── SUCCESS STORIES CAROUSEL ── */}
-      <ReviewsCarousel 
-        reviews={successStories}
-        title="छात्रों के असली अनुभव"
-        subtitle="5,000+ परिवारों ने हम पर भरोसा किया — यह उन्हीं की आवाज़ है।"
-      />
-
       {/* ── PARTNER COLLEGES SECTION ── */}
       <section id="partner-colleges" className="py-14 md:py-20 bg-gradient-to-b from-gray-50 to-white">
         <div className="container-shell">
           <AnimateIn type="fade-up" className="text-center mb-10">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-green-200 bg-green-50 px-4 py-2">
-              <Landmark size={13} className="text-green-600" />
-              <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-green-600">NCTE / UGC / AICTE / INC Recognised</span>
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-2">
+              <Landmark size={13} className="text-blue-700" />
+              <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-blue-700">NCTE / UGC / AICTE / INC Recognised</span>
             </div>
             <h2 className="font-headline text-3xl md:text-5xl font-extrabold text-gray-900">
               Our{" "}
@@ -1327,6 +1311,13 @@ export default function Home() {
           </AnimateIn>
         </div>
       </section>
+
+      {/* ── SUCCESS STORIES CAROUSEL ── */}
+      <ReviewsCarousel
+        reviews={successStories}
+        title="छात्रों के असली अनुभव"
+        subtitle="5,000+ परिवारों ने हम पर भरोसा किया — यह उन्हीं की आवाज़ है।"
+      />
 
       {/* ── DOCUMENTS CHECKLIST ── */}
       <section id="documents" className="py-24 bg-white">
@@ -1771,13 +1762,13 @@ export default function Home() {
       </section>
 
       {/* ── FINAL CTA SECTION ── */}
-      <section className="relative overflow-hidden py-16 md:py-24 bg-gradient-to-br from-[#dc143c] via-[#c0102e] to-[#9b0c24]">
+      <section className="relative overflow-hidden py-16 md:py-24 bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590]">
         {/* Dot grid */}
         <div className="pointer-events-none absolute inset-0 opacity-[0.08]"
           style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.9) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
         {/* Glow orbs */}
         <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-amber-400 opacity-20 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-red-300 opacity-20 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-blue-500 opacity-20 blur-3xl" />
 
         <div className="container-shell relative text-center text-white">
           {/* Badge */}
@@ -1796,7 +1787,7 @@ export default function Home() {
           </h2>
 
           {/* Sub line */}
-          <p className="mt-5 max-w-2xl mx-auto text-base md:text-lg text-red-100 leading-relaxed">
+          <p className="mt-5 max-w-2xl mx-auto text-base md:text-lg text-blue-100 leading-relaxed">
             एक call में जानें — <strong className="text-white">कौन सा course आपके लिए सही है</strong>, कौन सा college verified है, और BSCC loan कैसे मिलेगा।{" "}
             <span className="font-bold text-amber-300">पहली counselling 100% Free।</span>
           </p>
@@ -1804,7 +1795,7 @@ export default function Home() {
           {/* Trust line */}
           <div className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
             {["कोई fee नहीं", "Spam नहीं", "200+ Verified Colleges", "5,000+ Students Guided"].map((t) => (
-              <span key={t} className="flex items-center gap-1.5 text-xs font-semibold text-red-200">
+              <span key={t} className="flex items-center gap-1.5 text-xs font-semibold text-blue-200">
                 <Check size={11} className="text-amber-400" /> {t}
               </span>
             ))}
@@ -1814,9 +1805,9 @@ export default function Home() {
           <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4">
             <a
               href="/apply"
-              className="group relative flex w-full sm:w-auto items-center justify-center gap-2.5 overflow-hidden rounded-2xl bg-white px-8 py-4 font-extrabold text-[#dc143c] shadow-xl shadow-black/20 transition-all hover:-translate-y-1 hover:shadow-2xl active:scale-[0.97]"
+              className="group relative flex w-full sm:w-auto items-center justify-center gap-2.5 overflow-hidden rounded-2xl bg-white px-8 py-4 font-extrabold text-[#003590] shadow-xl shadow-black/20 transition-all hover:-translate-y-1 hover:shadow-2xl active:scale-[0.97]"
             >
-              <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-red-100/50 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
+              <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-blue-100/50 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
               <GraduationCap size={18} className="flex-shrink-0" />
               Apply Now — Free
               <ArrowRight size={16} className="flex-shrink-0 transition-transform group-hover:translate-x-1" />
