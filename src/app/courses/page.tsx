@@ -413,16 +413,6 @@ export default function CoursesPage() {
       </section>
 
       <SiteFooter />
-
-      {/* Floating WhatsApp */}
-      <a
-        href="https://wa.me/916203138576?text=नमस्ते!%20मुझे%20course%20admission%20के%20बारे%20में%20guidance%20चाहिए।"
-        target="_blank" rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-lg shadow-green-500/40 hover:bg-green-600 hover:scale-110 transition"
-        aria-label="WhatsApp"
-      >
-        <MessageCircle size={26} />
-      </a>
     </main>
   );
 }
