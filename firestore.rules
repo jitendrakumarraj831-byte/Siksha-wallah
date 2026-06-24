@@ -28,7 +28,11 @@ service cloud.firestore {
     // All status/note updates via Admin SDK server API only.
     match /course_applications/{id} {
       allow create: if true;
-      allow read:   if isSignedIn() && resource.data.userId == request.auth.uid;
+      // Allow student to read their own application — matched by userId OR by email
+      allow read:   if isSignedIn() && (
+                      resource.data.userId == request.auth.uid ||
+                      resource.data.email  == request.auth.token.email
+                    );
       allow update, delete: if false;
     }
 

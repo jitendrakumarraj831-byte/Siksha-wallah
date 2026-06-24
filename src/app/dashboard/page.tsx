@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 import { useAuth } from '@/components/auth-provider';
 import { type CourseApplication, type ApplicationStatus } from '@/services/application-service';
 import { getCourseSlug } from '@/lib/courses-data';
@@ -51,17 +53,42 @@ export default function DashboardPage() {
     }
     if (authLoading || !user) return;
 
-    user.getIdToken().then(async (token) => {
+    (async () => {
       try {
-        const res = await fetch(`/api/student/applications?uid=${user.uid}`, {
-          headers: { Authorization: `Bearer ${token}` },
+        // Query 1: by userId (primary — covers all logged-in submissions)
+        const q1 = query(collection(db, 'course_applications'), where('userId', '==', user.uid));
+        const snap1 = await getDocs(q1);
+        const seenIds = new Set<string>();
+        const apps: CourseApplication[] = [];
+        for (const d of snap1.docs) {
+          seenIds.add(d.id);
+          apps.push({ id: d.id, ...d.data() } as CourseApplication);
+        }
+
+        // Query 2: by email (fallback — covers submissions made before login)
+        if (user.email) {
+          const q2 = query(collection(db, 'course_applications'), where('email', '==', user.email));
+          const snap2 = await getDocs(q2);
+          for (const d of snap2.docs) {
+            if (seenIds.has(d.id)) continue;
+            const data = d.data();
+            if (!data.userId || data.userId === user.uid) {
+              apps.push({ id: d.id, ...data } as CourseApplication);
+            }
+          }
+        }
+
+        // Sort newest first
+        apps.sort((a, b) => {
+          const ta = (a.createdAt as any)?.toMillis?.() ?? (a.createdAt as any) ?? 0;
+          const tb = (b.createdAt as any)?.toMillis?.() ?? (b.createdAt as any) ?? 0;
+          return tb - ta;
         });
-        const json = await res.json();
-        if (json.success) setApplications(json.data);
+        setApplications(apps);
       } finally {
         setLoading(false);
       }
-    });
+    })();
   }, [authLoading, isAuthenticated, user, router]);
 
   const handleLogout = async () => {
