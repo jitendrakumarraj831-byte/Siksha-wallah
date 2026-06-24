@@ -32,6 +32,7 @@ interface StudentProfile {
   enrolledCourses?: string[];
   // joined applications
   applications?: CourseApplication[];
+  documents?: { id: string; name: string; type: string; url: string; uploadedAt?: number; mimeType?: string }[];
 }
 
 const APP_STATUS_META: Record<ApplicationStatus, { label: string; color: string; icon: string }> = {
@@ -239,6 +240,32 @@ function StudentCard({
             <div className="px-5 pb-5">
               <div className="rounded-xl bg-white border border-dashed border-gray-200 py-6 text-center text-xs text-gray-400">
                 No course applications yet. Student registered but hasn't applied via /apply.
+              </div>
+            </div>
+          )}
+
+          {/* Documents */}
+          {student.documents && student.documents.length > 0 && (
+            <div className="px-5 pb-5">
+              <p className="mb-2 text-xs font-extrabold uppercase tracking-wider text-gray-400">
+                Uploaded Documents ({student.documents.length})
+              </p>
+              <div className="grid gap-2 sm:grid-cols-2">
+                {student.documents.map((d) => (
+                  <a
+                    key={d.id}
+                    href={d.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs hover:border-blue-400 hover:bg-blue-50 transition"
+                  >
+                    <span className="text-base">
+                      {d.mimeType?.includes('pdf') ? '📄' : d.mimeType?.includes('image') ? '🖼️' : '📎'}
+                    </span>
+                    <span className="flex-1 truncate font-semibold text-gray-700">{d.name}</span>
+                    <span className="shrink-0 text-blue-600 font-bold">View →</span>
+                  </a>
+                ))}
               </div>
             </div>
           )}

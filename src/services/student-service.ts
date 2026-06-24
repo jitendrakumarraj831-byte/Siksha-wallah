@@ -1,16 +1,11 @@
-import { db, storage } from '@/lib/firebase';
+import { db, storage, auth } from '@/lib/firebase';
 import {
   doc,
-  collection,
-  query,
-  where,
-  getDocs,
   setDoc,
-  addDoc,
   getDoc,
-  deleteDoc,
 } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
+import { getIdToken } from 'firebase/auth';
 
 export interface StudentProfile {
   uid: string;
@@ -90,17 +85,22 @@ export const studentService = {
         async () => {
           try {
             const url = await getDownloadURL(task.snapshot.ref);
-            const docRef = await addDoc(collection(db, 'documents'), {
-              uid,
-              name: docName,
-              type: docType,
-              url,
-              storagePath,
-              fileSize: file.size,
-              mimeType: file.type,
-              uploadedAt: Date.now(),
-            } satisfies Omit<Document, 'id'>);
-            resolve(docRef.id);
+            // Save metadata via server API (bypasses Firestore client rules)
+            const token = auth?.currentUser ? await getIdToken(auth.currentUser) : null;
+            const res = await fetch('/api/student/documents', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                ...(token ? { Authorization: `Bearer ${token}` } : {}),
+              },
+              body: JSON.stringify({
+                uid, name: docName, type: docType, url,
+                storagePath, fileSize: file.size, mimeType: file.type,
+              }),
+            });
+            const json = await res.json();
+            if (!res.ok) throw new Error(json.error || 'Upload failed');
+            resolve(json.id);
           } catch (err: any) {
             reject(new Error(err.message));
           }
@@ -111,20 +111,32 @@ export const studentService = {
 
   async getDocuments(uid: string): Promise<Document[]> {
     try {
-      const q = query(collection(db, 'documents'), where('uid', '==', uid));
-      const snapshot = await getDocs(q);
-      return snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      } as Document));
+      const token = auth?.currentUser ? await getIdToken(auth.currentUser) : null;
+      const res = await fetch(`/api/student/documents?uid=${uid}`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      if (!res.ok) {
+        const json = await res.json().catch(() => ({}));
+        throw new Error(json.error || 'Failed to fetch documents');
+      }
+      const json = await res.json();
+      return json.data as Document[];
     } catch (error: any) {
       throw new Error(`Failed to fetch documents: ${error.message}`);
     }
   },
 
-  async deleteDocument(docId: string, storagePath?: string): Promise<void> {
+  async deleteDocument(docId: string, uid: string, storagePath?: string): Promise<void> {
     try {
-      await deleteDoc(doc(db, 'documents', docId));
+      const token = auth?.currentUser ? await getIdToken(auth.currentUser) : null;
+      const res = await fetch(`/api/student/documents?id=${docId}&uid=${uid}`, {
+        method: 'DELETE',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      if (!res.ok) {
+        const json = await res.json().catch(() => ({}));
+        throw new Error(json.error || 'Failed to delete document');
+      }
       if (storagePath && storage) {
         await deleteObject(ref(storage, storagePath)).catch(() => {});
       }

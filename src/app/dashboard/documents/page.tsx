@@ -547,7 +547,7 @@ export default function DocumentsPage() {
     if (!confirm(`Remove "${doc.name}"? This cannot be undone.`)) return;
     setError('');
     try {
-      await studentService.deleteDocument(doc.id!, doc.storagePath);
+      await studentService.deleteDocument(doc.id!, doc.uid, doc.storagePath);
       setDocuments(prev => prev.filter(d => d.id !== doc.id));
       setSuccess(`"${doc.name}" removed.`);
     } catch (err: any) {
