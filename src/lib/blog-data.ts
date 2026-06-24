@@ -12,14 +12,14 @@ export interface BlogArticle {
 export const blogArticles: BlogArticle[] = [
   {
     slug: "bed-admission-bihar-2025",
-    title: "B.Ed Admission Bihar 2025: Complete Guide",
-    titleHi: "B.Ed एडमिशन बिहार 2025: पूरी जानकारी हिंदी में",
+    title: "B.Ed Admission Bihar 2026/2027: Complete Guide",
+    titleHi: "B.Ed एडमिशन बिहार 2026/2027: पूरी जानकारी हिंदी में",
     excerpt:
-      "Bihar B.Ed 2025 की पूरी प्रक्रिया — पात्रता, आवेदन फॉर्म, परीक्षा तिथि, कॉलेज लिस्ट और फीस। Siksha Wallah के साथ सीट पक्की करें।",
+      "Bihar B.Ed 2026/2027 की पूरी प्रक्रिया — पात्रता, आवेदन फॉर्म, परीक्षा तिथि, कॉलेज लिस्ट और फीस। Siksha Wallah के साथ सीट पक्की करें।",
     date: "2025-04-10",
     readTime: "6 min",
     category: "Teaching",
-    content: `## Bihar B.Ed 2025 — पूरी जानकारी
+    content: `## Bihar B.Ed 2026/2027 — पूरी जानकारी
 
 **B.Ed (Bachelor of Education)** एक 2-वर्षीय प्रोफेशनल कोर्स है जो आपको सरकारी या प्राइवेट स्कूल में शिक्षक बनने के लिए तैयार करता है। बिहार में सरकारी शिक्षक बनने के लिए B.Ed अनिवार्य है।
 
@@ -58,14 +58,14 @@ Forbesganj, Araria में हमारे काउंसलर आपकी 
   },
   {
     slug: "bihar-student-credit-card-guide",
-    title: "Bihar Student Credit Card (BSCC) 2025 — Complete Guide",
-    titleHi: "Bihar Student Credit Card 2025 — पूरी जानकारी हिंदी में",
+    title: "Bihar Student Credit Card (BSCC) 2026/2027 — Complete Guide",
+    titleHi: "Bihar Student Credit Card 2026/2027 — पूरी जानकारी हिंदी में",
     excerpt:
       "BSCC के तहत ₹4 लाख तक का लोन, 4% ब्याज दर, पात्रता, जरूरी दस्तावेज और आवेदन प्रक्रिया — सब कुछ एक जगह।",
     date: "2025-05-01",
     readTime: "8 min",
     category: "Finance",
-    content: `## Bihar Student Credit Card — विस्तृत गाइड 2025
+    content: `## Bihar Student Credit Card — विस्तृत गाइड 2026/2027
 
 **Bihar Student Credit Card (BSCC)** बिहार सरकार की एक महत्वाकांक्षी योजना है जो उच्च शिक्षा के लिए आर्थिक रूप से कमजोर छात्रों को **₹4 लाख तक का शिक्षा लोन** प्रदान करती है।
 
@@ -160,14 +160,14 @@ Forbesganj, Araria में हमारे काउंसलर आपकी 
   },
   {
     slug: "deled-vs-bed-difference",
-    title: "D.El.Ed vs B.Ed — Key Differences Explained (Bihar 2025)",
+    title: "D.El.Ed vs B.Ed — Key Differences Explained (Bihar 2026/2027)",
     titleHi: "D.El.Ed vs B.Ed — अंतर, पात्रता, फीस और करियर स्कोप",
     excerpt:
       "D.El.Ed और B.Ed में क्या फर्क है? प्राइमरी शिक्षक या TGT के लिए कौन सा कोर्स जरूरी है? बिहार में सरकारी शिक्षक बनने की पूरी जानकारी।",
     date: "2025-06-01",
     readTime: "5 min",
     category: "Teaching",
-    content: `## D.El.Ed vs B.Ed — बिहार 2025 में क्या चुनें?
+    content: `## D.El.Ed vs B.Ed — बिहार 2026/2027 में क्या चुनें?
 
 बिहार में सरकारी शिक्षक बनने की चाह रखने वाले अधिकांश छात्र **D.El.Ed** और **B.Ed** के बीच confused रहते हैं। दोनों NCTE-approved teacher education courses हैं, लेकिन दोनों के लिए अलग-अलग स्तरों पर पढ़ाने का अधिकार मिलता है।
 
@@ -207,13 +207,13 @@ NCTE-approved colleges में D.El.Ed और B.Ed दोनों में d
   },
   {
     slug: "gnm-nursing-admission-bihar-2025",
-    title: "GNM Nursing Admission Bihar 2025 — Complete Guide",
-    titleHi: "GNM नर्सिंग एडमिशन बिहार 2025 — पूरी जानकारी हिंदी में",
+    title: "GNM Nursing Admission Bihar 2026/2027 — Complete Guide",
+    titleHi: "GNM नर्सिंग एडमिशन बिहार 2026/2027 — पूरी जानकारी हिंदी में",
     excerpt: "GNM (General Nursing & Midwifery) में admission कैसे लें? पात्रता, फीस, INC-approved colleges और BSCC loan की पूरी जानकारी Bihar students के लिए।",
     date: "2025-05-20",
     readTime: "6 min",
     category: "Medical",
-    content: `## GNM Nursing Admission Bihar 2025 — पूरी गाइड
+    content: `## GNM Nursing Admission Bihar 2026/2027 — पूरी गाइड
 
 **GNM (General Nursing and Midwifery)** एक 3.5 वर्षीय diploma course है जो 12वीं pass students को nurses बनने का मौका देता है। बिहार में सरकारी अस्पतालों में GNM nurses की भारी मांग है।
 
@@ -250,19 +250,19 @@ Bihar Student Credit Card से GNM की पूरी fees पर **₹4 ल�
   },
   {
     slug: "mbbs-neet-admission-bihar-2025",
-    title: "MBBS Admission Bihar 2025 — NEET Cutoff, Colleges & Fees",
-    titleHi: "MBBS एडमिशन बिहार 2025 — NEET Cutoff, कॉलेज और फीस गाइड",
-    excerpt: "Bihar में MBBS admission 2025: NEET cutoff, BCECE Medical counselling, top medical colleges, fees structure और BSCC loan की पूरी जानकारी।",
+    title: "MBBS Admission Bihar 2026/2027 — NEET Cutoff, Colleges & Fees",
+    titleHi: "MBBS एडमिशन बिहार 2026/2027 — NEET Cutoff, कॉलेज और फीस गाइड",
+    excerpt: "Bihar में MBBS admission 2026/2027: NEET cutoff, BCECE Medical counselling, top medical colleges, fees structure और BSCC loan की पूरी जानकारी।",
     date: "2025-04-25",
     readTime: "8 min",
     category: "Medical",
-    content: `## MBBS Admission Bihar 2025 — Complete Guide
+    content: `## MBBS Admission Bihar 2026/2027 — Complete Guide
 
 **MBBS (Bachelor of Medicine and Bachelor of Surgery)** भारत का सबसे prestigious medical course है। बिहार में NEET qualify करके सरकारी और private medical colleges में admission मिलता है।
 
-### NEET 2025 — जरूरी जानकारी
+### NEET 2026/2027 — जरूरी जानकारी
 
-- **Exam Date:** मई 2025 (NTA द्वारा आयोजित)
+- **Exam Date:** मई 2026/2027 (NTA द्वारा आयोजित)
 - **Eligibility:** 12वीं में Physics, Chemistry, Biology — न्यूनतम 50%
 - **Qualifying Marks:** General — 50th percentile; SC/ST/OBC — 40th percentile
 
@@ -299,13 +299,13 @@ Bihar Student Credit Card से GNM की पूरी fees पर **₹4 ल�
   },
   {
     slug: "bca-mca-it-career-bihar-2025",
-    title: "BCA & MCA — IT Career Guide for Bihar Students 2025",
-    titleHi: "BCA और MCA — बिहार के छात्रों के लिए IT Career Guide 2025",
+    title: "BCA & MCA — IT Career Guide for Bihar Students 2026/2027",
+    titleHi: "BCA और MCA — बिहार के छात्रों के लिए IT Career Guide 2026/2027",
     excerpt: "BCA और MCA से IT sector में career कैसे बनाएं? Eligibility, top colleges, salary scope, BSCC loan और Siksha Wallah से admission guidance।",
     date: "2025-05-28",
     readTime: "6 min",
     category: "Technical",
-    content: `## BCA & MCA — IT Career Guide Bihar 2025
+    content: `## BCA & MCA — IT Career Guide Bihar 2026/2027
 
 Technology के इस युग में **BCA (Bachelor of Computer Applications)** और **MCA (Master of Computer Applications)** बिहार के students के लिए सबसे बेहतरीन career options बन गए हैं।
 
@@ -358,13 +358,13 @@ NAAC-accredited colleges में direct admission। BSCC loan से fees क
   },
   {
     slug: "iti-polytechnic-govt-job-bihar-2025",
-    title: "ITI & Polytechnic — Government Job Guide Bihar 2025",
-    titleHi: "ITI और Polytechnic — बिहार में सरकारी नौकरी गाइड 2025",
+    title: "ITI & Polytechnic — Government Job Guide Bihar 2026/2027",
+    titleHi: "ITI और Polytechnic — बिहार में सरकारी नौकरी गाइड 2026/2027",
     excerpt: "10वीं के बाद ITI या Polytechnic करके Railway, Army, Bihar Police और अन्य सरकारी नौकरियां कैसे पाएं? Trades, fees, duration और BSCC loan की जानकारी।",
     date: "2025-06-05",
     readTime: "7 min",
     category: "Technical",
-    content: `## ITI & Polytechnic — Govt Job Guide Bihar 2025
+    content: `## ITI & Polytechnic — Govt Job Guide Bihar 2026/2027
 
 **10वीं पास** के बाद **ITI** और **Polytechnic** दो ऐसे course हैं जो बिहार के students को कम समय में सरकारी नौकरी दिला सकते हैं।
 
@@ -415,13 +415,13 @@ NCVT-affiliated और AICTE-approved colleges में direct admission। BSC
   },
   {
     slug: "anm-nursing-course-bihar-2025",
-    title: "ANM Nursing Course Bihar 2025 — Career in Healthcare",
-    titleHi: "ANM नर्सिंग कोर्स बिहार 2025 — Healthcare में Career Guide",
+    title: "ANM Nursing Course Bihar 2026/2027 — Career in Healthcare",
+    titleHi: "ANM नर्सिंग कोर्स बिहार 2026/2027 — Healthcare में Career Guide",
     excerpt: "ANM (Auxiliary Nursing and Midwifery) कोर्स क्या है? 10+2 के बाद ANM करके आंगनवाड़ी, सरकारी अस्पताल और PHC में नौकरी कैसे पाएं।",
     date: "2025-06-08",
     readTime: "5 min",
     category: "Medical",
-    content: `## ANM Nursing Course Bihar 2025
+    content: `## ANM Nursing Course Bihar 2026/2027
 
 **ANM (Auxiliary Nursing and Midwifery)** एक 2-वर्षीय diploma course है जो महिलाओं को community health worker और nurse बनने का अवसर देता है। बिहार में आंगनवाड़ी, PHC और सरकारी अस्पतालों में ANM की भारी मांग है।
 
@@ -470,13 +470,13 @@ ANM course INC-recognized colleges में करने पर BSCC loan appli
   },
   {
     slug: "mba-admission-bihar-2025",
-    title: "MBA Admission Bihar 2025 — CAT, MAT & Top B-Schools",
-    titleHi: "MBA एडमिशन बिहार 2025 — CAT, MAT और Top B-School Guide",
+    title: "MBA Admission Bihar 2026/2027 — CAT, MAT & Top B-Schools",
+    titleHi: "MBA एडमिशन बिहार 2026/2027 — CAT, MAT और Top B-School Guide",
     excerpt: "Bihar से MBA कैसे करें? CAT/MAT score, top B-Schools, specializations, fees और BSCC loan से MBA की पूरी जानकारी।",
     date: "2025-06-12",
     readTime: "6 min",
     category: "Technical",
-    content: `## MBA Admission Bihar 2025 — Complete Guide
+    content: `## MBA Admission Bihar 2026/2027 — Complete Guide
 
 **MBA (Master of Business Administration)** management और business field में career बनाने का सबसे popular postgraduate course है। बिहार के students के लिए CAT/MAT के जरिए top B-Schools में admission का मौका है।
 
@@ -524,13 +524,13 @@ CAT/MAT score के बिना भी AICTE-approved colleges में direc
   },
   {
     slug: "med-education-career-bihar-2025",
-    title: "M.Ed Course Bihar 2025 — Education Research & College Lecturer Career",
-    titleHi: "M.Ed कोर्स बिहार 2025 — Education में Research और College Lecturer Career",
+    title: "M.Ed Course Bihar 2026/2027 — Education Research & College Lecturer Career",
+    titleHi: "M.Ed कोर्स बिहार 2026/2027 — Education में Research और College Lecturer Career",
     excerpt: "M.Ed करके college lecturer, education researcher या school principal कैसे बनें? Eligibility, UGC-NET, fees और career scope की पूरी जानकारी।",
     date: "2025-06-15",
     readTime: "5 min",
     category: "Teaching",
-    content: `## M.Ed Course Bihar 2025 — Complete Guide
+    content: `## M.Ed Course Bihar 2026/2027 — Complete Guide
 
 **M.Ed (Master of Education)** teaching field की सबसे advanced degree है। B.Ed के बाद M.Ed करने पर college lecturer, researcher और education administrator बनने के दरवाजे खुलते हैं।
 
@@ -579,16 +579,16 @@ NCTE-approved colleges में M.Ed admission और UGC-NET preparation guida
   },
   {
     slug: "btech-admission-bihar-2025",
-    title: "B.Tech Admission Bihar 2025 — JEE, BCECE & Top Colleges",
-    titleHi: "B.Tech एडमिशन बिहार 2025 — JEE, BCECE और टॉप कॉलेज गाइड",
+    title: "B.Tech Admission Bihar 2026/2027 — JEE, BCECE & Top Colleges",
+    titleHi: "B.Tech एडमिशन बिहार 2026/2027 — JEE, BCECE और टॉप कॉलेज गाइड",
     excerpt:
-      "बिहार में B.Tech admission 2025: JEE Main cutoff, BCECE process, top engineering colleges, fees और Bihar Student Credit Card से loan की पूरी जानकारी।",
+      "बिहार में B.Tech admission 2026/2027: JEE Main cutoff, BCECE process, top engineering colleges, fees और Bihar Student Credit Card से loan की पूरी जानकारी।",
     date: "2025-06-10",
     readTime: "7 min",
     category: "Technical",
-    content: `## B.Tech Admission Bihar 2025 — Complete Guide
+    content: `## B.Tech Admission Bihar 2026/2027 — Complete Guide
 
-बिहार में इंजीनियरिंग करने के इच्छुक छात्रों के लिए 2025 में admission प्रक्रिया शुरू हो चुकी है। **JEE Main** और **BCECE** दोनों के जरिए बिहार के top engineering colleges में दाखिला मिलता है।
+बिहार में इंजीनियरिंग करने के इच्छुक छात्रों के लिए 2026/2027 में admission प्रक्रिया शुरू हो चुकी है। **JEE Main** और **BCECE** दोनों के जरिए बिहार के top engineering colleges में दाखिला मिलता है।
 
 ### Admission Routes
 
