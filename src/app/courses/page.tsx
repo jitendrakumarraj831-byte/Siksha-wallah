@@ -235,18 +235,26 @@ function CourseCard({
               ? <><ChevronUp size={15} /> Hide Details</>
               : <><ChevronDown size={15} /> View Career Scope & Details</>}
           </button>
-          {/* Full course detail page link */}
-          {(() => {
-            const slug = getCourseSlug(course.name);
-            return slug ? (
-              <Link
-                href={`/courses/${slug}`}
-                className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold text-white transition ${colors.btn}`}
-              >
-                <GraduationCap size={15} /> View Full Course Details →
-              </Link>
-            ) : null;
-          })()}
+          {/* Apply Now + Course detail */}
+          <div className="flex gap-2">
+            <Link
+              href={`/apply?course=${encodeURIComponent(course.name)}`}
+              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#dc143c] py-2.5 text-sm font-bold text-white transition hover:bg-red-700"
+            >
+              <GraduationCap size={15} /> Apply Now
+            </Link>
+            {(() => {
+              const slug = getCourseSlug(course.name);
+              return slug ? (
+                <Link
+                  href={`/courses/${slug}`}
+                  className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold text-white transition ${colors.btn}`}
+                >
+                  Full Details →
+                </Link>
+              ) : null;
+            })()}
+          </div>
           <a
             href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(course.name)}%20(${encodeURIComponent(course.full)})%20के%20बारे%20में%20जानकारी%20चाहिए।%20Fees%20aur%20admission%20process%20batayein।`}
             target="_blank"

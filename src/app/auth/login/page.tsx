@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { authService } from "@/lib/auth-service";
 import { saveActivity } from "@/services/activity-service";
@@ -10,8 +10,10 @@ import {
   Eye, EyeOff, UserPlus,
 } from "lucide-react";
 
-export default function StudentLoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") || "/dashboard";
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
@@ -40,7 +42,7 @@ export default function StudentLoginPage() {
         email,
         page: "/auth/login",
       });
-      router.push("/dashboard");
+      router.push(redirect);
     } catch {
       setError("Incorrect Email or Password.");
     } finally {
@@ -188,5 +190,13 @@ export default function StudentLoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function StudentLoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#00102e]" />}>
+      <LoginForm />
+    </Suspense>
   );
 }

@@ -16,7 +16,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { CountUp } from "@/components/count-up";
 import { AnimateIn } from "@/components/animate-in";
 import { ReviewsCarousel } from "@/components/reviews-carousel";
-import { streamTabs, colorMap, faqs, type StreamKey } from "@/lib/courses-data";
+import { streamTabs, colorMap, faqs, getCourseSlug, type StreamKey } from "@/lib/courses-data";
 import { successStories } from "@/lib/reviews-data";
 
 /* ─── Data imported from @/lib/courses-data ────────── */
@@ -765,24 +765,45 @@ export default function Home() {
 
                     {/* Toggle + CTA */}
                     <div className="mt-5 flex flex-col gap-2">
-                      <button
-                        onClick={() => setExpandedCard(isExpanded ? null : course.name)}
-                        className="flex w-full items-center justify-center gap-1.5 rounded-xl border-2 border-gray-200 py-2.5 text-sm font-bold text-gray-700 transition hover:border-gray-300 hover:bg-gray-50"
-                      >
-                        {isExpanded ? (
-                          <><ChevronUp size={15} /> Show Less</>
-                        ) : (
-                          <><ChevronDown size={15} /> View Career Scope & Study Mode</>
-                        )}
-                      </button>
-                      <a
-                        href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(course.name)}%20(${encodeURIComponent(course.full)})%20के%20बारे%20में%20जानकारी%20चाहिए।%20Fees%20aur%20admission%20process%20batayein।`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold text-white transition ${colors.btn}`}
-                      >
-                        <MessageCircle size={15} /> Enquire About Fees & Admission
-                      </a>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => setExpandedCard(isExpanded ? null : course.name)}
+                          className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border-2 border-gray-200 py-2.5 text-sm font-bold text-gray-700 transition hover:border-gray-300 hover:bg-gray-50"
+                        >
+                          {isExpanded ? (
+                            <><ChevronUp size={15} /> Show Less</>
+                          ) : (
+                            <><ChevronDown size={15} /> Career Scope</>
+                          )}
+                        </button>
+                        {(() => {
+                          const slug = getCourseSlug(course.name);
+                          return slug ? (
+                            <Link
+                              href={`/courses/${slug}`}
+                              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border-2 border-blue-200 bg-blue-50 py-2.5 text-sm font-bold text-[#003f9f] transition hover:bg-blue-100"
+                            >
+                              <BookOpen size={15} /> Full Details
+                            </Link>
+                          ) : null;
+                        })()}
+                      </div>
+                      <div className="flex gap-2">
+                        <Link
+                          href={`/apply?course=${encodeURIComponent(course.name)}`}
+                          className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#dc143c] py-2.5 text-sm font-bold text-white transition hover:bg-red-700"
+                        >
+                          <GraduationCap size={15} /> Apply Now
+                        </Link>
+                        <a
+                          href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(course.name)}%20(${encodeURIComponent(course.full)})%20के%20बारे%20में%20जानकारी%20चाहिए।%20Fees%20aur%20admission%20process%20batayein।`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold text-white transition ${colors.btn}`}
+                        >
+                          <MessageCircle size={15} /> Enquire
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
