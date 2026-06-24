@@ -86,7 +86,7 @@ function CourseCard({ course, streamKey }: { course: Course; streamKey: StreamKe
           <div className="flex gap-1.5">
             <Link
               href={`/apply?course=${encodeURIComponent(course.name)}`}
-              className="flex flex-1 items-center justify-center gap-1 rounded-xl bg-[#dc143c] py-2.5 text-xs font-bold text-white hover:bg-red-700 transition"
+              className="flex flex-1 items-center justify-center gap-1 rounded-xl bg-primary-blue py-2.5 text-xs font-bold text-white hover:bg-blue-700 transition"
             >
               <GraduationCap size={12} /> Apply
             </Link>
