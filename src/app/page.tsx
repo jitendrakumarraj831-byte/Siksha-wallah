@@ -1161,6 +1161,20 @@ export default function Home() {
                 इस सरकारी योजना से अपनी <strong className="text-white">पढ़ाई, हॉस्टल और भोजन</strong> का खर्च संभालें। ₹4 लाख तक का loan — <strong className="text-amber-400">केवल 4% वार्षिक ब्याज</strong> पर। हम पूरी आवेदन प्रक्रिया में <strong className="text-white">निःशुल्क मार्गदर्शन</strong> देते हैं।
               </p>
 
+              {/* Highlight stat cards — visual punch */}
+              <div className="mt-7 grid grid-cols-3 gap-3">
+                {[
+                  { big: "₹4L", sub: "तक का Loan" },
+                  { big: "4%", sub: "ब्याज (Women 1%)" },
+                  { big: "₹0", sub: "Collateral" },
+                ].map(({ big, sub }) => (
+                  <div key={sub} className="rounded-2xl border border-amber-400/25 bg-gradient-to-b from-amber-400/[0.14] to-transparent p-4 text-center">
+                    <p className="font-headline text-2xl font-black text-amber-400 md:text-3xl">{big}</p>
+                    <p className="mt-1 text-[11px] font-semibold leading-tight text-blue-200">{sub}</p>
+                  </div>
+                ))}
+              </div>
+
               {/* Benefit chips */}
               <div className="mt-7 grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {[
@@ -1203,12 +1217,19 @@ export default function Home() {
             </div>
 
             {/* ── RIGHT: Eligibility Checker ── */}
-            <div className="rounded-2xl border border-white/20 bg-white/[0.07] p-7 backdrop-blur-sm">
+            <div className="rounded-2xl border border-amber-400/30 bg-white/[0.08] p-7 shadow-2xl shadow-black/20 ring-1 ring-amber-400/10 backdrop-blur-sm">
+              <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-amber-400/30 bg-amber-400/[0.12] px-3 py-1">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-400" />
+                <span className="text-[11px] font-bold text-amber-300">सिर्फ 2 मिनट · 100% Free</span>
+              </div>
               <div className="mb-5 flex items-center gap-3">
                 <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-amber-400">
                   <CheckCircle2 size={18} className="text-gray-900" />
                 </div>
-                <h3 className="font-headline text-xl font-extrabold">Quick BSCC Eligibility Check</h3>
+                <div>
+                  <h3 className="font-headline text-xl font-extrabold leading-tight">Quick BSCC Eligibility Check</h3>
+                  <p className="text-xs text-blue-300">3 सवालों में जानें — आप eligible हैं या नहीं</p>
+                </div>
               </div>
 
               {bsccEligible === null ? (
