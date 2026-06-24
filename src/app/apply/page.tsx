@@ -287,11 +287,24 @@ function ApplyForm() {
                 <Phone size={18} /> Call करें — +91 62031 38576
               </a>
             </div>
-            <div className="text-center">
-              {user
-                ? <Link href="/dashboard" className="text-sm font-bold text-[#003f9f] hover:underline">My Dashboard देखें →</Link>
-                : <Link href="/" className="text-sm text-gray-400 hover:text-gray-700 transition">← Homepage पर जाएं</Link>
-              }
+            <div className="text-center space-y-2">
+              {user ? (
+                <Link href="/dashboard"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#003f9f] px-6 py-3 text-sm font-extrabold text-white hover:bg-blue-700 transition">
+                  My Dashboard देखें — Application Track करें →
+                </Link>
+              ) : (
+                <>
+                  <Link href="/auth/register"
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#003f9f] px-6 py-3 text-sm font-extrabold text-white hover:bg-blue-700 transition">
+                    Account बनाएं — Application Track करें →
+                  </Link>
+                  <p className="text-xs text-gray-400">
+                    पहले से account है?{' '}
+                    <Link href="/auth/login" className="font-bold text-[#003f9f] hover:underline">Login करें</Link>
+                  </p>
+                </>
+              )}
             </div>
           </div>
         </main>

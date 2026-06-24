@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/components/auth-provider';
@@ -40,6 +40,7 @@ function getInitials(name: string): string {
 export default function DashboardPage() {
   const { user, userProfile, isAuthenticated, loading: authLoading, logout } = useAuth();
   const router = useRouter();
+  const appsRef = useRef<HTMLDivElement>(null);
   const [applications, setApplications] = useState<CourseApplication[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -117,19 +118,26 @@ export default function DashboardPage() {
               </button>
             </div>
 
-            {/* Stats row */}
+            {/* Stats row — clickable */}
             <div className="mt-6 grid grid-cols-3 gap-3">
-              {[
-                { label: 'Profile',       value: `${pct}%`,        sub: 'Complete',    color: pct === 100 ? 'text-green-400' : 'text-amber-400' },
-                { label: 'Applications',  value: `${activeApps}`,  sub: 'Active',      color: 'text-blue-300'  },
-                { label: 'Admissions',    value: `${admissionDone}`,sub: 'Confirmed',  color: 'text-green-400' },
-              ].map(({ label, value, sub, color }) => (
-                <div key={label} className="rounded-xl bg-white/10 p-3 text-center backdrop-blur">
-                  <p className={`text-2xl font-extrabold ${color}`}>{value}</p>
-                  <p className="text-[11px] font-bold text-white">{label}</p>
-                  <p className="text-[10px] text-blue-300">{sub}</p>
-                </div>
-              ))}
+              <Link href="/dashboard/profile"
+                className="rounded-xl bg-white/10 p-3 text-center backdrop-blur transition hover:bg-white/20 cursor-pointer">
+                <p className={`text-2xl font-extrabold ${pct === 100 ? 'text-green-400' : 'text-amber-400'}`}>{pct}%</p>
+                <p className="text-[11px] font-bold text-white">Profile</p>
+                <p className="text-[10px] text-blue-300">Complete →</p>
+              </Link>
+              <button onClick={() => appsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                className="rounded-xl bg-white/10 p-3 text-center backdrop-blur transition hover:bg-white/20 cursor-pointer w-full">
+                <p className="text-2xl font-extrabold text-blue-300">{activeApps}</p>
+                <p className="text-[11px] font-bold text-white">Applications</p>
+                <p className="text-[10px] text-blue-300">देखें →</p>
+              </button>
+              <button onClick={() => appsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                className="rounded-xl bg-white/10 p-3 text-center backdrop-blur transition hover:bg-white/20 cursor-pointer w-full">
+                <p className="text-2xl font-extrabold text-green-400">{admissionDone}</p>
+                <p className="text-[11px] font-bold text-white">Admissions</p>
+                <p className="text-[10px] text-blue-300">Confirmed →</p>
+              </button>
             </div>
           </div>
         </div>
@@ -174,7 +182,7 @@ export default function DashboardPage() {
           </div>
 
           {/* My Applications */}
-          <div className="rounded-2xl bg-white shadow-sm border border-gray-100">
+          <div ref={appsRef} className="rounded-2xl bg-white shadow-sm border border-gray-100">
             <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
               <h2 className="font-headline text-base font-extrabold text-gray-900">My Applications</h2>
               <Link href="/apply"
@@ -211,13 +219,12 @@ export default function DashboardPage() {
                         <div className="flex flex-wrap items-center gap-2 mb-1.5">
                           {(() => {
                             const slug = getCourseSlug(app.course);
-                            return slug ? (
-                              <Link href={`/courses/${slug}`}
-                                className="font-headline text-sm font-extrabold text-[#003f9f] hover:underline">
-                                {app.course}
+                            const href = slug ? `/courses/${slug}` : `/courses`;
+                            return (
+                              <Link href={href}
+                                className="font-headline text-sm font-extrabold text-[#003f9f] underline underline-offset-2 hover:text-blue-700">
+                                {app.course} →
                               </Link>
-                            ) : (
-                              <span className="font-headline text-sm font-extrabold text-[#003f9f]">{app.course}</span>
                             );
                           })()}
                         </div>
