@@ -243,7 +243,7 @@ function ApplyForm() {
                   <div className="mt-3 rounded-xl bg-amber-100 border border-amber-200 px-4 py-3">
                     <p className="text-xs font-extrabold text-amber-900 mb-1.5">📍 Office Address:</p>
                     <p className="text-xs text-amber-800">College Chowk, Near HP Petrol Pump,<br />Forbesganj, Araria, Bihar</p>
-                    <p className="text-xs text-amber-800 mt-1">⏰ Mon–Sat: 9:00 AM – 6:00 PM</p>
+                    <p className="text-xs text-amber-800 mt-1">⏰ Mon–Sat: 9:00 AM – 7:00 PM</p>
                   </div>
                 </div>
               </div>

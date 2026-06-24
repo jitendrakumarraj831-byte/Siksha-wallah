@@ -113,7 +113,7 @@ export default function Home() {
               { icon: CreditCard,    text: "Complete BSCC Loan Support" },
               { icon: Users,         text: "5,000+ Students Guided" },
               { icon: Building2,     text: "200+ Partner Colleges" },
-              { icon: Award,         text: "9+ Years of Trusted Counselling" },
+              { icon: Award,         text: "11+ Years of Trusted Counselling" },
               { icon: CheckCircle2,  text: "100% Transparent. No Hidden Fees." },
             ].map(({ icon: Icon, text }) => (
               <div key={text} className="flex flex-shrink-0 items-center gap-1.5 rounded-full border border-white/[0.12] bg-white/[0.06] px-4 py-2 text-xs font-semibold text-white/85 backdrop-blur-sm">
@@ -201,7 +201,7 @@ export default function Home() {
                 {[
                   "200+ Verified Colleges",
                   "5,000+ Successful Admissions",
-                  "9+ Years of Experience",
+                  "11+ Years of Experience",
                   "100% Transparent · No Hidden Fee",
                 ].map((t, i, arr) => (
                   <span key={t} className="flex items-center gap-1.5 text-xs font-medium text-blue-300">
@@ -401,7 +401,7 @@ export default function Home() {
               { target: 5000, suffix: "+", label: "Students Successfully Guided", icon: Users     },
               { target: 200,  suffix: "+", label: "Approved Partner Colleges",    icon: Building2 },
               { target: 98,   suffix: "%", label: "Parent Satisfaction Rating",   icon: Star      },
-              { target: 9,    suffix: "+", label: "Years of Trusted Counselling", icon: Award     },
+              { target: 11,   suffix: "+", label: "Years of Trusted Counselling", icon: Award     },
             ] as const).map(({ target, suffix, label, icon: Icon }) => (
               <div key={label} className="text-center">
                 <div className="mb-2 flex justify-center">
@@ -1005,7 +1005,7 @@ export default function Home() {
               </span>
             </h2>
             <p className="mt-3 max-w-xl mx-auto text-gray-500">
-              हज़ारों Bihar के students ने Siksha Wallah पर भरोसा किया — क्योंकि हम सिर���फ college नहीं, सही दिशा देते हैं।
+              हज़ारों Bihar के students ने Siksha Wallah पर भरोसा किया — क्योंकि हम सिर्फ college नहीं, सही दिशा देते हैं।
             </p>
           </AnimateIn>
 
@@ -1016,7 +1016,7 @@ export default function Home() {
               { target: 5000, suffix: "+",      label: "Successful Admissions" },
               { target: 200,  suffix: "+",      label: "Partner Colleges" },
               { target: 2,    suffix: " Cr+",   label: "BSCC Loans Sanctioned" },
-              { target: 9,    suffix: "+ Yrs",  label: "Forbesganj में अनुभव" },
+              { target: 11,   suffix: "+ Yrs",  label: "Forbesganj में अनुभव" },
             ].map(({ target, suffix, label }) => (
               <div key={label} className="flex flex-col items-center justify-center gap-1 bg-blue-50 py-6 px-4 text-center">
                 <p className="font-headline text-3xl font-black text-blue-700 md:text-4xl">
@@ -1048,7 +1048,7 @@ export default function Home() {
               },
               {
                 icon: BadgeCheck,  border: "border-l-blue-500",   iconBg: "bg-blue-50",   iconColor: "text-blue-600",
-                title: "��ारदर्शी Fee Structure",
+                title: "पारदर्शी Fee Structure",
                 desc: "पहले दिन से सब कुछ clear — कोई surprise नहीं, कोई बाद में अचानक fee नहीं। 100% transparent process।",
               },
               {

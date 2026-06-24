@@ -73,7 +73,7 @@ export function SiteFooter() {
               </div>
             </Link>
             <p className="mb-5 text-sm leading-relaxed">
-              Forbesganj&apos;s most trusted education consultancy since 2015. Over 5,000 students personally guided into the right course, the right college and a secure career — across Bihar and beyond.
+              Forbesganj&apos;s most trusted education consultancy since 2015 — 11+ years of honest guidance. Over 5,000 students personally guided into the right course, the right college and a secure career — across Bihar and beyond.
             </p>
             <div className="space-y-2 text-sm">
               <div className="flex items-start gap-2">
