@@ -1,15 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState } from "react";
 import { saveInquiry } from "@/services/inquiry-service";
 import { saveActivity } from "@/services/activity-service";
 import {
   ArrowRight, BadgeCheck, BookOpen, Building2, Check,
-  ChevronDown, ChevronLeft, ChevronRight, CreditCard, GraduationCap, MapPin,
+  ChevronDown, CreditCard, GraduationCap, MapPin,
   MessageCircle, Phone, ShieldCheck, Sparkles, Star, Users, X,
   Clock, Award, CheckCircle2,
-  Briefcase, BookMarked, ChevronUp, FileText, ListChecks,
+  Briefcase, BookMarked, ChevronUp, FileText, ListChecks, TrendingUp,
 } from "lucide-react";
 import { SiteNavbar } from "@/components/site-navbar";
 import { SiteFooter } from "@/components/site-footer";
@@ -193,143 +193,46 @@ function CourseDetailModal({
   );
 }
 
-/* ─── Home page per-stream slider ────────────────────────────────── */
-function HomeStreamSlider({ tab, onOpen }: { tab: typeof streamTabs[0]; onOpen: (course: Course, key: StreamKey) => void }) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [atStart, setAtStart] = useState(true);
-  const [atEnd, setAtEnd] = useState(true);
-  const [isDragging, setIsDragging] = useState(false);
-  const [paused, setPaused] = useState(false);
-  const dragStart = useRef<{ x: number; scrollLeft: number } | null>(null);
-  const movedRef = useRef(false);
+/* ─── Home page tabbed course explorer ───────────────────────────── */
+function HomeCourseExplorer({ onOpen }: { onOpen: (course: Course, key: StreamKey) => void }) {
+  const [activeKey, setActiveKey] = useState<StreamKey>(streamTabs[0].key as StreamKey);
+  const tab = streamTabs.find((t) => t.key === activeKey)!;
   const c = colorMap[tab.color];
   const Icon = tab.icon;
-  const CARD_W = 244 + 16;
-
-  const updateArrows = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const scrollable = el.scrollWidth - el.clientWidth > 1;
-    setAtStart(el.scrollLeft <= 8);
-    setAtEnd(!scrollable || el.scrollLeft + el.clientWidth >= el.scrollWidth - 8);
-  }, []);
-
-  // Measure on mount and keep arrow / fade states correct on resize.
-  useEffect(() => {
-    updateArrows();
-    const el = scrollRef.current;
-    if (!el) return;
-    const ro = new ResizeObserver(updateArrows);
-    ro.observe(el);
-    window.addEventListener("resize", updateArrows);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", updateArrows);
-    };
-  }, [updateArrows]);
-
-  // Auto-slide left → right; loops back to start at the end. Pauses on
-  // hover, touch and while dragging.
-  useEffect(() => {
-    if (paused) return;
-    const id = setInterval(() => {
-      const el = scrollRef.current;
-      if (!el || el.scrollWidth - el.clientWidth <= 1) return;
-      if (el.scrollLeft + el.clientWidth >= el.scrollWidth - 8) {
-        el.scrollTo({ left: 0, behavior: "smooth" });
-      } else {
-        el.scrollBy({ left: CARD_W, behavior: "smooth" });
-      }
-    }, 3000);
-    return () => clearInterval(id);
-  }, [paused, CARD_W]);
-
-  function scroll(dir: "left" | "right") {
-    const el = scrollRef.current;
-    if (!el) return;
-    el.scrollBy({ left: dir === "left" ? -CARD_W * 2 : CARD_W * 2, behavior: "smooth" });
-  }
-  const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    if (e.pointerType !== "mouse") return; // touch devices use native momentum scrolling
-    const el = scrollRef.current;
-    if (!el) return;
-    setIsDragging(true);
-    movedRef.current = false;
-    dragStart.current = { x: e.clientX, scrollLeft: el.scrollLeft };
-    el.setPointerCapture(e.pointerId);
-  }, []);
-  const onPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    if (!dragStart.current || !scrollRef.current) return;
-    const dx = e.clientX - dragStart.current.x;
-    if (Math.abs(dx) > 5) movedRef.current = true;
-    scrollRef.current.scrollLeft = dragStart.current.scrollLeft - dx;
-  }, []);
-  const onPointerUp = useCallback(() => { setIsDragging(false); dragStart.current = null; }, []);
 
   return (
-    <div className="mb-6">
-      {/* ── Stream highlight header ── */}
-      <div className={`bg-gradient-to-r ${c.gradient} mx-0`}>
-        <div className="container-shell flex items-center justify-between gap-4 py-3">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 text-white shadow-inner">
-              <Icon size={20} />
-            </div>
-            <div>
-              <p className="font-headline text-lg font-extrabold text-white leading-none">{tab.label}</p>
-              <p className="text-[11px] text-white/70 mt-0.5">{tab.courses.length} courses available</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Link
-              href={`/courses#${tab.key}`}
-              className="hidden sm:flex items-center gap-1 text-[11px] font-bold text-white/90 hover:text-white bg-white/15 hover:bg-white/25 border border-white/30 px-3 py-1.5 rounded-lg transition"
-            >
-              सभी देखें <ArrowRight size={11} />
-            </Link>
+    <div className="container-shell">
+      {/* ── Stream tabs ── */}
+      <div className="mb-8 flex flex-wrap justify-center gap-2 md:gap-3">
+        {streamTabs.map((t) => {
+          const tc = colorMap[t.color];
+          const active = t.key === activeKey;
+          const TabIcon = t.icon;
+          return (
             <button
-              onClick={() => scroll("left")}
-              disabled={atStart}
-              aria-label="Scroll left"
-              className={`flex h-8 w-8 items-center justify-center rounded-full border-2 transition ${
-                atStart ? "border-white/20 text-white/30 cursor-not-allowed" : "border-white/50 text-white hover:bg-white/20"
+              key={t.key}
+              type="button"
+              onClick={() => setActiveKey(t.key as StreamKey)}
+              aria-pressed={active}
+              className={`flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-bold transition-all duration-200 ${
+                active
+                  ? `bg-gradient-to-r ${tc.gradient} text-white shadow-lg scale-105`
+                  : "bg-white text-gray-600 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 hover:-translate-y-0.5"
               }`}
             >
-              <ChevronLeft size={17} />
+              <TabIcon size={16} />
+              {t.shortLabel}
+              <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-extrabold ${active ? "bg-white/25 text-white" : "bg-gray-100 text-gray-500"}`}>
+                {t.courses.length}
+              </span>
             </button>
-            <button
-              onClick={() => scroll("right")}
-              disabled={atEnd}
-              aria-label="Scroll right"
-              className={`flex h-8 w-8 items-center justify-center rounded-full border-2 transition ${
-                atEnd ? "border-white/20 text-white/30 cursor-not-allowed" : "border-white/50 text-white hover:bg-white/20"
-              }`}
-            >
-              <ChevronRight size={17} />
-            </button>
-          </div>
-        </div>
+          );
+        })}
       </div>
 
-      {/* ── Cards row ── */}
-      <div className={`relative ${c.sectionBg} py-4`}>
-        <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-10 bg-gradient-to-r from-white/60 to-transparent" />
-        <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-10 bg-gradient-to-l from-white/60 to-transparent" />
-        <div
-          ref={scrollRef}
-          onScroll={updateArrows}
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerUp}
-          onPointerLeave={onPointerUp}
-          onClickCapture={(e) => { if (movedRef.current) { e.preventDefault(); e.stopPropagation(); } }}
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
-          onTouchStart={() => setPaused(true)}
-          onTouchEnd={() => setPaused(false)}
-          className="flex gap-4 overflow-x-auto px-4 pb-2 select-none"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none", cursor: isDragging ? "grabbing" : "grab" }}
-        >
+      {/* ── Course grid ── */}
+      <AnimateIn key={activeKey} type="fade-up">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {tab.courses.map((course) => (
             <div
               key={course.name}
@@ -337,41 +240,84 @@ function HomeStreamSlider({ tab, onOpen }: { tab: typeof streamTabs[0]; onOpen: 
               tabIndex={0}
               onClick={() => onOpen(course, tab.key as StreamKey)}
               onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onOpen(course, tab.key as StreamKey); } }}
-              className="flex-shrink-0 w-[220px] rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all text-left cursor-pointer"
+              className="group relative flex flex-col rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden transition-all duration-300 cursor-pointer text-left hover:-translate-y-1.5 hover:shadow-2xl hover:border-transparent"
             >
-              <div className={`h-1.5 bg-gradient-to-r ${c.accentBar}`} />
-              <div className="p-4">
-                <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-black ${c.badge}`}>{course.name}</span>
-                  {course.bscc && <span className="text-[10px] font-bold text-green-700 bg-green-50 border border-green-200 px-1.5 py-0.5 rounded-full">BSCC</span>}
+              {/* ── Colored header band ── */}
+              <div className={`relative overflow-hidden bg-gradient-to-br ${c.gradient} p-4`}>
+                {/* Watermark stream icon */}
+                <Icon className="pointer-events-none absolute -right-3 -top-3 text-white/15 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6" size={76} />
+                <div className="relative flex items-center justify-between gap-2">
+                  <span className="inline-flex items-center rounded-full border border-white/30 bg-white/20 px-2.5 py-1 text-[11px] font-black text-white backdrop-blur-sm">
+                    {course.name}
+                  </span>
+                  {course.bscc && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-green-500/90 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm">
+                      <CreditCard size={9} /> BSCC Loan
+                    </span>
+                  )}
                 </div>
-                <p className="text-xs font-extrabold text-gray-900 leading-snug mb-2 line-clamp-2">{course.full}</p>
-                <div className="flex gap-1.5 mb-2 flex-wrap">
-                  <span className="flex items-center gap-1 text-[10px] text-gray-500 bg-gray-50 border border-gray-100 rounded-lg px-1.5 py-0.5"><Clock size={9} /> {course.duration}</span>
-                  <span className="flex items-center gap-1 text-[10px] text-gray-500 bg-gray-50 border border-gray-100 rounded-lg px-1.5 py-0.5"><CreditCard size={9} /> {course.fee}</span>
+                <h3 className="relative mt-2.5 min-h-[2.5rem] text-sm font-extrabold leading-snug text-white line-clamp-2">
+                  {course.full}
+                </h3>
+              </div>
+
+              {/* ── Body ── */}
+              <div className="flex flex-1 flex-col p-4">
+                {/* Duration + fee */}
+                <div className="mb-3 flex flex-wrap gap-1.5">
+                  <span className="flex items-center gap-1 rounded-lg border border-gray-100 bg-gray-50 px-2 py-1 text-[10px] font-semibold text-gray-600"><Clock size={10} className="text-gray-400" /> {course.duration}</span>
+                  <span className="flex items-center gap-1 rounded-lg border border-gray-100 bg-gray-50 px-2 py-1 text-[10px] font-semibold text-gray-600"><CreditCard size={10} className="text-gray-400" /> {course.fee}</span>
                 </div>
-                <p className="text-[10px] font-bold text-green-700 mb-3">{course.salary}</p>
+
+                {/* Key highlight */}
+                <div className="mb-3 flex items-start gap-1.5 text-[11px] leading-snug text-gray-600">
+                  <CheckCircle2 size={13} className={`mt-0.5 flex-shrink-0 ${c.checkColor}`} />
+                  <span className="line-clamp-2">{course.highlights[0]}</span>
+                </div>
+
+                {/* Salary highlight — students' #1 concern */}
+                <div className="mb-4 flex items-center gap-2 rounded-xl border border-green-100 bg-green-50 px-3 py-2">
+                  <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-green-100">
+                    <TrendingUp size={13} className="text-green-600" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[9px] font-bold uppercase tracking-wide text-green-500">Expected Salary</p>
+                    <p className="truncate text-[11px] font-extrabold leading-tight text-green-700">{course.salary}</p>
+                  </div>
+                </div>
+
                 {/* Apply Now + More Details */}
-                <div className="grid grid-cols-2 gap-1.5">
+                <div className="mt-auto grid grid-cols-2 gap-2">
                   <Link
                     href={`/apply?course=${encodeURIComponent(course.name)}`}
                     onClick={(e) => e.stopPropagation()}
-                    className="flex items-center justify-center gap-1 rounded-lg bg-[#dc143c] py-2 text-[11px] font-bold text-white hover:bg-red-700 transition"
+                    className="flex items-center justify-center gap-1 rounded-lg bg-[#dc143c] py-2.5 text-[11px] font-bold text-white shadow-sm transition hover:bg-red-700"
                   >
-                    <GraduationCap size={11} /> Apply Now
+                    <GraduationCap size={12} /> Apply Now
                   </Link>
                   <button
                     type="button"
                     onClick={(e) => { e.stopPropagation(); onOpen(course, tab.key as StreamKey); }}
-                    className={`flex items-center justify-center gap-1 rounded-lg bg-gradient-to-r ${c.gradient} py-2 text-[11px] font-bold text-white`}
+                    className={`flex items-center justify-center gap-1 rounded-lg bg-gradient-to-r ${c.gradient} py-2.5 text-[11px] font-bold text-white shadow-sm transition group-hover:gap-1.5`}
                   >
-                    <BookOpen size={11} /> More Details
+                    <BookOpen size={12} /> Details
+                    <ArrowRight size={11} className="transition-transform group-hover:translate-x-0.5" />
                   </button>
                 </div>
               </div>
             </div>
           ))}
         </div>
+      </AnimateIn>
+
+      {/* ── View all for this stream ── */}
+      <div className="mt-8 text-center">
+        <Link
+          href={`/courses#${tab.key}`}
+          className="inline-flex items-center gap-1.5 text-sm font-bold text-gray-700 underline-offset-4 transition hover:text-gray-900 hover:underline"
+        >
+          View all {tab.shortLabel} courses <ArrowRight size={14} />
+        </Link>
       </div>
     </div>
   );
@@ -851,7 +797,7 @@ export default function Home() {
       </div>
 
       {/* ── COURSES SECTION ── */}
-      <section id="courses" className="py-12 bg-gray-50">
+      <section id="courses" className="py-12 bg-gradient-to-b from-gray-50 via-blue-50/30 to-white">
         <AnimateIn type="fade-up" className="text-center mb-10 container-shell">
           <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">Session 2026–27 · Admissions Open</p>
           <h2 className="font-headline text-4xl md:text-5xl font-extrabold">
@@ -865,13 +811,9 @@ export default function Home() {
           </p>
         </AnimateIn>
 
-        {streamTabs.map((tab) => (
-          <HomeStreamSlider
-            key={tab.key}
-            tab={tab}
-            onOpen={(course, key) => setModalCourse({ course, streamKey: key })}
-          />
-        ))}
+        <HomeCourseExplorer
+          onOpen={(course, key) => setModalCourse({ course, streamKey: key })}
+        />
 
         {modalCourse && (
           <CourseDetailModal
