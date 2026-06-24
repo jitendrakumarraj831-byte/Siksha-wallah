@@ -14,8 +14,8 @@ export type ActivityType =
   | "doc_upload"     // Document uploaded in dashboard
   | "profile_update" // Student updated their profile
   | "whatsapp"       // WhatsApp button clicked
-  | "bscc_check"     // BSCC eligibility checked
-  | "course_view";   // Course card expanded
+  | "call_click"     // Call button clicked
+  | "course_view";   // Course card/page viewed
 
 export interface Activity {
   id?: string;

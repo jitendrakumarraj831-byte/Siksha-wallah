@@ -1,16 +1,14 @@
 rules_version = '2';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Siksha Wallah — least-privilege Firestore rules.
+// Siksha Wallah — Firestore Security Rules
 //
-// Model: the office dashboard reads/writes private collections through the
-// cookie-gated server API (/api/admin/*) which uses the Firebase Admin SDK and
-// BYPASSES these rules. Therefore clients are denied all access to private
-// collections; only the trusted server can read leads/applications/students.
+// Architecture: Office dashboard reads/writes private collections through the
+// cookie-gated server API (/api/admin/*) using Firebase Admin SDK which
+// bypasses these rules. Client SDK is used only for student-owned data.
 //
-// BEFORE DEPLOYING: confirm the admin backend works in production
-// (GET /api/admin/data?type=inquiries returns data while logged in as office).
-// See SECURITY.md for the rollout runbook.
+// Collections in use: users, inquiries, course_applications, documents,
+//                     activities, courses
 // ─────────────────────────────────────────────────────────────────────────────
 
 service cloud.firestore {
@@ -19,89 +17,46 @@ service cloud.firestore {
     function isSignedIn() { return request.auth != null; }
     function isOwner(uid) { return isSignedIn() && request.auth.uid == uid; }
 
-    // Public lead-capture forms (guests may submit). The office dashboard reads
-    // these from the browser (cookie-gated /admin pages) via the client SDK as a
-    // reliable fallback when the Admin SDK backend is unavailable. Updates/deletes
-    // stay locked to the server admin API.
+    // Public lead-capture — guests submit inquiries.
+    // All reads/updates via Admin SDK server API only.
     match /inquiries/{id} {
       allow create: if true;
-      allow read: if true;
-      allow update: if true;
-      allow delete: if false;
-    }
-    match /course_applications/{id} {
-      allow create: if true;
-      allow read: if true;
-      allow update: if true;
-      allow delete: if false;
+      allow read, update, delete: if false;
     }
 
-    // Activity log: write-only for guests; office admin reads via real-time
-    // client subscription (subscribeActivities) because onSnapshot requires
-    // client-SDK access. Contains no sensitive PII beyond event descriptions.
-    match /activities/{id} {
+    // Students can read their own application after login.
+    // All status/note updates via Admin SDK server API only.
+    match /course_applications/{id} {
       allow create: if true;
-      allow read: if true;
+      allow read:   if isSignedIn() && resource.data.userId == request.auth.uid;
       allow update, delete: if false;
     }
 
-    // Student profiles — each user reads their own. Office reads via Admin SDK
-    // server API (/api/admin/data?type=students). Open read is allowed here as a
-    // client-SDK fallback while the Admin SDK setup is being verified.
+    // Activity log — public create (guest event tracking).
+    // Office reads via real-time subscribeActivities (client SDK onSnapshot).
+    match /activities/{id} {
+      allow create: if true;
+      allow read:   if true;
+      allow update, delete: if false;
+    }
+
+    // Student profiles — owner read/update only.
+    // Office reads all via Admin SDK (/api/admin/data?type=students).
     match /users/{userId} {
       allow create: if isOwner(userId);
-      allow read: if true;
+      allow read:   if isOwner(userId);
       allow update: if isOwner(userId);
       allow delete: if false;
     }
 
-    // Payments — owner creates/reads own; status updates are server-side only.
-    match /payments/{id} {
-      allow create: if isOwner(request.resource.data.uid);
-      allow read:   if isSignedIn() && resource.data.uid == request.auth.uid;
-      allow update, delete: if false;
-    }
-
-    // Enrollments & notifications — read own; all writes server-side (Admin SDK).
-    match /enrollments/{id} {
-      allow read:  if isSignedIn() && resource.data.uid == request.auth.uid;
-      allow write: if false;
-    }
-    match /notifications/{id} {
-      allow read:  if isSignedIn() && resource.data.uid == request.auth.uid;
-      allow write: if false;
-    }
-
-    // Document metadata — owner only (file bytes are governed by Storage rules).
+    // Documents — owner create/read/delete only.
     match /documents/{id} {
       allow create: if isOwner(request.resource.data.uid);
       allow read, delete: if isSignedIn() && resource.data.uid == request.auth.uid;
       allow update: if false;
     }
 
-    // Enrollment requests — student creates & reads own.
-    match /enrollmentRequests/{id} {
-      allow create: if isOwner(request.resource.data.uid);
-      allow read:   if isSignedIn() && resource.data.uid == request.auth.uid;
-      allow update, delete: if false;
-    }
-
-    // Community forum — public read; signed-in users author their own posts/replies.
-    // Updates allowed for signed-in users (views/replies/upvotes counters, author edits).
-    match /forum_posts/{id} {
-      allow read:   if true;
-      allow create: if isSignedIn() && request.resource.data.uid == request.auth.uid;
-      allow update: if isSignedIn();
-      allow delete: if false;
-    }
-    match /forum_replies/{id} {
-      allow read:   if true;
-      allow create: if isSignedIn() && request.resource.data.uid == request.auth.uid;
-      allow update: if isSignedIn();
-      allow delete: if false;
-    }
-
-    // Course catalog (if seeded in Firestore) — public read, no client writes.
+    // Course catalog — public read, no client writes.
     match /courses/{id} {
       allow read:  if true;
       allow write: if false;

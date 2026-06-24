@@ -7,7 +7,6 @@ import { saveActivity } from "@/services/activity-service";
 const QUICK_LINKS = [
   { href: "/", label: "Home" },
   { href: "/courses", label: "Explore Courses" },
-  { href: "/student-credit-card", label: "BSCC Loan Assistance" },
   { href: "/blog", label: "Career Guidance Blog" },
   { href: "/about", label: "About Us" },
   { href: "/contact", label: "Contact Our Team" },

@@ -17,8 +17,8 @@ const TYPE_META: Record<ActivityType, { icon: string; label: string; color: stri
   application:    { icon: "🎓", label: "Application",      color: "bg-blue-100 text-blue-800 border-blue-200",       detailLink: () => "/admin/applications" },
   doc_upload:     { icon: "📄", label: "Doc Upload",       color: "bg-blue-100 text-blue-800 border-blue-200",       detailLink: () => "/admin/students" },
   profile_update: { icon: "✏️",  label: "Profile Update",  color: "bg-amber-100 text-amber-800 border-amber-200", detailLink: () => "/admin/students" },
-  whatsapp:       { icon: "📱", label: "WhatsApp Click",   color: "bg-green-100 text-green-800 border-green-200" },
-  bscc_check:     { icon: "🏦", label: "BSCC Check",       color: "bg-amber-100 text-amber-800 border-amber-200" },
+  whatsapp:       { icon: "💬", label: "WhatsApp Click",   color: "bg-green-100 text-green-800 border-green-200" },
+  call_click:     { icon: "📞", label: "Call Click",       color: "bg-green-100 text-green-800 border-green-200" },
   course_view:    { icon: "📚", label: "Course Viewed",    color: "bg-indigo-100 text-indigo-800 border-indigo-200" },
 };
 
@@ -109,10 +109,10 @@ export default function ActivityPage() {
             </span>
           </Link>
           <nav className="hidden items-center gap-1 sm:flex">
-            <Link href="/admin/dashboard" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Inquiries</Link>
-            <Link href="/admin/applications" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Applications</Link>
+            <Link href="/admin/dashboard" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Dashboard</Link>
             <Link href="/admin/students" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Students</Link>
-            <Link href="/admin/activity" className="rounded-lg bg-blue-50 px-3 py-2 text-sm font-bold text-[#003f9f]">Activity Log</Link>
+            <Link href="/admin/applications" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Applications</Link>
+            <Link href="/admin/activity" className="rounded-lg bg-blue-50 px-3 py-2 text-sm font-bold text-[#003f9f]">Website Activity</Link>
           </nav>
           <div className="flex items-center gap-3">
             <span className="hidden text-sm font-semibold text-gray-600 sm:block">Welcome, {adminUser}</span>

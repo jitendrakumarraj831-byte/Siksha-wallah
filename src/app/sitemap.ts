@@ -4,7 +4,6 @@ const BASE_URL = "https://www.sikshawallahfbg.in";
 
 const BLOG_SLUGS = [
   "bed-admission-bihar-2025",
-  "bihar-student-credit-card-guide",
   "bsc-nursing-gnm-comparison-bihar",
   "deled-vs-bed-difference",
   "btech-admission-bihar-2025",
@@ -22,12 +21,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages = [
     { path: "/", priority: 1.0, freq: "weekly" },
     { path: "/courses", priority: 0.9, freq: "weekly" },
-    { path: "/student-credit-card", priority: 0.9, freq: "monthly" },
     { path: "/about", priority: 0.8, freq: "monthly" },
     { path: "/contact", priority: 0.8, freq: "monthly" },
     { path: "/blog", priority: 0.8, freq: "weekly" },
     { path: "/apply", priority: 0.9, freq: "monthly" },
-    { path: "/forum", priority: 0.6, freq: "weekly" },
   ].map(({ path, priority, freq }) => ({
     url: `${BASE_URL}${path}`,
     lastModified: now,

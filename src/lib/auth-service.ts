@@ -85,9 +85,8 @@ export const authService = {
         lastLogin: Date.now(),
       } satisfies UserProfile);
 
-      // Send branded welcome + verification emails (non-blocking)
+      // Send welcome email (non-blocking)
       fireEmail('/api/auth/welcome', { name, email: user.email ?? email });
-      fireEmail('/api/auth/send-verification', { name, email: user.email ?? email });
 
       return user;
     } catch (error: any) {

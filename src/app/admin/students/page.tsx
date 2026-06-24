@@ -444,10 +444,10 @@ export default function AdminStudentsPage() {
             </span>
           </Link>
           <nav className="hidden items-center gap-1 sm:flex">
-            <Link href="/admin/dashboard" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Inquiries</Link>
+            <Link href="/admin/dashboard" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Dashboard</Link>
             <Link href="/admin/applications" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Applications</Link>
             <Link href="/admin/students" className="rounded-lg bg-blue-50 px-3 py-2 text-sm font-bold text-[#003f9f]">Students</Link>
-            <Link href="/admin/activity" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Activity Log</Link>
+            <Link href="/admin/activity" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Website Activity</Link>
           </nav>
           <div className="flex items-center gap-3">
             <span className="hidden text-sm font-semibold text-gray-600 sm:block">Welcome, {adminUser}</span>
