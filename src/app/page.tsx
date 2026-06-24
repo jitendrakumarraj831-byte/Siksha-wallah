@@ -18,7 +18,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { CountUp } from "@/components/count-up";
 import { AnimateIn } from "@/components/animate-in";
 import { ReviewsCarousel } from "@/components/reviews-carousel";
-import { streamTabs, colorMap, faqs, type StreamKey } from "@/lib/courses-data";
+import { streamTabs, colorMap, faqs, getCourseSlug, type StreamKey } from "@/lib/courses-data";
 import { successStories } from "@/lib/reviews-data";
 
 
@@ -81,7 +81,7 @@ function StreamCards() {
                 <Link
                   href="/apply"
                   onClick={(e) => e.stopPropagation()}
-                  className="flex items-center justify-center gap-1.5 rounded-xl bg-[#dc143c] py-2.5 text-xs font-bold text-white transition hover:bg-red-700"
+                  className="flex items-center justify-center gap-1.5 rounded-xl bg-primary-blue py-2.5 text-xs font-bold text-white transition hover:bg-blue-700"
                 >
                   <GraduationCap size={13} /> Apply Now
                 </Link>
@@ -113,7 +113,7 @@ function StreamCards() {
           <div className="grid w-full grid-cols-2 gap-2">
             <Link
               href="/apply"
-              className="flex items-center justify-center gap-1.5 rounded-xl bg-[#dc143c] py-2.5 text-xs font-bold text-white transition hover:bg-red-700"
+              className="flex items-center justify-center gap-1.5 rounded-xl bg-primary-blue py-2.5 text-xs font-bold text-white transition hover:bg-blue-700"
             >
               <GraduationCap size={13} /> Apply Now
             </Link>
@@ -630,7 +630,7 @@ export default function Home() {
               { icon: ShieldCheck,  text: "100% Free Initial Counselling",   color: "text-green-400"  },
               { icon: GraduationCap, text: "NCTE / UGC Recognised Colleges",  color: "text-blue-400"   },
               { icon: CreditCard,   text: "End-to-End BSCC Loan Support",     color: "text-amber-400"  },
-              { icon: Phone,        text: "Personal Counsellor for Every Student", color: "text-red-400" },
+              { icon: Phone,        text: "Personal Counsellor for Every Student", color: "text-amber-400" },
             ].map(({ icon: Icon, text, color }) => (
               <span key={text} className="flex items-center gap-2 text-sm font-semibold text-gray-300">
                 <Icon size={15} className={color} />
@@ -645,7 +645,7 @@ export default function Home() {
       <section id="courses" className="py-12 bg-gradient-to-b from-gray-50 via-blue-50/30 to-white">
         <AnimateIn type="fade-up" className="text-center mb-10 container-shell">
           <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">Session 2026–27 · Admissions Open</p>
-          <h2 className="font-headline text-4xl md:text-5xl font-extrabold">
+          <h2 className="font-headline text-3xl md:text-5xl font-extrabold">
             अपने भविष्य की{" "}
             <span className="bg-gradient-to-r from-blue-700 to-indigo-600 bg-clip-text text-transparent">
               दिशा चुनें
@@ -769,18 +769,21 @@ export default function Home() {
                 gradient: "from-[#001850] to-[#003590]",
                 badge: "bg-blue-100 text-blue-800",
               },
-            ] as const).map(({ name, shortDesc, stream, icon: Icon, gradient, badge }) => (
+            ] as const).map(({ name, shortDesc, stream, icon: Icon, gradient, badge }) => {
+              const slug = getCourseSlug(name);
+              const detailsHref = slug ? `/courses/${slug}` : `/courses#${stream}`;
+              return (
               <AnimateIn key={name} type="zoom-in">
                 <div className="group flex flex-col rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl overflow-hidden h-full">
-                  {/* Brand-palette header */}
-                  <div className={`bg-gradient-to-br ${gradient} p-4 flex items-center justify-center`}>
+                  {/* Brand-palette header — clickable to full course details */}
+                  <Link href={detailsHref} className={`bg-gradient-to-br ${gradient} p-4 flex items-center justify-center`}>
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/20">
                       <Icon size={22} className="text-white" />
                     </div>
-                  </div>
+                  </Link>
                   {/* Content */}
                   <div className="flex flex-1 flex-col p-3 md:p-4">
-                    <h3 className="font-headline text-sm md:text-base font-extrabold text-gray-900">{name}</h3>
+                    <Link href={detailsHref} className="font-headline text-sm md:text-base font-extrabold text-gray-900 hover:text-primary-blue transition">{name}</Link>
                     <p className="mt-1 flex-1 text-xs text-gray-500 leading-snug">{shortDesc}</p>
                     <a
                       href={`/apply?course=${encodeURIComponent(name)}`}
@@ -788,16 +791,17 @@ export default function Home() {
                     >
                       Free Counselling <ArrowRight size={11} />
                     </a>
-                    <a
-                      href={`/courses#${stream}`}
+                    <Link
+                      href={detailsHref}
                       className={`mt-1.5 flex items-center justify-center gap-1 rounded-xl border py-1.5 text-xs font-semibold transition hover:opacity-80 ${badge}`}
                     >
-                      <BookOpen size={11} /> Details
-                    </a>
+                      <BookOpen size={11} /> Full Details
+                    </Link>
                   </div>
                 </div>
               </AnimateIn>
-            ))}
+              );
+            })}
           </div>
 
           <div className="mt-8 text-center">
@@ -899,10 +903,10 @@ export default function Home() {
           <AnimateIn type="fade-up" delay={60}>
           <div className="mb-12 grid grid-cols-2 md:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-blue-100 shadow-sm">
             {[
-              { target: 5000, suffix: "+",      label: "Successful Admissions" },
-              { target: 200,  suffix: "+",      label: "Partner Colleges" },
-              { target: 2,    suffix: " Cr+",   label: "BSCC Loans Sanctioned" },
-              { target: 11,   suffix: "+ Yrs",  label: "Forbesganj में अनुभव" },
+              { target: 2,   suffix: " Cr+",  label: "BSCC Loans Sanctioned" },
+              { target: 50,  suffix: "+",     label: "Verified Courses" },
+              { target: 5,   suffix: "",      label: "Career Streams" },
+              { target: 100, suffix: "%",     label: "Free Counselling" },
             ].map(({ target, suffix, label }) => (
               <div key={label} className="flex flex-col items-center justify-center gap-1 bg-blue-50 py-6 px-4 text-center">
                 <p className="font-headline text-3xl font-black text-blue-700 md:text-4xl">
@@ -1320,11 +1324,11 @@ export default function Home() {
       />
 
       {/* ── DOCUMENTS CHECKLIST ── */}
-      <section id="documents" className="py-24 bg-white">
+      <section id="documents" className="py-16 md:py-24 bg-white">
         <div className="container-shell">
           <AnimateIn type="fade-up" className="text-center mb-12">
             <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">Be Admission-Ready</p>
-            <h2 className="font-headline text-4xl md:text-5xl font-extrabold">Your Personal Admission Documents Checklist</h2>
+            <h2 className="font-headline text-3xl md:text-5xl font-extrabold">Your Personal Admission Documents Checklist</h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto">
               इस checklist में हर document को tick करते जाएँ। जब आप हमारे Forbesganj office आएँ, तो सभी original certificates के साथ 2 photocopies ज़रूर लाएँ।
             </p>
@@ -1530,7 +1534,7 @@ export default function Home() {
       </section>
 
       {/* ── FAQ ACCORDION ── */}
-      <section id="faq" className="py-24 bg-gray-50">
+      <section id="faq" className="py-16 md:py-24 bg-gray-50">
         <div className="container-shell">
           {/* Header */}
           <div className="mb-14 overflow-hidden rounded-3xl bg-gradient-to-br from-[#001f6b] via-[#003f9f] to-[#0060c7] px-8 py-12 text-center shadow-2xl relative">
@@ -1601,7 +1605,7 @@ export default function Home() {
                     { label: "Choosing the Right Course", color: "bg-green-100 text-green-700", range: "5–9" },
                     { label: "Admission Process", color: "bg-blue-100 text-blue-700", range: "10–12" },
                     { label: "BSCC Loan Support", color: "bg-amber-100 text-amber-700", range: "13–15" },
-                    { label: "Fees & Expenses", color: "bg-red-100 text-red-700", range: "16–17" },
+                    { label: "Fees & Expenses", color: "bg-indigo-100 text-indigo-700", range: "16–17" },
                   ].map(({ label, color, range }) => (
                     <div key={label} className={`flex items-center justify-between rounded-lg px-3 py-2 text-xs font-semibold ${color}`}>
                       <span>{label}</span>
@@ -1644,7 +1648,7 @@ export default function Home() {
       </section>
 
       {/* ── CONTACT & LOCATION ── */}
-      <section id="contact" className="relative overflow-hidden py-24 bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] text-white">
+      <section id="contact" className="relative overflow-hidden py-16 md:py-24 bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] text-white">
         {/* dot-grid */}
         <div className="pointer-events-none absolute inset-0 opacity-[0.07]"
           style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
@@ -1655,7 +1659,7 @@ export default function Home() {
             <AnimateIn type="fade-right">
             <div>
               <p className="text-sm font-bold uppercase tracking-widest mb-3 text-amber-400">Visit Our Counselling Centre</p>
-              <h2 className="font-headline text-4xl md:text-5xl font-extrabold mb-6">
+              <h2 className="font-headline text-3xl md:text-5xl font-extrabold mb-6">
                 Meet Our Counsellors Face-to-Face
               </h2>
 
@@ -1831,7 +1835,7 @@ export default function Home() {
           </div>
 
           {/* Office timing */}
-          <p className="mt-8 text-xs text-red-200/80">
+          <p className="mt-8 text-xs text-blue-200/80">
             <Clock size={11} className="inline mr-1" />
             Office Hours: Monday–Saturday, 9:00 AM – 6:00 PM &nbsp;|&nbsp; Forbesganj, Araria, Bihar
           </p>
