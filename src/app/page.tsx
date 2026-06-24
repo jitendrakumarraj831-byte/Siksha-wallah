@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { saveInquiry } from "@/services/inquiry-service";
 import { saveActivity } from "@/services/activity-service";
@@ -30,6 +31,8 @@ const STREAM_DESCRIPTIONS: Record<StreamKey, string> = {
 };
 
 function StreamCards() {
+  const router = useRouter();
+
   return (
     <div className="container-shell">
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -39,7 +42,12 @@ function StreamCards() {
           return (
             <div
               key={tab.key}
-              className="group relative flex flex-col rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl"
+              role="link"
+              tabIndex={0}
+              aria-label={`Explore ${tab.label} courses`}
+              onClick={() => router.push(`/courses#${tab.key}`)}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") router.push(`/courses#${tab.key}`); }}
+              className="group relative flex flex-col rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl cursor-pointer"
             >
               {/* Icon + course count */}
               <div className="flex items-center justify-between">
@@ -57,19 +65,21 @@ function StreamCards() {
                 {STREAM_DESCRIPTIONS[tab.key as StreamKey]}
               </p>
 
-              {/* Primary CTA: Explore Courses — stretched link covers entire card */}
+              {/* Primary CTA: Explore Courses — same action as card click */}
               <Link
                 href={`/courses#${tab.key}`}
-                className={`mt-5 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r ${c.gradient} py-3 text-sm font-extrabold text-white shadow-sm transition-all group-hover:gap-2.5 after:absolute after:inset-0 after:rounded-2xl after:content-['']`}
+                onClick={(e) => e.stopPropagation()}
+                className={`mt-5 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r ${c.gradient} py-3 text-sm font-extrabold text-white shadow-sm transition-all group-hover:gap-2.5`}
               >
                 <BookOpen size={16} /> Explore Courses
                 <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
               </Link>
 
-              {/* Lead-gen: Apply Now + WhatsApp — sit above the stretched link */}
-              <div className="relative z-10 mt-2 grid grid-cols-2 gap-2">
+              {/* Lead-gen: Apply Now + WhatsApp — stop propagation so card click doesn't fire */}
+              <div className="mt-2 grid grid-cols-2 gap-2">
                 <Link
                   href="/apply"
+                  onClick={(e) => e.stopPropagation()}
                   className="flex items-center justify-center gap-1.5 rounded-xl bg-[#dc143c] py-2.5 text-xs font-bold text-white transition hover:bg-red-700"
                 >
                   <GraduationCap size={13} /> Apply Now
@@ -78,6 +88,7 @@ function StreamCards() {
                   href={`https://wa.me/916203138576?text=${encodeURIComponent(`नमस्ते! मुझे ${tab.label} के courses के बारे में जानकारी चाहिए।`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
                   className="flex items-center justify-center gap-1.5 rounded-xl border-2 border-green-500 py-2.5 text-xs font-bold text-green-700 transition hover:bg-green-500 hover:text-white"
                 >
                   <MessageCircle size={13} /> WhatsApp
