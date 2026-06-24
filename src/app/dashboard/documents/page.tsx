@@ -5,13 +5,15 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/components/auth-provider';
 import { studentService, Document } from '@/services/student-service';
+import { getApplicationsByUser, type CourseApplication } from '@/services/application-service';
 import { saveActivity } from '@/services/activity-service';
 import { PortalShell } from '@/components/portal-shell';
 import {
   ArrowLeft, Download, Trash2, Upload, Loader, AlertCircle, CheckCircle2,
-  FileText, FileImage, File, X, CloudUpload,
+  FileText, FileImage, File, X, CloudUpload, ClipboardList,
 } from 'lucide-react';
 
+// ── Document types ────────────────────────────────────────────────────────────
 const DOC_TYPES = [
   { value: 'aadhaar',    label: 'Aadhaar Card' },
   { value: 'marksheet',  label: 'Marksheet (10th / 12th / Graduation)' },
@@ -19,6 +21,235 @@ const DOC_TYPES = [
   { value: 'other',      label: 'Other Document' },
 ];
 
+// ── Course → required document checklist ─────────────────────────────────────
+interface CourseDocInfo {
+  label: string;
+  type: string;       // matches DOC_TYPES value
+  note?: string;
+}
+
+interface CourseRequirement {
+  docs: CourseDocInfo[];
+}
+
+// Keyword → requirements mapping (case-insensitive match on course name)
+const COURSE_REQUIREMENTS: Array<{ keywords: string[]; req: CourseRequirement }> = [
+  {
+    keywords: ['b.ed', 'bed', 'b ed', 'bachelor of education'],
+    req: {
+      docs: [
+        { type: 'aadhaar',   label: 'Aadhaar Card' },
+        { type: 'marksheet', label: '10th Marksheet' },
+        { type: 'marksheet', label: '12th Marksheet' },
+        { type: 'marksheet', label: 'Graduation Marksheet' },
+        { type: 'photo',     label: 'Passport-Size Photo' },
+        { type: 'other',     label: 'Caste Certificate', note: 'If applicable (SC/ST/OBC)' },
+        { type: 'other',     label: 'Transfer Certificate (TC)' },
+      ],
+    },
+  },
+  {
+    keywords: ['d.el.ed', 'deled', 'diploma in elementary education', 'd el ed'],
+    req: {
+      docs: [
+        { type: 'aadhaar',   label: 'Aadhaar Card' },
+        { type: 'marksheet', label: '10th Marksheet' },
+        { type: 'marksheet', label: '12th Marksheet' },
+        { type: 'photo',     label: 'Passport-Size Photo' },
+        { type: 'other',     label: 'Caste Certificate', note: 'If applicable (SC/ST/OBC)' },
+        { type: 'other',     label: 'Transfer Certificate (TC)' },
+      ],
+    },
+  },
+  {
+    keywords: ['m.ed', 'med', 'master of education'],
+    req: {
+      docs: [
+        { type: 'aadhaar',   label: 'Aadhaar Card' },
+        { type: 'marksheet', label: '10th Marksheet' },
+        { type: 'marksheet', label: '12th Marksheet' },
+        { type: 'marksheet', label: 'Graduation Marksheet' },
+        { type: 'marksheet', label: 'B.Ed / M.A. Marksheet' },
+        { type: 'photo',     label: 'Passport-Size Photo' },
+        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+      ],
+    },
+  },
+  {
+    keywords: ['mbbs'],
+    req: {
+      docs: [
+        { type: 'aadhaar',   label: 'Aadhaar Card' },
+        { type: 'marksheet', label: '10th Marksheet' },
+        { type: 'marksheet', label: '12th Marksheet (Physics, Chemistry, Biology)' },
+        { type: 'photo',     label: 'Passport-Size Photo' },
+        { type: 'other',     label: 'NEET Score Card' },
+        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+        { type: 'other',     label: 'Domicile Certificate' },
+      ],
+    },
+  },
+  {
+    keywords: ['bds', 'dental'],
+    req: {
+      docs: [
+        { type: 'aadhaar',   label: 'Aadhaar Card' },
+        { type: 'marksheet', label: '10th Marksheet' },
+        { type: 'marksheet', label: '12th Marksheet (PCB)' },
+        { type: 'photo',     label: 'Passport-Size Photo' },
+        { type: 'other',     label: 'NEET Score Card' },
+        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+      ],
+    },
+  },
+  {
+    keywords: ['b.sc nursing', 'bsc nursing', 'bsc. nursing', 'b sc nursing'],
+    req: {
+      docs: [
+        { type: 'aadhaar',   label: 'Aadhaar Card' },
+        { type: 'marksheet', label: '10th Marksheet' },
+        { type: 'marksheet', label: '12th Marksheet (Biology mandatory)' },
+        { type: 'photo',     label: 'Passport-Size Photo' },
+        { type: 'other',     label: 'Medical Fitness Certificate' },
+        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+      ],
+    },
+  },
+  {
+    keywords: ['gnm', 'general nursing'],
+    req: {
+      docs: [
+        { type: 'aadhaar',   label: 'Aadhaar Card' },
+        { type: 'marksheet', label: '10th Marksheet' },
+        { type: 'marksheet', label: '12th Marksheet' },
+        { type: 'photo',     label: 'Passport-Size Photo' },
+        { type: 'other',     label: 'Medical Fitness Certificate' },
+        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+      ],
+    },
+  },
+  {
+    keywords: ['anm', 'auxiliary nurse'],
+    req: {
+      docs: [
+        { type: 'aadhaar',   label: 'Aadhaar Card' },
+        { type: 'marksheet', label: '10th Marksheet' },
+        { type: 'marksheet', label: '12th Marksheet' },
+        { type: 'photo',     label: 'Passport-Size Photo' },
+        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+      ],
+    },
+  },
+  {
+    keywords: ['b.pharma', 'bpharma', 'b pharma', 'bachelor of pharmacy'],
+    req: {
+      docs: [
+        { type: 'aadhaar',   label: 'Aadhaar Card' },
+        { type: 'marksheet', label: '10th Marksheet' },
+        { type: 'marksheet', label: '12th Marksheet (PCB / PCM)' },
+        { type: 'photo',     label: 'Passport-Size Photo' },
+        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+      ],
+    },
+  },
+  {
+    keywords: ['b.tech', 'btech', 'b tech', 'bachelor of technology'],
+    req: {
+      docs: [
+        { type: 'aadhaar',   label: 'Aadhaar Card' },
+        { type: 'marksheet', label: '10th Marksheet' },
+        { type: 'marksheet', label: '12th Marksheet (Physics, Chemistry, Maths)' },
+        { type: 'photo',     label: 'Passport-Size Photo' },
+        { type: 'other',     label: 'JEE / DCECE Score Card', note: 'If applicable' },
+        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+      ],
+    },
+  },
+  {
+    keywords: ['polytechnic', 'diploma engineering'],
+    req: {
+      docs: [
+        { type: 'aadhaar',   label: 'Aadhaar Card' },
+        { type: 'marksheet', label: '10th Marksheet' },
+        { type: 'photo',     label: 'Passport-Size Photo' },
+        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+      ],
+    },
+  },
+  {
+    keywords: ['iti', 'industrial training'],
+    req: {
+      docs: [
+        { type: 'aadhaar',   label: 'Aadhaar Card' },
+        { type: 'marksheet', label: '8th / 10th Marksheet' },
+        { type: 'photo',     label: 'Passport-Size Photo' },
+        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+      ],
+    },
+  },
+  {
+    keywords: ['bca', 'bachelor of computer application'],
+    req: {
+      docs: [
+        { type: 'aadhaar',   label: 'Aadhaar Card' },
+        { type: 'marksheet', label: '10th Marksheet' },
+        { type: 'marksheet', label: '12th Marksheet' },
+        { type: 'photo',     label: 'Passport-Size Photo' },
+        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+      ],
+    },
+  },
+  {
+    keywords: ['mca', 'master of computer application'],
+    req: {
+      docs: [
+        { type: 'aadhaar',   label: 'Aadhaar Card' },
+        { type: 'marksheet', label: '10th Marksheet' },
+        { type: 'marksheet', label: '12th Marksheet' },
+        { type: 'marksheet', label: 'Graduation Marksheet (BCA / B.Sc)' },
+        { type: 'photo',     label: 'Passport-Size Photo' },
+        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+      ],
+    },
+  },
+  {
+    keywords: ['bba', 'bachelor of business'],
+    req: {
+      docs: [
+        { type: 'aadhaar',   label: 'Aadhaar Card' },
+        { type: 'marksheet', label: '10th Marksheet' },
+        { type: 'marksheet', label: '12th Marksheet' },
+        { type: 'photo',     label: 'Passport-Size Photo' },
+        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+      ],
+    },
+  },
+  {
+    keywords: ['mba', 'master of business'],
+    req: {
+      docs: [
+        { type: 'aadhaar',   label: 'Aadhaar Card' },
+        { type: 'marksheet', label: '10th Marksheet' },
+        { type: 'marksheet', label: '12th Marksheet' },
+        { type: 'marksheet', label: 'Graduation Marksheet' },
+        { type: 'photo',     label: 'Passport-Size Photo' },
+        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+      ],
+    },
+  },
+];
+
+function getCourseRequirements(courseName: string): CourseRequirement | null {
+  const lower = courseName.toLowerCase();
+  for (const entry of COURSE_REQUIREMENTS) {
+    if (entry.keywords.some(k => lower.includes(k))) {
+      return entry.req;
+    }
+  }
+  return null;
+}
+
+// ── Utilities ─────────────────────────────────────────────────────────────────
 const ACCEPTED_TYPES = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
 const MAX_FILE_SIZE_MB = 5;
 
@@ -36,11 +267,13 @@ function formatBytes(bytes?: number) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+// ── Component ─────────────────────────────────────────────────────────────────
 export default function DocumentsPage() {
   const { user, isAuthenticated, loading: authLoading } = useAuth();
   const router = useRouter();
 
   const [documents, setDocuments] = useState<Document[]>([]);
+  const [applications, setApplications] = useState<CourseApplication[]>([]);
   const [pageLoading, setPageLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -55,7 +288,6 @@ export default function DocumentsPage() {
   const [fileError, setFileError] = useState('');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const dropZoneRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -64,19 +296,19 @@ export default function DocumentsPage() {
     }
     if (!user) return;
 
-    studentService.getDocuments(user.uid)
-      .then(setDocuments)
-      .catch(err => setError(err.message))
+    Promise.all([
+      studentService.getDocuments(user.uid).catch(() => [] as Document[]),
+      getApplicationsByUser(user.uid).catch(() => [] as CourseApplication[]),
+    ]).then(([docs, apps]) => {
+      setDocuments(docs);
+      setApplications(apps);
+    }).catch(err => setError(err.message))
       .finally(() => setPageLoading(false));
   }, [authLoading, isAuthenticated, user, router]);
 
   function validateFile(file: File): string {
-    if (!ACCEPTED_TYPES.includes(file.type)) {
-      return 'Please upload a PDF, JPG or PNG file only.';
-    }
-    if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-      return `For smooth uploads, please keep the file size under ${MAX_FILE_SIZE_MB} MB.`;
-    }
+    if (!ACCEPTED_TYPES.includes(file.type)) return 'Please upload a PDF, JPG or PNG file only.';
+    if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) return `File size must be under ${MAX_FILE_SIZE_MB} MB.`;
     return '';
   }
 
@@ -85,10 +317,7 @@ export default function DocumentsPage() {
     if (err) { setFileError(err); setSelectedFile(null); return; }
     setFileError('');
     setSelectedFile(file);
-    // Auto-fill doc name from filename (without extension)
-    if (!docName) {
-      setDocName(file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' '));
-    }
+    if (!docName) setDocName(file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' '));
   }
 
   function handleDrop(e: React.DragEvent) {
@@ -99,12 +328,10 @@ export default function DocumentsPage() {
 
   async function handleUpload(e: React.FormEvent) {
     e.preventDefault();
-    setError('');
-    setSuccess('');
-
+    setError(''); setSuccess('');
     if (!selectedFile) { setFileError('Please select a file to upload.'); return; }
-    if (!docName.trim()) { setError('Please give your document a clear name (e.g. "12th Marksheet").'); return; }
-    if (!docType) { setError('Please choose the type of document you are uploading.'); return; }
+    if (!docName.trim()) { setError('Please give your document a clear name.'); return; }
+    if (!docType) { setError('Please choose the document type.'); return; }
     if (!user) return;
 
     setUploading(true);
@@ -112,10 +339,7 @@ export default function DocumentsPage() {
 
     try {
       await studentService.uploadDocumentFile(
-        user.uid,
-        selectedFile,
-        docName.trim(),
-        docType,
+        user.uid, selectedFile, docName.trim(), docType,
         pct => setUploadProgress(pct),
       );
 
@@ -130,34 +354,45 @@ export default function DocumentsPage() {
         page: '/dashboard/documents',
       }).catch(() => {});
 
-      setSuccess(`"${docName.trim()}" was uploaded successfully. Your counsellor will review it shortly.`);
-      setSelectedFile(null);
-      setDocName('');
-      setDocType('');
-      setShowForm(false);
-      setUploadProgress(0);
-
-      // Refresh list
+      setSuccess(`"${docName.trim()}" uploaded successfully. Your counsellor will review it shortly.`);
+      setSelectedFile(null); setDocName(''); setDocType('');
+      setShowForm(false); setUploadProgress(0);
       const docs = await studentService.getDocuments(user.uid);
       setDocuments(docs);
     } catch (err: any) {
-      setError(err.message || 'The upload could not be completed. Please check your connection and try again.');
+      setError(err.message || 'Upload failed. Please try again.');
     } finally {
       setUploading(false);
     }
   }
 
   async function handleDelete(doc: Document) {
-    if (!confirm(`Are you sure you want to remove "${doc.name}"? This action cannot be undone.`)) return;
+    if (!confirm(`Remove "${doc.name}"? This cannot be undone.`)) return;
     setError('');
     try {
       await studentService.deleteDocument(doc.id!, doc.storagePath);
       setDocuments(prev => prev.filter(d => d.id !== doc.id));
-      setSuccess(`"${doc.name}" has been removed from your documents.`);
+      setSuccess(`"${doc.name}" removed.`);
     } catch (err: any) {
       setError(err.message);
     }
   }
+
+  // ── Compute what's uploaded ─────────────────────────────────────────────────
+  const uploadedTypes = new Set(documents.map(d => d.type));
+
+  // Build checklist for all applied courses
+  const courseChecklists = applications
+    .map(app => ({ courseName: app.course, req: getCourseRequirements(app.course) }))
+    .filter(c => c.req !== null) as { courseName: string; req: CourseRequirement }[];
+
+  // Deduplicate by course name
+  const seen = new Set<string>();
+  const uniqueChecklists = courseChecklists.filter(c => {
+    if (seen.has(c.courseName)) return false;
+    seen.add(c.courseName);
+    return true;
+  });
 
   if (authLoading || pageLoading) {
     return (
@@ -181,7 +416,9 @@ export default function DocumentsPage() {
         <div className="mt-6 flex items-center justify-between flex-wrap gap-3">
           <div>
             <h1 className="text-2xl font-extrabold text-slate-900">My Admission Documents</h1>
-            <p className="text-sm text-slate-500 mt-0.5">Upload PDF, JPG or PNG files — up to {MAX_FILE_SIZE_MB} MB each. All documents stay private and secure.</p>
+            <p className="text-sm text-slate-500 mt-0.5">
+              Upload PDF, JPG or PNG files — up to {MAX_FILE_SIZE_MB} MB each. All documents stay private and secure.
+            </p>
           </div>
           <button
             onClick={() => { setShowForm(!showForm); setError(''); setSuccess(''); setFileError(''); }}
@@ -206,14 +443,93 @@ export default function DocumentsPage() {
           </div>
         )}
 
+        {/* ── Course-wise Document Checklist ── */}
+        {uniqueChecklists.length > 0 && (
+          <div className="mt-6 space-y-4">
+            {uniqueChecklists.map(({ courseName, req }) => {
+              const total = req.docs.length;
+              const done = req.docs.filter(d => uploadedTypes.has(d.type)).length;
+              const allDone = done >= total;
+              return (
+                <div
+                  key={courseName}
+                  className={`rounded-2xl border-2 p-5 ${
+                    allDone
+                      ? 'border-green-200 bg-green-50'
+                      : 'border-blue-100 bg-blue-50'
+                  }`}
+                >
+                  <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
+                    <div className="flex items-center gap-2">
+                      <ClipboardList size={18} className={allDone ? 'text-green-600' : 'text-blue-600'} />
+                      <h2 className="font-extrabold text-slate-900 text-sm">
+                        {courseName} — Required Documents
+                      </h2>
+                    </div>
+                    <span className={`rounded-full px-3 py-0.5 text-xs font-bold ${
+                      allDone
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-blue-100 text-blue-700'
+                    }`}>
+                      {done} / {total} uploaded
+                    </span>
+                  </div>
+
+                  {/* Progress bar */}
+                  <div className="mb-4 h-1.5 w-full overflow-hidden rounded-full bg-white/60">
+                    <div
+                      className={`h-full rounded-full transition-all duration-500 ${
+                        allDone ? 'bg-green-500' : 'bg-blue-500'
+                      }`}
+                      style={{ width: `${(done / total) * 100}%` }}
+                    />
+                  </div>
+
+                  <ul className="grid gap-2 sm:grid-cols-2">
+                    {req.docs.map((docReq, idx) => {
+                      const uploaded = uploadedTypes.has(docReq.type);
+                      return (
+                        <li key={idx} className="flex items-start gap-2.5">
+                          {uploaded ? (
+                            <CheckCircle2 size={17} className="mt-0.5 flex-shrink-0 text-green-500" />
+                          ) : (
+                            <div className="mt-0.5 h-[17px] w-[17px] flex-shrink-0 rounded-full border-2 border-slate-300 bg-white" />
+                          )}
+                          <div>
+                            <p className={`text-sm font-semibold leading-tight ${
+                              uploaded ? 'text-slate-500 line-through' : 'text-slate-800'
+                            }`}>
+                              {docReq.label}
+                            </p>
+                            {docReq.note && (
+                              <p className="text-xs text-slate-500 mt-0.5">{docReq.note}</p>
+                            )}
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+
+                  {!allDone && (
+                    <button
+                      onClick={() => { setShowForm(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                      className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-[#003f9f] px-4 py-2 text-xs font-bold text-white hover:bg-blue-700 transition"
+                    >
+                      <Upload size={13} /> Upload Missing Documents
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
         {/* ── Upload Form ── */}
         {showForm && (
           <form onSubmit={handleUpload} className="mt-6 rounded-2xl border-2 border-blue-100 bg-white p-6 shadow-sm">
             <h2 className="font-bold text-slate-900 mb-5 text-lg">Upload a New Document</h2>
 
-            {/* Drop Zone */}
             <div
-              ref={dropZoneRef}
               onDragOver={e => e.preventDefault()}
               onDrop={handleDrop}
               onClick={() => fileInputRef.current?.click()}
@@ -228,10 +544,7 @@ export default function DocumentsPage() {
                 type="file"
                 accept=".pdf,.jpg,.jpeg,.png"
                 className="sr-only"
-                onChange={e => {
-                  const f = e.target.files?.[0];
-                  if (f) handleFileSelect(f);
-                }}
+                onChange={e => { const f = e.target.files?.[0]; if (f) handleFileSelect(f); }}
               />
               {selectedFile ? (
                 <div className="flex flex-col items-center gap-2">
@@ -291,11 +604,10 @@ export default function DocumentsPage() {
               </div>
             </div>
 
-            {/* Upload Progress */}
             {uploading && (
               <div className="mt-5">
                 <div className="mb-1 flex items-center justify-between text-xs font-semibold text-slate-600">
-                  <span>Uploading your document securely…</span>
+                  <span>Uploading securely…</span>
                   <span>{uploadProgress}%</span>
                 </div>
                 <div className="h-2.5 w-full overflow-hidden rounded-full bg-slate-100">
@@ -313,11 +625,10 @@ export default function DocumentsPage() {
                 disabled={uploading || !selectedFile}
                 className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#003f9f] px-6 py-3 text-sm font-extrabold text-white transition hover:bg-blue-700 disabled:opacity-60"
               >
-                {uploading ? (
-                  <><Loader size={16} className="animate-spin" /> Uploading {uploadProgress}%…</>
-                ) : (
-                  <><CloudUpload size={16} /> Upload Document</>
-                )}
+                {uploading
+                  ? <><Loader size={16} className="animate-spin" /> Uploading {uploadProgress}%…</>
+                  : <><CloudUpload size={16} /> Upload Document</>
+                }
               </button>
               <button
                 type="button"
@@ -330,11 +641,13 @@ export default function DocumentsPage() {
           </form>
         )}
 
-        {/* ── Document List ── */}
+        {/* ── Uploaded Document List ── */}
         <div className="mt-8">
           {documents.length > 0 ? (
             <>
-              <p className="mb-4 text-sm font-semibold text-slate-500">You have shared {documents.length} document{documents.length !== 1 ? 's' : ''} with us so far.</p>
+              <p className="mb-4 text-sm font-semibold text-slate-500">
+                You have shared {documents.length} document{documents.length !== 1 ? 's' : ''} with us so far.
+              </p>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {documents.map(doc => (
                   <div key={doc.id} className="group rounded-2xl border-2 border-slate-100 bg-white p-5 shadow-sm hover:border-blue-200 hover:shadow-md transition">
@@ -345,11 +658,9 @@ export default function DocumentsPage() {
                       <div className="flex-1 min-w-0">
                         <p className="font-extrabold text-slate-900 text-sm leading-tight break-words">{doc.name}</p>
                         <p className="mt-0.5 text-xs font-semibold text-slate-500">
-                          {DOC_TYPES.find(t => t.value === doc.type)?.label?.split(' ').slice(1).join(' ') ?? doc.type.replace(/_/g, ' ')}
+                          {DOC_TYPES.find(t => t.value === doc.type)?.label ?? doc.type.replace(/_/g, ' ')}
                         </p>
-                        {doc.fileSize && (
-                          <p className="mt-0.5 text-xs text-slate-400">{formatBytes(doc.fileSize)}</p>
-                        )}
+                        {doc.fileSize && <p className="mt-0.5 text-xs text-slate-400">{formatBytes(doc.fileSize)}</p>}
                         <p className="mt-1 text-xs text-slate-400">
                           {new Date(doc.uploadedAt).toLocaleDateString('hi-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                         </p>
@@ -384,7 +695,7 @@ export default function DocumentsPage() {
               <CloudUpload size={48} className="mx-auto text-slate-300 mb-4" />
               <p className="font-bold text-slate-600 text-lg">You haven&apos;t uploaded any documents yet.</p>
               <p className="text-sm text-slate-400 mt-1 mb-5">
-                Begin by uploading your essential admission documents — your counsellor will verify them and guide you through the next steps.
+                Upload the required documents above — your counsellor will verify them and guide you through the next steps.
               </p>
               <button
                 onClick={() => setShowForm(true)}
@@ -396,13 +707,13 @@ export default function DocumentsPage() {
           )}
         </div>
 
-        {/* Info box */}
+        {/* Info tips */}
         <div className="mt-8 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
           <p className="font-bold mb-1">A few helpful tips:</p>
           <ul className="space-y-1 list-disc list-inside text-xs">
             <li>Always keep the original copy of every document with you.</li>
-            <li>PDF format works best — please scan documents clearly before uploading.</li>
-            <li>For BSCC, Aadhaar, Family Income Certificate and Domicile Certificate are essential.</li>
+            <li>PDF format works best — scan documents clearly before uploading.</li>
+            <li>Aadhaar Card, Marksheets and a Passport-size Photograph are required for all courses.</li>
             <li>Your documents are 100% private — only you and your Siksha Wallah counsellor can view them.</li>
           </ul>
         </div>
