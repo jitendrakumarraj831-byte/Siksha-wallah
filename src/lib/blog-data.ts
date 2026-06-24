@@ -6,6 +6,7 @@ export interface BlogArticle {
   date: string;
   readTime: string;
   category: string;
+  featured?: boolean;
   content: string;
 }
 
@@ -19,6 +20,7 @@ export const blogArticles: BlogArticle[] = [
     date: "2025-04-10",
     readTime: "6 min",
     category: "Teaching",
+    featured: true,
     content: `## Bihar B.Ed 2026/2027 — पूरी जानकारी
 
 **B.Ed (Bachelor of Education)** एक 2-वर्षीय प्रोफेशनल कोर्स है जो आपको सरकारी या प्राइवेट स्कूल में शिक्षक बनने के लिए तैयार करता है। बिहार में सरकारी शिक्षक बनने के लिए B.Ed अनिवार्य है।
@@ -65,6 +67,7 @@ Forbesganj, Araria में हमारे काउंसलर आपकी 
     date: "2025-05-01",
     readTime: "8 min",
     category: "Finance",
+    featured: true,
     content: `## Bihar Student Credit Card — विस्तृत गाइड 2026/2027
 
 **Bihar Student Credit Card (BSCC)** बिहार सरकार की एक महत्वाकांक्षी योजना है जो उच्च शिक्षा के लिए आर्थिक रूप से कमजोर छात्रों को **₹4 लाख तक का शिक्षा लोन** प्रदान करती है।
@@ -213,6 +216,7 @@ NCTE-approved colleges में D.El.Ed और B.Ed दोनों में d
     date: "2025-05-20",
     readTime: "6 min",
     category: "Medical",
+    featured: true,
     content: `## GNM Nursing Admission Bihar 2026/2027 — पूरी गाइड
 
 **GNM (General Nursing and Midwifery)** एक 3.5 वर्षीय diploma course है जो 12वीं pass students को nurses बनने का मौका देता है। बिहार में सरकारी अस्पतालों में GNM nurses की भारी मांग है।
@@ -586,6 +590,7 @@ NCTE-approved colleges में M.Ed admission और UGC-NET preparation guida
     date: "2025-06-10",
     readTime: "7 min",
     category: "Technical",
+    featured: true,
     content: `## B.Tech Admission Bihar 2026/2027 — Complete Guide
 
 बिहार में इंजीनियरिंग करने के इच्छुक छात्रों के लिए 2026/2027 में admission प्रक्रिया शुरू हो चुकी है। **JEE Main** और **BCECE** दोनों के जरिए बिहार के top engineering colleges में दाखिला मिलता है।

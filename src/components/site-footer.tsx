@@ -68,7 +68,7 @@ export function SiteFooter() {
                   <GraduationCap size={20} aria-hidden="true" />
                 </span>
                 <span className="font-headline text-lg font-extrabold">
-                  SIKSHA<span className="text-primary-red">WALLAH</span>
+                  SIKSHA<span className="text-amber-400">WALLAH</span>
                 </span>
               </div>
             </Link>

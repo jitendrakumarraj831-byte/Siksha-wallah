@@ -160,31 +160,42 @@ export default function AboutPage() {
           </div>
           <div className="grid gap-6 md:grid-cols-3">
             {team.map(({ name, role, phone, exp, specialization, bio }) => (
-              <div key={name} className="rounded-2xl bg-white border-2 border-gray-100 p-7 text-center shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[#003f9f] to-[#0060c7] font-headline text-3xl font-extrabold text-white shadow-lg">
-                  {name[0]}
+              <div key={name} className="overflow-hidden rounded-2xl bg-white shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                {/* Colored top band */}
+                <div className="relative bg-gradient-to-br from-[#001f6b] to-[#003f9f] px-7 pb-10 pt-7 text-center">
+                  <BadgeCheck size={80} className="pointer-events-none absolute -right-4 -top-4 text-white/5" />
+                  {/* Available badge */}
+                  <div className="absolute right-4 top-4 flex items-center gap-1.5 rounded-full bg-green-500/20 px-2.5 py-1 text-[11px] font-bold text-green-300 ring-1 ring-green-500/30">
+                    <span className="h-1.5 w-1.5 rounded-full bg-green-400" /> Available
+                  </div>
+                  {/* Avatar */}
+                  <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 font-headline text-3xl font-extrabold text-gray-900 shadow-xl ring-4 ring-white/20">
+                    {name.split(' ').map((w: string) => w[0]).join('').toUpperCase().slice(0, 2)}
+                  </div>
+                  <div className="mt-3">
+                    <p className="text-xs font-bold uppercase tracking-widest text-blue-300">{exp} Experience</p>
+                  </div>
                 </div>
-                <h3 className="font-headline text-xl font-extrabold text-gray-900">{name}</h3>
-                <p className="text-primary-blue font-semibold text-sm mt-1">{role}</p>
-                <p className="mt-1 text-xs text-gray-400 font-semibold">{exp} of counselling experience</p>
-                <div className="mt-2 inline-block rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-primary-blue">
-                  {specialization}
+                {/* Content — pulls up over the band */}
+                <div className="-mt-5 rounded-t-2xl bg-white px-7 pb-7 pt-5 text-center">
+                  <h3 className="font-headline text-xl font-extrabold text-gray-900">{name}</h3>
+                  <p className="text-primary-blue font-semibold text-sm mt-0.5">{role}</p>
+                  <div className="mt-3 inline-block rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-primary-blue">
+                    {specialization}
+                  </div>
+                  <p className="mt-4 text-sm text-gray-500 leading-relaxed">{bio}</p>
+                  <div className="mt-5 grid grid-cols-2 gap-2">
+                    <a href={`tel:+91${phone}`}
+                      className="flex items-center justify-center gap-1.5 rounded-xl bg-[#003f9f] px-3 py-2.5 text-xs font-bold text-white hover:bg-blue-800 transition">
+                      <Phone size={13} /> Call Now
+                    </a>
+                    <a href={`https://wa.me/91${phone}?text=नमस्ते! मुझे admission guidance चाहिए।`}
+                      target="_blank" rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-1.5 rounded-xl bg-green-500 px-3 py-2.5 text-xs font-bold text-white hover:bg-green-600 transition">
+                      <MessageCircle size={13} /> WhatsApp
+                    </a>
+                  </div>
                 </div>
-                <p className="mt-4 text-sm text-gray-600 leading-relaxed">{bio}</p>
-                <a
-                  href={`tel:+91${phone}`}
-                  className="mt-5 flex items-center justify-center gap-2 rounded-xl bg-primary-blue px-4 py-3 text-sm font-bold text-white hover:bg-blue-800 transition"
-                >
-                  <Phone size={15} /> Call +91 {phone}
-                </a>
-                <a
-                  href={`https://wa.me/91${phone}?text=नमस्ते! मुझे admission के बारे में guidance चाहिए।`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-2 flex items-center justify-center gap-2 rounded-xl bg-green-500 px-4 py-2.5 text-sm font-bold text-white hover:bg-green-600 transition"
-                >
-                  <MessageCircle size={15} /> Chat on WhatsApp
-                </a>
               </div>
             ))}
           </div>
