@@ -27,7 +27,15 @@ function CourseCard({ course, streamKey }: { course: Course; streamKey: StreamKe
   const slug = getCourseSlug(course.name);
 
   return (
-    <div className="flex-shrink-0 w-[272px] sm:w-[288px] flex flex-col rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200">
+    <div className="group relative flex-shrink-0 w-[272px] sm:w-[288px] flex flex-col rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200 cursor-pointer">
+      {/* Whole-card click → course details (stretched link). Action buttons below sit above this via z-index. */}
+      {slug && (
+        <Link
+          href={`/courses/${slug}`}
+          aria-label={`${course.name} — ${course.full} की पूरी details देखें`}
+          className="absolute inset-0 z-10"
+        />
+      )}
       {/* Top accent */}
       <div className={`h-1.5 bg-gradient-to-r ${colors.accentBar}`} />
 
@@ -81,12 +89,12 @@ function CourseCard({ course, streamKey }: { course: Course; streamKey: StreamKe
           <p className="text-xs font-extrabold text-green-700">{course.salary}</p>
         </div>
 
-        {/* Action buttons */}
-        <div className="flex flex-col gap-1.5 mt-auto">
+        {/* Action buttons — raised above the stretched card link */}
+        <div className="relative z-20 flex flex-col gap-1.5 mt-auto">
           <div className="flex gap-1.5">
             <Link
               href={`/apply?course=${encodeURIComponent(course.name)}`}
-              className="flex flex-1 items-center justify-center gap-1 rounded-xl bg-[#dc143c] py-2.5 text-xs font-bold text-white hover:bg-red-700 transition"
+              className="flex flex-1 items-center justify-center gap-1 rounded-xl bg-primary-blue py-2.5 text-xs font-bold text-white hover:bg-blue-700 transition"
             >
               <GraduationCap size={12} /> Apply
             </Link>
@@ -313,7 +321,6 @@ function StreamSlider({ tab }: { tab: typeof streamTabs[0] }) {
 
 /* ─── Main Page ──────────────────────────────────────────────────── */
 export default function CoursesPage() {
-  const totalCourses = streamTabs.reduce((s, t) => s + t.courses.length, 0);
 
   return (
     <main className="bg-white text-gray-900">
@@ -335,7 +342,7 @@ export default function CoursesPage() {
           <h1 className="font-headline font-black leading-[1.08] tracking-tight">
             <span className="block text-white text-3xl md:text-5xl">Choose Your Career Stream</span>
             <span className="block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent text-4xl md:text-6xl mt-1">
-              {totalCourses}+ Verified Courses
+              50+ Verified Courses
             </span>
           </h1>
           <div className="mx-auto mt-3 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent" />
@@ -367,7 +374,7 @@ export default function CoursesPage() {
           {/* Stats */}
           <div className="mt-8 flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm text-blue-200 font-semibold">
             {[
-              `${totalCourses}+ Verified Courses`,
+              "50+ Verified Courses",
               "200+ Partner Colleges",
               "100% Free Counselling",
               "5,000+ Students Guided",

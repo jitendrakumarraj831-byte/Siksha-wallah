@@ -774,26 +774,28 @@ export default function Home() {
               const detailsHref = slug ? `/courses/${slug}` : `/courses#${stream}`;
               return (
               <AnimateIn key={name} type="zoom-in">
-                <div className="group flex flex-col rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl overflow-hidden h-full">
-                  {/* Brand-palette header — clickable to full course details */}
-                  <Link href={detailsHref} className={`bg-gradient-to-br ${gradient} p-4 flex items-center justify-center`}>
+                <div className="group relative flex flex-col rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl overflow-hidden h-full cursor-pointer">
+                  {/* Whole-card click → full course details (stretched link). Buttons below sit above via z-index. */}
+                  <Link href={detailsHref} aria-label={`${name} की पूरी details देखें`} className="absolute inset-0 z-10" />
+                  {/* Brand-palette header */}
+                  <div className={`bg-gradient-to-br ${gradient} p-4 flex items-center justify-center`}>
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/20">
                       <Icon size={22} className="text-white" />
                     </div>
-                  </Link>
+                  </div>
                   {/* Content */}
                   <div className="flex flex-1 flex-col p-3 md:p-4">
-                    <Link href={detailsHref} className="font-headline text-sm md:text-base font-extrabold text-gray-900 hover:text-primary-blue transition">{name}</Link>
+                    <h3 className="font-headline text-sm md:text-base font-extrabold text-gray-900 transition group-hover:text-primary-blue">{name}</h3>
                     <p className="mt-1 flex-1 text-xs text-gray-500 leading-snug">{shortDesc}</p>
                     <a
                       href={`/apply?course=${encodeURIComponent(name)}`}
-                      className="mt-3 flex items-center justify-center gap-1.5 rounded-xl bg-primary-blue py-2 text-xs font-extrabold text-white shadow-sm transition hover:bg-blue-700"
+                      className="relative z-20 mt-3 flex items-center justify-center gap-1.5 rounded-xl bg-primary-blue py-2 text-xs font-extrabold text-white shadow-sm transition hover:bg-blue-700"
                     >
                       Free Counselling <ArrowRight size={11} />
                     </a>
                     <Link
                       href={detailsHref}
-                      className={`mt-1.5 flex items-center justify-center gap-1 rounded-xl border py-1.5 text-xs font-semibold transition hover:opacity-80 ${badge}`}
+                      className={`relative z-20 mt-1.5 flex items-center justify-center gap-1 rounded-xl border py-1.5 text-xs font-semibold transition hover:opacity-80 ${badge}`}
                     >
                       <BookOpen size={11} /> Full Details
                     </Link>
