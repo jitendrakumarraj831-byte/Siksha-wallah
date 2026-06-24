@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/components/auth-provider';
-import { getApplicationsByUser, type CourseApplication, type ApplicationStatus } from '@/services/application-service';
+import { type CourseApplication, type ApplicationStatus } from '@/services/application-service';
 import { getCourseSlug } from '@/lib/courses-data';
 import { PortalShell } from '@/components/portal-shell';
 import {
@@ -45,9 +45,17 @@ export default function DashboardPage() {
     }
     if (authLoading || !user) return;
 
-    getApplicationsByUser(user.uid)
-      .then(data => setApplications(data))
-      .finally(() => setLoading(false));
+    user.getIdToken().then(async (token) => {
+      try {
+        const res = await fetch(`/api/student/applications?uid=${user.uid}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const json = await res.json();
+        if (json.success) setApplications(json.data);
+      } finally {
+        setLoading(false);
+      }
+    });
   }, [authLoading, isAuthenticated, user, router]);
 
   const handleLogout = async () => {
