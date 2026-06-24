@@ -1059,7 +1059,7 @@ export default function Home() {
               {
                 icon: Award,       border: "border-l-amber-500",  iconBg: "bg-amber-50",  iconColor: "text-amber-600",
                 title: "9+ साल का अनुभव",
-                desc: "Forbesganj में 9 साल से active — 5,000+ परिवारों का भरोसा, बिना किसी complaint के।",
+                desc: "Forbesganj में 11 साल से active — 5,000+ परिवारों का भरोसा, बिना किसी complaint के।",
               },
             ].map(({ icon: Icon, border, iconBg, iconColor, title, desc }, i) => (
               <AnimateIn key={title} type="zoom-in" delay={i * 60}>
