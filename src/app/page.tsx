@@ -293,6 +293,15 @@ const PARTNER_COLLEGES: CollegeCategory[] = [
   },
 ];
 
+/* ─── FAQ card styling by topic group ───────────────────────────────────── */
+function getFaqStyle(i: number) {
+  if (i < 4)  return { label: "Counselling",     bar: "from-blue-600 to-indigo-600",  border: "border-blue-200",   tag: "bg-blue-100 text-blue-700",     text: "text-blue-700" };
+  if (i < 9)  return { label: "Course Selection", bar: "from-green-600 to-emerald-600", border: "border-green-200",  tag: "bg-green-100 text-green-700",   text: "text-green-700" };
+  if (i < 12) return { label: "Admission",        bar: "from-sky-600 to-blue-700",     border: "border-sky-200",    tag: "bg-sky-100 text-sky-700",       text: "text-sky-700" };
+  if (i < 15) return { label: "BSCC Loan",        bar: "from-amber-500 to-orange-600", border: "border-amber-200",  tag: "bg-amber-100 text-amber-700",   text: "text-amber-700" };
+  return            { label: "Fees & Expenses",  bar: "from-indigo-600 to-purple-600", border: "border-indigo-200", tag: "bg-indigo-100 text-indigo-700", text: "text-indigo-700" };
+}
+
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [checkedDocs, setCheckedDocs] = useState<Record<string, boolean>>({});
@@ -301,6 +310,7 @@ export default function Home() {
   const [bsccBihar, setBsccBihar] = useState("");
   const [bsccAge, setBsccAge] = useState("");
   const [selectedCollege, setSelectedCollege] = useState<CollegeCategory | null>(null);
+  const [loanAmount, setLoanAmount] = useState(200000);
 
   // Multi-step form
   const [step, setStep] = useState(0);
@@ -1161,6 +1171,59 @@ export default function Home() {
                 इस सरकारी योजना से अपनी <strong className="text-white">पढ़ाई, हॉस्टल और भोजन</strong> का खर्च संभालें। ₹4 लाख तक का loan — <strong className="text-amber-400">केवल 4% वार्षिक ब्याज</strong> पर। हम पूरी आवेदन प्रक्रिया में <strong className="text-white">निःशुल्क मार्गदर्शन</strong> देते हैं।
               </p>
 
+              {/* Interactive Loan Calculator — live savings */}
+              <div className="mt-7 rounded-2xl border border-amber-400/30 bg-white/[0.06] p-5 shadow-lg shadow-black/10">
+                <div className="mb-1 flex items-center gap-2">
+                  <CreditCard size={15} className="text-amber-400" />
+                  <span className="text-xs font-extrabold uppercase tracking-wider text-amber-300">Loan Savings Calculator</span>
+                </div>
+                <div className="flex items-end justify-between">
+                  <span className="text-sm font-semibold text-blue-200">मुझे चाहिए:</span>
+                  <span className="font-headline text-3xl font-black text-amber-400">
+                    ₹{loanAmount.toLocaleString("en-IN")}
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min={50000}
+                  max={400000}
+                  step={10000}
+                  value={loanAmount}
+                  onChange={(e) => setLoanAmount(Number(e.target.value))}
+                  aria-label="Loan amount selector"
+                  className="mt-3 w-full cursor-pointer accent-amber-400"
+                />
+                <div className="mt-1 flex justify-between text-[10px] font-medium text-blue-300">
+                  <span>₹50,000</span>
+                  <span>₹4,00,000</span>
+                </div>
+
+                <div className="mt-4 grid grid-cols-2 gap-3">
+                  <div className="rounded-xl border border-amber-400/20 bg-amber-400/[0.10] p-3 text-center">
+                    <p className="text-[11px] font-semibold text-blue-200">BSCC ब्याज @4%/yr</p>
+                    <p className="font-headline text-lg font-black text-amber-400">
+                      ₹{Math.round(loanAmount * 0.04).toLocaleString("en-IN")}
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3 text-center">
+                    <p className="text-[11px] font-semibold text-blue-200">Normal Bank @11%/yr</p>
+                    <p className="font-headline text-lg font-black text-red-300 line-through decoration-2">
+                      ₹{Math.round(loanAmount * 0.11).toLocaleString("en-IN")}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-3 flex items-center justify-center gap-1.5 rounded-xl bg-green-500/15 py-2.5 text-center">
+                  <CheckCircle2 size={15} className="text-green-400" />
+                  <p className="text-xs font-bold text-green-300">
+                    आप हर साल लगभग ₹{Math.round(loanAmount * 0.07).toLocaleString("en-IN")} बचाते हैं!
+                  </p>
+                </div>
+                <p className="mt-2 text-center text-[10px] text-blue-300/70">
+                  * Women applicants के लिए सिर्फ 1% ब्याज — और भी ज्यादा बचत
+                </p>
+              </div>
+
               {/* Benefit chips */}
               <div className="mt-7 grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {[
@@ -1203,12 +1266,19 @@ export default function Home() {
             </div>
 
             {/* ── RIGHT: Eligibility Checker ── */}
-            <div className="rounded-2xl border border-white/20 bg-white/[0.07] p-7 backdrop-blur-sm">
+            <div className="rounded-2xl border border-amber-400/30 bg-white/[0.08] p-7 shadow-2xl shadow-black/20 ring-1 ring-amber-400/10 backdrop-blur-sm">
+              <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-amber-400/30 bg-amber-400/[0.12] px-3 py-1">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-400" />
+                <span className="text-[11px] font-bold text-amber-300">सिर्फ 2 मिनट · 100% Free</span>
+              </div>
               <div className="mb-5 flex items-center gap-3">
                 <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-amber-400">
                   <CheckCircle2 size={18} className="text-gray-900" />
                 </div>
-                <h3 className="font-headline text-xl font-extrabold">Quick BSCC Eligibility Check</h3>
+                <div>
+                  <h3 className="font-headline text-xl font-extrabold leading-tight">Quick BSCC Eligibility Check</h3>
+                  <p className="text-xs text-blue-300">3 सवालों में जानें — आप eligible हैं या नहीं</p>
+                </div>
               </div>
 
               {bsccEligible === null ? (
@@ -1736,8 +1806,8 @@ export default function Home() {
 
           <div className="grid gap-12 lg:grid-cols-[1fr_1.8fr] items-start">
             {/* Left — contact strip */}
-            <AnimateIn type="fade-right">
-            <div className="sticky top-24">
+            <AnimateIn type="fade-right" className="order-2 lg:order-1">
+            <div className="lg:sticky lg:top-24">
               <div className="rounded-2xl bg-[#003f9f] p-6 text-white mb-6">
                 <p className="font-headline text-lg font-extrabold mb-1">Prefer to speak in person?</p>
                 <p className="text-blue-200 text-sm mb-5">Didn&apos;t find your answer here? Our counsellors are just one call away — free, friendly and honest.</p>
@@ -1758,8 +1828,8 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-              {/* Category quick links */}
-              <div className="rounded-2xl border border-gray-200 bg-white p-5">
+              {/* Category quick links — desktop only (non-interactive labels) */}
+              <div className="hidden lg:block rounded-2xl border border-gray-200 bg-white p-5">
                 <p className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Browse by Topic</p>
                 <div className="space-y-2">
                   {[
@@ -1780,32 +1850,117 @@ export default function Home() {
             </AnimateIn>
 
             {/* Right — accordion */}
-            <AnimateIn type="fade-left" delay={100}>
-            <div className="space-y-3">
-              {faqs.map(({ q, a }, i) => (
-                <div key={i} className={`rounded-2xl border-2 overflow-hidden transition-all ${openFaq === i ? "border-[#003f9f] shadow-md" : "border-gray-200 bg-white"}`}>
-                  <button
-                    onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                    className="flex w-full items-start justify-between gap-4 px-6 py-5 text-left transition hover:bg-blue-50/50"
-                  >
-                    <div className="flex items-start gap-3">
-                      <span className={`mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-[10px] font-extrabold ${openFaq === i ? "bg-[#003f9f] text-white" : "bg-gray-100 text-gray-500"}`}>
-                        {i + 1}
+            <AnimateIn type="fade-left" delay={100} className="order-1 lg:order-2">
+            <div>
+              <p className="mb-3 flex items-center gap-1.5 text-xs font-semibold text-gray-400">
+                <ArrowRight size={13} className="text-[#003f9f]" /> Swipe करें · किसी भी सवाल पर tap करके पूरा जवाब देखें
+              </p>
+              <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 lg:mx-0 lg:px-0">
+                {faqs.map(({ q }, i) => {
+                  const s = getFaqStyle(i);
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => setOpenFaq(i)}
+                      className={`group flex w-[80%] flex-shrink-0 snap-start flex-col rounded-2xl border-2 ${s.border} bg-white p-5 text-left shadow-sm transition hover:-translate-y-1 hover:shadow-lg sm:w-[300px]`}
+                    >
+                      <div className="mb-3 flex items-center justify-between gap-2">
+                        <span className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${s.bar} text-sm font-black text-white shadow`}>
+                          {i + 1}
+                        </span>
+                        <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold ${s.tag}`}>{s.label}</span>
+                      </div>
+                      <p className="line-clamp-3 flex-1 font-headline text-base font-bold leading-snug text-gray-900">
+                        {q}
+                      </p>
+                      <span className={`mt-4 inline-flex items-center gap-1 text-xs font-bold transition-all group-hover:gap-2 ${s.text}`}>
+                        पूरा जवाब पढ़ें <ArrowRight size={13} />
                       </span>
-                      <span className="font-headline font-bold text-base text-gray-900 leading-snug">{q}</span>
-                    </div>
-                    <ChevronDown size={20} className={`flex-shrink-0 mt-0.5 text-[#003f9f] transition-transform duration-200 ${openFaq === i ? "rotate-180" : ""}`} />
-                  </button>
-                  {openFaq === i && (
-                    <div className="px-6 pb-5 pt-0 text-gray-600 text-sm leading-relaxed border-t border-blue-100 bg-blue-50/30">
-                      <div className="pt-4 whitespace-pre-line">{a}</div>
-                    </div>
-                  )}
-                </div>
-              ))}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
             </AnimateIn>
           </div>
+
+          {/* ── Big Q&A Modal ── */}
+          {openFaq !== null && faqs[openFaq] && (() => {
+            const s = getFaqStyle(openFaq);
+            return (
+            <div
+              className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 backdrop-blur-sm sm:items-center"
+              onClick={() => setOpenFaq(null)}
+            >
+              <div
+                className="relative max-h-[88vh] w-full max-w-xl overflow-hidden rounded-2xl bg-white shadow-2xl"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Header */}
+                <div className={`flex items-start justify-between gap-3 bg-gradient-to-r ${s.bar} p-5 text-white`}>
+                  <div className="flex items-start gap-3">
+                    <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-white/20 text-base font-black">
+                      {openFaq + 1}
+                    </span>
+                    <div>
+                      <span className="mb-1 inline-block rounded-full bg-white/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+                        {s.label}
+                      </span>
+                      <h3 className="font-headline text-lg font-extrabold leading-snug">{faqs[openFaq].q}</h3>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setOpenFaq(null)}
+                    aria-label="Close"
+                    className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white/20 transition hover:bg-white/30"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+
+                {/* Answer */}
+                <div className="max-h-[55vh] overflow-y-auto p-6">
+                  <p className="whitespace-pre-line text-[15px] leading-relaxed text-gray-700">{faqs[openFaq].a}</p>
+                </div>
+
+                {/* Footer CTAs */}
+                <div className="flex flex-col gap-2.5 border-t border-gray-100 p-5 sm:flex-row">
+                  <a
+                    href={`https://wa.me/916203138576?text=${encodeURIComponent(`नमस्ते! मेरा सवाल है: ${faqs[openFaq].q}`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-green-500 px-5 py-3 font-bold text-white transition hover:bg-green-600"
+                  >
+                    <MessageCircle size={16} /> और पूछें — WhatsApp
+                  </a>
+                  <a
+                    href="tel:+916203138576"
+                    className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary-blue px-5 py-3 font-bold text-white transition hover:bg-blue-700"
+                  >
+                    <Phone size={16} /> Counsellor को Call करें
+                  </a>
+                </div>
+
+                {/* Prev / Next navigation */}
+                <div className="flex items-center justify-between border-t border-gray-100 px-5 py-3">
+                  <button
+                    onClick={() => setOpenFaq(openFaq > 0 ? openFaq - 1 : faqs.length - 1)}
+                    className="flex items-center gap-1 text-xs font-bold text-gray-500 transition hover:text-[#003f9f]"
+                  >
+                    <ChevronDown size={14} className="rotate-90" /> पिछला
+                  </button>
+                  <span className="text-[11px] font-semibold text-gray-400">{openFaq + 1} / {faqs.length}</span>
+                  <button
+                    onClick={() => setOpenFaq(openFaq < faqs.length - 1 ? openFaq + 1 : 0)}
+                    className="flex items-center gap-1 text-xs font-bold text-gray-500 transition hover:text-[#003f9f]"
+                  >
+                    अगला <ChevronDown size={14} className="-rotate-90" />
+                  </button>
+                </div>
+              </div>
+            </div>
+            );
+          })()}
         </div>
       </section>
 
