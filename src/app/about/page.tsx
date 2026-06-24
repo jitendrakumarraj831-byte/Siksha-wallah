@@ -1,6 +1,7 @@
 "use client";
 
-import { PortalShell } from "@/components/portal-shell";
+import { SiteNavbar } from "@/components/site-navbar";
+import { SiteFooter } from "@/components/site-footer";
 import { ReviewsCarousel } from "@/components/reviews-carousel";
 import {
   GraduationCap, Users, Award, BadgeCheck, MapPin, Phone,
@@ -43,7 +44,9 @@ const trustPoints = [
 
 export default function AboutPage() {
   return (
-    <PortalShell>
+    <>
+      <SiteNavbar />
+      <main>
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] py-20 text-white">
         {/* Dot-grid */}
@@ -300,6 +303,8 @@ export default function AboutPage() {
         title="सफल छात्रों की प्रेरणादायक कहानियाँ"
         subtitle="हमारे साथ admission पाने वाले 5,000+ students के असली अनुभव सुनें।"
       />
-    </PortalShell>
+      </main>
+      <SiteFooter />
+    </>
   );
 }

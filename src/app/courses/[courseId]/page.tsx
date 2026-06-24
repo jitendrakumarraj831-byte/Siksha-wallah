@@ -2,7 +2,8 @@
 
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { PortalShell } from '@/components/portal-shell';
+import { SiteNavbar } from '@/components/site-navbar';
+import { SiteFooter } from '@/components/site-footer';
 import { COURSE_ID_MAP, colorMap, streamTabs } from '@/lib/courses-data';
 import { saveActivity } from '@/services/activity-service';
 import { useEffect } from 'react';
@@ -78,7 +79,8 @@ export default function CourseDetailPage() {
 
   if (!entry) {
     return (
-      <PortalShell>
+      <>
+        <SiteNavbar />
         <div className="flex min-h-[70vh] items-center justify-center">
           <div className="text-center">
             <AlertCircle className="mx-auto text-red-500 mb-4" size={48} />
@@ -89,7 +91,8 @@ export default function CourseDetailPage() {
             </Link>
           </div>
         </div>
-      </PortalShell>
+        <SiteFooter />
+      </>
     );
   }
 
@@ -100,7 +103,8 @@ export default function CourseDetailPage() {
   const waMsg = `नमस्ते! मुझे ${course.name} (${course.full}) के बारे में जानकारी चाहिए। Fees aur admission process batayein।`;
 
   return (
-    <PortalShell>
+    <>
+      <SiteNavbar />
       {/* Hero banner */}
       <div className={`bg-gradient-to-r ${colors.gradient} py-10 text-white`}>
         <div className="container-shell">
@@ -302,6 +306,7 @@ export default function CourseDetailPage() {
           </div>
         </div>
       </div>
-    </PortalShell>
+      <SiteFooter />
+    </>
   );
 }
