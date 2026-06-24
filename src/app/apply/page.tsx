@@ -158,7 +158,7 @@ function ApplyForm() {
         userId: user?.uid || undefined,
         fullName: form.fullName,
         mobile: form.mobile,
-        email: form.email || undefined,
+        email: form.email || user?.email || undefined,
         fatherName: form.fatherName || undefined,
         dob: form.dob || undefined,
         gender: form.gender || undefined,
