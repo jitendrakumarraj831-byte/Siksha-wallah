@@ -30,6 +30,8 @@ export interface CourseApplication {
   preferredCollege?: string;
   bsccRequired?: boolean;
   message?: string;
+  // Document availability checklist (student self-declared)
+  availableDocs?: string[];   // list of doc labels student has
   // Admin fields
   status?: ApplicationStatus;
   note?: string;

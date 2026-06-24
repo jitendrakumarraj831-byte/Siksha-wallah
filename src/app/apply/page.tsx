@@ -53,6 +53,19 @@ type FormData = {
   bsccRequired: boolean; message: string;
 };
 
+// Common documents every student should check
+const ALL_DOCS = [
+  "Aadhaar Card (आधार कार्ड)",
+  "10th Marksheet (दसवीं अंकपत्र)",
+  "12th Marksheet (बारहवीं अंकपत्र)",
+  "Graduation Marksheet (स्नातक अंकपत्र)",
+  "Caste Certificate (जाति प्रमाण पत्र)",
+  "Income Certificate (आय प्रमाण पत्र)",
+  "Domicile / Residence Certificate (निवास प्रमाण पत्र)",
+  "Passport Size Photos (4 copies)",
+  "Bank Passbook / Account Details",
+];
+
 const EMPTY: FormData = {
   fullName: "", mobile: "", email: "", fatherName: "",
   dob: "", gender: "", address: "", district: "", state: "Bihar",
@@ -70,6 +83,8 @@ function ApplyForm() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [appId, setAppId] = useState("");
+  const [availableDocs, setAvailableDocs] = useState<string[]>([]);
+  const [tcAccepted, setTcAccepted] = useState(false);
 
   // Pre-fill course from URL param ?course=
   useEffect(() => {
@@ -94,6 +109,12 @@ function ApplyForm() {
   const set = (k: keyof FormData, v: string | boolean) =>
     setForm(f => ({ ...f, [k]: v }));
 
+  function toggleDoc(label: string) {
+    setAvailableDocs(prev =>
+      prev.includes(label) ? prev.filter(d => d !== label) : [...prev, label]
+    );
+  }
+
   function validateStep1() {
     if (!form.fullName.trim()) return "कृपया अपना पूरा नाम दर्ज करें।";
     if (!form.mobile.trim() || form.mobile.length < 10) return "कृपया एक सही 10-अंकों का mobile number दर्ज करें।";
@@ -117,6 +138,9 @@ function ApplyForm() {
       const e = validateStep2();
       if (e) { setError(e); return; }
     }
+    if (step === 3) {
+      if (!tcAccepted) { setError("कृपया Terms & Conditions स्वीकार करें।"); return; }
+    }
     setStep(s => s + 1);
   }
 
@@ -126,6 +150,7 @@ function ApplyForm() {
     if (e1) { setError(e1); return; }
     const e2 = validateStep2();
     if (e2) { setError(e2); return; }
+    if (!tcAccepted) { setError("कृपया Terms & Conditions स्वीकार करें।"); return; }
     setLoading(true);
     setError("");
     try {
@@ -148,6 +173,7 @@ function ApplyForm() {
         preferredCollege: form.preferredCollege || undefined,
         bsccRequired: form.bsccRequired,
         message: form.message || undefined,
+        availableDocs: availableDocs.length > 0 ? availableDocs : undefined,
       });
       setAppId(id.slice(0, 8).toUpperCase());
       saveInquiry({
@@ -183,40 +209,90 @@ function ApplyForm() {
     return (
       <>
         <SiteNavbar />
-        <main className="min-h-screen bg-green-50 flex items-center justify-center px-4 py-16">
-          <div className="w-full max-w-lg text-center">
-            <div className="mb-6 flex justify-center">
-              <div className="flex h-24 w-24 items-center justify-center rounded-full bg-green-100">
-                <CheckCircle2 size={56} className="text-green-500" />
+        <main className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 px-4 py-12">
+          <div className="mx-auto w-full max-w-lg">
+            {/* Success header */}
+            <div className="text-center mb-6">
+              <div className="mb-4 flex justify-center">
+                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
+                  <CheckCircle2 size={48} className="text-green-500" />
+                </div>
+              </div>
+              <h1 className="font-headline text-2xl font-extrabold text-gray-900 mb-1">
+                Application <span className="text-green-600">Submitted!</span>
+              </h1>
+              <p className="text-sm text-gray-500">आपका आवेदन सफलतापूर्वक जमा हो गया।</p>
+            </div>
+
+            {/* Reference ID */}
+            <div className="mb-4 rounded-2xl border-2 border-[#003f9f] bg-white px-6 py-4 text-center">
+              <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Application Reference ID</p>
+              <p className="font-headline text-3xl font-extrabold text-[#003f9f]">#{appId}</p>
+              <p className="text-xs text-gray-400 mt-1">यह ID save करके रखें — status track करने के काम आएगी।</p>
+            </div>
+
+            {/* IMPORTANT: Office visit notice */}
+            <div className="mb-4 rounded-2xl border-2 border-amber-400 bg-amber-50 p-5">
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">🏢</span>
+                <div>
+                  <p className="font-extrabold text-amber-900 text-base mb-1">Office में Original Documents लेकर आएं</p>
+                  <p className="text-sm text-amber-800 leading-relaxed">
+                    Form submit होने के बाद admission process complete करने के लिए आपको <strong>Siksha Wallah Office</strong> में अपने सभी original documents लेकर आना होगा।
+                  </p>
+                  <div className="mt-3 rounded-xl bg-amber-100 border border-amber-200 px-4 py-3">
+                    <p className="text-xs font-extrabold text-amber-900 mb-1.5">📍 Office Address:</p>
+                    <p className="text-xs text-amber-800">College Chowk, Near HP Petrol Pump,<br />Forbesganj, Araria, Bihar</p>
+                    <p className="text-xs text-amber-800 mt-1">⏰ Mon–Sat: 9:00 AM – 6:00 PM</p>
+                  </div>
+                </div>
               </div>
             </div>
-            <h1 className="font-headline text-3xl font-extrabold text-gray-900 mb-2">
-              Application <span className="text-green-600">Submitted</span> Successfully!
-            </h1>
-            <p className="text-gray-600 mb-4">
-              आपका आवेदन हमें प्राप्त हो गया है। हमारा एक अनुभवी counsellor <strong>30 मिनट के भीतर</strong> आपको call या WhatsApp पर संपर्क करेगा।
+
+            {/* Documents you marked as available */}
+            {availableDocs.length > 0 && (
+              <div className="mb-4 rounded-2xl border-2 border-gray-200 bg-white p-5">
+                <p className="font-extrabold text-gray-800 text-sm mb-3">📋 आपने जो Documents Available बताए:</p>
+                <div className="space-y-1.5">
+                  {ALL_DOCS.map(doc => (
+                    <div key={doc} className="flex items-center gap-2 text-sm">
+                      {availableDocs.includes(doc)
+                        ? <><span className="text-green-500 font-bold">✅</span><span className="text-gray-700">{doc}</span></>
+                        : <><span className="text-gray-300">⬜</span><span className="text-gray-400 line-through">{doc}</span></>
+                      }
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-3 text-xs text-red-600 font-semibold">
+                  ⚠️ Office आते समय जो documents ✅ नहीं हैं उन्हें भी साथ लाने की कोशिश करें।
+                </p>
+              </div>
+            )}
+
+            {/* Counsellor contact */}
+            <p className="text-center text-sm text-gray-600 mb-3">
+              हमारा counsellor <strong>30 मिनट के भीतर</strong> आपसे संपर्क करेगा।
             </p>
-            <div className="mb-6 rounded-2xl border-2 border-green-200 bg-white px-6 py-4">
-              <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Your Application Reference ID</p>
-              <p className="font-headline text-2xl font-extrabold text-[#003f9f]">#{appId}</p>
-              <p className="text-xs text-gray-400 mt-1">कृपया इस reference ID को सुरक्षित रखें — यह आपकी application को track करने के काम आएगी।</p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
+            <div className="flex flex-col gap-2 mb-5">
               <a
-                href={`https://wa.me/916203138576?text=नमस्ते!%20मैंने%20${encodeURIComponent(form.course)}%20के%20लिए%20application%20submit%20की%20है।%20मेरा%20नाम%20${encodeURIComponent(form.fullName)}%20है।%20Reference%20ID:%20%23${appId}%20।%20Kripya%20guide%20karein।`}
+                href={`https://wa.me/916203138576?text=नमस्ते!%20मैंने%20${encodeURIComponent(form.course)}%20के%20लिए%20apply%20किया%20है।%20नाम:%20${encodeURIComponent(form.fullName)}%20।%20Reference%20ID:%20%23${appId}`}
                 target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-green-500 px-6 py-3 font-extrabold text-white hover:bg-green-600 transition"
+                className="flex items-center justify-center gap-2 rounded-xl bg-green-500 py-3 font-extrabold text-white hover:bg-green-600 transition"
               >
-                <MessageCircle size={18} fill="currentColor" /> Continue on WhatsApp
+                <MessageCircle size={18} fill="currentColor" /> WhatsApp पर बात करें
               </a>
-              <a href="tel:+916203138576" className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#003f9f] px-6 py-3 font-extrabold text-white hover:bg-blue-700 transition">
-                <Phone size={18} /> Speak to a Counsellor
+              <a href="tel:+916203138576"
+                className="flex items-center justify-center gap-2 rounded-xl bg-[#003f9f] py-3 font-extrabold text-white hover:bg-blue-700 transition"
+              >
+                <Phone size={18} /> Call करें — +91 62031 38576
               </a>
             </div>
-            {user
-              ? <Link href="/dashboard" className="text-sm font-bold text-[#003f9f] hover:underline">Go to My Dashboard →</Link>
-              : <Link href="/" className="text-sm text-gray-400 hover:text-gray-600 transition">← Back to Homepage</Link>
-            }
+            <div className="text-center">
+              {user
+                ? <Link href="/dashboard" className="text-sm font-bold text-[#003f9f] hover:underline">My Dashboard देखें →</Link>
+                : <Link href="/" className="text-sm text-gray-400 hover:text-gray-700 transition">← Homepage पर जाएं</Link>
+              }
+            </div>
           </div>
         </main>
         <SiteFooter />
@@ -244,7 +320,7 @@ function ApplyForm() {
             </div>
             {/* H1 */}
             <h1 className="font-headline font-black tracking-tight leading-[1.1]">
-              <span className="block text-[1.5rem] md:text-[2.2rem] lg:text-[2.6rem] text-white/80">सिर्फ़ 3 Steps में</span>
+              <span className="block text-[1.5rem] md:text-[2.2rem] lg:text-[2.6rem] text-white/80">सिर्फ़ 4 Steps में</span>
               <span className="block text-[2.8rem] md:text-[4.2rem] lg:text-[5rem] bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">Admission शुरू करें।</span>
               <span className="block text-[1.4rem] md:text-[1.9rem] lg:text-[2.2rem] text-white">पहली Counselling <span className="text-amber-300 font-extrabold">बिल्कुल मुफ़्त।</span></span>
             </h1>
@@ -255,13 +331,14 @@ function ApplyForm() {
             {/* Step pills */}
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               {[
-                "Step 1: Personal Details",
-                "Step 2: Course & Qualification",
-                "Step 3: Review & Submit",
+                "Personal Details",
+                "Course & Qualification",
+                "Documents Checklist",
+                "Review & Submit",
               ].map((pill, i) => (
                 <span key={pill} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.07] px-4 py-2 text-xs font-semibold text-blue-100">
                   <span className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-400 text-[10px] font-extrabold text-gray-900">{i + 1}</span>
-                  {pill.replace(/^Step \d+: /, "")}
+                  {pill}
                 </span>
               ))}
             </div>
@@ -285,16 +362,16 @@ function ApplyForm() {
         {/* Progress bar */}
         <div className="bg-white border-b border-gray-100 py-4">
           <div className="container-shell">
-            <div className="flex items-center gap-2 max-w-lg mx-auto">
-              {[1, 2, 3].map(s => (
-                <div key={s} className="flex items-center gap-2 flex-1">
+            <div className="flex items-center gap-1 max-w-2xl mx-auto">
+              {[1, 2, 3, 4].map(s => (
+                <div key={s} className="flex items-center gap-1 flex-1">
                   <div className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm font-extrabold transition ${step >= s ? "bg-amber-400 text-gray-900" : "bg-gray-100 text-gray-400"}`}>
                     {step > s ? "✓" : s}
                   </div>
                   <span className={`text-xs font-semibold hidden sm:block ${step >= s ? "text-amber-600" : "text-gray-400"}`}>
-                    {s === 1 ? "Personal Details" : s === 2 ? "Course & Qualification" : "Review & Submit"}
+                    {s === 1 ? "Personal" : s === 2 ? "Course" : s === 3 ? "Documents" : "Submit"}
                   </span>
-                  {s < 3 && <div className={`flex-1 h-0.5 ${step > s ? "bg-amber-400" : "bg-gray-200"}`} />}
+                  {s < 4 && <div className={`flex-1 h-0.5 ${step > s ? "bg-amber-400" : "bg-gray-200"}`} />}
                 </div>
               ))}
             </div>
@@ -584,8 +661,78 @@ function ApplyForm() {
                   </div>
                 )}
 
-                {/* ── STEP 3: Review & Submit ── */}
+                {/* ── STEP 3: Document Checklist ── */}
                 {step === 3 && (
+                  <div className="space-y-4">
+                    <div className="rounded-2xl bg-white border-2 border-blue-100 shadow-sm p-5">
+                      <div className="flex items-center gap-3 mb-4">
+                        <FileText size={20} className="text-[#003f9f]" />
+                        <div>
+                          <h2 className="font-headline text-base font-extrabold text-gray-900">Documents Checklist</h2>
+                          <p className="text-xs text-gray-500">जो documents आपके पास हैं उन पर ✅ करें</p>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        {ALL_DOCS.map(doc => (
+                          <label key={doc} className={`flex items-center gap-3 rounded-xl border-2 px-4 py-3 cursor-pointer transition ${availableDocs.includes(doc) ? "border-green-400 bg-green-50" : "border-gray-200 bg-gray-50 hover:border-gray-300"}`}>
+                            <input
+                              type="checkbox"
+                              checked={availableDocs.includes(doc)}
+                              onChange={() => toggleDoc(doc)}
+                              className="h-4 w-4 accent-green-500"
+                            />
+                            <span className={`text-sm font-semibold ${availableDocs.includes(doc) ? "text-green-800" : "text-gray-700"}`}>{doc}</span>
+                            {availableDocs.includes(doc) && <span className="ml-auto text-green-500 font-bold text-xs">✅ है</span>}
+                          </label>
+                        ))}
+                      </div>
+                      <div className="mt-4 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-xs text-amber-800">
+                        <strong>📌 ध्यान दें:</strong> Form submit होने के बाद आपको Office में आकर सभी original documents verify कराने होंगे। जो documents नहीं हैं उन्हें जल्द तैयार करें।
+                      </div>
+                    </div>
+
+                    {/* Terms & Conditions */}
+                    <div className="rounded-2xl border-2 border-gray-200 bg-white p-5">
+                      <h3 className="font-extrabold text-gray-900 text-sm mb-3">📋 Terms & Conditions</h3>
+                      <div className="rounded-xl bg-gray-50 border border-gray-200 px-4 py-3 text-xs text-gray-600 space-y-2 max-h-40 overflow-y-auto mb-4">
+                        <p>1. <strong>Data Confidentiality:</strong> आपके द्वारा दी गई सभी जानकारी पूरी तरह गोपनीय रहेगी। आपका data सिर्फ Siksha Wallah Consultancy के पास रहेगा — किसी तीसरे पक्ष को share नहीं किया जाएगा।</p>
+                        <p>2. <strong>Office Visit Mandatory:</strong> Online form submit करने के बाद admission process complete करने के लिए आपको अपने सभी original documents लेकर Siksha Wallah Office (College Chowk, Forbesganj) में आना अनिवार्य है।</p>
+                        <p>3. <strong>Free Counselling:</strong> हमारी सभी counselling services पूरी तरह निःशुल्क हैं। किसी भी stage पर कोई hidden charges नहीं लिए जाएंगे।</p>
+                        <p>4. <strong>Application Status:</strong> Form submit होने के बाद आप अपना application status student dashboard में track कर सकते हैं।</p>
+                        <p>5. <strong>Authenticity:</strong> आप confirm करते हैं कि form में भरी गई सारी जानकारी सही और सत्य है।</p>
+                      </div>
+                      <label className="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={tcAccepted}
+                          onChange={e => setTcAccepted(e.target.checked)}
+                          className="mt-0.5 h-4 w-4 accent-[#003f9f]"
+                        />
+                        <span className="text-sm font-semibold text-gray-700">
+                          मैं उपरोक्त सभी Terms & Conditions पढ़ और समझ चुका/चुकी हूँ और इन्हें स्वीकार करता/करती हूँ।
+                        </span>
+                      </label>
+                    </div>
+
+                    <div className="flex gap-3">
+                      <button
+                        type="button" onClick={() => { setStep(2); setError(""); }}
+                        className="flex-1 rounded-xl border-2 border-gray-200 py-4 text-sm font-bold text-gray-600 hover:border-gray-300 transition"
+                      >
+                        ← Back
+                      </button>
+                      <button
+                        type="button" onClick={nextStep}
+                        className="flex-[2] flex items-center justify-center gap-2 rounded-xl bg-[#003f9f] py-4 font-extrabold text-white hover:bg-blue-700 transition shadow-lg shadow-blue-200"
+                      >
+                        Review & Submit <ArrowRight size={18} />
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* ── STEP 4: Review & Submit ── */}
+                {step === 4 && (
                   <div className="space-y-4">
 
                     {/* Personal Details card */}
@@ -667,21 +814,30 @@ function ApplyForm() {
                       )}
                     </div>
 
+                    {/* Documents summary */}
+                    <div className="rounded-2xl bg-green-50 border-2 border-green-200 px-5 py-4">
+                      <p className="font-bold text-green-900 text-sm mb-2">✅ Available Documents ({availableDocs.length}/{ALL_DOCS.length})</p>
+                      {availableDocs.length > 0
+                        ? <div className="flex flex-wrap gap-1.5">{availableDocs.map(d => <span key={d} className="rounded-lg bg-green-100 border border-green-300 px-2 py-0.5 text-xs font-semibold text-green-800">{d.split(" (")[0]}</span>)}</div>
+                        : <p className="text-xs text-green-700">कोई document mark नहीं किया।</p>
+                      }
+                    </div>
+
                     <div className="rounded-2xl bg-amber-50 border-2 border-amber-200 px-5 py-4 text-sm text-amber-800">
-                      <p className="font-bold mb-1">What happens after you submit?</p>
+                      <p className="font-bold mb-1">🏢 Submit के बाद क्या होगा?</p>
                       <ul className="space-y-1 text-xs">
-                        <li>• आपकी application हमारे counselling team के पास securely save हो जाएगी।</li>
-                        <li>• एक dedicated counsellor 30 मिनट के भीतर आपको call या WhatsApp करेगा।</li>
-                        <li>• पूरा परामर्श और मार्गदर्शन 100% निःशुल्क — कोई hidden charges नहीं।</li>
+                        <li>• एक counsellor <strong>30 मिनट के भीतर</strong> call/WhatsApp करेगा।</li>
+                        <li>• आपको <strong>original documents लेकर Office आना होगा</strong> — College Chowk, Forbesganj।</li>
+                        <li>• आपकी सारी जानकारी सिर्फ Siksha Wallah के पास रहेगी — पूरी तरह confidential।</li>
                       </ul>
                     </div>
 
                     <div className="flex gap-3">
                       <button
-                        type="button" onClick={() => { setStep(2); setError(""); }}
+                        type="button" onClick={() => { setStep(3); setError(""); }}
                         className="flex-1 rounded-xl border-2 border-gray-200 py-4 text-sm font-bold text-gray-600 hover:border-gray-300 transition"
                       >
-                        ← Edit Details
+                        ← Edit
                       </button>
                       <button
                         type="submit"

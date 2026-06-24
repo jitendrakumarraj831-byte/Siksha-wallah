@@ -142,6 +142,7 @@ function AppCard({ app, onStatusChange, onNoteSaved, isNew }: {
               <Row k="BSCC" v={app.bsccRequired ? "Yes — Required" : "Not required"} />
             </InfoBlock>
             <InfoBlock title="Actions">
+
               {/* Status */}
               <p className="font-semibold text-gray-500 mb-1.5">Update Status:</p>
               <select
@@ -183,6 +184,17 @@ function AppCard({ app, onStatusChange, onNoteSaved, isNew }: {
           {app.message && (
             <div className="mt-3 rounded-xl bg-yellow-50 border border-yellow-200 px-4 py-3 text-xs text-gray-700">
               <span className="font-bold text-yellow-700">💬 Student Message: </span>{app.message}
+            </div>
+          )}
+
+          {app.availableDocs && app.availableDocs.length > 0 && (
+            <div className="mt-3 rounded-xl bg-green-50 border border-green-200 px-4 py-3 text-xs">
+              <p className="font-bold text-green-800 mb-2">📋 Student के पास Available Documents ({app.availableDocs.length}):</p>
+              <div className="flex flex-wrap gap-1.5">
+                {app.availableDocs.map((d: string) => (
+                  <span key={d} className="rounded-lg bg-green-100 border border-green-300 px-2 py-0.5 font-semibold text-green-800">{d.split(" (")[0]}</span>
+                ))}
+              </div>
             </div>
           )}
         </div>
