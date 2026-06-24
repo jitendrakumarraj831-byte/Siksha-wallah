@@ -18,7 +18,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { CountUp } from "@/components/count-up";
 import { AnimateIn } from "@/components/animate-in";
 import { ReviewsCarousel } from "@/components/reviews-carousel";
-import { streamTabs, colorMap, faqs, type StreamKey } from "@/lib/courses-data";
+import { streamTabs, colorMap, faqs, getCourseSlug, type StreamKey } from "@/lib/courses-data";
 import { successStories } from "@/lib/reviews-data";
 
 
@@ -769,18 +769,21 @@ export default function Home() {
                 gradient: "from-[#001850] to-[#003590]",
                 badge: "bg-blue-100 text-blue-800",
               },
-            ] as const).map(({ name, shortDesc, stream, icon: Icon, gradient, badge }) => (
+            ] as const).map(({ name, shortDesc, stream, icon: Icon, gradient, badge }) => {
+              const slug = getCourseSlug(name);
+              const detailsHref = slug ? `/courses/${slug}` : `/courses#${stream}`;
+              return (
               <AnimateIn key={name} type="zoom-in">
                 <div className="group flex flex-col rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl overflow-hidden h-full">
-                  {/* Brand-palette header */}
-                  <div className={`bg-gradient-to-br ${gradient} p-4 flex items-center justify-center`}>
+                  {/* Brand-palette header — clickable to full course details */}
+                  <Link href={detailsHref} className={`bg-gradient-to-br ${gradient} p-4 flex items-center justify-center`}>
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/20">
                       <Icon size={22} className="text-white" />
                     </div>
-                  </div>
+                  </Link>
                   {/* Content */}
                   <div className="flex flex-1 flex-col p-3 md:p-4">
-                    <h3 className="font-headline text-sm md:text-base font-extrabold text-gray-900">{name}</h3>
+                    <Link href={detailsHref} className="font-headline text-sm md:text-base font-extrabold text-gray-900 hover:text-primary-blue transition">{name}</Link>
                     <p className="mt-1 flex-1 text-xs text-gray-500 leading-snug">{shortDesc}</p>
                     <a
                       href={`/apply?course=${encodeURIComponent(name)}`}
@@ -788,16 +791,17 @@ export default function Home() {
                     >
                       Free Counselling <ArrowRight size={11} />
                     </a>
-                    <a
-                      href={`/courses#${stream}`}
+                    <Link
+                      href={detailsHref}
                       className={`mt-1.5 flex items-center justify-center gap-1 rounded-xl border py-1.5 text-xs font-semibold transition hover:opacity-80 ${badge}`}
                     >
-                      <BookOpen size={11} /> Details
-                    </a>
+                      <BookOpen size={11} /> Full Details
+                    </Link>
                   </div>
                 </div>
               </AnimateIn>
-            ))}
+              );
+            })}
           </div>
 
           <div className="mt-8 text-center">
