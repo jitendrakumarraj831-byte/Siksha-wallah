@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { saveInquiry } from "@/services/inquiry-service";
 import { saveActivity } from "@/services/activity-service";
 import {
@@ -304,6 +304,41 @@ function getFaqStyle(i: number) {
 
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const faqSliderRef = useRef<HTMLDivElement>(null);
+  const faqAutoSlide = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    const slider = faqSliderRef.current;
+    if (!slider) return;
+
+    const startAutoSlide = () => {
+      faqAutoSlide.current = setInterval(() => {
+        const cardWidth = slider.querySelector("button")?.offsetWidth ?? 280;
+        const gap = 16;
+        const maxScroll = slider.scrollWidth - slider.clientWidth;
+        const next = slider.scrollLeft + cardWidth + gap;
+        slider.scrollTo({ left: next > maxScroll ? 0 : next, behavior: "smooth" });
+      }, 3000);
+    };
+
+    const stopAutoSlide = () => {
+      if (faqAutoSlide.current) clearInterval(faqAutoSlide.current);
+    };
+
+    startAutoSlide();
+    slider.addEventListener("touchstart", stopAutoSlide, { passive: true });
+    slider.addEventListener("mousedown", stopAutoSlide);
+    slider.addEventListener("touchend", startAutoSlide, { passive: true });
+    slider.addEventListener("mouseup", startAutoSlide);
+
+    return () => {
+      stopAutoSlide();
+      slider.removeEventListener("touchstart", stopAutoSlide);
+      slider.removeEventListener("mousedown", stopAutoSlide);
+      slider.removeEventListener("touchend", startAutoSlide);
+      slider.removeEventListener("mouseup", startAutoSlide);
+    };
+  }, []);
   const [checkedDocs, setCheckedDocs] = useState<Record<string, boolean>>({});
   const [bsccEligible, setBsccEligible] = useState<null | boolean>(null);
   const [bsccIncome, setBsccIncome] = useState("");
@@ -1855,7 +1890,7 @@ export default function Home() {
               <p className="mb-3 flex items-center gap-1.5 text-xs font-semibold text-gray-400">
                 <ArrowRight size={13} className="text-[#003f9f]" /> Swipe करें · किसी भी सवाल पर tap करके पूरा जवाब देखें
               </p>
-              <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 lg:mx-0 lg:px-0">
+              <div ref={faqSliderRef} className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 lg:mx-0 lg:px-0">
                 {faqs.map(({ q }, i) => {
                   const s = getFaqStyle(i);
                   return (
@@ -1884,83 +1919,6 @@ export default function Home() {
             </AnimateIn>
           </div>
 
-          {/* ── Big Q&A Modal ── */}
-          {openFaq !== null && faqs[openFaq] && (() => {
-            const s = getFaqStyle(openFaq);
-            return (
-            <div
-              className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4 backdrop-blur-sm sm:items-center"
-              onClick={() => setOpenFaq(null)}
-            >
-              <div
-                className="relative max-h-[88vh] w-full max-w-xl overflow-hidden rounded-2xl bg-white shadow-2xl"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {/* Header */}
-                <div className={`flex items-start justify-between gap-3 bg-gradient-to-r ${s.bar} p-5 text-white`}>
-                  <div className="flex items-start gap-3">
-                    <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-white/20 text-base font-black">
-                      {openFaq + 1}
-                    </span>
-                    <div>
-                      <span className="mb-1 inline-block rounded-full bg-white/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider">
-                        {s.label}
-                      </span>
-                      <h3 className="font-headline text-lg font-extrabold leading-snug">{faqs[openFaq].q}</h3>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setOpenFaq(null)}
-                    aria-label="Close"
-                    className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white/20 transition hover:bg-white/30"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-
-                {/* Answer */}
-                <div className="max-h-[55vh] overflow-y-auto p-6">
-                  <p className="whitespace-pre-line text-[15px] leading-relaxed text-gray-700">{faqs[openFaq].a}</p>
-                </div>
-
-                {/* Footer CTAs */}
-                <div className="flex flex-col gap-2.5 border-t border-gray-100 p-5 sm:flex-row">
-                  <a
-                    href={`https://wa.me/916203138576?text=${encodeURIComponent(`नमस्ते! मेरा सवाल है: ${faqs[openFaq].q}`)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-green-500 px-5 py-3 font-bold text-white transition hover:bg-green-600"
-                  >
-                    <MessageCircle size={16} /> और पूछें — WhatsApp
-                  </a>
-                  <a
-                    href="tel:+916203138576"
-                    className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary-blue px-5 py-3 font-bold text-white transition hover:bg-blue-700"
-                  >
-                    <Phone size={16} /> Counsellor को Call करें
-                  </a>
-                </div>
-
-                {/* Prev / Next navigation */}
-                <div className="flex items-center justify-between border-t border-gray-100 px-5 py-3">
-                  <button
-                    onClick={() => setOpenFaq(openFaq > 0 ? openFaq - 1 : faqs.length - 1)}
-                    className="flex items-center gap-1 text-xs font-bold text-gray-500 transition hover:text-[#003f9f]"
-                  >
-                    <ChevronDown size={14} className="rotate-90" /> पिछला
-                  </button>
-                  <span className="text-[11px] font-semibold text-gray-400">{openFaq + 1} / {faqs.length}</span>
-                  <button
-                    onClick={() => setOpenFaq(openFaq < faqs.length - 1 ? openFaq + 1 : 0)}
-                    className="flex items-center gap-1 text-xs font-bold text-gray-500 transition hover:text-[#003f9f]"
-                  >
-                    अगला <ChevronDown size={14} className="-rotate-90" />
-                  </button>
-                </div>
-              </div>
-            </div>
-            );
-          })()}
         </div>
       </section>
 
@@ -2158,6 +2116,81 @@ export default function Home() {
           </p>
         </div>
       </section>
+
+      {/* ── FAQ Q&A Modal (top-level so fixed positioning is never trapped) ── */}
+      {openFaq !== null && faqs[openFaq] && (
+        <div
+          className="fixed inset-0 z-[100] flex items-end justify-center bg-black/60 p-4 backdrop-blur-sm sm:items-center"
+          onClick={() => setOpenFaq(null)}
+        >
+          <div
+            className="relative max-h-[88vh] w-full max-w-xl overflow-hidden rounded-2xl bg-white shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className={`flex items-start justify-between gap-3 bg-gradient-to-r ${getFaqStyle(openFaq).bar} p-5 text-white`}>
+              <div className="flex items-start gap-3">
+                <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-white/20 text-base font-black">
+                  {openFaq + 1}
+                </span>
+                <div>
+                  <span className="mb-1 inline-block rounded-full bg-white/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+                    {getFaqStyle(openFaq).label}
+                  </span>
+                  <h3 className="font-headline text-lg font-extrabold leading-snug">{faqs[openFaq].q}</h3>
+                </div>
+              </div>
+              <button
+                onClick={() => setOpenFaq(null)}
+                aria-label="Close"
+                className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-white/20 transition hover:bg-white/30"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Answer */}
+            <div className="max-h-[50vh] overflow-y-auto p-6">
+              <p className="whitespace-pre-line text-[15px] leading-relaxed text-gray-700">{faqs[openFaq].a}</p>
+            </div>
+
+            {/* Footer CTAs */}
+            <div className="flex flex-col gap-2.5 border-t border-gray-100 p-5 sm:flex-row">
+              <a
+                href={`https://wa.me/916203138576?text=${encodeURIComponent(`नमस्ते! मेरा सवाल है: ${faqs[openFaq].q}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-green-500 px-5 py-3 font-bold text-white transition hover:bg-green-600"
+              >
+                <MessageCircle size={16} /> और पूछें — WhatsApp
+              </a>
+              <a
+                href="tel:+916203138576"
+                className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#003f9f] px-5 py-3 font-bold text-white transition hover:bg-blue-700"
+              >
+                <Phone size={16} /> Counsellor को Call करें
+              </a>
+            </div>
+
+            {/* Prev / Next navigation */}
+            <div className="flex items-center justify-between border-t border-gray-100 px-5 py-3">
+              <button
+                onClick={() => setOpenFaq(openFaq > 0 ? openFaq - 1 : faqs.length - 1)}
+                className="flex items-center gap-1 text-xs font-bold text-gray-500 transition hover:text-[#003f9f]"
+              >
+                <ChevronDown size={14} className="rotate-90" /> पिछला
+              </button>
+              <span className="text-[11px] font-semibold text-gray-400">{openFaq + 1} / {faqs.length}</span>
+              <button
+                onClick={() => setOpenFaq(openFaq < faqs.length - 1 ? openFaq + 1 : 0)}
+                className="flex items-center gap-1 text-xs font-bold text-gray-500 transition hover:text-[#003f9f]"
+              >
+                अगला <ChevronDown size={14} className="-rotate-90" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <SiteFooter />
     </main>
