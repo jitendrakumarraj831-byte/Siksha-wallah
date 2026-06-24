@@ -57,17 +57,17 @@ function StreamCards() {
                 {STREAM_DESCRIPTIONS[tab.key as StreamKey]}
               </p>
 
-              {/* Primary CTA: Explore Courses */}
+              {/* Primary CTA: Explore Courses — stretched link covers entire card */}
               <Link
                 href={`/courses#${tab.key}`}
-                className={`mt-5 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r ${c.gradient} py-3 text-sm font-extrabold text-white shadow-sm transition-all group-hover:gap-2.5`}
+                className={`mt-5 flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r ${c.gradient} py-3 text-sm font-extrabold text-white shadow-sm transition-all group-hover:gap-2.5 after:absolute after:inset-0 after:rounded-2xl after:content-['']`}
               >
                 <BookOpen size={16} /> Explore Courses
                 <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
               </Link>
 
-              {/* Lead-gen preserved: Apply Now + WhatsApp */}
-              <div className="mt-2 grid grid-cols-2 gap-2">
+              {/* Lead-gen: Apply Now + WhatsApp — sit above the stretched link */}
+              <div className="relative z-10 mt-2 grid grid-cols-2 gap-2">
                 <Link
                   href="/apply"
                   className="flex items-center justify-center gap-1.5 rounded-xl bg-[#dc143c] py-2.5 text-xs font-bold text-white transition hover:bg-red-700"
