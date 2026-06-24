@@ -161,7 +161,7 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
           <div>
             <p className="mb-3 font-bold text-white">Student Portal</p>
             <div className="flex flex-col gap-2 text-sm">
-              {[["Login", "/auth/login"], ["Register", "/auth/register"], ["My Dashboard", "/dashboard"], ["My Documents", "/dashboard/documents"]].map(([label, href]) => (
+              {[["Login", "/auth/login"], ["Register", "/auth/register"], ["My Dashboard", "/dashboard"], ["Required Documents", "/dashboard/documents"]].map(([label, href]) => (
                 <Link key={href} href={href} className="hover:text-white transition">{label}</Link>
               ))}
             </div>

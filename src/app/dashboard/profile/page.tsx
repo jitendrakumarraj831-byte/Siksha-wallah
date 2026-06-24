@@ -10,7 +10,7 @@ import { PortalShell } from '@/components/portal-shell';
 import { ArrowLeft, Loader, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 export default function ProfilePage() {
-  const { user, isAuthenticated, loading: authLoading } = useAuth();
+  const { user, isAuthenticated, loading: authLoading, refreshUserProfile } = useAuth();
   const router = useRouter();
   const [formData, setFormData] = useState<Partial<StudentProfile>>({});
   const [loading, setLoading] = useState(true);
@@ -65,6 +65,9 @@ export default function ProfilePage() {
         userId: user.uid,
         page: '/dashboard/profile',
       }).catch(() => {});
+      // Refresh the cached profile in AuthContext so the dashboard shows the
+      // updated completion % immediately (otherwise it reads stale data).
+      await refreshUserProfile(user.uid).catch(() => {});
       // Redirect to dashboard after 1.5s so student sees 100% completion
       setSuccess('Profile updated successfully.');
       setTimeout(() => router.push('/dashboard'), 1500);
