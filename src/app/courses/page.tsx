@@ -6,8 +6,7 @@ import { useSearchParams } from "next/navigation";
 import {
   Award, BadgeCheck, BookMarked, Briefcase, Building2, CheckCircle2,
   ChevronDown, ChevronUp, Clock, CreditCard, FileText, MessageCircle,
-  ShieldCheck, Sparkles, Star, GraduationCap, Stethoscope, Cpu,
-  Activity, Scale,
+  ShieldCheck, Sparkles, Star, GraduationCap,
 } from "lucide-react";
 import { SiteNavbar } from "@/components/site-navbar";
 import { SiteFooter } from "@/components/site-footer";
@@ -227,34 +226,26 @@ function CourseCard({
 
         {/* Action buttons */}
         <div className="mt-5 flex flex-col gap-2">
-          <button
-            onClick={onToggle}
-            className="flex w-full items-center justify-center gap-1.5 rounded-xl border-2 border-gray-200 py-2.5 text-sm font-bold text-gray-700 transition hover:border-gray-300 hover:bg-gray-50"
-          >
-            {isExpanded
-              ? <><ChevronUp size={15} /> Hide Details</>
-              : <><ChevronDown size={15} /> View Career Scope & Details</>}
-          </button>
-          {/* Apply Now + Course detail */}
+          {/* Primary row: Apply + Details */}
           <div className="flex gap-2">
             <Link
               href={`/apply?course=${encodeURIComponent(course.name)}`}
-              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#dc143c] py-2.5 text-sm font-bold text-white transition hover:bg-red-700"
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#dc143c] py-2.5 text-sm font-bold text-white transition hover:bg-red-700"
             >
-              <GraduationCap size={15} /> Apply Now
+              <GraduationCap size={14} /> Apply Now
             </Link>
-            {(() => {
-              const slug = getCourseSlug(course.name);
-              return slug ? (
-                <Link
-                  href={`/courses/${slug}`}
-                  className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold text-white transition ${colors.btn}`}
-                >
-                  Full Details →
-                </Link>
-              ) : null;
-            })()}
+            <button
+              onClick={onToggle}
+              className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl border-2 py-2.5 text-sm font-bold transition ${
+                isExpanded
+                  ? 'border-gray-300 bg-gray-50 text-gray-700'
+                  : 'border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50'
+              }`}
+            >
+              {isExpanded ? <><ChevronUp size={14} /> Less</> : <><ChevronDown size={14} /> Details</>}
+            </button>
           </div>
+          {/* Secondary: WhatsApp */}
           <a
             href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(course.name)}%20(${encodeURIComponent(course.full)})%20के%20बारे%20में%20जानकारी%20चाहिए।%20Fees%20aur%20admission%20process%20batayein।`}
             target="_blank"
@@ -262,106 +253,11 @@ function CourseCard({
             onClick={() => saveActivity({ type: 'whatsapp', title: `💬 WhatsApp — Course: ${course.name}`, description: `Enquiry for ${course.full}`, page: '/courses' })}
             className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-green-500 py-2.5 text-sm font-bold text-green-700 transition hover:bg-green-500 hover:text-white"
           >
-            <MessageCircle size={15} /> WhatsApp Enquiry
+            <MessageCircle size={15} /> WhatsApp पर पूछें
           </a>
-          {course.bscc && (
-            <Link
-              href="/contact"
-              className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-slate-200 py-2.5 text-xs font-bold text-slate-600 transition hover:bg-slate-50"
-            >
-              <CreditCard size={13} /> Ask About BSCC Loan →
-            </Link>
-          )}
         </div>
       </div>
     </div>
-  );
-}
-
-/* ─── Stream Picker helpers ───────────────────────────────────────────── */
-const STREAM_TAGLINES: Record<StreamKey, string> = {
-  teaching:    "Govt Teacher बनें",
-  medical:     "Doctor · Nurse · Pharma",
-  paramedical: "Lab · Physio · Radiology",
-  law:         "Advocate · Judge · Legal",
-  technical:   "Engineer · IT · MBA",
-};
-
-function getGlowColor(color: string): string {
-  const glows: Record<string, string> = {
-    blue:   "rgba(59,130,246,0.40)",
-    red:    "rgba(239,68,68,0.40)",
-    green:  "rgba(34,197,94,0.40)",
-    amber:  "rgba(251,191,36,0.40)",
-    orange: "rgba(249,115,22,0.40)",
-  };
-  return glows[color] ?? "rgba(255,255,255,0.18)";
-}
-
-/* ─── Stream Picker Card ──────────────────────────────────────────────── */
-function StreamCard({
-  tab,
-  isActive,
-  onClick,
-}: {
-  tab: (typeof streamTabs)[0];
-  isActive: boolean;
-  onClick: () => void;
-}) {
-  const colors = colorMap[tab.color];
-  const Icon = tab.icon;
-
-  return (
-    <button
-      onClick={onClick}
-      style={isActive ? { boxShadow: `0 0 0 2px rgba(255,255,255,0.22), 0 20px 48px -8px ${getGlowColor(tab.color)}` } : undefined}
-      className={`group relative flex w-[calc(50%-8px)] sm:w-48 flex-col items-start gap-0 overflow-hidden rounded-2xl border transition-all duration-300 cursor-pointer text-left ${
-        isActive
-          ? "bg-white/[0.18] border-white/30 -translate-y-2 scale-[1.03]"
-          : "border-white/[0.10] bg-white/[0.05] hover:bg-white/[0.12] hover:border-white/[0.22] hover:-translate-y-1.5 hover:shadow-xl"
-      }`}
-    >
-      {/* Colored top accent bar */}
-      <div className={`h-[3px] w-full bg-gradient-to-r ${colors.accentBar} ${isActive ? "opacity-100" : "opacity-50 group-hover:opacity-80"} transition-opacity`} />
-
-      <div className="flex flex-col gap-3 p-5 w-full">
-        {/* Icon circle */}
-        <div className={`flex h-12 w-12 items-center justify-center rounded-xl transition-all ${
-          isActive
-            ? `bg-gradient-to-br ${colors.gradient} shadow-lg`
-            : "bg-white/[0.08] group-hover:bg-white/[0.14]"
-        }`}>
-          <Icon size={22} className={isActive ? "text-white" : "text-gray-300 group-hover:text-white"} />
-        </div>
-
-        {/* Labels */}
-        <div>
-          <p className={`text-sm font-extrabold leading-tight ${isActive ? "text-white" : "text-gray-100 group-hover:text-white"}`}>
-            {tab.label}
-          </p>
-          <p className={`mt-0.5 text-[11px] font-medium ${isActive ? "text-white/70" : "text-gray-500 group-hover:text-gray-400"}`}>
-            {STREAM_TAGLINES[tab.key as StreamKey]}
-          </p>
-        </div>
-
-        {/* Footer row */}
-        <div className="flex items-center justify-between">
-          <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold ${
-            isActive
-              ? `bg-gradient-to-r ${colors.gradient} text-white shadow-sm`
-              : "bg-white/[0.08] text-gray-400 group-hover:bg-white/[0.14] group-hover:text-gray-200"
-          }`}>
-            {tab.courses.length} Courses
-          </span>
-          {isActive && (
-            <span className="flex items-center gap-1 text-[10px] font-bold text-amber-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
-              Active
-            </span>
-          )}
-        </div>
-      </div>
-    </button>
   );
 }
 
@@ -446,75 +342,6 @@ function CoursesInner() {
               </button>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ── STREAM PICKER ─────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] py-16 md:py-24">
-        {/* Dot grid — identical to hero */}
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.07]"
-          style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }}
-        />
-        {/* Glow orbs — identical to hero */}
-        <div className="pointer-events-none absolute -top-40 -right-32 h-[480px] w-[480px] rounded-full bg-amber-400 opacity-[0.10] blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-blue-500 opacity-[0.13] blur-3xl" />
-        {/* Extra centre glow for depth */}
-        <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-96 w-96 rounded-full bg-indigo-600 opacity-[0.08] blur-[80px]" />
-
-        <div className="container-shell relative text-center">
-
-          {/* Session badge */}
-          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/[0.10] px-4 py-2">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
-            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Session 2026–27 &nbsp;·&nbsp; Admissions Open</span>
-          </div>
-
-          {/* Heading */}
-          <h2 className="font-headline text-[2rem] font-black leading-[1.1] tracking-tight text-white md:text-5xl">
-            अपने भविष्य की{" "}
-            <span className="bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent">
-              दिशा चुनें
-            </span>
-          </h2>
-
-          {/* Underline accent — same as hero */}
-          <div className="mx-auto mt-3 h-[3px] w-24 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-36" />
-
-          {/* Stats row */}
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm font-semibold text-blue-100">
-            <span className="flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
-              50+ Courses
-            </span>
-            <span className="hidden sm:block h-4 w-px bg-white/20" />
-            <span className="flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
-              200+ Partner Colleges
-            </span>
-            <span className="hidden sm:block h-4 w-px bg-white/20" />
-            <span className="flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
-              100% Free Counselling
-            </span>
-          </div>
-
-          {/* Stream cards */}
-          <div className="mt-10 flex flex-wrap justify-center gap-3 md:gap-4">
-            {streamTabs.map((tab) => (
-              <StreamCard
-                key={tab.key}
-                tab={tab}
-                isActive={activeStream === tab.key}
-                onClick={() => handleStreamSelect(tab.key)}
-              />
-            ))}
-          </div>
-
-          {/* Helper hint */}
-          <p className="mt-7 text-xs text-blue-300/70">
-            किसी भी stream पर click करें — courses, fees और career scope तुरंत दिखेगा
-          </p>
         </div>
       </section>
 
