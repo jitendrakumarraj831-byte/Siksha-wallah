@@ -11,7 +11,7 @@ export interface BlogArticle {
 
 export const blogArticles: BlogArticle[] = [
   {
-    slug: "bed-admission-bihar-2025",
+    slug: "bed-admission-bihar-2026",
     title: "B.Ed Admission Bihar 2026/2027: Complete Guide",
     titleHi: "B.Ed एडमिशन बिहार 2026/2027: पूरी जानकारी हिंदी में",
     excerpt:
