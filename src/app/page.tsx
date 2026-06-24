@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { saveInquiry } from "@/services/inquiry-service";
 import { saveActivity } from "@/services/activity-service";
 import {
@@ -304,41 +305,51 @@ function getFaqStyle(i: number) {
 
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
   const faqSliderRef = useRef<HTMLDivElement>(null);
-  const faqAutoSlide = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  // Portal needs the DOM to exist (avoids SSR mismatch)
+  useEffect(() => setMounted(true), []);
+
+  // Auto-slide for the FAQ question carousel — pauses on interaction & when a Q&A modal is open
   useEffect(() => {
     const slider = faqSliderRef.current;
     if (!slider) return;
 
-    const startAutoSlide = () => {
-      faqAutoSlide.current = setInterval(() => {
-        const cardWidth = slider.querySelector("button")?.offsetWidth ?? 280;
-        const gap = 16;
-        const maxScroll = slider.scrollWidth - slider.clientWidth;
-        const next = slider.scrollLeft + cardWidth + gap;
-        slider.scrollTo({ left: next > maxScroll ? 0 : next, behavior: "smooth" });
-      }, 3000);
+    let timer: ReturnType<typeof setInterval> | null = null;
+    let paused = false;
+
+    const step = () => {
+      if (paused || openFaq !== null) return;
+      const card = slider.querySelector("button") as HTMLElement | null;
+      const cardWidth = card?.offsetWidth ?? 280;
+      const gap = 16;
+      const maxScroll = slider.scrollWidth - slider.clientWidth - 2;
+      const next = slider.scrollLeft + cardWidth + gap;
+      slider.scrollTo({ left: next >= maxScroll ? 0 : next, behavior: "smooth" });
     };
 
-    const stopAutoSlide = () => {
-      if (faqAutoSlide.current) clearInterval(faqAutoSlide.current);
+    const start = () => {
+      if (timer) clearInterval(timer);
+      timer = setInterval(step, 3200);
     };
+    const pause = () => { paused = true; };
+    const resume = () => { paused = false; };
 
-    startAutoSlide();
-    slider.addEventListener("touchstart", stopAutoSlide, { passive: true });
-    slider.addEventListener("mousedown", stopAutoSlide);
-    slider.addEventListener("touchend", startAutoSlide, { passive: true });
-    slider.addEventListener("mouseup", startAutoSlide);
+    start();
+    // Pause while the user is actively touching/dragging, resume shortly after
+    slider.addEventListener("touchstart", pause, { passive: true });
+    slider.addEventListener("touchend", () => setTimeout(resume, 2500), { passive: true });
+    slider.addEventListener("mouseenter", pause);
+    slider.addEventListener("mouseleave", resume);
 
     return () => {
-      stopAutoSlide();
-      slider.removeEventListener("touchstart", stopAutoSlide);
-      slider.removeEventListener("mousedown", stopAutoSlide);
-      slider.removeEventListener("touchend", startAutoSlide);
-      slider.removeEventListener("mouseup", startAutoSlide);
+      if (timer) clearInterval(timer);
+      slider.removeEventListener("touchstart", pause);
+      slider.removeEventListener("mouseenter", pause);
+      slider.removeEventListener("mouseleave", resume);
     };
-  }, []);
+  }, [openFaq]);
   const [checkedDocs, setCheckedDocs] = useState<Record<string, boolean>>({});
   const [bsccEligible, setBsccEligible] = useState<null | boolean>(null);
   const [bsccIncome, setBsccIncome] = useState("");
@@ -2117,8 +2128,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── FAQ Q&A Modal (top-level so fixed positioning is never trapped) ── */}
-      {openFaq !== null && faqs[openFaq] && (
+      {/* ── FAQ Q&A Modal (portaled to <body> so fixed positioning is never trapped) ── */}
+      {mounted && openFaq !== null && faqs[openFaq] && createPortal(
         <div
           className="fixed inset-0 z-[100] flex items-end justify-center bg-black/60 p-4 backdrop-blur-sm sm:items-center"
           onClick={() => setOpenFaq(null)}
@@ -2189,7 +2200,8 @@ export default function Home() {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       <SiteFooter />
