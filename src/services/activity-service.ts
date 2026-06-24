@@ -48,7 +48,7 @@ export async function saveActivity(
   }
 }
 
-export async function getAllActivities(max = 200): Promise<Activity[]> {
+export async function getAllActivities(max = 500): Promise<Activity[]> {
   try {
     const q = query(collection(db, COLLECTION), orderBy("createdAt", "desc"), limit(max));
     const snap = await getDocs(q);
@@ -58,12 +58,33 @@ export async function getAllActivities(max = 200): Promise<Activity[]> {
   }
 }
 
-/** Real-time listener — calls cb whenever new activity arrives */
+/** Fetch next page of activities starting after the last doc */
+export async function getActivitiesAfter(
+  lastCreatedAt: any,
+  pageSize = 200,
+): Promise<Activity[]> {
+  try {
+    const { startAfter } = await import('firebase/firestore');
+    const q = query(
+      collection(db, COLLECTION),
+      orderBy('createdAt', 'desc'),
+      startAfter(lastCreatedAt),
+      limit(pageSize),
+    );
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...d.data() } as Activity));
+  } catch {
+    return [];
+  }
+}
+
+/** Real-time listener — calls cb whenever a new activity arrives.
+ *  Default max is 500 so the office sees all recent events live. */
 export function subscribeActivities(
-  max: number,
-  cb: (activities: Activity[]) => void
+  max = 500,
+  cb: (activities: Activity[]) => void,
 ): Unsubscribe {
-  const q = query(collection(db, COLLECTION), orderBy("createdAt", "desc"), limit(max));
+  const q = query(collection(db, COLLECTION), orderBy('createdAt', 'desc'), limit(max));
   return onSnapshot(q, snap => {
     cb(snap.docs.map(d => ({ id: d.id, ...d.data() } as Activity)));
   }, () => { /* ignore errors */ });
