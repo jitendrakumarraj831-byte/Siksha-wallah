@@ -136,6 +136,163 @@ function StreamCards() {
 /* ─── Multi-step Form ─────────────────────────────── */
 const STEPS = ["Name", "Mobile", "Course", "Qualify"];
 
+/* ─── Partner College Modal Data ───────────────────────────────────────── */
+type CollegeCategory = {
+  category: string;
+  icon: React.ElementType;
+  iconBg: string;
+  approval: string;
+  count: string;
+  countColor: string;
+  color: string;
+  accentText: string;
+  colleges: readonly string[];
+  courses: string[];
+  location: string;
+  whatsappMsg: string;
+};
+
+const PARTNER_COLLEGES: CollegeCategory[] = [
+  {
+    category: "Teaching Colleges",
+    icon: BookMarked,
+    color: "border-blue-200 bg-blue-50",
+    iconBg: "bg-blue-600",
+    count: "60+",
+    countColor: "text-blue-700",
+    accentText: "text-blue-700",
+    approval: "NCTE Approved",
+    colleges: [
+      "Patna Teachers Training College",
+      "Nalanda B.Ed College",
+      "Purnea College of Education",
+      "Darbhanga Education Institute",
+      "Gaya Teachers College",
+      "Bhagalpur B.Ed Institute",
+      "Samastipur College of Education",
+      "Muzaffarpur Teachers College",
+    ],
+    courses: ["B.Ed", "D.El.Ed", "B.P.Ed", "M.Ed"],
+    location: "Patna, Nalanda, Purnea, Darbhanga, Gaya और पूरे Bihar में",
+    whatsappMsg: "नमस्ते! मुझे Teaching (B.Ed/D.El.Ed) के लिए partner colleges की full list चाहिए।",
+  },
+  {
+    category: "Medical & Nursing",
+    icon: Stethoscope,
+    color: "border-red-200 bg-red-50",
+    iconBg: "bg-red-600",
+    count: "50+",
+    countColor: "text-red-700",
+    accentText: "text-red-700",
+    approval: "INC / PCI Approved",
+    colleges: [
+      "Patna Nursing Institute",
+      "PMCH Affiliated Colleges",
+      "Bhagalpur Medical Institute",
+      "Muzaffarpur Nursing College",
+      "Saharsa Healthcare Institute",
+      "Darbhanga Nursing School",
+      "Gaya Medical Nursing College",
+      "Ara Nursing & Para Medical",
+    ],
+    courses: ["MBBS (Guidance)", "B.Sc Nursing", "GNM", "ANM", "B.Pharma", "D.Pharma", "BMLT"],
+    location: "Patna, Muzaffarpur, Bhagalpur, Darbhanga, Gaya और आस-पास",
+    whatsappMsg: "नमस्ते! मुझे Medical & Nursing colleges की full list चाहिए।",
+  },
+  {
+    category: "Engineering & IT",
+    icon: Cpu,
+    color: "border-orange-200 bg-orange-50",
+    iconBg: "bg-orange-500",
+    count: "40+",
+    countColor: "text-orange-700",
+    accentText: "text-orange-700",
+    approval: "AICTE Approved",
+    colleges: [
+      "NIT Patna (Guidance)",
+      "BCECE Affiliated Colleges",
+      "Motihari Engineering College",
+      "Purnea Polytechnic Institute",
+      "Katihar Technical College",
+      "Bhagalpur Engineering College",
+      "Muzaffarpur Institute of Tech.",
+      "Chandragupt Institute Patna",
+    ],
+    courses: ["B.Tech", "Polytechnic", "ITI", "BCA", "MCA", "BBA", "MBA"],
+    location: "Patna, Motihari, Purnea, Katihar, Bhagalpur और Bihar भर में",
+    whatsappMsg: "नमस्ते! मुझे Engineering & IT colleges की full list चाहिए।",
+  },
+  {
+    category: "Law Colleges",
+    icon: Scale,
+    color: "border-slate-200 bg-slate-50",
+    iconBg: "bg-slate-700",
+    count: "20+",
+    countColor: "text-slate-700",
+    accentText: "text-slate-700",
+    approval: "BCI Approved",
+    colleges: [
+      "Patna Law College",
+      "Chanakya National Law University",
+      "BN Mandal University Law Dept.",
+      "Lalit Narayan Law College",
+      "Tilka Manjhi Law College",
+      "Bhagalpur Law College",
+      "Muzaffarpur Law Institute",
+      "Gaya College Law Dept.",
+    ],
+    courses: ["LLB (3-year)", "BA.LLB (5-year)", "BBA.LLB (5-year)", "LLM"],
+    location: "Patna, Bhagalpur, Muzaffarpur, Gaya, Madhepura",
+    whatsappMsg: "नमस्ते! मुझे Law colleges की full list चाहिए।",
+  },
+  {
+    category: "Pharmacy Colleges",
+    icon: FlaskConical,
+    color: "border-green-200 bg-green-50",
+    iconBg: "bg-green-600",
+    count: "30+",
+    countColor: "text-green-700",
+    accentText: "text-green-700",
+    approval: "PCI Approved",
+    colleges: [
+      "Patna Pharmacy College",
+      "Bhagalpur College of Pharmacy",
+      "Darbhanga Pharma Institute",
+      "Bihar Pharmacy College",
+      "Gaya Pharmacy Institute",
+      "Muzaffarpur Pharma School",
+      "Purnea Pharma College",
+      "Ara Pharmacy Institute",
+    ],
+    courses: ["B.Pharma", "D.Pharma"],
+    location: "Patna, Bhagalpur, Darbhanga, Muzaffarpur, Gaya",
+    whatsappMsg: "नमस्ते! मुझे Pharmacy colleges की full list चाहिए।",
+  },
+  {
+    category: "Para Medical",
+    icon: Award,
+    color: "border-purple-200 bg-purple-50",
+    iconBg: "bg-purple-600",
+    count: "40+",
+    countColor: "text-purple-700",
+    accentText: "text-purple-700",
+    approval: "MCI / State Approved",
+    colleges: [
+      "Patna Allied Health College",
+      "PMCH Para Medical Institute",
+      "Muzaffarpur Health Institute",
+      "Samastipur Para Medical College",
+      "Begusarai Healthcare Academy",
+      "Darbhanga Para Medical School",
+      "Bhagalpur Allied Health Inst.",
+      "Gaya Para Medical College",
+    ],
+    courses: ["B.P.T", "B.O.T.T", "B.R.I.T", "B.M.L.T", "D.M.L.T", "DMRT (X-Ray)", "OPT"],
+    location: "Patna, Muzaffarpur, Bhagalpur, Samastipur, Darbhanga",
+    whatsappMsg: "नमस्ते! मुझे Para Medical colleges की full list चाहिए।",
+  },
+];
+
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [checkedDocs, setCheckedDocs] = useState<Record<string, boolean>>({});
@@ -143,6 +300,7 @@ export default function Home() {
   const [bsccIncome, setBsccIncome] = useState("");
   const [bsccBihar, setBsccBihar] = useState("");
   const [bsccAge, setBsccAge] = useState("");
+  const [selectedCollege, setSelectedCollege] = useState<CollegeCategory | null>(null);
 
   // Multi-step form
   const [step, setStep] = useState(0);
@@ -1157,120 +1315,28 @@ export default function Home() {
 
           {/* Mobile: horizontal snap-carousel · Desktop: grid */}
           <div className="no-scrollbar -mx-4 mb-8 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
-            {([
-              {
-                category: "Teaching Colleges",
-                icon: BookMarked,
-                color: "border-blue-200 bg-blue-50",
-                iconBg: "bg-blue-600",
-                count: "60+",
-                countColor: "text-blue-700",
-                colleges: [
-                  "Patna Teachers Training College",
-                  "Nalanda B.Ed College",
-                  "Purnea College of Education",
-                  "Darbhanga Education Institute",
-                  "Gaya Teachers College",
-                ],
-                approval: "NCTE Approved",
-              },
-              {
-                category: "Medical & Nursing",
-                icon: Stethoscope,
-                color: "border-red-200 bg-red-50",
-                iconBg: "bg-red-600",
-                count: "50+",
-                countColor: "text-red-700",
-                colleges: [
-                  "Patna Nursing Institute",
-                  "PMCH Affiliated Colleges",
-                  "Bhagalpur Medical Institute",
-                  "Muzaffarpur Nursing College",
-                  "Saharsa Healthcare Institute",
-                ],
-                approval: "INC / PCI Approved",
-              },
-              {
-                category: "Engineering & IT",
-                icon: Cpu,
-                color: "border-orange-200 bg-orange-50",
-                iconBg: "bg-orange-500",
-                count: "40+",
-                countColor: "text-orange-700",
-                colleges: [
-                  "NIT Patna (Guidance)",
-                  "BCECE Affiliated Colleges",
-                  "Motihari Engineering College",
-                  "Purnea Polytechnic Institute",
-                  "Katihar Technical College",
-                ],
-                approval: "AICTE Approved",
-              },
-              {
-                category: "Law Colleges",
-                icon: Scale,
-                color: "border-slate-200 bg-slate-50",
-                iconBg: "bg-slate-700",
-                count: "20+",
-                countColor: "text-slate-700",
-                colleges: [
-                  "Patna Law College",
-                  "Chanakya National Law University",
-                  "BN Mandal University Law Dept.",
-                  "Lalit Narayan Law College",
-                  "Tilka Manjhi Law College",
-                ],
-                approval: "BCI Approved",
-              },
-              {
-                category: "Pharmacy Colleges",
-                icon: FlaskConical,
-                color: "border-green-200 bg-green-50",
-                iconBg: "bg-green-600",
-                count: "30+",
-                countColor: "text-green-700",
-                colleges: [
-                  "Patna Pharmacy College",
-                  "Bhagalpur College of Pharmacy",
-                  "Darbhanga Pharma Institute",
-                  "Bihar Pharmacy College",
-                  "Gaya Pharmacy Institute",
-                ],
-                approval: "PCI Approved",
-              },
-              {
-                category: "Para Medical",
-                icon: Award,
-                color: "border-purple-200 bg-purple-50",
-                iconBg: "bg-purple-600",
-                count: "40+",
-                countColor: "text-purple-700",
-                colleges: [
-                  "Patna Allied Health College",
-                  "PMCH Para Medical Institute",
-                  "Muzaffarpur Health Institute",
-                  "Samastipur Para Medical College",
-                  "Begusarai Healthcare Academy",
-                ],
-                approval: "MCI / State Approved",
-              },
-            ] as const).map(({ category, icon: Icon, color, iconBg, count, countColor, colleges, approval }) => (
-              <AnimateIn key={category} type="fade-up" className="w-[78%] shrink-0 snap-start sm:w-auto">
-                <div className={`rounded-2xl border-2 ${color} p-5 h-full`}>
+            {PARTNER_COLLEGES.map((col) => {
+              const Icon = col.icon;
+              return (
+              <AnimateIn key={col.category} type="fade-up" className="w-[78%] shrink-0 snap-start sm:w-auto">
+                <button
+                  onClick={() => setSelectedCollege(col)}
+                  className={`group w-full text-left rounded-2xl border-2 ${col.color} p-5 h-full transition hover:-translate-y-1 hover:shadow-lg cursor-pointer`}
+                >
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${iconBg} text-white`}>
+                      <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${col.iconBg} text-white`}>
                         <Icon size={18} />
                       </div>
                       <div>
-                        <h3 className="font-headline text-sm font-extrabold text-gray-900">{category}</h3>
-                        <span className="text-[10px] font-semibold text-gray-500">{approval}</span>
+                        <h3 className="font-headline text-sm font-extrabold text-gray-900">{col.category}</h3>
+                        <span className="text-[10px] font-semibold text-gray-500">{col.approval}</span>
                       </div>
                     </div>
-                    <span className={`font-headline text-2xl font-black ${countColor}`}>{count}</span>
+                    <span className={`font-headline text-2xl font-black ${col.countColor}`}>{col.count}</span>
                   </div>
                   <ul className="space-y-2">
-                    {colleges.map((c) => (
+                    {col.colleges.slice(0, 5).map((c) => (
                       <li key={c} className="flex items-center gap-2 text-xs text-gray-600">
                         <CheckCircle2 size={12} className="flex-shrink-0 text-green-500" />
                         {c}
@@ -1278,10 +1344,103 @@ export default function Home() {
                     ))}
                   </ul>
                   <p className="mt-3 text-[10px] text-gray-400 font-medium">+ Many more verified colleges across Bihar</p>
-                </div>
+                  <div className={`mt-3 flex items-center gap-1 text-xs font-bold ${col.accentText} group-hover:gap-2 transition-all`}>
+                    View All Colleges <ArrowRight size={12} />
+                  </div>
+                </button>
               </AnimateIn>
-            ))}
+              );
+            })}
           </div>
+
+          {/* ── College Details Modal ── */}
+          {selectedCollege && (
+            <div
+              className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+              onClick={() => setSelectedCollege(null)}
+            >
+              <div
+                className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-2xl"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Modal header */}
+                <div className={`flex items-center justify-between gap-3 p-5 border-b border-gray-100`}>
+                  <div className="flex items-center gap-3">
+                    <div className={`flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl ${selectedCollege.iconBg} text-white`}>
+                      <selectedCollege.icon size={20} />
+                    </div>
+                    <div>
+                      <h3 className="font-headline text-lg font-extrabold text-gray-900">{selectedCollege.category}</h3>
+                      <span className="text-xs font-semibold text-gray-500">{selectedCollege.approval} · {selectedCollege.count} Colleges</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setSelectedCollege(null)}
+                    className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition"
+                  >
+                    <X size={16} className="text-gray-600" />
+                  </button>
+                </div>
+
+                <div className="p-5 space-y-5">
+                  {/* Courses offered */}
+                  <div>
+                    <p className="mb-2 text-xs font-bold uppercase tracking-wider text-gray-400">Courses Offered</p>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedCollege.courses.map((c) => (
+                        <span key={c} className={`rounded-full ${selectedCollege.color} border px-3 py-1 text-xs font-bold ${selectedCollege.accentText}`}>
+                          {c}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* College list */}
+                  <div>
+                    <p className="mb-2 text-xs font-bold uppercase tracking-wider text-gray-400">Partner Colleges</p>
+                    <ul className="space-y-2">
+                      {selectedCollege.colleges.map((c) => (
+                        <li key={c} className="flex items-center gap-2.5 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3">
+                          <CheckCircle2 size={14} className="flex-shrink-0 text-green-500" />
+                          <span className="text-sm font-semibold text-gray-800">{c}</span>
+                        </li>
+                      ))}
+                      <li className="flex items-center gap-2.5 rounded-xl border border-dashed border-gray-200 px-4 py-3">
+                        <Building2 size={14} className="flex-shrink-0 text-gray-400" />
+                        <span className="text-sm text-gray-500">+ और भी verified colleges — full list के लिए WhatsApp करें</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  {/* Location */}
+                  <div className="flex items-start gap-2 rounded-xl bg-blue-50 border border-blue-100 px-4 py-3">
+                    <MapPin size={14} className="mt-0.5 flex-shrink-0 text-blue-600" />
+                    <p className="text-xs text-blue-700 font-medium">{selectedCollege.location}</p>
+                  </div>
+
+                  {/* CTAs */}
+                  <div className="flex flex-col gap-2.5">
+                    <a
+                      href={`https://wa.me/916203138576?text=${encodeURIComponent(selectedCollege.whatsappMsg)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2 rounded-xl bg-green-500 px-5 py-3.5 font-bold text-white transition hover:bg-green-600"
+                    >
+                      <MessageCircle size={16} /> Full College List माँगें — WhatsApp
+                    </a>
+                    <a
+                      href="/apply"
+                      className="flex items-center justify-center gap-2 rounded-xl bg-primary-blue px-5 py-3.5 font-bold text-white transition hover:bg-blue-700"
+                    >
+                      <GraduationCap size={16} /> Free Counselling — Apply Now
+                    </a>
+                  </div>
+
+                  <p className="text-center text-[11px] text-gray-400">सभी colleges NCTE / UGC / AICTE / INC / BCI / PCI approved हैं</p>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Trust Banner */}
           <AnimateIn type="fade-up">
