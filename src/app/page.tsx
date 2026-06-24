@@ -16,11 +16,185 @@ import { SiteFooter } from "@/components/site-footer";
 import { CountUp } from "@/components/count-up";
 import { AnimateIn } from "@/components/animate-in";
 import { ReviewsCarousel } from "@/components/reviews-carousel";
-import { streamTabs, colorMap, faqs, getCourseSlug, type StreamKey } from "@/lib/courses-data";
+import { streamTabs, colorMap, faqs, getCourseSlug, type StreamKey, type Course } from "@/lib/courses-data";
 import { successStories } from "@/lib/reviews-data";
 
+/* ─── Course Detail Modal ─────────────────────────────────────────── */
+function CourseDetailModal({
+  course, streamKey, onClose,
+}: { course: Course; streamKey: StreamKey; onClose: () => void }) {
+  const tab = streamTabs.find(s => s.key === streamKey)!;
+  const c = colorMap[tab.color];
+  const slug = getCourseSlug(course.name);
+
+  return (
+    <div
+      className="fixed inset-0 z-[999] flex items-end sm:items-center justify-center p-0 sm:p-4"
+      onClick={onClose}
+    >
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+
+      {/* Panel */}
+      <div
+        className="relative w-full sm:max-w-lg max-h-[92vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl bg-white shadow-2xl"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Colored header */}
+        <div className={`bg-gradient-to-r ${c.gradient} p-6 rounded-t-3xl sm:rounded-t-3xl`}>
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/30 transition"
+            aria-label="Close"
+          >
+            <X size={18} />
+          </button>
+          <div className="flex items-center gap-3 mb-3">
+            <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-black bg-white/20 text-white border border-white/30`}>
+              {tab.label}
+            </span>
+            {course.bscc && (
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-white bg-green-600/80 border border-green-400/40 px-2.5 py-1 rounded-full">
+                <CreditCard size={10} /> BSCC Eligible
+              </span>
+            )}
+          </div>
+          <h2 className="font-headline text-2xl font-extrabold text-white leading-snug">{course.full}</h2>
+          <p className="mt-1 text-white/70 text-sm font-bold">{course.name}</p>
+        </div>
+
+        {/* Body */}
+        <div className="p-5 space-y-4">
+          {/* Quick facts */}
+          <div className="grid grid-cols-3 gap-3">
+            {[
+              { label: "Duration", value: course.duration, icon: Clock },
+              { label: "Approx. Fee", value: course.fee, icon: CreditCard },
+              { label: "Salary", value: course.salary, icon: Award },
+            ].map(({ label, value, icon: Icon }) => (
+              <div key={label} className="rounded-xl bg-gray-50 border border-gray-100 p-3 text-center">
+                <Icon size={14} className="mx-auto mb-1 text-gray-400" />
+                <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">{label}</p>
+                <p className="text-xs font-extrabold text-gray-800 mt-0.5 leading-snug">{value}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Eligibility */}
+          <div className="rounded-xl border border-blue-100 bg-blue-50 p-4">
+            <p className="text-xs font-bold uppercase tracking-wider text-blue-500 mb-1.5">Eligibility</p>
+            <p className="text-sm text-blue-900 leading-relaxed">{course.eligibility}</p>
+          </div>
+
+          {/* Hindi Description */}
+          <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
+            <div className="flex items-center gap-1.5 mb-1.5 text-xs font-bold uppercase tracking-wider text-amber-600">
+              <Sparkles size={12} /> हिंदी में जानें
+            </div>
+            <p className="text-sm leading-relaxed text-amber-900">{course.hindiDesc}</p>
+          </div>
+
+          {/* Key Highlights */}
+          <div className="rounded-xl border border-green-100 bg-green-50 p-4">
+            <div className="flex items-center gap-1.5 mb-2 text-xs font-bold uppercase tracking-wider text-green-600">
+              <Star size={12} /> Key Highlights
+            </div>
+            <ul className="space-y-1.5">
+              {course.highlights.map((h, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm text-green-900">
+                  <CheckCircle2 size={13} className="mt-0.5 flex-shrink-0 text-green-500" /> {h}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Entrance Exam + Govt Jobs */}
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="rounded-xl bg-gray-50 border border-gray-100 p-4">
+              <div className="flex items-center gap-1.5 mb-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">
+                <FileText size={12} /> Entrance Exam
+              </div>
+              <p className="text-sm leading-relaxed text-gray-700">{course.entranceExam}</p>
+            </div>
+            <div className="rounded-xl bg-gray-50 border border-gray-100 p-4">
+              <div className="flex items-center gap-1.5 mb-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">
+                <ShieldCheck size={12} /> Govt Jobs
+              </div>
+              <p className="text-sm leading-relaxed text-gray-700">{course.govtJobs}</p>
+            </div>
+          </div>
+
+          {/* Career Scope */}
+          <div className="rounded-xl bg-gray-50 border border-gray-100 p-4">
+            <div className="flex items-center gap-1.5 mb-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">
+              <Briefcase size={12} /> Career Scope
+            </div>
+            <p className="text-sm leading-relaxed text-gray-700">{course.careerScope}</p>
+          </div>
+
+          {/* Top Colleges */}
+          <div>
+            <div className="flex items-center gap-1.5 mb-2 text-xs font-bold uppercase tracking-wider text-gray-400">
+              <Building2 size={12} /> Top Colleges
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {course.topColleges.map((col, i) => (
+                <span key={i} className="rounded-lg bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700">{col}</span>
+              ))}
+            </div>
+          </div>
+
+          {/* Study Mode */}
+          <div className="rounded-xl bg-gray-50 border border-gray-100 p-4">
+            <div className="flex items-center gap-1.5 mb-1.5 text-xs font-bold uppercase tracking-wider text-gray-400">
+              <BookMarked size={12} /> Study Mode
+            </div>
+            <p className="text-sm leading-relaxed text-gray-700">{course.mode}</p>
+          </div>
+
+          {/* BSCC */}
+          {course.bscc && (
+            <div className="rounded-xl bg-green-50 border border-green-200 p-4 flex items-start gap-2">
+              <CreditCard size={16} className="mt-0.5 flex-shrink-0 text-green-600" />
+              <p className="text-sm text-green-700 font-semibold leading-relaxed">
+                Bihar Student Credit Card (BSCC) के लिए eligible — ₹4 Lakh तक education loan सिर्फ 4% interest पर। हमारी team complete BSCC application support देती है।
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Sticky CTA footer */}
+        <div className="sticky bottom-0 bg-white border-t border-gray-100 p-4 flex gap-3">
+          <Link
+            href={`/apply?course=${encodeURIComponent(course.name)}`}
+            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#dc143c] py-3.5 font-extrabold text-white hover:bg-red-700 transition shadow-lg shadow-red-200"
+          >
+            <GraduationCap size={18} /> Apply Now
+          </Link>
+          {slug ? (
+            <Link
+              href={`/courses/${slug}`}
+              className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-3.5 font-extrabold text-white transition bg-gradient-to-r ${c.gradient} shadow-lg`}
+            >
+              Full Details <ArrowRight size={16} />
+            </Link>
+          ) : (
+            <a
+              href={`https://wa.me/916203138576?text=नमस्ते!%20${encodeURIComponent(course.name)}%20(${encodeURIComponent(course.full)})%20के%20बारे%20में%20जानकारी%20चाहिए।`}
+              target="_blank" rel="noopener noreferrer"
+              className="flex flex-1 items-center justify-center gap-2 rounded-xl border-2 border-green-500 py-3.5 font-extrabold text-green-700 hover:bg-green-500 hover:text-white transition"
+            >
+              <MessageCircle size={18} /> WhatsApp
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── Home page per-stream slider ────────────────────────────────── */
-function HomeStreamSlider({ tab }: { tab: typeof streamTabs[0] }) {
+function HomeStreamSlider({ tab, onOpen }: { tab: typeof streamTabs[0]; onOpen: (course: Course, key: StreamKey) => void }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
@@ -113,47 +287,31 @@ function HomeStreamSlider({ tab }: { tab: typeof streamTabs[0] }) {
           className="flex gap-4 overflow-x-auto px-4 pb-2 select-none"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none", cursor: isDragging ? "grabbing" : "grab" }}
         >
-          {tab.courses.map((course) => {
-            const slug = getCourseSlug(course.name);
-            return (
-              <div
-                key={course.name}
-                className="flex-shrink-0 w-[220px] rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden hover:shadow-md transition-shadow"
-              >
-                <div className={`h-1.5 bg-gradient-to-r ${c.accentBar}`} />
-                <div className="p-4 flex flex-col h-full">
-                  <div className="flex items-center justify-between gap-2 mb-2">
-                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-black ${c.badge}`}>{course.name}</span>
-                    {course.bscc && <span className="text-[10px] font-bold text-green-700 bg-green-50 border border-green-200 px-1.5 py-0.5 rounded-full">BSCC</span>}
-                  </div>
-                  <p className="text-xs font-extrabold text-gray-900 leading-snug mb-2 line-clamp-2">{course.full}</p>
-                  <div className="flex gap-1.5 mb-2 flex-wrap">
-                    <span className="flex items-center gap-1 text-[10px] text-gray-500 bg-gray-50 border border-gray-100 rounded-lg px-1.5 py-0.5"><Clock size={9} /> {course.duration}</span>
-                    <span className="flex items-center gap-1 text-[10px] text-gray-500 bg-gray-50 border border-gray-100 rounded-lg px-1.5 py-0.5"><CreditCard size={9} /> {course.fee}</span>
-                  </div>
-                  <p className="text-[10px] font-bold text-green-700 mb-3">{course.salary}</p>
-                  <div className="flex gap-1.5 mt-auto">
-                    <Link href={`/apply?course=${encodeURIComponent(course.name)}`}
-                      className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-[#dc143c] py-2 text-[11px] font-bold text-white hover:bg-red-700 transition">
-                      <GraduationCap size={10} /> Apply
-                    </Link>
-                    {slug ? (
-                      <Link href={`/courses/${slug}`}
-                        className={`flex flex-1 items-center justify-center gap-1 rounded-lg py-2 text-[11px] font-bold text-white transition bg-gradient-to-r ${c.gradient}`}>
-                        Details
-                      </Link>
-                    ) : (
-                      <a href={`https://wa.me/916203138576?text=नमस्ते!%20${encodeURIComponent(course.name)}%20के%20बारे%20में%20जानकारी%20चाहिए।`}
-                        target="_blank" rel="noopener noreferrer"
-                        className="flex flex-1 items-center justify-center gap-1 rounded-lg border border-green-400 py-2 text-[11px] font-bold text-green-700 hover:bg-green-500 hover:text-white transition">
-                        <MessageCircle size={10} /> Enquire
-                      </a>
-                    )}
-                  </div>
+          {tab.courses.map((course) => (
+            <button
+              key={course.name}
+              type="button"
+              onClick={() => !isDragging && onOpen(course, tab.key as StreamKey)}
+              className="flex-shrink-0 w-[220px] rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all text-left cursor-pointer"
+            >
+              <div className={`h-1.5 bg-gradient-to-r ${c.accentBar}`} />
+              <div className="p-4">
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-black ${c.badge}`}>{course.name}</span>
+                  {course.bscc && <span className="text-[10px] font-bold text-green-700 bg-green-50 border border-green-200 px-1.5 py-0.5 rounded-full">BSCC</span>}
+                </div>
+                <p className="text-xs font-extrabold text-gray-900 leading-snug mb-2 line-clamp-2">{course.full}</p>
+                <div className="flex gap-1.5 mb-2 flex-wrap">
+                  <span className="flex items-center gap-1 text-[10px] text-gray-500 bg-gray-50 border border-gray-100 rounded-lg px-1.5 py-0.5"><Clock size={9} /> {course.duration}</span>
+                  <span className="flex items-center gap-1 text-[10px] text-gray-500 bg-gray-50 border border-gray-100 rounded-lg px-1.5 py-0.5"><CreditCard size={9} /> {course.fee}</span>
+                </div>
+                <p className="text-[10px] font-bold text-green-700 mb-3">{course.salary}</p>
+                <div className={`flex items-center justify-center gap-1 rounded-lg bg-gradient-to-r ${c.gradient} py-2 text-[11px] font-bold text-white`}>
+                  <BookOpen size={11} /> Details देखें
                 </div>
               </div>
-            );
-          })}
+            </button>
+          ))}
         </div>
       </div>
     </div>
@@ -166,6 +324,7 @@ const STEPS = ["Name", "Mobile", "Course", "Qualify"];
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [checkedDocs, setCheckedDocs] = useState<Record<string, boolean>>({});
+  const [modalCourse, setModalCourse] = useState<{ course: Course; streamKey: StreamKey } | null>(null);
   const [bsccEligible, setBsccEligible] = useState<null | boolean>(null);
   const [bsccIncome, setBsccIncome] = useState("");
   const [bsccBihar, setBsccBihar] = useState("");
@@ -648,8 +807,20 @@ export default function Home() {
         </AnimateIn>
 
         {streamTabs.map((tab) => (
-          <HomeStreamSlider key={tab.key} tab={tab} />
+          <HomeStreamSlider
+            key={tab.key}
+            tab={tab}
+            onOpen={(course, key) => setModalCourse({ course, streamKey: key })}
+          />
         ))}
+
+        {modalCourse && (
+          <CourseDetailModal
+            course={modalCourse.course}
+            streamKey={modalCourse.streamKey}
+            onClose={() => setModalCourse(null)}
+          />
+        )}
 
         <div className="mt-6 text-center container-shell">
           <Link
