@@ -7,6 +7,34 @@ export default {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  safelist: [
+    // colorMap classes assembled dynamically at runtime — Tailwind can't detect these statically
+    // blue
+    'text-blue-700', 'border-blue-600', 'bg-blue-50', 'bg-blue-600', 'hover:bg-blue-700',
+    'hover:border-blue-300', 'bg-blue-100', 'text-blue-600', 'from-blue-600', 'to-indigo-700',
+    'from-blue-500', 'to-indigo-500', 'bg-blue-50/40', 'shadow-blue-200', 'border-blue-100',
+    'text-blue-800', 'text-blue-500',
+    // red
+    'text-red-700', 'border-red-600', 'bg-red-50', 'bg-red-600', 'hover:bg-red-700',
+    'hover:border-red-300', 'bg-red-100', 'text-red-600', 'from-red-600', 'to-rose-700',
+    'from-red-500', 'to-rose-500', 'bg-red-50/40', 'shadow-red-200', 'border-red-100',
+    'text-red-800', 'text-red-500',
+    // green
+    'text-green-700', 'border-green-600', 'bg-green-50', 'bg-green-600', 'hover:bg-green-700',
+    'hover:border-green-300', 'bg-green-100', 'text-green-600', 'from-green-600', 'to-green-800',
+    'from-green-500', 'to-green-700', 'bg-green-50/40', 'shadow-green-200', 'border-green-100',
+    'text-green-800', 'text-green-500',
+    // amber
+    'text-amber-700', 'border-amber-600', 'bg-amber-50', 'bg-amber-600', 'hover:bg-amber-700',
+    'hover:border-amber-300', 'bg-amber-100', 'text-amber-600', 'from-amber-500', 'to-orange-600',
+    'from-amber-400', 'to-orange-500', 'bg-amber-50/40', 'shadow-amber-200', 'border-amber-100',
+    'text-amber-800', 'text-amber-500',
+    // orange
+    'text-orange-700', 'border-orange-600', 'bg-orange-50', 'bg-orange-600', 'hover:bg-orange-700',
+    'hover:border-orange-300', 'bg-orange-100', 'text-orange-600', 'from-orange-600', 'to-amber-600',
+    'from-orange-500', 'to-amber-500', 'bg-orange-50/40', 'shadow-orange-200', 'border-orange-100',
+    'text-orange-800', 'text-orange-500',
+  ],
   theme: {
     extend: {
       fontFamily: {
