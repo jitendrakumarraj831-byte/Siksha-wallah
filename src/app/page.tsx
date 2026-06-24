@@ -392,6 +392,15 @@ export default function Home() {
 
       <SiteNavbar />
 
+      {/* ── Course Detail Modal ── */}
+      {modalCourse && (
+        <CourseDetailModal
+          course={modalCourse.course}
+          streamKey={modalCourse.streamKey}
+          onClose={() => setModalCourse(null)}
+        />
+      )}
+
       {/* ── HERO ── */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] text-white">
 
@@ -1108,7 +1117,7 @@ export default function Home() {
               {[
                 { step: "01", icon: Phone,        title: "Call या WhatsApp करें",            desc: "पहली बातचीत बिल्कुल निःशुल्क। हम आपकी situation समझेंगे।",             color: "text-blue-300",  bg: "bg-blue-500/20" },
                 { step: "02", icon: FileText,     title: "अपनी Profile Share करें",          desc: "Marks, बजट, stream और career goal बताएँ — हम सही options निकालेंगे।", color: "text-green-300", bg: "bg-green-500/20" },
-                { step: "03", icon: Building2,    title: "Verified College Options पाएँ",    desc: "आपके लिए NCTE/INC/AICTE approved colleges की shortlist ready होगी।",   color: "text-amber-300", bg: "bg-amber-500/20" },
+                { step: "03", icon: Building2,    title: "Verified College Options पा���ँ",    desc: "आपके लिए NCTE/INC/AICTE approved colleges की shortlist ready होगी।",   color: "text-amber-300", bg: "bg-amber-500/20" },
                 { step: "04", icon: BadgeCheck,   title: "Admission Confirm करें",           desc: "Documents से DRCC तक — हर step पर हम साथ। Seat confirm होने तक।",    color: "text-red-300",   bg: "bg-red-500/20"  },
               ].map(({ step, icon: StepIcon, title, desc, color, bg }, i) => (
                 <div key={step} className="relative">
