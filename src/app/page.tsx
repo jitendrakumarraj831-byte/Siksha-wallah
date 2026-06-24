@@ -9,7 +9,7 @@ import {
   ChevronDown, CreditCard, GraduationCap, MapPin,
   MessageCircle, Phone, ShieldCheck, Sparkles, Star, Users, X,
   Clock, Award, CheckCircle2,
-  Briefcase, BookMarked, ChevronUp, FileText, ListChecks,
+  Briefcase, BookMarked, ChevronUp, FileText, ListChecks, TrendingUp,
 } from "lucide-react";
 import { SiteNavbar } from "@/components/site-navbar";
 import { SiteFooter } from "@/components/site-footer";
@@ -198,6 +198,7 @@ function HomeCourseExplorer({ onOpen }: { onOpen: (course: Course, key: StreamKe
   const [activeKey, setActiveKey] = useState<StreamKey>(streamTabs[0].key as StreamKey);
   const tab = streamTabs.find((t) => t.key === activeKey)!;
   const c = colorMap[tab.color];
+  const Icon = tab.icon;
 
   return (
     <div className="container-shell">
@@ -213,10 +214,10 @@ function HomeCourseExplorer({ onOpen }: { onOpen: (course: Course, key: StreamKe
               type="button"
               onClick={() => setActiveKey(t.key as StreamKey)}
               aria-pressed={active}
-              className={`flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-bold transition-all ${
+              className={`flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-bold transition-all duration-200 ${
                 active
-                  ? `bg-gradient-to-r ${tc.gradient} text-white shadow-lg`
-                  : "bg-white text-gray-600 border border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                  ? `bg-gradient-to-r ${tc.gradient} text-white shadow-lg scale-105`
+                  : "bg-white text-gray-600 border border-gray-200 hover:border-gray-300 hover:bg-gray-50 hover:-translate-y-0.5"
               }`}
             >
               <TabIcon size={16} />
@@ -231,7 +232,7 @@ function HomeCourseExplorer({ onOpen }: { onOpen: (course: Course, key: StreamKe
 
       {/* ── Course grid ── */}
       <AnimateIn key={activeKey} type="fade-up">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {tab.courses.map((course) => (
             <div
               key={course.name}
@@ -239,35 +240,68 @@ function HomeCourseExplorer({ onOpen }: { onOpen: (course: Course, key: StreamKe
               tabIndex={0}
               onClick={() => onOpen(course, tab.key as StreamKey)}
               onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onOpen(course, tab.key as StreamKey); } }}
-              className="group flex flex-col rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all cursor-pointer text-left"
+              className="group relative flex flex-col rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden transition-all duration-300 cursor-pointer text-left hover:-translate-y-1.5 hover:shadow-2xl hover:border-transparent"
             >
-              <div className={`h-1.5 bg-gradient-to-r ${c.accentBar}`} />
+              {/* ── Colored header band ── */}
+              <div className={`relative overflow-hidden bg-gradient-to-br ${c.gradient} p-4`}>
+                {/* Watermark stream icon */}
+                <Icon className="pointer-events-none absolute -right-3 -top-3 text-white/15 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6" size={76} />
+                <div className="relative flex items-center justify-between gap-2">
+                  <span className="inline-flex items-center rounded-full border border-white/30 bg-white/20 px-2.5 py-1 text-[11px] font-black text-white backdrop-blur-sm">
+                    {course.name}
+                  </span>
+                  {course.bscc && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-green-500/90 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm">
+                      <CreditCard size={9} /> BSCC Loan
+                    </span>
+                  )}
+                </div>
+                <h3 className="relative mt-2.5 min-h-[2.5rem] text-sm font-extrabold leading-snug text-white line-clamp-2">
+                  {course.full}
+                </h3>
+              </div>
+
+              {/* ── Body ── */}
               <div className="flex flex-1 flex-col p-4">
-                <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-black ${c.badge}`}>{course.name}</span>
-                  {course.bscc && <span className="text-[10px] font-bold text-green-700 bg-green-50 border border-green-200 px-1.5 py-0.5 rounded-full">BSCC</span>}
+                {/* Duration + fee */}
+                <div className="mb-3 flex flex-wrap gap-1.5">
+                  <span className="flex items-center gap-1 rounded-lg border border-gray-100 bg-gray-50 px-2 py-1 text-[10px] font-semibold text-gray-600"><Clock size={10} className="text-gray-400" /> {course.duration}</span>
+                  <span className="flex items-center gap-1 rounded-lg border border-gray-100 bg-gray-50 px-2 py-1 text-[10px] font-semibold text-gray-600"><CreditCard size={10} className="text-gray-400" /> {course.fee}</span>
                 </div>
-                <p className="text-sm font-extrabold text-gray-900 leading-snug mb-2 line-clamp-2">{course.full}</p>
-                <div className="flex gap-1.5 mb-2 flex-wrap">
-                  <span className="flex items-center gap-1 text-[10px] text-gray-500 bg-gray-50 border border-gray-100 rounded-lg px-1.5 py-0.5"><Clock size={9} /> {course.duration}</span>
-                  <span className="flex items-center gap-1 text-[10px] text-gray-500 bg-gray-50 border border-gray-100 rounded-lg px-1.5 py-0.5"><CreditCard size={9} /> {course.fee}</span>
+
+                {/* Key highlight */}
+                <div className="mb-3 flex items-start gap-1.5 text-[11px] leading-snug text-gray-600">
+                  <CheckCircle2 size={13} className={`mt-0.5 flex-shrink-0 ${c.checkColor}`} />
+                  <span className="line-clamp-2">{course.highlights[0]}</span>
                 </div>
-                <p className="text-[10px] font-bold text-green-700 mb-3 line-clamp-1">{course.salary}</p>
+
+                {/* Salary highlight — students' #1 concern */}
+                <div className="mb-4 flex items-center gap-2 rounded-xl border border-green-100 bg-green-50 px-3 py-2">
+                  <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-green-100">
+                    <TrendingUp size={13} className="text-green-600" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[9px] font-bold uppercase tracking-wide text-green-500">Expected Salary</p>
+                    <p className="truncate text-[11px] font-extrabold leading-tight text-green-700">{course.salary}</p>
+                  </div>
+                </div>
+
                 {/* Apply Now + More Details */}
-                <div className="mt-auto grid grid-cols-2 gap-1.5">
+                <div className="mt-auto grid grid-cols-2 gap-2">
                   <Link
                     href={`/apply?course=${encodeURIComponent(course.name)}`}
                     onClick={(e) => e.stopPropagation()}
-                    className="flex items-center justify-center gap-1 rounded-lg bg-[#dc143c] py-2 text-[11px] font-bold text-white hover:bg-red-700 transition"
+                    className="flex items-center justify-center gap-1 rounded-lg bg-[#dc143c] py-2.5 text-[11px] font-bold text-white shadow-sm transition hover:bg-red-700"
                   >
-                    <GraduationCap size={11} /> Apply Now
+                    <GraduationCap size={12} /> Apply Now
                   </Link>
                   <button
                     type="button"
                     onClick={(e) => { e.stopPropagation(); onOpen(course, tab.key as StreamKey); }}
-                    className={`flex items-center justify-center gap-1 rounded-lg bg-gradient-to-r ${c.gradient} py-2 text-[11px] font-bold text-white`}
+                    className={`flex items-center justify-center gap-1 rounded-lg bg-gradient-to-r ${c.gradient} py-2.5 text-[11px] font-bold text-white shadow-sm transition group-hover:gap-1.5`}
                   >
-                    <BookOpen size={11} /> More Details
+                    <BookOpen size={12} /> Details
+                    <ArrowRight size={11} className="transition-transform group-hover:translate-x-0.5" />
                   </button>
                 </div>
               </div>
@@ -763,7 +797,7 @@ export default function Home() {
       </div>
 
       {/* ── COURSES SECTION ── */}
-      <section id="courses" className="py-12 bg-gray-50">
+      <section id="courses" className="py-12 bg-gradient-to-b from-gray-50 via-blue-50/30 to-white">
         <AnimateIn type="fade-up" className="text-center mb-10 container-shell">
           <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">Session 2026–27 · Admissions Open</p>
           <h2 className="font-headline text-4xl md:text-5xl font-extrabold">
