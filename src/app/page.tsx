@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { saveInquiry } from "@/services/inquiry-service";
 import { saveActivity } from "@/services/activity-service";
 import {
@@ -197,34 +197,55 @@ function CourseDetailModal({
 function HomeStreamSlider({ tab, onOpen }: { tab: typeof streamTabs[0]; onOpen: (course: Course, key: StreamKey) => void }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [atStart, setAtStart] = useState(true);
-  const [atEnd, setAtEnd] = useState(false);
+  const [atEnd, setAtEnd] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
   const dragStart = useRef<{ x: number; scrollLeft: number } | null>(null);
+  const movedRef = useRef(false);
   const c = colorMap[tab.color];
   const Icon = tab.icon;
   const CARD_W = 244 + 16;
+
+  const updateArrows = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const scrollable = el.scrollWidth - el.clientWidth > 1;
+    setAtStart(el.scrollLeft <= 8);
+    setAtEnd(!scrollable || el.scrollLeft + el.clientWidth >= el.scrollWidth - 8);
+  }, []);
+
+  // Measure on mount and keep arrow / fade states correct on resize.
+  useEffect(() => {
+    updateArrows();
+    const el = scrollRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(updateArrows);
+    ro.observe(el);
+    window.addEventListener("resize", updateArrows);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", updateArrows);
+    };
+  }, [updateArrows]);
 
   function scroll(dir: "left" | "right") {
     const el = scrollRef.current;
     if (!el) return;
     el.scrollBy({ left: dir === "left" ? -CARD_W * 2 : CARD_W * 2, behavior: "smooth" });
   }
-  function onScroll() {
-    const el = scrollRef.current;
-    if (!el) return;
-    setAtStart(el.scrollLeft <= 8);
-    setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 8);
-  }
   const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse") return; // touch devices use native momentum scrolling
     const el = scrollRef.current;
     if (!el) return;
     setIsDragging(true);
+    movedRef.current = false;
     dragStart.current = { x: e.clientX, scrollLeft: el.scrollLeft };
     el.setPointerCapture(e.pointerId);
   }, []);
   const onPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     if (!dragStart.current || !scrollRef.current) return;
-    scrollRef.current.scrollLeft = dragStart.current.scrollLeft - (e.clientX - dragStart.current.x);
+    const dx = e.clientX - dragStart.current.x;
+    if (Math.abs(dx) > 5) movedRef.current = true;
+    scrollRef.current.scrollLeft = dragStart.current.scrollLeft - dx;
   }, []);
   const onPointerUp = useCallback(() => { setIsDragging(false); dragStart.current = null; }, []);
 
@@ -279,11 +300,12 @@ function HomeStreamSlider({ tab, onOpen }: { tab: typeof streamTabs[0]; onOpen: 
         <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-10 bg-gradient-to-l from-white/60 to-transparent" />
         <div
           ref={scrollRef}
-          onScroll={onScroll}
+          onScroll={updateArrows}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerLeave={onPointerUp}
+          onClickCapture={(e) => { if (movedRef.current) { e.preventDefault(); e.stopPropagation(); } }}
           className="flex gap-4 overflow-x-auto px-4 pb-2 select-none"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none", cursor: isDragging ? "grabbing" : "grab" }}
         >
@@ -291,7 +313,7 @@ function HomeStreamSlider({ tab, onOpen }: { tab: typeof streamTabs[0]; onOpen: 
             <button
               key={course.name}
               type="button"
-              onClick={() => !isDragging && onOpen(course, tab.key as StreamKey)}
+              onClick={() => onOpen(course, tab.key as StreamKey)}
               className="flex-shrink-0 w-[220px] rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition-all text-left cursor-pointer"
             >
               <div className={`h-1.5 bg-gradient-to-r ${c.accentBar}`} />
