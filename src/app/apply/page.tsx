@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { SiteNavbar } from "@/components/site-navbar";
 import { SiteFooter } from "@/components/site-footer";
@@ -60,14 +61,23 @@ const EMPTY: FormData = {
   bsccRequired: false, message: "",
 };
 
-export default function ApplyPage() {
+function ApplyForm() {
   const { user, userProfile, loading: authLoading } = useAuth();
+  const searchParams = useSearchParams();
   const [form, setForm] = useState<FormData>(EMPTY);
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [appId, setAppId] = useState("");
+
+  // Pre-fill course from URL param ?course=
+  useEffect(() => {
+    const courseParam = searchParams.get("course");
+    if (courseParam) {
+      setForm(f => ({ ...f, course: f.course || courseParam }));
+    }
+  }, [searchParams]);
 
   // Pre-fill form fields when logged-in student visits
   useEffect(() => {
@@ -710,6 +720,14 @@ export default function ApplyPage() {
       </main>
       <SiteFooter />
     </>
+  );
+}
+
+export default function ApplyPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50" />}>
+      <ApplyForm />
+    </Suspense>
   );
 }
 
