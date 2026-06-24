@@ -24,218 +24,395 @@ const DOC_TYPES = [
 // ── Course → required document checklist ─────────────────────────────────────
 interface CourseDocInfo {
   label: string;
-  type: string;       // matches DOC_TYPES value
+  type: string;
   note?: string;
 }
+interface CourseRequirement { docs: CourseDocInfo[] }
 
-interface CourseRequirement {
-  docs: CourseDocInfo[];
-}
-
-// Keyword → requirements mapping (case-insensitive match on course name)
 const COURSE_REQUIREMENTS: Array<{ keywords: string[]; req: CourseRequirement }> = [
+  // ── Teaching ──────────────────────────────────────────────────────────────
   {
     keywords: ['b.ed', 'bed', 'b ed', 'bachelor of education'],
-    req: {
-      docs: [
-        { type: 'aadhaar',   label: 'Aadhaar Card' },
-        { type: 'marksheet', label: '10th Marksheet' },
-        { type: 'marksheet', label: '12th Marksheet' },
-        { type: 'marksheet', label: 'Graduation Marksheet' },
-        { type: 'photo',     label: 'Passport-Size Photo' },
-        { type: 'other',     label: 'Caste Certificate', note: 'If applicable (SC/ST/OBC)' },
-        { type: 'other',     label: 'Transfer Certificate (TC)' },
-      ],
-    },
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet' },
+      { type: 'marksheet', label: 'Graduation Marksheet' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Transfer Certificate (TC)' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable (SC/ST/OBC)' },
+    ]},
   },
   {
-    keywords: ['d.el.ed', 'deled', 'diploma in elementary education', 'd el ed'],
-    req: {
-      docs: [
-        { type: 'aadhaar',   label: 'Aadhaar Card' },
-        { type: 'marksheet', label: '10th Marksheet' },
-        { type: 'marksheet', label: '12th Marksheet' },
-        { type: 'photo',     label: 'Passport-Size Photo' },
-        { type: 'other',     label: 'Caste Certificate', note: 'If applicable (SC/ST/OBC)' },
-        { type: 'other',     label: 'Transfer Certificate (TC)' },
-      ],
-    },
+    keywords: ['d.el.ed', 'deled', 'diploma in elementary education', 'd el ed', 'd.el.ed'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Transfer Certificate (TC)' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
   },
   {
-    keywords: ['m.ed', 'med', 'master of education'],
-    req: {
-      docs: [
-        { type: 'aadhaar',   label: 'Aadhaar Card' },
-        { type: 'marksheet', label: '10th Marksheet' },
-        { type: 'marksheet', label: '12th Marksheet' },
-        { type: 'marksheet', label: 'Graduation Marksheet' },
-        { type: 'marksheet', label: 'B.Ed / M.A. Marksheet' },
-        { type: 'photo',     label: 'Passport-Size Photo' },
-        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-      ],
-    },
+    keywords: ['b.p.ed', 'bped', 'b.ped', 'bachelor of physical education'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet' },
+      { type: 'marksheet', label: 'Graduation Marksheet' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Physical Fitness Certificate' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
   },
   {
-    keywords: ['mbbs'],
-    req: {
-      docs: [
-        { type: 'aadhaar',   label: 'Aadhaar Card' },
-        { type: 'marksheet', label: '10th Marksheet' },
-        { type: 'marksheet', label: '12th Marksheet (Physics, Chemistry, Biology)' },
-        { type: 'photo',     label: 'Passport-Size Photo' },
-        { type: 'other',     label: 'NEET Score Card' },
-        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-        { type: 'other',     label: 'Domicile Certificate' },
-      ],
-    },
+    keywords: ['m.ed', 'master of education'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet' },
+      { type: 'marksheet', label: 'Graduation Marksheet' },
+      { type: 'marksheet', label: 'B.Ed / M.A. Marksheet' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
+  },
+  // ── Medical ───────────────────────────────────────────────────────────────
+  {
+    keywords: ['mbbs', 'bachelor of medicine'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet (PCB)' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'NEET Score Card' },
+      { type: 'other',     label: 'Domicile Certificate' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
   },
   {
-    keywords: ['bds', 'dental'],
-    req: {
-      docs: [
-        { type: 'aadhaar',   label: 'Aadhaar Card' },
-        { type: 'marksheet', label: '10th Marksheet' },
-        { type: 'marksheet', label: '12th Marksheet (PCB)' },
-        { type: 'photo',     label: 'Passport-Size Photo' },
-        { type: 'other',     label: 'NEET Score Card' },
-        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-      ],
-    },
+    keywords: ['bams', 'ayurvedic', 'bachelor of ayurvedic'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet (PCB)' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'NEET Score Card' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
   },
   {
-    keywords: ['b.sc nursing', 'bsc nursing', 'bsc. nursing', 'b sc nursing'],
-    req: {
-      docs: [
-        { type: 'aadhaar',   label: 'Aadhaar Card' },
-        { type: 'marksheet', label: '10th Marksheet' },
-        { type: 'marksheet', label: '12th Marksheet (Biology mandatory)' },
-        { type: 'photo',     label: 'Passport-Size Photo' },
-        { type: 'other',     label: 'Medical Fitness Certificate' },
-        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-      ],
-    },
+    keywords: ['bds', 'bachelor of dental', 'dental surgery'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet (PCB)' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'NEET Score Card' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
   },
   {
-    keywords: ['gnm', 'general nursing'],
-    req: {
-      docs: [
-        { type: 'aadhaar',   label: 'Aadhaar Card' },
-        { type: 'marksheet', label: '10th Marksheet' },
-        { type: 'marksheet', label: '12th Marksheet' },
-        { type: 'photo',     label: 'Passport-Size Photo' },
-        { type: 'other',     label: 'Medical Fitness Certificate' },
-        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-      ],
-    },
+    keywords: ['b.sc nursing', 'bsc nursing', 'bsc. nursing', 'bachelor of science in nursing'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet (Biology)' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Medical Fitness Certificate' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
   },
   {
-    keywords: ['anm', 'auxiliary nurse'],
-    req: {
-      docs: [
-        { type: 'aadhaar',   label: 'Aadhaar Card' },
-        { type: 'marksheet', label: '10th Marksheet' },
-        { type: 'marksheet', label: '12th Marksheet' },
-        { type: 'photo',     label: 'Passport-Size Photo' },
-        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-      ],
-    },
+    keywords: ['gnm', 'general nursing & midwifery', 'general nursing'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Medical Fitness Certificate' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
   },
   {
-    keywords: ['b.pharma', 'bpharma', 'b pharma', 'bachelor of pharmacy'],
-    req: {
-      docs: [
-        { type: 'aadhaar',   label: 'Aadhaar Card' },
-        { type: 'marksheet', label: '10th Marksheet' },
-        { type: 'marksheet', label: '12th Marksheet (PCB / PCM)' },
-        { type: 'photo',     label: 'Passport-Size Photo' },
-        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-      ],
-    },
+    keywords: ['anm', 'auxiliary nursing'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
   },
   {
-    keywords: ['b.tech', 'btech', 'b tech', 'bachelor of technology'],
-    req: {
-      docs: [
-        { type: 'aadhaar',   label: 'Aadhaar Card' },
-        { type: 'marksheet', label: '10th Marksheet' },
-        { type: 'marksheet', label: '12th Marksheet (Physics, Chemistry, Maths)' },
-        { type: 'photo',     label: 'Passport-Size Photo' },
-        { type: 'other',     label: 'JEE / DCECE Score Card', note: 'If applicable' },
-        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-      ],
-    },
+    keywords: ['d.pharma', 'dpharma', 'diploma in pharmacy'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet (PCB/PCM)' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
   },
   {
-    keywords: ['polytechnic', 'diploma engineering'],
-    req: {
-      docs: [
-        { type: 'aadhaar',   label: 'Aadhaar Card' },
-        { type: 'marksheet', label: '10th Marksheet' },
-        { type: 'photo',     label: 'Passport-Size Photo' },
-        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-      ],
-    },
+    keywords: ['b.pharma', 'bpharma', 'bachelor of pharmacy'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet (PCB/PCM)' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
+  },
+  {
+    keywords: ['bmlt', 'b.mlt', 'bachelor of medical lab', 'b.m.l.t'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet (PCB)' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
+  },
+  // ── Technical ─────────────────────────────────────────────────────────────
+  {
+    keywords: ['b.tech', 'btech', 'bachelor of technology'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet (PCM)' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'JEE / DCECE Score Card', note: 'If applicable' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
+  },
+  {
+    keywords: ['polytechnic', 'diploma in engineering', 'diploma engineering'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
   },
   {
     keywords: ['iti', 'industrial training'],
-    req: {
-      docs: [
-        { type: 'aadhaar',   label: 'Aadhaar Card' },
-        { type: 'marksheet', label: '8th / 10th Marksheet' },
-        { type: 'photo',     label: 'Passport-Size Photo' },
-        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-      ],
-    },
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '8th / 10th Marksheet' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
   },
   {
     keywords: ['bca', 'bachelor of computer application'],
-    req: {
-      docs: [
-        { type: 'aadhaar',   label: 'Aadhaar Card' },
-        { type: 'marksheet', label: '10th Marksheet' },
-        { type: 'marksheet', label: '12th Marksheet' },
-        { type: 'photo',     label: 'Passport-Size Photo' },
-        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-      ],
-    },
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
   },
   {
     keywords: ['mca', 'master of computer application'],
-    req: {
-      docs: [
-        { type: 'aadhaar',   label: 'Aadhaar Card' },
-        { type: 'marksheet', label: '10th Marksheet' },
-        { type: 'marksheet', label: '12th Marksheet' },
-        { type: 'marksheet', label: 'Graduation Marksheet (BCA / B.Sc)' },
-        { type: 'photo',     label: 'Passport-Size Photo' },
-        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-      ],
-    },
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet' },
+      { type: 'marksheet', label: 'Graduation Marksheet (BCA/B.Sc)' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
   },
   {
-    keywords: ['bba', 'bachelor of business'],
-    req: {
-      docs: [
-        { type: 'aadhaar',   label: 'Aadhaar Card' },
-        { type: 'marksheet', label: '10th Marksheet' },
-        { type: 'marksheet', label: '12th Marksheet' },
-        { type: 'photo',     label: 'Passport-Size Photo' },
-        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-      ],
-    },
+    keywords: ['bba', 'bachelor of business administration'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
   },
   {
-    keywords: ['mba', 'master of business'],
-    req: {
-      docs: [
-        { type: 'aadhaar',   label: 'Aadhaar Card' },
-        { type: 'marksheet', label: '10th Marksheet' },
-        { type: 'marksheet', label: '12th Marksheet' },
-        { type: 'marksheet', label: 'Graduation Marksheet' },
-        { type: 'photo',     label: 'Passport-Size Photo' },
-        { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-      ],
-    },
+    keywords: ['mba', 'master of business administration'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet' },
+      { type: 'marksheet', label: 'Graduation Marksheet' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'CAT/MAT Score Card', note: 'If applicable' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
+  },
+  // ── Paramedical ───────────────────────────────────────────────────────────
+  {
+    keywords: ['b.p.t', 'bpt', 'bachelor of physiotherapy', 'physiotherapy'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet (PCB)' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Medical Fitness Certificate' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
+  },
+  {
+    keywords: ['b.o.t.t', 'bott', 'operation theatre technology'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet (PCB)' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
+  },
+  {
+    keywords: ['b.r.i.t', 'brit', 'radio imaging technology', 'radiology'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet (PCB)' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
+  },
+  {
+    keywords: ['b.o.t', 'bot', 'occupational therapy'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet (PCB)' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
+  },
+  {
+    keywords: ['b.sc. biotech', 'bsc biotech', 'biotechnology'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet (PCB)' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
+  },
+  {
+    keywords: ['hospital mgmt', 'hospital management', 'b.sc. in hospital'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet (any stream)' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
+  },
+  {
+    keywords: ['d.m.l.t', 'dmlt', 'diploma in medical lab'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet (Biology)' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
+  },
+  {
+    keywords: ['d.o.t.a', 'dota', 'operation theatre assistant'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet (Biology)' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
+  },
+  {
+    keywords: ['d.m.r', 'dmr', 'diploma in medical radiology', 'x-ray'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet (Biology)' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
+  },
+  {
+    keywords: ['o.p.t', 'opt', 'ophthalmic', 'eye care'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet (Biology)' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
+  },
+  {
+    keywords: ['o.f.c.g', 'ofcg', 'orthotics', 'footwear correction'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet (Biology)' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
+  },
+  {
+    keywords: ['dresser', 'wound dressing'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet / Certificate' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+    ]},
+  },
+  // ── Law ───────────────────────────────────────────────────────────────────
+  {
+    keywords: ['llb', 'bachelor of laws', 'law degree'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet' },
+      { type: 'marksheet', label: 'Graduation Marksheet' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
+  },
+  {
+    keywords: ['ba.llb', 'ba llb', 'bachelor of arts & laws'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'CLAT Score Card', note: 'If applicable' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
+  },
+  {
+    keywords: ['bba.llb', 'bba llb', 'bachelor of business administration & laws'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'CLAT Score Card', note: 'If applicable' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
+  },
+  {
+    keywords: ['llm', 'master of laws'],
+    req: { docs: [
+      { type: 'aadhaar',   label: 'Aadhaar Card' },
+      { type: 'marksheet', label: '10th Marksheet' },
+      { type: 'marksheet', label: '12th Marksheet' },
+      { type: 'marksheet', label: 'Graduation Marksheet' },
+      { type: 'marksheet', label: 'LLB Marksheet' },
+      { type: 'photo',     label: 'Passport-Size Photo' },
+      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
+    ]},
   },
 ];
 

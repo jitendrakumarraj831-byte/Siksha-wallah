@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { SiteNavbar } from "@/components/site-navbar";
 import { SiteFooter } from "@/components/site-footer";
-import { streamTabs, colorMap, type StreamKey } from "@/lib/courses-data";
+import { streamTabs, colorMap, getCourseSlug, type StreamKey } from "@/lib/courses-data";
 import { saveActivity } from "@/services/activity-service";
 
 /* ─── per-stream metadata ─────────────────────────────────────────────── */
@@ -235,21 +235,33 @@ function CourseCard({
               ? <><ChevronUp size={15} /> Hide Details</>
               : <><ChevronDown size={15} /> View Career Scope & Details</>}
           </button>
+          {/* Full course detail page link */}
+          {(() => {
+            const slug = getCourseSlug(course.name);
+            return slug ? (
+              <Link
+                href={`/courses/${slug}`}
+                className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold text-white transition ${colors.btn}`}
+              >
+                <GraduationCap size={15} /> View Full Course Details →
+              </Link>
+            ) : null;
+          })()}
           <a
             href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(course.name)}%20(${encodeURIComponent(course.full)})%20के%20बारे%20में%20जानकारी%20चाहिए।%20Fees%20aur%20admission%20process%20batayein।`}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => saveActivity({ type: 'whatsapp', title: `💬 WhatsApp — Course: ${course.name}`, description: `Enquiry for ${course.full}`, page: '/courses' })}
-            className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold text-white transition ${colors.btn}`}
+            className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-green-500 py-2.5 text-sm font-bold text-green-700 transition hover:bg-green-500 hover:text-white"
           >
-            <MessageCircle size={15} /> Enquire About Fees & Admission
+            <MessageCircle size={15} /> WhatsApp Enquiry
           </a>
           {course.bscc && (
             <Link
               href="/contact"
-              className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-green-500 py-2.5 text-sm font-bold text-green-700 transition hover:bg-green-500 hover:text-white"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-slate-200 py-2.5 text-xs font-bold text-slate-600 transition hover:bg-slate-50"
             >
-              <CreditCard size={15} /> Ask About BSCC Loan →
+              <CreditCard size={13} /> Ask About BSCC Loan →
             </Link>
           )}
         </div>

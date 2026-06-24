@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/components/auth-provider';
 import { getApplicationsByUser, type CourseApplication, type ApplicationStatus } from '@/services/application-service';
+import { getCourseSlug } from '@/lib/courses-data';
 import { PortalShell } from '@/components/portal-shell';
 import {
   User, FileText, BookOpen, LogOut, Loader, Plus, ClipboardList, ArrowRight,
@@ -170,9 +171,16 @@ export default function DashboardPage() {
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
                         <div className="flex flex-wrap items-center gap-2 mb-2">
-                          <span className="rounded-lg bg-blue-50 px-2.5 py-1 text-sm font-extrabold text-[#003f9f]">
-                            {app.course}
-                          </span>
+                          {(() => {
+                            const slug = getCourseSlug(app.course);
+                            return slug ? (
+                              <Link href={`/courses/${slug}`} className="rounded-lg bg-blue-50 px-2.5 py-1 text-sm font-extrabold text-[#003f9f] hover:bg-blue-100 underline-offset-2 hover:underline transition">
+                                {app.course} →
+                              </Link>
+                            ) : (
+                              <span className="rounded-lg bg-blue-50 px-2.5 py-1 text-sm font-extrabold text-[#003f9f]">{app.course}</span>
+                            );
+                          })()}
                           <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${meta.color}`}>
                             {meta.label}
                           </span>

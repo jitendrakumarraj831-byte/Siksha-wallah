@@ -10,9 +10,17 @@ const BLOG_SLUGS = [
 ];
 
 const COURSE_IDS = [
-  "bed", "deled", "med",
-  "mbbs", "bds", "bsc-nursing", "gnm", "anm", "bpharma",
+  // Teaching
+  "bed", "deled", "bped", "med",
+  // Medical
+  "mbbs", "bams", "bds", "bsc-nursing", "gnm", "anm", "dpharma", "bmlt", "bpharma",
+  // Technical
   "btech", "polytechnic", "iti", "bca", "mca", "bba", "mba",
+  // Paramedical
+  "bpt", "bott", "brit", "bmlt-para", "bot", "bsc-biotech",
+  "hospital-mgmt", "dmlt", "dota", "dmr", "opt", "ofcg", "dresser",
+  // Law
+  "llb", "ba-llb", "bba-llb", "llm",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
