@@ -176,6 +176,14 @@ textarea {
   }
 }
 
+/* Course auto-sliders — different speeds per stream */
+.course-marquee        { animation: marquee 32s linear infinite; }
+.course-marquee-slow   { animation: marquee 40s linear infinite; }
+.course-marquee-fast   { animation: marquee 25s linear infinite; }
+.course-marquee:hover,
+.course-marquee-slow:hover,
+.course-marquee-fast:hover { animation-play-state: paused; }
+
 .reveal {
   animation: reveal 0.7s ease both;
 }
