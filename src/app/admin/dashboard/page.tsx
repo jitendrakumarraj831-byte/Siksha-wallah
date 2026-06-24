@@ -6,32 +6,17 @@ import Link from "next/link";
 import {
   GraduationCap, LogOut, Loader, Users, Phone,
   CheckCircle2, MessageCircle, Filter, Clock,
-  AlertCircle, RefreshCw, CalendarDays, StickyNote,
-  X, Save, LayoutDashboard, Activity,
+  AlertCircle, RefreshCw, StickyNote, X, Save,
 } from "lucide-react";
 import {
   getAllInquiries, updateInquiryStatus, updateInquiryNote,
   type Inquiry, type InquiryStatus,
 } from "@/services/inquiry-service";
-import { subscribeActivities, type Activity as ActivityItem, type ActivityType } from "@/services/activity-service";
 
 const STATUS_META: Record<InquiryStatus, { label: string; color: string }> = {
-  pending:        { label: "Pending",        color: "bg-yellow-100 text-yellow-800 border-yellow-200" },
-  called:         { label: "Called",         color: "bg-blue-100 text-blue-800 border-blue-200" },
-  admission_done: { label: "Admission Done", color: "bg-green-100 text-green-800 border-green-200" },
-};
-
-const ACTIVITY_META: Record<ActivityType, { icon: string; label: string }> = {
-  registration:   { icon: "👤", label: "Student Registrations" },
-  student_login:  { icon: "🔑", label: "Student Logins" },
-  course_view:    { icon: "📚", label: "Course Views" },
-  application:    { icon: "🎓", label: "Applications Submitted" },
-  whatsapp:       { icon: "💬", label: "WhatsApp Clicks" },
-  call_click:     { icon: "📞", label: "Call Clicks" },
-  inquiry:        { icon: "📋", label: "Inquiries" },
-  contact:        { icon: "📝", label: "Contact Form" },
-  doc_upload:     { icon: "📄", label: "Document Uploads" },
-  profile_update: { icon: "✏️",  label: "Profile Updates" },
+  pending:        { label: "Pending Call",    color: "bg-yellow-100 text-yellow-800 border-yellow-200" },
+  called:         { label: "Called",          color: "bg-blue-100 text-blue-800 border-blue-200" },
+  admission_done: { label: "Admission Done",  color: "bg-green-100 text-green-800 border-green-200" },
 };
 
 function toDate(ts: any): Date | null {
@@ -42,26 +27,14 @@ function toDate(ts: any): Date | null {
 function formatDate(ts: any): string {
   const d = toDate(ts);
   if (!d) return "—";
-  return d.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+  return d.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
 }
 
 function isToday(ts: any): boolean {
   const d = toDate(ts);
   if (!d) return false;
-  const today = new Date();
-  return d.getDate() === today.getDate() &&
-    d.getMonth() === today.getMonth() &&
-    d.getFullYear() === today.getFullYear();
-}
-
-function timeAgo(ts: any): string {
-  const d = ts?.toDate ? ts.toDate() : ts ? new Date(ts) : null;
-  if (!d) return "";
-  const diff = Math.floor((Date.now() - d.getTime()) / 1000);
-  if (diff < 60) return `${diff}s ago`;
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-  return `${Math.floor(diff / 86400)}d ago`;
+  const t = new Date();
+  return d.getDate() === t.getDate() && d.getMonth() === t.getMonth() && d.getFullYear() === t.getFullYear();
 }
 
 function NoteCell({ inq, onSaved }: { inq: Inquiry; onSaved: (id: string, note: string) => void }) {
@@ -88,7 +61,7 @@ function NoteCell({ inq, onSaved }: { inq: Inquiry; onSaved: (id: string, note: 
         className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition ${inq.note ? "bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100" : "bg-gray-100 text-gray-500 hover:bg-gray-200"}`}
       >
         <StickyNote size={11} />
-        {inq.note ? "View Note" : "Add Note"}
+        {inq.note ? "Note देखें" : "Note लिखें"}
       </button>
       {open && (
         <div className="absolute right-0 top-8 z-50 w-64 rounded-xl border border-gray-200 bg-white p-3 shadow-xl">
@@ -101,7 +74,7 @@ function NoteCell({ inq, onSaved }: { inq: Inquiry; onSaved: (id: string, note: 
             value={draft}
             onChange={e => setDraft(e.target.value)}
             rows={3}
-            placeholder="Called at 3pm, interested in B.Ed..."
+            placeholder="जैसे: 3 बजे call किया, B.Ed में interested है..."
             className="w-full resize-none rounded-lg border border-gray-200 p-2 text-xs outline-none focus:border-[#003f9f]"
           />
           <button
@@ -110,7 +83,7 @@ function NoteCell({ inq, onSaved }: { inq: Inquiry; onSaved: (id: string, note: 
             className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg bg-[#003f9f] py-1.5 text-xs font-bold text-white hover:bg-blue-700 disabled:opacity-60"
           >
             {saving ? <Loader size={12} className="animate-spin" /> : <Save size={12} />}
-            Save
+            Save करें
           </button>
         </div>
       )}
@@ -125,7 +98,6 @@ export default function AdminDashboardPage() {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [filterStatus, setFilterStatus] = useState<"" | InquiryStatus>("");
 
   useEffect(() => {
@@ -136,12 +108,7 @@ export default function AdminDashboardPage() {
     setAdminUser(user || "Admin");
   }, [router]);
 
-  useEffect(() => {
-    if (!authorized) return;
-    loadInquiries();
-    const unsub = subscribeActivities(100, setActivities);
-    return () => unsub();
-  }, [authorized]);
+  useEffect(() => { if (authorized) loadInquiries(); }, [authorized]);
 
   async function loadInquiries() {
     setLoading(true);
@@ -149,7 +116,7 @@ export default function AdminDashboardPage() {
       setInquiries(await getAllInquiries());
       setError("");
     } catch {
-      setError("Could not load inquiries. Check Firebase connection.");
+      setError("Inquiries load नहीं हो पाईं। Firebase connection check करें।");
     } finally {
       setLoading(false);
     }
@@ -173,25 +140,14 @@ export default function AdminDashboardPage() {
     router.replace("/admin/login");
   }
 
-  const totalInquiries     = inquiries.length;
-  const todayInquiries     = inquiries.filter(i => isToday(i.createdAt)).length;
-  const pendingCalls       = inquiries.filter(i => !i.status || i.status === "pending").length;
-  const admissionsDone     = inquiries.filter(i => i.status === "admission_done").length;
+  const total        = inquiries.length;
+  const todayCount   = inquiries.filter(i => isToday(i.createdAt)).length;
+  const pendingCount = inquiries.filter(i => !i.status || i.status === "pending").length;
+  const doneCount    = inquiries.filter(i => i.status === "admission_done").length;
 
-  // Activity summary counts (today)
-  const activitySummary = useMemo(() => {
-    const tracked: ActivityType[] = ['registration', 'student_login', 'course_view', 'application', 'whatsapp', 'call_click'];
-    return tracked.map(type => ({
-      type,
-      ...ACTIVITY_META[type],
-      total: activities.filter(a => a.type === type).length,
-      today: activities.filter(a => a.type === type && isToday(a.createdAt)).length,
-    }));
-  }, [activities]);
-
-  const filtered = useMemo(() => inquiries.filter(inq => {
-    return !filterStatus || (inq.status || "pending") === filterStatus;
-  }), [inquiries, filterStatus]);
+  const filtered = useMemo(() => inquiries.filter(inq =>
+    !filterStatus || (inq.status || "pending") === filterStatus
+  ), [inquiries, filterStatus]);
 
   if (authorized === null) return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50">
@@ -202,78 +158,55 @@ export default function AdminDashboardPage() {
   return (
     <div className="min-h-screen bg-gray-50">
 
-      {/* Top Nav */}
-      <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 shadow-sm backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-          <Link href="/" className="flex items-center gap-3">
+      {/* Header */}
+      <header className="sticky top-0 z-50 border-b border-gray-200 bg-white shadow-sm">
+        <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4">
+          <Link href="/" className="flex items-center gap-2">
             <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#003f9f] text-white">
               <GraduationCap size={20} />
             </span>
             <span className="font-headline text-lg font-extrabold">
-              SIKSHA<span className="text-[#dc143c]">WALLAH</span>{" "}
-              <span className="text-gray-400 font-normal text-sm">Office</span>
+              SIKSHA<span className="text-[#dc143c]">WALLAH</span>
+              <span className="ml-1 text-sm font-normal text-gray-400">Office</span>
             </span>
           </Link>
 
           <nav className="hidden items-center gap-1 sm:flex">
-            <Link href="/admin/dashboard" className="rounded-lg bg-blue-50 px-3 py-2 text-sm font-bold text-[#003f9f]">
-              Dashboard
-            </Link>
-            <Link href="/admin/students" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">
-              Students
-            </Link>
-            <Link href="/admin/applications" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">
-              Applications
-            </Link>
-            <Link href="/admin/activity" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">
-              Website Activity
-            </Link>
+            <Link href="/admin/dashboard" className="rounded-lg bg-blue-50 px-3 py-2 text-sm font-bold text-[#003f9f]">Dashboard</Link>
+            <Link href="/admin/applications" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Applications</Link>
+            <Link href="/admin/students" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Students</Link>
           </nav>
 
           <div className="flex items-center gap-3">
-            <span className="hidden text-sm font-semibold text-gray-600 sm:block">
-              {adminUser}
-            </span>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 rounded-xl border-2 border-gray-200 px-4 py-2 text-sm font-bold text-gray-700 hover:border-red-300 hover:text-red-600 transition"
-            >
-              <LogOut size={16} /> Logout
+            <span className="hidden text-sm font-semibold text-gray-600 sm:block">{adminUser}</span>
+            <button onClick={handleLogout} className="flex items-center gap-2 rounded-xl border-2 border-gray-200 px-3 py-2 text-sm font-bold text-gray-700 hover:border-red-300 hover:text-red-600 transition">
+              <LogOut size={15} /> Logout
             </button>
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+      <main className="mx-auto max-w-5xl px-4 py-8">
 
-        {/* Page header */}
-        <div className="mb-6">
-          <div className="flex items-center gap-2 text-sm font-semibold text-gray-400 mb-1">
-            <LayoutDashboard size={13} /> Office Dashboard
-          </div>
-          <h1 className="font-headline text-3xl font-extrabold text-gray-900">Dashboard</h1>
-        </div>
-
-        {/* Summary Widgets */}
-        <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Stats */}
+        <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
           {[
-            { label: "Total Students", value: activities.filter(a => a.type === 'registration').length, icon: Users, color: "blue", sub: "Registered accounts" },
-            { label: "Total Applications", value: totalInquiries, icon: CalendarDays, color: "blue", sub: "All inquiries" },
-            { label: "Today's Applications", value: todayInquiries, icon: Clock, color: "yellow", sub: "New today" },
-            { label: "Website Visitors", value: activities.length, icon: Activity, color: "green", sub: "Tracked events" },
-          ].map(({ label, value, icon: Icon, color, sub }) => {
-            const bg: Record<string, string> = { blue: "bg-blue-50", yellow: "bg-amber-50", green: "bg-green-50" };
-            const txt: Record<string, string> = { blue: "text-blue-600", yellow: "text-amber-600", green: "text-green-600" };
+            { label: "कुल Inquiries", value: total,        icon: Users,         color: "blue" },
+            { label: "आज की",         value: todayCount,   icon: Clock,         color: "amber" },
+            { label: "Call बाकी",      value: pendingCount, icon: Phone,         color: "red" },
+            { label: "Admission हुई", value: doneCount,    icon: CheckCircle2,  color: "green" },
+          ].map(({ label, value, icon: Icon, color }) => {
+            const bg:  Record<string,string> = { blue:"bg-blue-50",  amber:"bg-amber-50",  red:"bg-red-50",  green:"bg-green-50" };
+            const txt: Record<string,string> = { blue:"text-blue-600",amber:"text-amber-600",red:"text-red-600",green:"text-green-600" };
             return (
-              <div key={label} className="rounded-2xl border-2 border-gray-100 bg-white p-5 shadow-sm">
+              <div key={label} className="rounded-2xl border-2 border-gray-100 bg-white p-4 shadow-sm">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">{label}</p>
-                    <p className={`mt-2 text-3xl font-extrabold ${txt[color]}`}>{value}</p>
-                    <p className="mt-1 text-xs text-gray-400">{sub}</p>
+                    <p className="text-xs font-semibold text-gray-500">{label}</p>
+                    <p className={`mt-1 text-3xl font-extrabold ${txt[color]}`}>{value}</p>
                   </div>
-                  <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${bg[color]}`}>
-                    <Icon size={22} className={txt[color]} />
+                  <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${bg[color]}`}>
+                    <Icon size={20} className={txt[color]} />
                   </div>
                 </div>
               </div>
@@ -281,131 +214,113 @@ export default function AdminDashboardPage() {
           })}
         </div>
 
-        {/* Website Activity Summary */}
-        <div className="mb-6 rounded-2xl border-2 border-gray-100 bg-white p-5 shadow-sm">
-          <h2 className="mb-4 font-bold text-gray-800 flex items-center gap-2">
-            <Activity size={16} className="text-[#003f9f]" />
-            Website Activity
-          </h2>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {activitySummary.map(({ type, icon, label, total, today }) => (
-              <div key={type} className="flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 px-4 py-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">{icon}</span>
-                  <span className="text-sm font-semibold text-gray-700">{label}</span>
-                </div>
-                <div className="text-right">
-                  <p className="text-base font-extrabold text-gray-900">{total}</p>
-                  {today > 0 && (
-                    <p className="text-xs text-green-600 font-semibold">+{today} today</p>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {error && (
-          <div className="mb-5 flex gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          <div className="mb-4 flex gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
             <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
             <p>{error}</p>
           </div>
         )}
 
-        {/* Filters */}
+        {/* Filter + Refresh */}
         <div className="mb-4 flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-1.5 text-sm font-semibold text-gray-500">
-            <Filter size={13} /> Filter:
-          </div>
           <select
             value={filterStatus}
             onChange={e => setFilterStatus(e.target.value as "" | InquiryStatus)}
-            className="rounded-xl border-2 border-gray-200 px-3 py-2 text-sm font-semibold text-gray-700 outline-none focus:border-[#003f9f] transition"
+            className="rounded-xl border-2 border-gray-200 px-3 py-2 text-sm font-semibold text-gray-700 outline-none focus:border-[#003f9f]"
           >
-            <option value="">All Status</option>
-            <option value="pending">Pending</option>
-            <option value="called">Called</option>
+            <option value="">सभी दिखाएं</option>
+            <option value="pending">Call बाकी</option>
+            <option value="called">Call हो गई</option>
             <option value="admission_done">Admission Done</option>
           </select>
-          <button
-            onClick={loadInquiries}
-            className="ml-auto flex items-center gap-2 rounded-xl border-2 border-gray-200 px-4 py-2 text-sm font-bold text-gray-600 hover:border-[#003f9f] hover:text-[#003f9f] transition"
-          >
+          <span className="text-sm text-gray-400">{filtered.length} / {total} दिख रहे हैं</span>
+          <button onClick={loadInquiries} className="ml-auto flex items-center gap-2 rounded-xl border-2 border-gray-200 px-4 py-2 text-sm font-bold text-gray-600 hover:border-[#003f9f] hover:text-[#003f9f] transition">
             <RefreshCw size={13} className={loading ? "animate-spin" : ""} /> Refresh
           </button>
         </div>
 
-        {/* Inquiry Table */}
+        {/* Inquiry List */}
         <div className="rounded-2xl border-2 border-gray-100 bg-white shadow-sm overflow-hidden">
-          <div className="border-b border-gray-100 px-5 py-4">
-            <h2 className="font-bold text-gray-800">Student Inquiries</h2>
-            <p className="text-xs text-gray-400 mt-0.5">Showing {filtered.length} of {totalInquiries} total</p>
+          <div className="border-b border-gray-100 bg-gray-50 px-5 py-3">
+            <h2 className="font-extrabold text-gray-800">📋 Student Inquiries</h2>
           </div>
+
           {loading ? (
-            <div className="flex items-center justify-center py-20">
+            <div className="flex items-center justify-center py-16">
               <Loader size={32} className="animate-spin text-[#003f9f]" />
             </div>
           ) : filtered.length === 0 ? (
-            <div className="py-20 text-center">
-              <Users size={36} className="mx-auto mb-3 text-gray-300" />
-              <p className="font-semibold text-gray-500">No inquiries found</p>
+            <div className="py-16 text-center text-gray-400">
+              <Users size={32} className="mx-auto mb-2 text-gray-300" />
+              <p className="font-semibold">कोई inquiry नहीं मिली</p>
             </div>
           ) : (
             <div className="divide-y divide-gray-100">
               {filtered.map(inq => {
                 const st = (inq.status || "pending") as InquiryStatus;
                 const { label, color } = STATUS_META[st];
+                const isNew = st === "pending" && isToday(inq.createdAt);
                 return (
-                  <div key={inq.id} className="flex flex-wrap items-start gap-3 px-4 py-4 hover:bg-blue-50/20 transition">
+                  <div key={inq.id} className={`flex flex-wrap items-start gap-3 px-4 py-4 transition ${isNew ? "bg-amber-50/40" : "hover:bg-gray-50"}`}>
+
+                    {/* Name + Date */}
                     <div className="flex items-center gap-3 min-w-[160px] flex-1">
-                      <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#003f9f] font-bold text-sm text-white">
+                      <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[#003f9f] font-bold text-white">
                         {inq.fullName?.[0]?.toUpperCase() || "?"}
+                        {isNew && <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-amber-400 border-2 border-white" />}
                       </div>
                       <div className="min-w-0">
-                        <p className="font-bold text-gray-900 text-sm leading-tight">{inq.fullName}</p>
+                        <p className="font-bold text-gray-900 text-sm">{inq.fullName}</p>
                         <p className="text-xs text-gray-400">{formatDate(inq.createdAt)}</p>
                       </div>
                     </div>
 
-                    <div className="min-w-[120px]">
-                      <span className="rounded-lg bg-blue-50 px-2 py-0.5 text-xs font-bold text-blue-800">
-                        {inq.course || "—"}
-                      </span>
-                      <p className="mt-1 text-xs text-gray-400">{inq.qualification || inq.message || "—"}</p>
+                    {/* Course */}
+                    <div className="min-w-[110px]">
+                      <span className="rounded-lg bg-blue-50 px-2 py-0.5 text-xs font-bold text-blue-800">{inq.course || "—"}</span>
+                      <p className="mt-1 text-xs text-gray-400">{inq.qualification || "—"}</p>
                     </div>
 
+                    {/* Status */}
                     <div className="flex-shrink-0">
                       <select
                         value={st}
                         onChange={e => inq.id && handleStatusChange(inq.id, e.target.value as InquiryStatus)}
-                        className={`rounded-full border px-3 py-1 text-xs font-bold outline-none cursor-pointer transition ${color}`}
+                        className={`rounded-full border px-3 py-1 text-xs font-bold outline-none cursor-pointer ${color}`}
                       >
-                        <option value="pending">Pending</option>
-                        <option value="called">Called</option>
-                        <option value="admission_done">Admission Done</option>
+                        <option value="pending">Call बाकी</option>
+                        <option value="called">Called ✓</option>
+                        <option value="admission_done">Admission Done ✅</option>
                       </select>
                     </div>
 
+                    {/* Note */}
                     <div className="flex-shrink-0">
                       <NoteCell inq={inq} onSaved={handleNoteSaved} />
                     </div>
 
+                    {/* Call + WhatsApp */}
                     <div className="flex items-center gap-2 flex-shrink-0 ml-auto">
-                      <a
-                        href={`tel:+91${inq.mobile}`}
-                        className="inline-flex items-center gap-1 rounded-lg bg-green-500 px-3 py-1.5 text-xs font-bold text-white hover:bg-green-600 transition"
+                      <a href={`tel:+91${inq.mobile}`}
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-green-500 px-3 py-1.5 text-xs font-bold text-white hover:bg-green-600 transition"
                       >
-                        <Phone size={11} /> {inq.mobile}
+                        <Phone size={12} /> {inq.mobile}
                       </a>
                       <a
-                        href={`https://wa.me/91${inq.mobile}?text=Hello%20${encodeURIComponent(inq.fullName)}%2C%20I%20am%20from%20Siksha%20Wallah%20regarding%20your%20inquiry%20for%20${encodeURIComponent(inq.course || "admission")}.`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 rounded-lg bg-[#25D366] px-3 py-1.5 text-xs font-bold text-white hover:bg-green-500 transition"
+                        href={`https://wa.me/91${inq.mobile}?text=नमस्ते%20${encodeURIComponent(inq.fullName)}%20जी!%20मैं%20Siksha%20Wallah%20से%20बोल%20रहा/रही%20हूँ।%20आपने%20${encodeURIComponent(inq.course || "admission")}%20के%20लिए%20inquiry%20की%20थी।%20क्या%20आप%20अभी%20बात%20कर%20सकते%20हैं?`}
+                        target="_blank" rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-[#25D366] px-3 py-1.5 text-xs font-bold text-white hover:bg-green-500 transition"
                       >
-                        <MessageCircle size={11} /> WA
+                        <MessageCircle size={12} /> WA
                       </a>
                     </div>
+
+                    {/* Note preview */}
+                    {inq.note && (
+                      <div className="w-full mt-1 rounded-lg bg-amber-50 border border-amber-100 px-3 py-1.5 text-xs text-amber-800">
+                        📝 {inq.note}
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -413,44 +328,29 @@ export default function AdminDashboardPage() {
           )}
         </div>
 
-        {/* Live Activity Feed */}
-        <div className="mt-10">
-          <div className="mb-4 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
-                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500" />
-              </span>
-              <h2 className="font-headline text-lg font-extrabold text-gray-900">Live Activity Feed</h2>
-              <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-bold text-gray-500">{activities.length}</span>
+        {/* Quick links */}
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <Link href="/admin/applications" className="flex items-center gap-3 rounded-2xl border-2 border-gray-100 bg-white p-4 hover:border-[#003f9f] transition">
+            <span className="text-2xl">🎓</span>
+            <div>
+              <p className="font-bold text-gray-800 text-sm">Applications</p>
+              <p className="text-xs text-gray-400">Online form submissions</p>
             </div>
-            <Link href="/admin/activity" className="text-xs font-bold text-[#003f9f] hover:underline">
-              View Full Log →
-            </Link>
-          </div>
-
-          {activities.length === 0 ? (
-            <div className="rounded-2xl border-2 border-dashed border-gray-200 py-12 text-center text-gray-400">
-              <p className="text-sm font-semibold">No activity yet</p>
-              <p className="text-xs mt-1">Activities appear here in real-time as visitors use the website</p>
+          </Link>
+          <Link href="/admin/students" className="flex items-center gap-3 rounded-2xl border-2 border-gray-100 bg-white p-4 hover:border-[#003f9f] transition">
+            <span className="text-2xl">👤</span>
+            <div>
+              <p className="font-bold text-gray-800 text-sm">Students</p>
+              <p className="text-xs text-gray-400">Registered accounts</p>
             </div>
-          ) : (
-            <div className="space-y-2">
-              {activities.slice(0, 20).map(act => {
-                const meta = ACTIVITY_META[act.type] || { icon: "📌", label: act.type };
-                return (
-                  <div key={act.id} className="flex items-start gap-3 rounded-xl border border-gray-100 bg-white px-4 py-3">
-                    <span className="text-lg leading-none mt-0.5">{meta.icon}</span>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-bold text-sm text-gray-800">{act.title}</p>
-                      <p className="text-xs mt-0.5 text-gray-500 truncate">{act.description}</p>
-                    </div>
-                    <span className="flex-shrink-0 text-xs text-gray-400 whitespace-nowrap">{timeAgo(act.createdAt)}</span>
-                  </div>
-                );
-              })}
+          </Link>
+          <Link href="/admin/activity" className="flex items-center gap-3 rounded-2xl border-2 border-gray-100 bg-white p-4 hover:border-[#003f9f] transition col-span-2 sm:col-span-1">
+            <span className="text-2xl">📊</span>
+            <div>
+              <p className="font-bold text-gray-800 text-sm">Website Activity</p>
+              <p className="text-xs text-gray-400">Visitors & events</p>
             </div>
-          )}
+          </Link>
         </div>
 
       </main>
