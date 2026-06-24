@@ -35,8 +35,16 @@ export default function BlogPage() {
     ? blogArticles
     : blogArticles.filter((a) => a.category === activeCategory);
 
-  const featured = filtered[0];
-  const rest     = filtered.slice(1);
+  // When "all" is selected: show first article of each category as featured.
+  // When a specific category is selected: show only first article as featured.
+  const featuredList = activeCategory === "all"
+    ? CATEGORIES.filter((c) => c.key !== "all").map((c) =>
+        blogArticles.find((a) => a.category === c.key)
+      ).filter(Boolean) as typeof blogArticles
+    : filtered.slice(0, 1);
+
+  const featuredSlugs = new Set(featuredList.map((a) => a.slug));
+  const rest = filtered.filter((a) => !featuredSlugs.has(a.slug));
 
   return (
     <>
@@ -120,48 +128,59 @@ export default function BlogPage() {
               <div className="py-20 text-center text-gray-400">No articles are available in this category yet. Please check back soon.</div>
             ) : (
               <>
-                {/* ── FEATURED ARTICLE (first) ── */}
-                {featured && (
-                  <Link
-                    href={`/blog/${featured.slug}`}
-                    className="group mb-10 flex flex-col overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl md:flex-row"
-                  >
-                    {/* Colored banner */}
-                    <div className={`relative flex min-h-[180px] w-full flex-col justify-between bg-gradient-to-br p-7 text-white md:min-h-0 md:w-[42%] ${
-                      CATEGORY_STYLES[featured.category]?.bar ?? "from-blue-500 to-blue-700"
-                    }`}>
-                      <div>
-                        <span className="inline-block rounded-full bg-white/20 px-3 py-1 text-xs font-bold uppercase tracking-widest">
-                          Featured Article
-                        </span>
-                        <div className="mt-4 flex items-center gap-2 text-xs font-semibold text-white/80">
-                          <Clock size={12} /> {featured.readTime}
-                          <span className="ml-2 rounded-full bg-white/20 px-2.5 py-0.5">{featured.category}</span>
-                        </div>
-                      </div>
-                      <div className="mt-6 hidden items-center gap-1.5 text-sm font-semibold text-white/90 md:flex">
-                        <BookOpen size={14} /> Counsellor-Reviewed Guide
-                      </div>
+                {/* ── FEATURED ARTICLES ── */}
+                {featuredList.length > 0 && (
+                  <div className="mb-10">
+                    <div className="mb-4 flex items-center gap-2">
+                      <Sparkles size={15} className="text-amber-500" />
+                      <span className="text-sm font-extrabold uppercase tracking-widest text-amber-600">Featured Articles</span>
                     </div>
+                    <div className={`grid gap-5 ${featuredList.length === 1 ? "" : "md:grid-cols-2"}`}>
+                      {featuredList.map((featured) => (
+                        <Link
+                          key={featured.slug}
+                          href={`/blog/${featured.slug}`}
+                          className="group flex flex-col overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl md:flex-row"
+                        >
+                          {/* Colored banner */}
+                          <div className={`relative flex min-h-[160px] w-full flex-col justify-between bg-gradient-to-br p-6 text-white md:min-h-0 md:w-[38%] ${
+                            CATEGORY_STYLES[featured.category]?.bar ?? "from-blue-500 to-blue-700"
+                          }`}>
+                            <div>
+                              <span className="inline-block rounded-full bg-white/20 px-3 py-1 text-xs font-bold uppercase tracking-widest">
+                                Featured Article
+                              </span>
+                              <div className="mt-3 flex items-center gap-2 text-xs font-semibold text-white/80">
+                                <Clock size={12} /> {featured.readTime}
+                                <span className="ml-2 rounded-full bg-white/20 px-2.5 py-0.5">{featured.category}</span>
+                              </div>
+                            </div>
+                            <div className="mt-4 hidden items-center gap-1.5 text-sm font-semibold text-white/90 md:flex">
+                              <BookOpen size={14} /> Counsellor-Reviewed Guide
+                            </div>
+                          </div>
 
-                    {/* Content */}
-                    <div className="flex flex-1 flex-col justify-between p-7">
-                      <div>
-                        <h2 className="font-headline text-xl font-extrabold leading-snug text-gray-900 group-hover:text-amber-600 transition-colors md:text-2xl">
-                          {featured.titleHi ?? featured.title}
-                        </h2>
-                        <p className="mt-3 text-sm leading-relaxed text-gray-500 md:text-base">
-                          {featured.excerpt}
-                        </p>
-                      </div>
-                      <div className="mt-6 flex items-center justify-between">
-                        <span className="text-xs text-gray-400">{new Date(featured.date).toLocaleDateString("hi-IN", { year: "numeric", month: "long", day: "numeric" })}</span>
-                        <span className="flex items-center gap-1.5 rounded-xl bg-amber-400 px-4 py-2 text-sm font-bold text-gray-900 transition group-hover:bg-amber-300">
-                          Read Full Article <ArrowRight size={14} />
-                        </span>
-                      </div>
+                          {/* Content */}
+                          <div className="flex flex-1 flex-col justify-between p-6">
+                            <div>
+                              <h2 className="font-headline text-lg font-extrabold leading-snug text-gray-900 group-hover:text-amber-600 transition-colors md:text-xl">
+                                {featured.titleHi ?? featured.title}
+                              </h2>
+                              <p className="mt-2 text-sm leading-relaxed text-gray-500 line-clamp-3">
+                                {featured.excerpt}
+                              </p>
+                            </div>
+                            <div className="mt-5 flex items-center justify-between">
+                              <span className="text-xs text-gray-400">{new Date(featured.date).toLocaleDateString("hi-IN", { year: "numeric", month: "long", day: "numeric" })}</span>
+                              <span className="flex items-center gap-1.5 rounded-xl bg-amber-400 px-4 py-2 text-sm font-bold text-gray-900 transition group-hover:bg-amber-300">
+                                Read Full Article <ArrowRight size={14} />
+                              </span>
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
                     </div>
-                  </Link>
+                  </div>
                 )}
 
                 {/* ── REST ARTICLES GRID ── */}
