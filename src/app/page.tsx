@@ -445,7 +445,7 @@ export default function Home() {
               </div>
 
               {/* H1 — 3-tier Hindi headline */}
-              <h1 className="font-headline font-black tracking-tight leading-[1.12]">
+              <h1 className="font-headline font-black tracking-tight leading-[1.12] heading-hindi">
                 <span className="block text-[1.9rem] text-white/75 md:text-[2.8rem] lg:text-[3.2rem] [text-shadow:0_2px_16px_rgba(255,255,255,0.08)]">
                   किस Course में है
                 </span>
@@ -809,7 +809,7 @@ export default function Home() {
       <section id="courses" className="py-12 bg-gradient-to-b from-gray-50 via-blue-50/30 to-white">
         <AnimateIn type="fade-up" className="text-center mb-10 container-shell">
           <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">Session 2026–27 · Admissions Open</p>
-          <h2 className="font-headline text-4xl md:text-5xl font-extrabold">
+          <h2 className="font-headline text-4xl md:text-5xl font-extrabold heading-hindi">
             अपने भविष्य की{" "}
             <span className="bg-gradient-to-r from-blue-700 to-indigo-600 bg-clip-text text-transparent">
               दिशा चुनें
