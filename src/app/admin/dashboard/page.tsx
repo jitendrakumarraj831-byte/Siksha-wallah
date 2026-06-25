@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState, useMemo, useRef, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, useMemo, useRef } from "react";
 import Link from "next/link";
-import { AdminMobileNav } from "@/components/admin-mobile-nav";
+import { AdminHeader } from "@/components/admin-header";
+import { useAdminGuard } from "@/hooks/use-admin-guard";
 import { adminFetchData, adminUpdate } from "@/lib/admin-api";
 import {
-  GraduationCap, LogOut, Loader, Users, Phone,
-  CheckCircle2, MessageCircle, Filter, Clock,
+  Loader, Users, Phone,
+  CheckCircle2, MessageCircle, Clock,
   AlertCircle, RefreshCw, StickyNote, X, Save,
 } from "lucide-react";
 import {
@@ -99,35 +99,13 @@ function NoteCell({ inq, onSaved }: { inq: Inquiry; onSaved: (id: string, note: 
 }
 
 export default function AdminDashboardPage() {
-  const router = useRouter();
-  const [authorized, setAuthorized] = useState<boolean | null>(null);
-  const [adminUser, setAdminUser] = useState("Admin");
+  const { authorized, adminUser } = useAdminGuard();
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [filterStatus, setFilterStatus] = useState<"" | InquiryStatus>("");
   const [filterToday, setFilterToday] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const cached = localStorage.getItem("sw_admin_session");
-    const cachedUser = localStorage.getItem("sw_admin_user");
-    if (cached) {
-      setAuthorized(true);
-      setAdminUser(cachedUser || "Admin");
-      return;
-    }
-    // localStorage missing (e.g. cleared or private browsing) — verify via cookie
-    fetch("/api/admin/data?type=ping", { credentials: "include" })
-      .then(async (res) => {
-        if (res.status === 401) { router.replace("/admin/login"); return; }
-        // Cookie is valid — restore localStorage cache
-        localStorage.setItem("sw_admin_session", "1");
-        setAuthorized(true);
-        setAdminUser("Admin");
-      })
-      .catch(() => { router.replace("/admin/login"); });
-  }, [router]);
 
   useEffect(() => { if (authorized) loadInquiries(); }, [authorized]);
 
@@ -162,13 +140,6 @@ export default function AdminDashboardPage() {
     setInquiries(prev => prev.map(i => i.id === id ? { ...i, note } : i));
   }
 
-  async function handleLogout() {
-    await fetch("/api/admin/logout", { method: "POST" }).catch(() => {});
-    localStorage.removeItem("sw_admin_session");
-    localStorage.removeItem("sw_admin_user");
-    router.replace("/admin/login");
-  }
-
   const total        = inquiries.length;
   const todayCount   = inquiries.filter(i => isToday(i.createdAt)).length;
   const pendingCount = inquiries.filter(i => !i.status || i.status === "pending").length;
@@ -195,35 +166,7 @@ export default function AdminDashboardPage() {
   return (
     <div className="min-h-screen bg-gray-50">
 
-      {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-gray-200 bg-white shadow-sm">
-        <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#003f9f] text-white">
-              <GraduationCap size={20} />
-            </span>
-            <span className="font-headline text-lg font-extrabold">
-              SIKSHA<span className="text-[#dc143c]">WALLAH</span>
-              <span className="ml-1 text-sm font-normal text-gray-400">Office</span>
-            </span>
-          </Link>
-
-          <nav className="hidden items-center gap-1 sm:flex">
-            <Link href="/admin/dashboard" className="rounded-lg bg-blue-50 px-3 py-2 text-sm font-bold text-[#003f9f]">Dashboard</Link>
-            <Link href="/admin/applications" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Applications</Link>
-            <Link href="/admin/students" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Students</Link>
-            <Link href="/admin/messages" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Messages</Link>
-          </nav>
-
-          <div className="flex items-center gap-3">
-            <AdminMobileNav />
-            <span className="hidden text-sm font-semibold text-gray-600 sm:block">{adminUser}</span>
-            <button onClick={handleLogout} className="flex items-center gap-2 rounded-xl border-2 border-gray-200 px-3 py-2 text-sm font-bold text-gray-700 hover:border-red-300 hover:text-red-600 transition">
-              <LogOut size={15} /> Logout
-            </button>
-          </div>
-        </div>
-      </header>
+      <AdminHeader adminUser={adminUser} />
 
       <main className="mx-auto max-w-5xl px-4 py-8">
 
