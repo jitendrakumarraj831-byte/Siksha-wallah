@@ -14,15 +14,17 @@ const QUICK_LINKS = [
   { href: "/apply", label: "Book Free Counselling" },
 ];
 
+// Each course links to its matching stream section on the /courses page,
+// so clicking jumps straight to the relevant course list.
 const COURSES = [
-  "B.Ed / D.El.Ed",
-  "M.Ed",
-  "B.Sc Nursing / GNM / ANM",
-  "B.Pharma / D.Pharma",
-  "MBBS / BDS",
-  "BBA / MBA",
-  "B.Tech / Polytechnic",
-  "BCA / MCA / ITI",
+  { label: "B.Ed / D.El.Ed",           href: "/courses#teaching" },
+  { label: "M.Ed",                     href: "/courses#teaching" },
+  { label: "B.Sc Nursing / GNM / ANM", href: "/courses#medical" },
+  { label: "B.Pharma / D.Pharma",      href: "/courses#medical" },
+  { label: "MBBS / BDS",               href: "/courses#medical" },
+  { label: "BBA / MBA",                href: "/courses#technical" },
+  { label: "B.Tech / Polytechnic",     href: "/courses#technical" },
+  { label: "BCA / MCA / ITI",          href: "/courses#technical" },
 ];
 
 const PHONES = [
@@ -118,10 +120,10 @@ export function SiteFooter() {
           <div>
             <h3 className="mb-4 font-headline font-bold text-white">Courses We Guide For</h3>
             <ul className="space-y-2 text-sm" role="list">
-              {COURSES.map((course) => (
-                <li key={course}>
-                  <Link href="/courses" className="transition duration-200 hover:pl-1 hover:text-white">
-                    {course}
+              {COURSES.map(({ label, href }) => (
+                <li key={label}>
+                  <Link href={href} className="transition duration-200 hover:pl-1 hover:text-white">
+                    {label}
                   </Link>
                 </li>
               ))}
