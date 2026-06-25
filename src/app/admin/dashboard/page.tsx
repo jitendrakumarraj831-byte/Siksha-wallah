@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AdminMobileNav } from "@/components/admin-mobile-nav";
+import { adminFetchData } from "@/lib/admin-api";
 import {
   GraduationCap, LogOut, Loader, Users, Phone,
   CheckCircle2, MessageCircle, Filter, Clock,
@@ -128,7 +129,9 @@ export default function AdminDashboardPage() {
   async function loadInquiries() {
     setLoading(true);
     try {
-      setInquiries(await getAllInquiries());
+      // Prefer the secure Admin-SDK API (works once Firestore rules are locked);
+      // fall back to the direct client read for older/open-rules setups.
+      setInquiries(await adminFetchData<Inquiry[]>("inquiries", getAllInquiries));
       setError("");
     } catch {
       setError("Inquiries load नहीं हो पाईं। Firebase connection check करें।");

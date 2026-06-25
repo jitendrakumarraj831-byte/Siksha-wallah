@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AdminMobileNav } from "@/components/admin-mobile-nav";
+import { adminFetchData } from "@/lib/admin-api";
 import {
   GraduationCap, LogOut, Loader, Phone, Mail, MapPin,
   BookOpen, AlertCircle,
@@ -250,7 +251,8 @@ export default function AdminApplicationsPage() {
   useEffect(() => {
     if (!authorized) return;
     setLoading(true);
-    getAllApplications()
+    // Prefer the secure Admin-SDK API; fall back to the direct client read.
+    adminFetchData<CourseApplication[]>("applications", getAllApplications)
       .then((data) => setApplications(data))
       .catch(() => {})
       .finally(() => setLoading(false));
