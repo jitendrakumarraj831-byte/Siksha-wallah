@@ -4,14 +4,14 @@ import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AdminMobileNav } from "@/components/admin-mobile-nav";
-import { adminFetchData } from "@/lib/admin-api";
+import { adminFetchData, adminUpdate } from "@/lib/admin-api";
 import {
   GraduationCap, LogOut, Loader, Users, Phone,
   CheckCircle2, MessageCircle, Filter, Clock,
   AlertCircle, RefreshCw, StickyNote, X, Save,
 } from "lucide-react";
 import {
-  getAllInquiries, updateInquiryStatus, updateInquiryNote,
+  getAllInquiries,
   type Inquiry, type InquiryStatus,
 } from "@/services/inquiry-service";
 
@@ -43,16 +43,20 @@ function NoteCell({ inq, onSaved }: { inq: Inquiry; onSaved: (id: string, note: 
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState(inq.note || "");
   const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState("");
   const ref = useRef<HTMLTextAreaElement>(null);
 
   async function save() {
     if (!inq.id) return;
     setSaving(true);
+    setErr("");
     try {
-      await updateInquiryNote(inq.id, draft);
+      await adminUpdate("inquiries", inq.id, { note: draft });
       onSaved(inq.id, draft);
       setOpen(false);
-    } catch { /* noop */ }
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Save नहीं हुआ। दोबारा करें।");
+    }
     finally { setSaving(false); }
   }
 
@@ -87,6 +91,7 @@ function NoteCell({ inq, onSaved }: { inq: Inquiry; onSaved: (id: string, note: 
             {saving ? <Loader size={12} className="animate-spin" /> : <Save size={12} />}
             Save करें
           </button>
+          {err && <p className="mt-2 rounded-lg bg-red-50 px-2 py-1.5 text-[11px] font-semibold text-red-600">{err}</p>}
         </div>
       )}
     </div>
@@ -141,10 +146,16 @@ export default function AdminDashboardPage() {
   }
 
   async function handleStatusChange(id: string, status: InquiryStatus) {
+    // Optimistic update; revert if the server write doesn't persist.
+    const snapshot = inquiries;
+    setInquiries(prev => prev.map(i => i.id === id ? { ...i, status } : i));
+    setError("");
     try {
-      await updateInquiryStatus(id, status);
-      setInquiries(prev => prev.map(i => i.id === id ? { ...i, status } : i));
-    } catch { alert("Status update failed. Please try again."); }
+      await adminUpdate("inquiries", id, { status });
+    } catch (e) {
+      setInquiries(snapshot);
+      setError(e instanceof Error ? e.message : "Status update नहीं हो पाया।");
+    }
   }
 
   function handleNoteSaved(id: string, note: string) {

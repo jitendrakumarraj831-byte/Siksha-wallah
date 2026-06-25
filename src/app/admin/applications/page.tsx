@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AdminMobileNav } from "@/components/admin-mobile-nav";
-import { adminFetchData } from "@/lib/admin-api";
+import { adminFetchData, adminUpdate } from "@/lib/admin-api";
 import {
   GraduationCap, LogOut, Loader, Phone, Mail, MapPin,
   BookOpen, AlertCircle,
@@ -12,8 +12,6 @@ import {
 } from "lucide-react";
 import {
   getAllApplications,
-  updateApplicationStatus,
-  updateApplicationNote,
   type CourseApplication,
   type ApplicationStatus,
 } from "@/services/application-service";
@@ -40,14 +38,21 @@ function NoteCell({ app, onSaved }: { app: CourseApplication; onSaved: (id: stri
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState(app.note || "");
   const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState("");
 
   async function save() {
     if (!app.id) return;
     setSaving(true);
-    await updateApplicationNote(app.id!, draft);
-    onSaved(app.id, draft);
-    setSaving(false);
-    setOpen(false);
+    setErr("");
+    try {
+      await adminUpdate("course_applications", app.id, { note: draft });
+      onSaved(app.id, draft);
+      setOpen(false);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Save failed");
+    } finally {
+      setSaving(false);
+    }
   }
 
   if (!open) return (
@@ -57,17 +62,20 @@ function NoteCell({ app, onSaved }: { app: CourseApplication; onSaved: (id: stri
   );
 
   return (
-    <div className="flex items-center gap-1">
-      <input
-        autoFocus value={draft}
-        onChange={e => setDraft(e.target.value)}
-        onKeyDown={e => e.key === "Enter" && save()}
-        className="w-32 rounded-lg border border-blue-300 px-2 py-1 text-xs outline-none focus:border-blue-500"
-      />
-      <button onClick={save} disabled={saving} className="rounded-lg bg-blue-600 px-2 py-1 text-xs font-bold text-white hover:bg-blue-700">
-        {saving ? "…" : "Save"}
-      </button>
-      <button onClick={() => { setOpen(false); setDraft(app.note || ""); }} className="text-xs text-gray-400 hover:text-red-500">✕</button>
+    <div>
+      <div className="flex items-center gap-1">
+        <input
+          autoFocus value={draft}
+          onChange={e => setDraft(e.target.value)}
+          onKeyDown={e => e.key === "Enter" && save()}
+          className="w-32 rounded-lg border border-blue-300 px-2 py-1 text-xs outline-none focus:border-blue-500"
+        />
+        <button onClick={save} disabled={saving} className="rounded-lg bg-blue-600 px-2 py-1 text-xs font-bold text-white hover:bg-blue-700">
+          {saving ? "…" : "Save"}
+        </button>
+        <button onClick={() => { setOpen(false); setErr(""); setDraft(app.note || ""); }} className="text-xs text-gray-400 hover:text-red-500">✕</button>
+      </div>
+      {err && <p className="mt-1 text-[11px] font-semibold text-red-600">{err}</p>}
     </div>
   );
 }
@@ -226,6 +234,7 @@ export default function AdminApplicationsPage() {
   const [adminUser, setAdminUser] = useState("Admin");
   const [applications, setApplications] = useState<CourseApplication[]>([]);
   const [loading, setLoading] = useState(true);
+  const [actionError, setActionError] = useState("");
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState<"" | ApplicationStatus>("");
   const [filterCourse, setFilterCourse] = useState("");
@@ -265,9 +274,17 @@ export default function AdminApplicationsPage() {
     router.replace("/admin/login");
   }
 
-  function handleStatusChange(id: string, status: ApplicationStatus) {
-    updateApplicationStatus(id, status).catch(() => {});
+  async function handleStatusChange(id: string, status: ApplicationStatus) {
+    // Optimistic update; revert if the server write doesn't persist.
+    const snapshot = applications;
     setApplications(prev => prev.map(a => a.id === id ? { ...a, status } : a));
+    setActionError("");
+    try {
+      await adminUpdate("course_applications", id, { status });
+    } catch (e) {
+      setApplications(snapshot);
+      setActionError(e instanceof Error ? e.message : "Status update failed.");
+    }
   }
 
   function handleNoteSaved(id: string, note: string) {
@@ -323,6 +340,12 @@ export default function AdminApplicationsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {actionError && (
+        <div className="fixed bottom-5 left-1/2 z-[60] flex max-w-[92vw] -translate-x-1/2 items-center gap-2 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg">
+          <AlertCircle size={16} className="flex-shrink-0" /> {actionError}
+          <button onClick={() => setActionError("")} aria-label="Dismiss" className="ml-2 text-white/80 hover:text-white">✕</button>
+        </div>
+      )}
       {/* Nav */}
       <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 shadow-sm backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">

@@ -1,6 +1,6 @@
 
 import { db } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp, query, orderBy, getDocs, doc, updateDoc } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, query, orderBy, getDocs } from "firebase/firestore";
 
 export type InquiryStatus = "pending" | "called" | "admission_done";
 
@@ -38,9 +38,9 @@ export async function getAllInquiries(): Promise<Inquiry[]> {
   try {
     const q = query(collection(db, INQUIRIES_COLLECTION), orderBy("createdAt", "desc"));
     const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
+    return querySnapshot.docs.map(d => ({
+      id: d.id,
+      ...d.data()
     })) as Inquiry[];
   } catch (error) {
     console.error("Error fetching inquiries:", error);
@@ -48,22 +48,8 @@ export async function getAllInquiries(): Promise<Inquiry[]> {
   }
 }
 
-export async function updateInquiryStatus(id: string, status: InquiryStatus): Promise<void> {
-  try {
-    const ref = doc(db, INQUIRIES_COLLECTION, id);
-    await updateDoc(ref, { status });
-  } catch (error) {
-    console.error("Error updating inquiry status:", error);
-    throw error;
-  }
-}
-
-export async function updateInquiryNote(id: string, note: string): Promise<void> {
-  try {
-    const ref = doc(db, INQUIRIES_COLLECTION, id);
-    await updateDoc(ref, { note, noteUpdatedAt: serverTimestamp() });
-  } catch (error) {
-    console.error("Error updating inquiry note:", error);
-    throw error;
-  }
-}
+// NOTE: Inquiry status/note changes are office-only writes. The office logs in
+// with a signed cookie (not a Firebase Auth user), so Firestore rules treat it
+// as anonymous and deny direct client writes. Persist changes through the
+// cookie-gated Admin SDK API via `adminUpdate("inquiries", id, …)` in
+// `@/lib/admin-api` instead.

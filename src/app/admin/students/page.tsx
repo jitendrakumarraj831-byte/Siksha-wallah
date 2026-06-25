@@ -11,11 +11,12 @@ import {
   CheckCircle2, RefreshCw,
 } from "lucide-react";
 import { db } from "@/lib/firebase";
+import { adminUpdate } from "@/lib/admin-api";
 import {
   collection, getDocs, query, where,
 } from "firebase/firestore";
 import {
-  getAllApplications, updateApplicationStatus,
+  getAllApplications,
   type CourseApplication, type ApplicationStatus,
 } from "@/services/application-service";
 
@@ -284,6 +285,7 @@ export default function AdminStudentsPage() {
   const [students, setStudents] = useState<StudentProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [actionError, setActionError] = useState("");
   const [diag, setDiag] = useState<string>("");
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState<"" | "has_app" | "no_app" | "admission_done" | "bscc">("");
@@ -422,12 +424,20 @@ export default function AdminStudentsPage() {
     router.replace("/admin/login");
   }
 
-  function handleAppStatusChange(appId: string, status: ApplicationStatus) {
-    updateApplicationStatus(appId, status).catch(() => {});
+  async function handleAppStatusChange(appId: string, status: ApplicationStatus) {
+    // Optimistic update; revert if the server write doesn't persist.
+    const snapshot = students;
     setStudents(prev => prev.map(s => ({
       ...s,
       applications: s.applications?.map(a => a.id === appId ? { ...a, status } : a),
     })));
+    setActionError("");
+    try {
+      await adminUpdate("course_applications", appId, { status });
+    } catch (e) {
+      setStudents(snapshot);
+      setActionError(e instanceof Error ? e.message : "Status update failed.");
+    }
   }
 
   // Stats
@@ -469,6 +479,12 @@ export default function AdminStudentsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {actionError && (
+        <div className="fixed bottom-5 left-1/2 z-[60] flex max-w-[92vw] -translate-x-1/2 items-center gap-2 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg">
+          <AlertCircle size={16} className="flex-shrink-0" /> {actionError}
+          <button onClick={() => setActionError("")} aria-label="Dismiss" className="ml-2 text-white/80 hover:text-white">✕</button>
+        </div>
+      )}
       {/* Nav */}
       <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 shadow-sm backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
