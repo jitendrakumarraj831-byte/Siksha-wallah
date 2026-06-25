@@ -1,27 +1,8 @@
 import type { MetadataRoute } from "next";
+import { blogArticles } from "@/lib/blog-data";
+import { COURSE_ID_MAP } from "@/lib/courses-data";
 
 const BASE_URL = "https://www.sikshawallahfbg.in";
-
-const BLOG_SLUGS = [
-  "bed-admission-bihar-2025",
-  "bsc-nursing-gnm-comparison-bihar",
-  "deled-vs-bed-difference",
-  "btech-admission-bihar-2025",
-];
-
-const COURSE_IDS = [
-  // Teaching
-  "bed", "deled", "bped", "med",
-  // Medical
-  "mbbs", "bams", "bds", "bsc-nursing", "gnm", "anm", "dpharma", "bmlt", "bpharma",
-  // Technical
-  "btech", "polytechnic", "iti", "bca", "mca", "bba", "mba",
-  // Paramedical
-  "bpt", "bott", "brit", "bmlt-para", "bot", "bsc-biotech",
-  "hospital-mgmt", "dmlt", "dota", "dmr", "opt", "ofcg", "dresser",
-  // Law
-  "llb", "ba-llb", "bba-llb", "llm",
-];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
@@ -40,15 +21,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority,
   }));
 
-  const coursePages = COURSE_IDS.map((id) => ({
+  // Derived from the live data so the sitemap never drifts out of sync with the
+  // actual course detail pages (generated from COURSE_ID_MAP).
+  const coursePages = Object.keys(COURSE_ID_MAP).map((id) => ({
     url: `${BASE_URL}/courses/${id}`,
     lastModified: now,
     changeFrequency: "monthly" as const,
     priority: 0.75,
   }));
 
-  const blogPages = BLOG_SLUGS.map((slug) => ({
-    url: `${BASE_URL}/blog/${slug}`,
+  // Derived from the live blog data so every published article is listed and no
+  // stale/renamed slug is referenced.
+  const blogPages = blogArticles.map((article) => ({
+    url: `${BASE_URL}/blog/${article.slug}`,
     lastModified: now,
     changeFrequency: "monthly" as const,
     priority: 0.7,
