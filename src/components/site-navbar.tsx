@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { GraduationCap, Phone, Menu, X, ChevronRight, MessageCircle } from "lucide-react";
+import { GraduationCap, Phone, Menu, X, ChevronRight, MessageCircle, ShieldCheck } from "lucide-react";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -35,7 +35,7 @@ export function SiteNavbar({ transparent = false }: { transparent?: boolean }) {
       <header
         className={`fixed inset-x-0 top-0 z-50 border-b transition-all md:duration-300 duration-200 ${
           scrolled
-            ? "border-gray-200 bg-white/96 shadow-md backdrop-blur-md"
+            ? "border-gray-200 bg-white/95 shadow-md backdrop-blur-md"
             : isTransparent
               ? "border-white/10 bg-[#00102e]/70 backdrop-blur-md"
               : "border-gray-100 bg-white/95 shadow-sm backdrop-blur"
@@ -68,7 +68,7 @@ export function SiteNavbar({ transparent = false }: { transparent?: boolean }) {
                 className={`rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${
                   pathname === href
                     ? isTransparent
-                      ? "bg-white/18 text-white"
+                      ? "bg-white/20 text-white"
                       : "bg-blue-50 text-primary-blue"
                     : isTransparent
                       ? "text-white/85 hover:bg-white/10 hover:text-white"
@@ -102,8 +102,19 @@ export function SiteNavbar({ transparent = false }: { transparent?: boolean }) {
                   : "border-gray-200 text-gray-700 hover:border-green-500 hover:text-green-600"
               }`}
             >
-              <MessageCircle size={13} aria-hidden="true" /> Chat on WhatsApp
+              <MessageCircle size={13} aria-hidden="true" /> <span className="hidden xl:inline">Chat on </span>WhatsApp
             </a>
+            <Link
+              href="/admin/login"
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-bold transition ${
+                isTransparent
+                  ? "text-white/85 hover:bg-white/10 hover:text-white"
+                  : "text-gray-700 hover:bg-gray-50 hover:text-primary-blue"
+              }`}
+              aria-label="Office / Counsellor login"
+            >
+              <ShieldCheck size={13} aria-hidden="true" /> Office Login
+            </Link>
             <Link
               href="/auth/login"
               className={`rounded-lg border-2 px-3.5 py-2 text-sm font-bold transition ${

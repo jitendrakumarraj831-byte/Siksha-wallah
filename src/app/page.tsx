@@ -1595,9 +1595,9 @@ export default function Home() {
       />
 
       {/* ── DOCUMENTS CHECKLIST ── */}
-      <section id="documents" className="py-16 md:py-24 bg-white">
+      <section id="documents" className="py-16 md:py-24 bg-gradient-to-b from-white via-blue-50/40 to-white">
         <div className="container-shell">
-          <AnimateIn type="fade-up" className="text-center mb-12">
+          <AnimateIn type="fade-up" className="text-center mb-10">
             <p className="text-sm font-bold uppercase tracking-widest text-primary-blue mb-2">Be Admission-Ready</p>
             <h2 className="font-headline text-3xl md:text-5xl font-extrabold">Your Personal Admission Documents Checklist</h2>
             <p className="mt-3 text-gray-500 max-w-xl mx-auto">
@@ -1605,137 +1605,179 @@ export default function Home() {
             </p>
           </AnimateIn>
 
-          <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr] items-start">
-            {/* Interactive Checklist */}
-            <div className="rounded-2xl border-2 border-gray-100 bg-gray-50 overflow-hidden">
-              {/* Header */}
-              <div className="flex items-center justify-between bg-primary-blue px-6 py-4">
-                <div className="flex items-center gap-2 text-white">
-                  <ListChecks size={20} />
-                  <span className="font-headline font-extrabold text-lg">My Document Checklist</span>
-                </div>
-                <span className="rounded-full bg-white/20 px-3 py-1 text-sm font-bold text-white">
-                  {Object.values(checkedDocs).filter(Boolean).length} of {[
-                    "10th-marksheet", "12th-marksheet", "graduation", "aadhaar",
-                    "residential", "income", "caste", "photos", "tc", "migration"
-                  ].length} Ready
-                </span>
-              </div>
-
-              {/* Progress bar */}
-              <div className="h-2 w-full bg-gray-200">
-                <div
-                  className="h-full bg-green-500 transition-all duration-500"
-                  style={{
-                    width: `${(Object.values(checkedDocs).filter(Boolean).length / 10) * 100}%`,
-                  }}
-                />
-              </div>
-
-              {/* Document Groups */}
-              <div className="p-5 space-y-5">
-                {[
-                  {
-                    group: "Academic Documents",
-                    color: "bg-blue-100 text-blue-700",
-                    docs: [
-                      { id: "10th-marksheet", label: "Class 10 Marksheet & Passing Certificate", note: "Original board certificate is required for verification.", required: true },
-                      { id: "12th-marksheet", label: "Class 12 Marksheet & Passing Certificate", note: "All-subject marksheet plus passing/migration certificate.", required: true },
-                      { id: "graduation", label: "Graduation Degree & Marksheets (All Years)", note: "Needed for B.Ed, M.Ed, MBA, MCA and all postgraduate courses.", required: false },
-                    ],
-                  },
-                  {
-                    group: "Identity & Residence Documents",
-                    color: "bg-green-100 text-green-700",
-                    docs: [
-                      { id: "aadhaar", label: "Student's Aadhaar Card", note: "Should be linked with an active mobile number.", required: true },
-                      { id: "residential", label: "Residential / Domicile Certificate", note: "Bihar domicile certificate from SDO or Circle Office.", required: true },
-                      { id: "income", label: "Family Income Certificate", note: "Issued by the local CO/SDO. Annual income should be below ₹4.5 Lakh for BSCC eligibility.", required: true },
-                      { id: "caste", label: "Caste Certificate (SC / ST / OBC, if applicable)", note: "Required for reserved-category seats and scholarship benefits.", required: false },
-                    ],
-                  },
-                  {
-                    group: "Other Essential Documents",
-                    color: "bg-amber-100 text-amber-700",
-                    docs: [
-                      { id: "photos", label: "Passport-Size Photographs", note: "6–8 recent colour photographs on a white background.", required: true },
-                      { id: "tc", label: "Transfer Certificate (TC)", note: "From the last school or college you attended.", required: true },
-                      { id: "migration", label: "Migration Certificate (if from another board)", note: "Required when admitting to a state university after CBSE/ISC.", required: false },
-                    ],
-                  },
-                ].map(({ group, color, docs }) => (
-                  <div key={group}>
-                    <h3 className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-extrabold uppercase tracking-wider mb-3 ${color}`}>
-                      <FileText size={12} /> {group}
-                    </h3>
-                    <div className="space-y-2">
-                      {docs.map(({ id, label, note, required }) => (
-                        <label
-                          key={id}
-                          htmlFor={id}
-                          className={`flex cursor-pointer items-start gap-3 rounded-xl border-2 p-4 transition-all ${
-                            checkedDocs[id]
-                              ? "border-green-300 bg-green-50"
-                              : "border-gray-200 bg-white hover:border-gray-300"
-                          }`}
-                        >
-                          <div className="relative mt-0.5 flex-shrink-0">
-                            <input
-                              type="checkbox"
-                              id={id}
-                              checked={!!checkedDocs[id]}
-                              onChange={() => setCheckedDocs((prev) => ({ ...prev, [id]: !prev[id] }))}
-                              className="sr-only"
-                            />
-                            <div className={`flex h-5 w-5 items-center justify-center rounded border-2 transition-all ${
-                              checkedDocs[id] ? "border-green-500 bg-green-500" : "border-gray-300"
-                            }`}>
-                              {checkedDocs[id] && <Check size={12} className="text-white" strokeWidth={3} />}
-                            </div>
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className={`text-sm font-bold ${checkedDocs[id] ? "text-green-700 line-through" : "text-gray-900"}`}>
-                                {label}
-                              </span>
-                              {required && (
-                                <span className="rounded bg-red-100 px-1.5 py-0.5 text-[10px] font-bold text-red-600">MUST HAVE</span>
-                              )}
-                            </div>
-                            <p className="mt-0.5 text-xs text-gray-500">{note}</p>
-                          </div>
-                        </label>
-                      ))}
+          {/* ── Progress summary band with circular ring ── */}
+          {(() => {
+            const done = Object.values(checkedDocs).filter(Boolean).length;
+            const total = 10;
+            const pct = Math.round((done / total) * 100);
+            const complete = done >= total;
+            return (
+              <div className="mx-auto mb-10 max-w-3xl rounded-3xl border border-blue-100 bg-white p-5 shadow-xl shadow-blue-900/5 sm:p-6">
+                <div className="flex flex-col items-center gap-5 sm:flex-row sm:gap-6">
+                  {/* Ring */}
+                  <div className="relative h-24 w-24 flex-shrink-0">
+                    <svg className="h-24 w-24 -rotate-90" viewBox="0 0 36 36" aria-hidden="true">
+                      <circle cx="18" cy="18" r="16" fill="none" stroke="#e5e7eb" strokeWidth="3.2" />
+                      <circle
+                        cx="18" cy="18" r="16" fill="none"
+                        stroke={complete ? "#16a34a" : "#003f9f"}
+                        strokeWidth="3.2" strokeLinecap="round" pathLength={100}
+                        strokeDasharray={`${pct} 100`}
+                        className="transition-all duration-700 ease-out"
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                      <span className={`font-headline text-2xl font-extrabold ${complete ? "text-green-600" : "text-gray-900"}`}>{done}<span className="text-base text-gray-400">/{total}</span></span>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Ready</span>
                     </div>
                   </div>
-                ))}
-
-                {/* CTA after checklist */}
-                <div className="rounded-xl bg-primary-blue p-4 text-white flex items-center justify-between gap-4 flex-wrap">
-                  <div>
-                    <p className="font-bold text-sm">All documents ready? Let&apos;s take the next step together.</p>
-                    <p className="text-xs text-blue-200">Visit our Forbesganj office for a free, no-obligation document verification.</p>
+                  {/* Text + bar */}
+                  <div className="flex-1 text-center sm:text-left">
+                    <div className="flex items-center justify-center gap-2 sm:justify-start">
+                      <ListChecks size={18} className={complete ? "text-green-600" : "text-primary-blue"} />
+                      <p className="font-headline text-lg font-extrabold text-gray-900">
+                        {complete ? "सभी documents ready हैं! 🎉" : `${done} of ${total} documents ready`}
+                      </p>
+                    </div>
+                    <p className="mt-1 text-sm text-gray-500">
+                      {complete
+                        ? "शानदार! अब बस अपने Forbesganj office आकर free verification कराएँ।"
+                        : "हर document को tick करते जाएँ — आपकी admission उतनी ही तेज़ और आसान होगी।"}
+                    </p>
+                    <div className="mt-3 h-2.5 w-full overflow-hidden rounded-full bg-gray-100">
+                      <div
+                        className={`h-full rounded-full transition-all duration-700 ease-out ${complete ? "bg-gradient-to-r from-green-400 to-green-600" : "bg-gradient-to-r from-blue-500 to-indigo-600"}`}
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
                   </div>
-                  <a
-                    href="https://wa.me/916203138576?text=नमस्ते!%20मैंने%20अपने%20admission%20documents%20collect%20कर%20लिए%20हैं।%20आगे%20का%20process%20बताएं।"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-shrink-0 flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-bold text-primary-blue hover:bg-blue-50 transition"
-                  >
-                    <MessageCircle size={15} /> Share on WhatsApp
-                  </a>
                 </div>
               </div>
-            </div>
+            );
+          })()}
 
-            {/* Right panel — course-wise special docs */}
-            <div className="space-y-5">
-              <h3 className="font-headline text-2xl font-extrabold text-gray-900">Additional Documents by Course</h3>
+          {/* ── Category grid: 3 columns ── */}
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {[
+              {
+                group: "Academic Documents",
+                accent: "from-blue-500 to-indigo-600",
+                chip: "bg-blue-100 text-blue-700",
+                docs: [
+                  { id: "10th-marksheet", label: "Class 10 Marksheet & Passing Certificate", note: "Original board certificate is required for verification.", required: true },
+                  { id: "12th-marksheet", label: "Class 12 Marksheet & Passing Certificate", note: "All-subject marksheet plus passing/migration certificate.", required: true },
+                  { id: "graduation", label: "Graduation Degree & Marksheets (All Years)", note: "Needed for B.Ed, M.Ed, MBA, MCA and all postgraduate courses.", required: false },
+                ],
+              },
+              {
+                group: "Identity & Residence",
+                accent: "from-green-500 to-emerald-600",
+                chip: "bg-green-100 text-green-700",
+                docs: [
+                  { id: "aadhaar", label: "Student's Aadhaar Card", note: "Should be linked with an active mobile number.", required: true },
+                  { id: "residential", label: "Residential / Domicile Certificate", note: "Bihar domicile certificate from SDO or Circle Office.", required: true },
+                  { id: "income", label: "Family Income Certificate", note: "Issued by the local CO/SDO. Annual income should be below ₹4.5 Lakh for BSCC eligibility.", required: true },
+                  { id: "caste", label: "Caste Certificate (SC / ST / OBC, if applicable)", note: "Required for reserved-category seats and scholarship benefits.", required: false },
+                ],
+              },
+              {
+                group: "Other Essential",
+                accent: "from-amber-500 to-orange-600",
+                chip: "bg-amber-100 text-amber-700",
+                docs: [
+                  { id: "photos", label: "Passport-Size Photographs", note: "6–8 recent colour photographs on a white background.", required: true },
+                  { id: "tc", label: "Transfer Certificate (TC)", note: "From the last school or college you attended.", required: true },
+                  { id: "migration", label: "Migration Certificate (if from another board)", note: "Required when admitting to a state university after CBSE/ISC.", required: false },
+                ],
+              },
+            ].map(({ group, accent, chip, docs }) => (
+              <div key={group} className="flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-shadow hover:shadow-md">
+                <div className={`h-1.5 bg-gradient-to-r ${accent}`} />
+                <div className="flex flex-1 flex-col p-5">
+                  <div className="mb-4 flex items-center justify-between gap-2">
+                    <h3 className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-extrabold uppercase tracking-wider ${chip}`}>
+                      <FileText size={12} /> {group}
+                    </h3>
+                    <span className="text-xs font-extrabold text-gray-400">
+                      {docs.filter((d) => checkedDocs[d.id]).length}/{docs.length}
+                    </span>
+                  </div>
+                  <div className="space-y-2">
+                    {docs.map(({ id, label, note, required }) => (
+                      <label
+                        key={id}
+                        htmlFor={id}
+                        className={`group/doc flex cursor-pointer items-start gap-3 rounded-xl border p-3 transition-all ${
+                          checkedDocs[id]
+                            ? "border-green-200 bg-green-50"
+                            : "border-gray-200 bg-gray-50/60 hover:border-blue-300 hover:bg-white"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          id={id}
+                          checked={!!checkedDocs[id]}
+                          onChange={() => setCheckedDocs((prev) => ({ ...prev, [id]: !prev[id] }))}
+                          className="sr-only"
+                        />
+                        <div className={`mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-md border-2 transition-all ${
+                          checkedDocs[id] ? "border-green-500 bg-green-500" : "border-gray-300 group-hover/doc:border-blue-400"
+                        }`}>
+                          {checkedDocs[id] && <Check size={12} className="text-white" strokeWidth={3} />}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-start gap-1.5">
+                            <span className={`text-sm font-bold leading-snug ${checkedDocs[id] ? "text-green-700 line-through" : "text-gray-900"}`}>
+                              {label}
+                            </span>
+                            {required && (
+                              <span className="whitespace-nowrap rounded bg-red-100 px-1.5 py-0.5 text-[10px] font-bold text-red-600">MUST</span>
+                            )}
+                          </div>
+                          <p className="mt-0.5 text-xs leading-relaxed text-gray-500">{note}</p>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* ── WhatsApp CTA band ── */}
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-gradient-to-r from-[#001f6b] to-[#003f9f] p-5 shadow-lg shadow-blue-900/10 sm:p-6">
+            <div className="flex items-center gap-3">
+              <div className="hidden h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-white/15 sm:flex">
+                <ListChecks size={24} className="text-white" />
+              </div>
+              <div>
+                <p className="font-bold text-white">All documents ready? Let&apos;s take the next step together.</p>
+                <p className="text-sm text-blue-200">Visit our Forbesganj office for a free, no-obligation document verification.</p>
+              </div>
+            </div>
+            <a
+              href="https://wa.me/916203138576?text=नमस्ते!%20मैंने%20अपने%20admission%20documents%20collect%20कर%20लिए%20हैं।%20आगे%20का%20process%20बताएं।"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-shrink-0 items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-primary-blue transition hover:bg-blue-50"
+            >
+              <MessageCircle size={15} /> Share on WhatsApp
+            </a>
+          </div>
+
+          {/* ── Course-specific documents: full-width 4-column grid ── */}
+          <div className="mt-12">
+            <div className="mb-6 text-center">
+              <h3 className="font-headline text-2xl md:text-3xl font-extrabold text-gray-900">Additional Documents by Course</h3>
+              <p className="mt-1 text-sm text-gray-500">आपके चुने हुए course के अनुसार ये extra documents भी साथ रखें।</p>
+            </div>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {[
                 {
                   course: "B.Ed / M.Ed",
                   color: "border-blue-200 bg-blue-50",
                   badge: "bg-blue-100 text-blue-700",
+                  check: "text-blue-500",
                   extras: [
                     "Graduation Degree & marksheets (all years)",
                     "Character Certificate from last institution",
@@ -1747,6 +1789,7 @@ export default function Home() {
                   course: "B.Sc Nursing / GNM / ANM",
                   color: "border-red-200 bg-red-50",
                   badge: "bg-red-100 text-red-700",
+                  check: "text-red-500",
                   extras: [
                     "Medical Fitness Certificate from MBBS Doctor",
                     "PCB (Physics, Chemistry, Biology) 12th marksheet mandatory",
@@ -1758,6 +1801,7 @@ export default function Home() {
                   course: "B.Pharma / D.Pharma",
                   color: "border-green-200 bg-green-50",
                   badge: "bg-green-100 text-green-700",
+                  check: "text-green-500",
                   extras: [
                     "12th PCB or PCM marksheet (Biology/Maths required)",
                     "NEET score card (for some private pharmacy colleges)",
@@ -1769,6 +1813,7 @@ export default function Home() {
                   course: "D.El.Ed",
                   color: "border-amber-200 bg-amber-50",
                   badge: "bg-amber-100 text-amber-700",
+                  check: "text-amber-500",
                   extras: [
                     "12th Marksheet & Certificate (any stream, 50% marks)",
                     "Character Certificate from 12th school Principal",
@@ -1776,29 +1821,32 @@ export default function Home() {
                     "SCERT application form (filled & signed)",
                   ],
                 },
-              ].map(({ course, color, badge, extras }) => (
-                <div key={course} className={`rounded-xl border-2 p-5 ${color}`}>
-                  <span className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-extrabold mb-3 ${badge}`}>
+              ].map(({ course, color, badge, check, extras }) => (
+                <div key={course} className={`flex flex-col rounded-2xl border-2 p-5 ${color}`}>
+                  <span className={`mb-3 inline-flex w-fit items-center gap-1 rounded-lg px-2.5 py-1 text-xs font-extrabold ${badge}`}>
                     <BookOpen size={11} /> {course}
                   </span>
                   <ul className="space-y-2">
                     {extras.map((item) => (
                       <li key={item} className="flex items-start gap-2 text-sm text-gray-700">
-                        <CheckCircle2 size={14} className="mt-0.5 flex-shrink-0 text-gray-500" />
+                        <CheckCircle2 size={14} className={`mt-0.5 flex-shrink-0 ${check}`} />
                         {item}
                       </li>
                     ))}
                   </ul>
                 </div>
               ))}
+            </div>
 
-              <div className="rounded-xl border-2 border-dashed border-amber-300 bg-amber-50 p-5">
-                <p className="font-bold text-amber-800 text-sm mb-1">Not sure which documents you need?</p>
-                <p className="text-xs text-amber-700 mb-3">Give us a quick call — our counsellor will share a personalised document list for your chosen course in under 2 minutes.</p>
-                <a href="tel:+916203138576" className="inline-flex items-center gap-2 rounded-xl bg-amber-500 px-4 py-2.5 text-sm font-bold text-white hover:bg-amber-600 transition">
-                  <Phone size={14} /> Call +91 6203138576
-                </a>
+            {/* Not-sure CTA — full width */}
+            <div className="mt-6 flex flex-col items-center justify-between gap-4 rounded-2xl border-2 border-dashed border-amber-300 bg-amber-50 p-5 text-center sm:flex-row sm:text-left">
+              <div>
+                <p className="text-sm font-bold text-amber-800">Not sure which documents you need?</p>
+                <p className="text-xs text-amber-700">Give us a quick call — counsellor 2 मिनट में आपके course की personalised list बताएँगे।</p>
               </div>
+              <a href="tel:+916203138576" className="inline-flex flex-shrink-0 items-center gap-2 rounded-xl bg-amber-500 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-amber-600">
+                <Phone size={14} /> Call +91 6203138576
+              </a>
             </div>
           </div>
         </div>
