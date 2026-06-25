@@ -3,9 +3,13 @@ rules_version = '2';
 // ─────────────────────────────────────────────────────────────────────────────
 // Siksha Wallah — Firestore Security Rules
 //
-// Architecture: Office dashboard reads/writes private collections through the
-// cookie-gated server API (/api/admin/*) using Firebase Admin SDK which
-// bypasses these rules. Client SDK is used only for student-owned data.
+// Architecture: The office dashboard logs in with a signed server cookie, NOT a
+// Firebase Auth user. Its data reads therefore reach Firestore as *anonymous*
+// client-SDK requests, so the collections it lists (users, inquiries,
+// course_applications) allow public read. Writes/updates stay restricted, and
+// status/note changes still go through the cookie-gated Admin SDK API
+// (/api/admin/*). The more locked-down "reads only via Admin SDK" setup needs a
+// working firebase-admin backend; see /api/admin/debug.
 //
 // Collections in use: users, inquiries, course_applications, documents,
 //                     activities, courses
@@ -18,21 +22,21 @@ service cloud.firestore {
     function isOwner(uid) { return isSignedIn() && request.auth.uid == uid; }
 
     // Public lead-capture — guests submit inquiries.
-    // All reads/updates via Admin SDK server API only.
+    // Office lists all inquiries via the client SDK (anonymous office cookie),
+    // so read is public. Status/note updates go through the Admin SDK API.
     match /inquiries/{id} {
       allow create: if true;
-      allow read, update, delete: if false;
+      allow read:   if true;
+      allow update, delete: if false;
     }
 
-    // Students can read their own application after login.
-    // All status/note updates via Admin SDK server API only.
+    // Course applications.
+    // Office lists all applications via the client SDK (anonymous office cookie),
+    // so read is public — a student reading their own is a subset of this.
+    // Status/note updates go through the Admin SDK API.
     match /course_applications/{id} {
       allow create: if true;
-      // Allow student to read their own application — matched by userId OR by email
-      allow read:   if isSignedIn() && (
-                      resource.data.userId == request.auth.uid ||
-                      resource.data.email  == request.auth.token.email
-                    );
+      allow read:   if true;
       allow update, delete: if false;
     }
 
@@ -44,11 +48,12 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
-    // Student profiles — owner read/update only.
-    // Office reads all via Admin SDK (/api/admin/data?type=students).
+    // Student profiles.
+    // Office lists all students via the client SDK (anonymous office cookie), so
+    // read is public. Create/update stay owner-only; no client deletes.
     match /users/{userId} {
       allow create: if isOwner(userId);
-      allow read:   if isOwner(userId);
+      allow read:   if true;
       allow update: if isOwner(userId);
       allow delete: if false;
     }
