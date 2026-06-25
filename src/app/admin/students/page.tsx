@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { AdminMobileNav } from "@/components/admin-mobile-nav";
 import {
   GraduationCap, LogOut, Loader, Users, Phone, MessageCircle,
   Search, AlertCircle, UserCheck, UserX, Mail, MapPin, Calendar,
@@ -488,6 +489,7 @@ export default function AdminStudentsPage() {
             <Link href="/admin/activity" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Website Activity</Link>
           </nav>
           <div className="flex items-center gap-3">
+            <AdminMobileNav />
             <span className="hidden text-sm font-semibold text-gray-600 sm:block">Welcome, {adminUser}</span>
             <button onClick={handleLogout} className="flex items-center gap-2 rounded-xl border-2 border-gray-200 px-4 py-2 text-sm font-bold text-gray-700 hover:border-red-300 hover:text-red-600 transition">
               <LogOut size={16} /> Logout
