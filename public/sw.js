@@ -45,3 +45,43 @@ self.addEventListener("fetch", (event) => {
       )
   );
 });
+
+// Open (or focus) the chat when a notification is tapped. Used by the
+// "counsellor is online" notification fired from the student portal.
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const target = (event.notification.data && event.notification.data.url) || "/dashboard/messages";
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((wins) => {
+      for (const w of wins) {
+        if (w.url.includes(target) && "focus" in w) return w.focus();
+      }
+      // Fall back to focusing any open tab and navigating it, else open a new one.
+      if (wins.length && "navigate" in wins[0]) {
+        return wins[0].focus().then(() => wins[0].navigate(target));
+      }
+      return self.clients.openWindow ? self.clients.openWindow(target) : undefined;
+    })
+  );
+});
+
+// Future-proofing: if server-sent Web Push is added later, render it. Harmless
+// today since nothing pushes yet.
+self.addEventListener("push", (event) => {
+  let payload = {};
+  try {
+    payload = event.data ? event.data.json() : {};
+  } catch {
+    payload = { body: event.data ? event.data.text() : "" };
+  }
+  const title = payload.title || "Siksha Wallah";
+  event.waitUntil(
+    self.registration.showNotification(title, {
+      body: payload.body || "",
+      icon: "/icon-192.png",
+      badge: "/icon-192.png",
+      tag: payload.tag || "siksha-wallah",
+      data: { url: payload.url || "/dashboard/messages" },
+    })
+  );
+});

@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { AdminMobileNav } from "@/components/admin-mobile-nav";
 import {
   GraduationCap, LogOut, Loader, Users, Phone,
   CheckCircle2, MessageCircle, Filter, Clock,
@@ -201,6 +202,7 @@ export default function AdminDashboardPage() {
           </nav>
 
           <div className="flex items-center gap-3">
+            <AdminMobileNav />
             <span className="hidden text-sm font-semibold text-gray-600 sm:block">{adminUser}</span>
             <button onClick={handleLogout} className="flex items-center gap-2 rounded-xl border-2 border-gray-200 px-3 py-2 text-sm font-bold text-gray-700 hover:border-red-300 hover:text-red-600 transition">
               <LogOut size={15} /> Logout

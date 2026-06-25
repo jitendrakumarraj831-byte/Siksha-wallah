@@ -34,10 +34,16 @@ export function msgTime(ts: any): number {
 
 /** Real-time listener for the signed-in student's own conversation.
  *  Single-field `where` only (auto-indexed) — sorting is done in JS so no
- *  composite Firestore index is required. */
+ *  composite Firestore index is required.
+ *
+ *  `onError` is invoked if the listener fails (e.g. PERMISSION_DENIED when the
+ *  `messages` Firestore rules haven't been deployed, or a network drop). The
+ *  caller MUST use it to clear any loading state — otherwise a failed listener
+ *  leaves the UI stuck on a spinner forever. */
 export function subscribeMessages(
   studentId: string,
   cb: (messages: ChatMessage[]) => void,
+  onError?: (error: unknown) => void,
 ): Unsubscribe {
   const q = query(collection(db, COLLECTION), where("studentId", "==", studentId));
   return onSnapshot(
@@ -47,7 +53,7 @@ export function subscribeMessages(
       msgs.sort((a, b) => msgTime(a.createdAt) - msgTime(b.createdAt));
       cb(msgs);
     },
-    () => { /* ignore listener errors (e.g. transient permission/network) */ },
+    (err) => { onError?.(err); },
   );
 }
 

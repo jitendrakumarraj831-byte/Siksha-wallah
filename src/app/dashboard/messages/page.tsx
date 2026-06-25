@@ -9,7 +9,7 @@ import {
   subscribeMessages, sendStudentMessage, markAdminMessagesRead,
   msgTime, type ChatMessage,
 } from '@/services/chat-service';
-import { ArrowLeft, Send, Loader, MessageCircle, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Send, Loader, MessageCircle, ShieldCheck, AlertTriangle } from 'lucide-react';
 
 function fmtTime(ts: any): string {
   const ms = msgTime(ts);
@@ -22,6 +22,7 @@ export default function StudentMessagesPage() {
   const router = useRouter();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [text, setText] = useState('');
   const [sending, setSending] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
@@ -32,11 +33,23 @@ export default function StudentMessagesPage() {
 
   useEffect(() => {
     if (!user) return;
-    const unsub = subscribeMessages(user.uid, (msgs) => {
-      setMessages(msgs);
-      setLoading(false);
-      markAdminMessagesRead(msgs).catch(() => {});
-    });
+    setLoading(true);
+    setLoadError(false);
+    const unsub = subscribeMessages(
+      user.uid,
+      (msgs) => {
+        setMessages(msgs);
+        setLoading(false);
+        setLoadError(false);
+        markAdminMessagesRead(msgs).catch(() => {});
+      },
+      () => {
+        // Listener failed (most often: the `messages` Firestore rules aren't
+        // deployed → PERMISSION_DENIED). Don't hang on the spinner forever.
+        setLoading(false);
+        setLoadError(true);
+      },
+    );
     return () => unsub();
   }, [user]);
 
@@ -97,7 +110,19 @@ export default function StudentMessagesPage() {
 
             {/* Messages */}
             <div className="flex-1 space-y-3 overflow-y-auto bg-gray-50 px-4 py-5">
-              {messages.length === 0 ? (
+              {loadError ? (
+                <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50">
+                    <AlertTriangle size={28} className="text-red-500" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-700">Chat abhi load nahi ho paa raha</p>
+                    <p className="mt-1 text-sm text-gray-400">
+                      Thodi der baad dobara try karein. Agar problem bani rahe to WhatsApp par humse baat karein.
+                    </p>
+                  </div>
+                </div>
+              ) : messages.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
                   <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50">
                     <MessageCircle size={28} className="text-[#003f9f]" />

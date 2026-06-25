@@ -5,6 +5,7 @@ import "./globals.css";
 import { AuthProvider } from "@/components/auth-provider";
 import { FloatingContact } from "@/components/floating-contact";
 import { InstallPrompt } from "@/components/install-prompt";
+import { CounsellorNotifier } from "@/components/counsellor-notifier";
 import { Analytics } from "@vercel/analytics/next";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
@@ -158,6 +159,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           {children}
           <FloatingContact />
           <InstallPrompt />
+          <CounsellorNotifier />
         </AuthProvider>
         <Analytics />
         {GA_ID && (
