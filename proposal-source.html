@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<title>Siksha-Wallah — Project Delivery & Pricing Proposal</title>
+<style>
+  @page { size: A4; margin: 16mm 14mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Segoe UI", "Noto Sans", Arial, sans-serif;
+    color: #1f2937; font-size: 12px; line-height: 1.6; margin: 0;
+  }
+  h1,h2,h3 { font-family: "Segoe UI Semibold","Segoe UI",Arial,sans-serif; }
+  .cover {
+    background: linear-gradient(135deg,#001f6b 0%,#003f9f 55%,#0060c7 100%);
+    color:#fff; padding:46px 40px; border-radius:14px; margin-bottom:28px;
+    position:relative; overflow:hidden;
+  }
+  .cover:after{
+    content:""; position:absolute; right:-60px; top:-60px; width:240px; height:240px;
+    background:#f59e0b; opacity:.18; border-radius:50%;
+  }
+  .badge{
+    display:inline-block; background:rgba(255,255,255,.16); color:#fff;
+    padding:5px 14px; border-radius:999px; font-size:11px; letter-spacing:.5px;
+    margin-bottom:18px; font-weight:600;
+  }
+  .cover h1{ font-size:30px; margin:0 0 6px; line-height:1.2; }
+  .cover .sub{ font-size:15px; color:#dbeafe; margin:0 0 22px; }
+  .cover .meta{ font-size:12px; color:#eff6ff; }
+  .cover .meta b{ color:#fde68a; }
+  .accent{ color:#003f9f; }
+  h2{
+    color:#001f6b; font-size:18px; margin:30px 0 10px;
+    padding-bottom:7px; border-bottom:3px solid #f59e0b; display:inline-block;
+  }
+  h3{ color:#003f9f; font-size:14px; margin:18px 0 6px; }
+  table{ width:100%; border-collapse:collapse; margin:10px 0 16px; font-size:11.5px; }
+  th{ background:#003f9f; color:#fff; text-align:left; padding:8px 10px; font-weight:600; }
+  td{ padding:7px 10px; border-bottom:1px solid #e5e7eb; vertical-align:top; }
+  tr:nth-child(even) td{ background:#f8fafc; }
+  .tag-yes{ color:#15803d; font-weight:700; }
+  .tag-no{ color:#b45309; font-weight:700; }
+  .grid{ display:flex; gap:14px; margin:12px 0; flex-wrap:wrap; }
+  .stat{
+    flex:1; min-width:120px; background:#eff6ff; border:1px solid #bfdbfe;
+    border-radius:10px; padding:14px; text-align:center;
+  }
+  .stat .n{ font-size:24px; font-weight:800; color:#003f9f; }
+  .stat .l{ font-size:11px; color:#475569; margin-top:2px; }
+  .price-box{
+    background:linear-gradient(135deg,#fffbeb,#fef3c7); border:2px solid #f59e0b;
+    border-radius:12px; padding:20px 22px; margin:14px 0;
+  }
+  .price-box .label{ font-size:12px; color:#92400e; font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
+  .price-box .amount{ font-size:28px; font-weight:800; color:#001f6b; margin:4px 0; }
+  .price-box .note{ font-size:11px; color:#78716c; }
+  .callout{
+    background:#f0f9ff; border-left:4px solid #003f9f; padding:12px 16px;
+    border-radius:0 8px 8px 0; margin:14px 0; font-size:11.5px;
+  }
+  .callout.warn{ background:#fffbeb; border-left-color:#f59e0b; }
+  ul{ margin:8px 0; padding-left:20px; }
+  li{ margin:4px 0; }
+  .footer{
+    margin-top:34px; padding-top:16px; border-top:2px solid #e5e7eb;
+    font-size:11px; color:#64748b; text-align:center;
+  }
+  .pagebreak{ page-break-before:always; }
+  .small{ font-size:10.5px; color:#64748b; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="badge">PROJECT DELIVERY &amp; PRICING PROPOSAL</div>
+  <h1>Siksha-Wallah</h1>
+  <p class="sub">Online Admission &amp; Counselling Platform — Complete Web Application</p>
+  <div class="meta">
+    <b>Prepared for:</b> [Client / Consultancy Name] &nbsp; • &nbsp;
+    <b>Date:</b> 25 June 2026<br>
+    <b>Prepared by:</b> Jitendra Kumar &nbsp; • &nbsp;
+    <b>Contact:</b> jitendrakumarraj831@gmail.com<br>
+    <b>Version:</b> 1.0 (Production-Ready)
+  </div>
+</div>
+
+<h2>1. Project ka Parichay</h2>
+<p>
+  <b>Siksha-Wallah</b> ek poora online admission &amp; counselling platform hai jo ek
+  education consultancy ke liye banaya gaya hai. Isme do hisse hain:
+</p>
+<ul>
+  <li><b>Student Website</b> — student 5 streams ke 38 courses dekh sakte hain, online apply
+      kar sakte hain, apna account bana sakte hain, documents upload kar sakte hain, aur
+      seedhe counsellor se <b>live chat</b> kar sakte hain.</li>
+  <li><b>Office / Admin Panel</b> — ek private dashboard jahan se consultancy har lead,
+      application aur message ko ek jagah manage karti hai (phone &amp; WhatsApp follow-up ke saath).</li>
+</ul>
+
+<div class="grid">
+  <div class="stat"><div class="n">25</div><div class="l">Total Pages</div></div>
+  <div class="stat"><div class="n">12</div><div class="l">Backend APIs</div></div>
+  <div class="stat"><div class="n">38</div><div class="l">Courses (5 streams)</div></div>
+  <div class="stat"><div class="n">14</div><div class="l">Blog Articles</div></div>
+  <div class="stat"><div class="n">~16k</div><div class="l">Lines of Code</div></div>
+</div>
+
+<h2>2. Kya-Kya Bana Hua Hai (Delivered Features)</h2>
+
+<h3>Student Side ✅</h3>
+<table>
+  <tr><th>Feature</th><th>Details</th></tr>
+  <tr><td>Homepage</td><td>Hero, animated counters, 5 stream cards, partner colleges, success stories, FAQ</td></tr>
+  <tr><td>Course Catalog</td><td>5 streams, 38 courses — eligibility, fees, duration, career scope, govt jobs; har course ka detail page</td></tr>
+  <tr><td>Online Apply Form</td><td>Multi-step form jo lead seedhe database mein save karta hai</td></tr>
+  <tr><td>Student Account</td><td>Real sign-up / login / password reset / email verification (Firebase Auth)</td></tr>
+  <tr><td>Student Dashboard</td><td>Profile, document upload, application status — har student sirf apna data dekhta hai</td></tr>
+  <tr><td>Live Counsellor Chat</td><td>Real-time chat (student ⇄ office) — koi third-party tool nahi, koi extra subscription nahi</td></tr>
+  <tr><td>Contact + Blog</td><td>Contact form (email), WhatsApp/phone links, aur 14 blog articles</td></tr>
+  <tr><td>Mobile + PWA</td><td>Mobile-first design, "Add to Home Screen" installable</td></tr>
+</table>
+
+<h3>Office / Admin Panel ✅</h3>
+<table>
+  <tr><th>Feature</th><th>Details</th></tr>
+  <tr><td>Secure Login</td><td>JWT + bcrypt session, middleware se protected</td></tr>
+  <tr><td>Lead Dashboard</td><td>Live counts — total inquiries, aaj ke leads, pending follow-up, admitted</td></tr>
+  <tr><td>Lead Management</td><td>Status workflow (Pending → Called → Admitted), staff notes, 1-click call &amp; WhatsApp</td></tr>
+  <tr><td>Students &amp; Applications</td><td>Saare registered students aur submitted applications ki list</td></tr>
+  <tr><td>Counsellor Chat (office side)</td><td>Student ke messages ka reply admin panel se</td></tr>
+  <tr><td>Activity Log</td><td>Site par ho rahe events ka timeline</td></tr>
+</table>
+
+<div class="callout">
+  <b>Technical foundation:</b> Next.js 15, React 19, TypeScript (100%), Tailwind CSS,
+  Firebase Firestore (security rules ke saath), Nodemailer email, SEO (sitemap/robots/OG),
+  Vercel Analytics.
+</div>
+
+<div class="pagebreak"></div>
+
+<h2>3. Website ke Saare Pages (25 Pages)</h2>
+<table>
+  <tr><th>Section</th><th>Pages</th><th>Count</th></tr>
+  <tr><td>Public / Student-facing</td><td>Home, About, Courses, Course-detail, Apply, Contact, Blog, Blog-article, Login-chooser, Portal</td><td><b>10</b></td></tr>
+  <tr><td>Authentication</td><td>Register, Login, Forgot-password, Reset-password</td><td><b>4</b></td></tr>
+  <tr><td>Student Dashboard</td><td>Dashboard Home, Profile, Documents, Messages (Chat)</td><td><b>4</b></td></tr>
+  <tr><td>Office / Admin Panel</td><td>Login, Dashboard, Applications, Students, Activity, Messages, (auto-redirect)</td><td><b>7</b></td></tr>
+  <tr><td><b>Total</b></td><td>+ 1 custom 404 page • 12 backend API endpoints</td><td><b>25</b></td></tr>
+</table>
+
+<h2>4. Doosre Developer is Type ki Website ka Kitna Charge Karte Hain?</h2>
+<p class="small">
+  Neeche Indian market (2026) ke real rates hain — taaki aapko is platform ki sahi
+  value samajh aaye. Ye ek <b>full-stack application</b> hai (sirf simple website nahi):
+  student login, admin CRM, real-time chat, email, 25 pages.
+</p>
+<table>
+  <tr><th>Kaun Banata Hai</th><th>Is type ke project ka charge</th></tr>
+  <tr><td>Fresher / Junior freelancer (Tier 2-3 city)</td><td>₹40,000 – ₹90,000</td></tr>
+  <tr><td>Mid-level freelancer</td><td>₹1,20,000 – ₹2,50,000</td></tr>
+  <tr><td>Web studio / Small company</td><td>₹2,50,000 – ₹4,50,000</td></tr>
+  <tr><td>Professional agency (metro city)</td><td>₹5,00,000 – ₹10,00,000+</td></tr>
+</table>
+
+<div class="price-box">
+  <div class="label">Is Project ki Professional Market Value</div>
+  <div class="amount">₹2,50,000 – ₹4,00,000</div>
+  <div class="note">Ek experienced freelancer / studio se banwane par (one-time, complete platform).</div>
+</div>
+
+<h2>5. Aapke Liye Investment</h2>
+<table>
+  <tr><th>Item</th><th>Price</th></tr>
+  <tr><td><b>Complete Platform — jaisa abhi banaya gaya (25 pages, admin panel, chat, sab kuch)</b></td><td><b>₹ ____________</b><br><span class="small">(market value ₹2.5L–₹4L; final price aapse tay)</span></td></tr>
+  <tr><td>Annual Maintenance (optional) — updates, bug-fixes, support</td><td>₹30,000 – ₹1,20,000 / saal</td></tr>
+</table>
+<div class="callout warn">
+  <b>Note:</b> Upar wala "Complete Platform" price ek-baar ka (one-time) hai. Domain aur
+  hosting ka kharcha alag hota hai (Section 7 dekhein) — wo provider ko jaata hai, developer ko nahi.
+</div>
+
+<h2>6. Phase 2 — Optional Add-ons (Abhi Nahi Bane) 🔜</h2>
+<p class="small">
+  Ye features <b>abhi platform mein nahi hain</b>. Inki library install hai (future kaam tez hoga),
+  par working feature baad mein banega. Agar chahiye to inhe alag se quote kiya jaata hai —
+  isse expectation bilkul clear rehta hai.
+</p>
+<table>
+  <tr><th>Add-on</th><th>Abhi ki Sthiti</th><th>Banane ka Charge</th></tr>
+  <tr><td>Online Payment (Razorpay)</td><td class="tag-no">Nahi bana</td><td>₹15,000 – ₹40,000</td></tr>
+  <tr><td>AI Admission Advisor (Google Gemini)</td><td class="tag-no">Nahi bana</td><td>₹25,000 – ₹75,000</td></tr>
+  <tr><td>Community Forum</td><td class="tag-no">Nahi bana</td><td>₹30,000 – ₹70,000</td></tr>
+</table>
+
+<h2>7. Running Cost (Provider ko, Developer ko Nahi)</h2>
+<table>
+  <tr><th>Cheez</th><th>Kharcha</th></tr>
+  <tr><td>Domain (.in / .com)</td><td>₹800 – ₹1,500 / saal</td></tr>
+  <tr><td>Hosting (Vercel / Firebase)</td><td>Shuru mein FREE; scale par ₹2,000 – ₹8,000 / mahina</td></tr>
+  <tr><td>Email service (optional, bade volume par)</td><td>₹0 – ₹2,000 / mahina</td></tr>
+</table>
+
+<h2>8. Agla Kadam (Next Steps)</h2>
+<ul>
+  <li>Price aur scope confirm karein.</li>
+  <li>Domain, Firebase &amp; email credentials share karein (setup ke liye).</li>
+  <li>Deployment (Vercel/Firebase) + custom domain live.</li>
+  <li>Admin account banakar handover + training.</li>
+</ul>
+
+<div class="callout">
+  <b>Is proposal mein shaamil:</b> Complete source code, README + Quick-Start guide,
+  deployment, admin handover. <b>Phase 2 add-ons</b> (payment/AI/forum) is price mein
+  shaamil nahi hain.
+</div>
+
+<div class="footer">
+  Siksha-Wallah — Online Admission &amp; Counselling Platform<br>
+  Prepared by Jitendra Kumar • jitendrakumarraj831@gmail.com • 25 June 2026<br>
+  <span class="small">Built with Next.js 15 &amp; Firebase • Mobile-first • SEO-ready • Production-ready</span>
+</div>
+
+</body>
+</html>
