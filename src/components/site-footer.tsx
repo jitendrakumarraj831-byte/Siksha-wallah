@@ -14,15 +14,17 @@ const QUICK_LINKS = [
   { href: "/apply", label: "Book Free Counselling" },
 ];
 
+// Each course links to its matching stream section on the /courses page,
+// so clicking jumps straight to the relevant course list.
 const COURSES = [
-  "B.Ed / D.El.Ed",
-  "M.Ed",
-  "B.Sc Nursing / GNM / ANM",
-  "B.Pharma / D.Pharma",
-  "MBBS / BDS",
-  "BBA / MBA",
-  "B.Tech / Polytechnic",
-  "BCA / MCA / ITI",
+  { label: "B.Ed / D.El.Ed",           href: "/courses#teaching" },
+  { label: "M.Ed",                     href: "/courses#teaching" },
+  { label: "B.Sc Nursing / GNM / ANM", href: "/courses#medical" },
+  { label: "B.Pharma / D.Pharma",      href: "/courses#medical" },
+  { label: "MBBS / BDS",               href: "/courses#medical" },
+  { label: "BBA / MBA",                href: "/courses#technical" },
+  { label: "B.Tech / Polytechnic",     href: "/courses#technical" },
+  { label: "BCA / MCA / ITI",          href: "/courses#technical" },
 ];
 
 const PHONES = [
@@ -84,10 +86,13 @@ export function SiteFooter() {
                 <Clock size={14} className="shrink-0 text-amber-400" aria-hidden="true" />
                 <span>Mon-Sat: 9:00 AM - 7:00 PM</span>
               </div>
-              <div className="flex items-center gap-2">
+              <a
+                href="mailto:sikshawallah.info@gmail.com"
+                className="flex items-center gap-2 transition hover:text-white"
+              >
                 <Mail size={14} className="shrink-0 text-amber-400" aria-hidden="true" />
                 <span>sikshawallah.info@gmail.com</span>
-              </div>
+              </a>
               <a
                 href="https://maps.google.com/?q=College+Chowk+Forbesganj+Araria+Bihar"
                 target="_blank"
@@ -115,10 +120,10 @@ export function SiteFooter() {
           <div>
             <h3 className="mb-4 font-headline font-bold text-white">Courses We Guide For</h3>
             <ul className="space-y-2 text-sm" role="list">
-              {COURSES.map((course) => (
-                <li key={course}>
-                  <Link href="/courses" className="transition duration-200 hover:pl-1 hover:text-white">
-                    {course}
+              {COURSES.map(({ label, href }) => (
+                <li key={label}>
+                  <Link href={href} className="transition duration-200 hover:pl-1 hover:text-white">
+                    {label}
                   </Link>
                 </li>
               ))}
@@ -169,9 +174,16 @@ export function SiteFooter() {
       </div>
 
       <div className="border-t border-gray-800 py-5">
-        <div className="container-shell flex flex-col items-center gap-2 text-center text-xs sm:flex-row sm:justify-between sm:text-left">
-          <p>© {new Date().getFullYear()} Siksha Wallah Education Consultancy. All rights reserved. | College Chowk, Forbesganj, Araria, Bihar — 854318</p>
-          <p className="text-gray-500">Trusted guidance for B.Ed • D.El.Ed • Nursing • Pharmacy • Engineering • Management</p>
+        <div className="container-shell flex flex-col items-center gap-3 text-xs">
+          <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 font-semibold" aria-label="Legal">
+            <Link href="/portal/privacy" className="transition hover:text-white">Privacy Policy</Link>
+            <span className="text-gray-700" aria-hidden="true">·</span>
+            <Link href="/portal/terms" className="transition hover:text-white">Terms &amp; Conditions</Link>
+          </nav>
+          <div className="flex w-full flex-col items-center gap-2 text-center sm:flex-row sm:justify-between sm:text-left">
+            <p>© {new Date().getFullYear()} Siksha Wallah Education Consultancy. All rights reserved. | College Chowk, Forbesganj, Araria, Bihar — 854318</p>
+            <p className="text-gray-500">Trusted guidance for B.Ed • D.El.Ed • Nursing • Pharmacy • Engineering • Management</p>
+          </div>
         </div>
       </div>
     </footer>
