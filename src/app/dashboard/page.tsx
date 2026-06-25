@@ -56,36 +56,38 @@ export default function DashboardPage() {
 
     (async () => {
       try {
-        // Query 1: by userId (primary — covers all logged-in submissions)
-        const q1 = query(collection(db, 'course_applications'), where('userId', '==', user.uid));
-        const snap1 = await getDocs(q1);
-        const seenIds = new Set<string>();
-        const apps: CourseApplication[] = [];
-        for (const d of snap1.docs) {
-          seenIds.add(d.id);
-          apps.push({ id: d.id, ...d.data() } as CourseApplication);
-        }
-
-        // Query 2: by email (fallback — covers submissions made before login)
-        if (user.email) {
-          const q2 = query(collection(db, 'course_applications'), where('email', '==', user.email));
-          const snap2 = await getDocs(q2);
-          for (const d of snap2.docs) {
-            if (seenIds.has(d.id)) continue;
-            const data = d.data();
-            if (!data.userId || data.userId === user.uid) {
-              apps.push({ id: d.id, ...data } as CourseApplication);
+        // Primary: token-verified server API (Admin SDK). Returns this student's
+        // applications matched by uid AND by email (covers apply-before-login)
+        // and backfills userId. Works with locked Firestore rules.
+        const token = await user.getIdToken().catch(() => null);
+        if (token) {
+          const res = await fetch(`/api/student/applications?uid=${user.uid}`, {
+            headers: { Authorization: `Bearer ${token}` },
+            cache: 'no-store',
+          });
+          if (res.ok) {
+            const json = await res.json().catch(() => null);
+            if (json?.success) {
+              setApplications(json.data as CourseApplication[]);
+              return;
             }
           }
         }
 
-        // Sort newest first
+        // Fallback: read this student's own applications directly. Satisfies the
+        // owner-only rule (userId == auth.uid); misses pre-login email-only
+        // matches, which the API path above handles when it's available.
+        const q1 = query(collection(db, 'course_applications'), where('userId', '==', user.uid));
+        const snap1 = await getDocs(q1);
+        const apps = snap1.docs.map((d) => ({ id: d.id, ...d.data() } as CourseApplication));
         apps.sort((a, b) => {
           const ta = (a.createdAt as any)?.toMillis?.() ?? (a.createdAt as any) ?? 0;
           const tb = (b.createdAt as any)?.toMillis?.() ?? (b.createdAt as any) ?? 0;
           return tb - ta;
         });
         setApplications(apps);
+      } catch {
+        setApplications([]);
       } finally {
         setLoading(false);
       }

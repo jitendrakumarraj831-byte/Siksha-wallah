@@ -1,18 +1,25 @@
 rules_version = '2';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Siksha Wallah — Firestore Security Rules
+// Siksha Wallah — Firestore Security Rules (hardened)
 //
-// Architecture: The office dashboard logs in with a signed server cookie, NOT a
-// Firebase Auth user. Its data reads therefore reach Firestore as *anonymous*
-// client-SDK requests, so the collections it lists (users, inquiries,
-// course_applications) allow public read. Writes/updates stay restricted, and
-// status/note changes still go through the cookie-gated Admin SDK API
-// (/api/admin/*). The more locked-down "reads only via Admin SDK" setup needs a
-// working firebase-admin backend; see /api/admin/debug.
+// Architecture:
+//   • Students authenticate with Firebase Auth and may touch ONLY their own data.
+//   • The office dashboard logs in with a signed httpOnly cookie (NOT a Firebase
+//     Auth user). It therefore reads private collections through the cookie-gated
+//     Admin SDK API (/api/admin/*), which BYPASSES these rules. So these rules do
+//     NOT grant the office any client read — they don't need to.
 //
-// Collections in use: users, inquiries, course_applications, documents,
-//                     activities, courses
+// Result: no collection holding personal data is world-readable. Guests can still
+// submit lead-capture forms (create-only), and each student can read only their
+// own profile, applications and documents.
+//
+// ⚠️ DEPLOY PREREQUISITE: the office reads require a working firebase-admin
+// backend. Confirm /api/admin/debug returns { ok: true } BEFORE deploying these
+// rules, otherwise the office dashboard will show no data. See SECURITY.md.
+//
+// Collections: users, inquiries, course_applications, documents, activities,
+//              courses, messages
 // ─────────────────────────────────────────────────────────────────────────────
 
 service cloud.firestore {
@@ -21,44 +28,42 @@ service cloud.firestore {
     function isSignedIn() { return request.auth != null; }
     function isOwner(uid) { return isSignedIn() && request.auth.uid == uid; }
 
-    // Public lead-capture — guests submit inquiries.
-    // Office lists all inquiries via the client SDK (anonymous office cookie),
-    // so read is public. Status/note updates go through the Admin SDK API.
+    // Public lead-capture — guests submit inquiries (create-only). Reading the
+    // full list is office-only and goes through the Admin SDK API; no client
+    // read, no client update/delete.
     match /inquiries/{id} {
       allow create: if true;
-      allow read:   if true;
-      allow update, delete: if false;
+      allow read, update, delete: if false;
     }
 
-    // Course applications.
-    // Office lists all applications via the client SDK (anonymous office cookie),
-    // so read is public — a student reading their own is a subset of this.
-    // Status/note updates go through the Admin SDK API.
+    // Course applications. Guests/students submit (create-only). A signed-in
+    // student may read ONLY their own applications (rule below matches the
+    // dashboard/documents queries `where('userId','==', uid)`). The full list +
+    // status/note writes are office-only via the Admin SDK API.
     match /course_applications/{id} {
       allow create: if true;
-      allow read:   if true;
+      allow read:   if isSignedIn() && resource.data.userId == request.auth.uid;
       allow update, delete: if false;
     }
 
-    // Activity log — public create (guest event tracking).
-    // Office reads via real-time subscribeActivities (client SDK onSnapshot).
+    // Activity log — public create (guest/visitor event tracking). Holds contact
+    // details, so it is NOT client-readable; the office feed loads via the Admin
+    // SDK API (/api/admin/data?type=activities).
     match /activities/{id} {
       allow create: if true;
-      allow read:   if true;
-      allow update, delete: if false;
+      allow read, update, delete: if false;
     }
 
-    // Student profiles.
-    // Office lists all students via the client SDK (anonymous office cookie), so
-    // read is public. Create/update stay owner-only; no client deletes.
+    // Student profiles — each student reads/writes ONLY their own. The office
+    // lists all students via the Admin SDK API. No client deletes.
     match /users/{userId} {
       allow create: if isOwner(userId);
-      allow read:   if true;
+      allow read:   if isOwner(userId);
       allow update: if isOwner(userId);
       allow delete: if false;
     }
 
-    // Documents — owner create/read/delete only.
+    // Documents — owner create/read/delete only (office reads via Admin SDK API).
     match /documents/{id} {
       allow create: if isOwner(request.resource.data.uid);
       allow read, delete: if isSignedIn() && resource.data.uid == request.auth.uid;

@@ -1,9 +1,5 @@
 import { db } from "@/lib/firebase";
-import {
-  collection, addDoc, serverTimestamp,
-  query, orderBy, limit, onSnapshot,
-  getDocs, Unsubscribe,
-} from "firebase/firestore";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 export type ActivityType =
   | "inquiry"        // Homepage form submit
@@ -48,44 +44,8 @@ export async function saveActivity(
   }
 }
 
-export async function getAllActivities(max = 500): Promise<Activity[]> {
-  try {
-    const q = query(collection(db, COLLECTION), orderBy("createdAt", "desc"), limit(max));
-    const snap = await getDocs(q);
-    return snap.docs.map(d => ({ id: d.id, ...d.data() } as Activity));
-  } catch {
-    return [];
-  }
-}
-
-/** Fetch next page of activities starting after the last doc */
-export async function getActivitiesAfter(
-  lastCreatedAt: any,
-  pageSize = 200,
-): Promise<Activity[]> {
-  try {
-    const { startAfter } = await import('firebase/firestore');
-    const q = query(
-      collection(db, COLLECTION),
-      orderBy('createdAt', 'desc'),
-      startAfter(lastCreatedAt),
-      limit(pageSize),
-    );
-    const snap = await getDocs(q);
-    return snap.docs.map(d => ({ id: d.id, ...d.data() } as Activity));
-  } catch {
-    return [];
-  }
-}
-
-/** Real-time listener — calls cb whenever a new activity arrives.
- *  Default max is 500 so the office sees all recent events live. */
-export function subscribeActivities(
-  max = 500,
-  cb: (activities: Activity[]) => void,
-): Unsubscribe {
-  const q = query(collection(db, COLLECTION), orderBy('createdAt', 'desc'), limit(max));
-  return onSnapshot(q, snap => {
-    cb(snap.docs.map(d => ({ id: d.id, ...d.data() } as Activity)));
-  }, () => { /* ignore errors */ });
-}
+// NOTE: Reading activities is office-only. The collection holds lead/student
+// contact details (mobile, email), so client reads are denied by the Firestore
+// rules. The office activity feed loads through the cookie-gated Admin SDK API
+// (`/api/admin/data?type=activities&limit=&before=`). Only `saveActivity`
+// (public create) runs on the client.

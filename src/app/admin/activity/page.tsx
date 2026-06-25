@@ -10,11 +10,23 @@ import {
   ChevronDown,
 } from "lucide-react";
 import {
-  subscribeActivities,
-  getActivitiesAfter,
   type Activity,
   type ActivityType,
 } from "@/services/activity-service";
+
+// Fetch activities through the cookie-gated Admin SDK API so the `activities`
+// collection no longer needs public client read. `before` (millis) pages older.
+async function fetchActivities(limit: number, before?: number): Promise<Activity[]> {
+  const params = new URLSearchParams({ type: "activities", limit: String(limit) });
+  if (before && before > 0) params.set("before", String(before));
+  const res = await fetch(`/api/admin/data?${params.toString()}`, {
+    cache: "no-store",
+    credentials: "include",
+  });
+  if (!res.ok) throw new Error("Failed to load activities");
+  const json = await res.json();
+  return (json?.data ?? []) as Activity[];
+}
 
 const TYPE_META: Record<ActivityType, { icon: string; label: string; color: string; detailLink?: (act: Activity) => string }> = {
   inquiry:        { icon: "📋", label: "Inquiry",          color: "bg-blue-100 text-blue-800 border-blue-200",       detailLink: () => "/admin/dashboard" },
@@ -83,23 +95,40 @@ export default function ActivityPage() {
 
   useEffect(() => {
     if (!authorized) return;
-    setLoading(true);
-    const unsub = subscribeActivities(500, (data) => {
-      setLiveActivities(data);
-      setLoading(false);
-    });
-    return () => unsub();
+    let stop = false;
+    const load = async () => {
+      try {
+        const data = await fetchActivities(200);
+        if (!stop) setLiveActivities(data);
+      } catch {
+        /* keep last data; try again next tick */
+      } finally {
+        if (!stop) setLoading(false);
+      }
+    };
+    load();
+    // Near-real-time: refresh the newest page while the tab is visible.
+    const id = setInterval(() => {
+      if (document.visibilityState === "visible") load();
+    }, 20000);
+    return () => { stop = true; clearInterval(id); };
   }, [authorized]);
 
   const loadMore = useCallback(async () => {
     const allSoFar = [...liveActivities, ...olderActivities];
     const last = allSoFar[allSoFar.length - 1];
-    if (!last?.createdAt) return;
+    const cursor = typeof last?.createdAt === "number" ? last.createdAt : 0;
+    if (!cursor) { setHasMore(false); return; }
     setLoadingMore(true);
-    const older = await getActivitiesAfter(last.createdAt, 200);
-    if (older.length < 200) setHasMore(false);
-    setOlderActivities(prev => [...prev, ...older]);
-    setLoadingMore(false);
+    try {
+      const older = await fetchActivities(200, cursor);
+      if (older.length < 200) setHasMore(false);
+      setOlderActivities(prev => [...prev, ...older]);
+    } catch {
+      /* leave hasMore; user can retry */
+    } finally {
+      setLoadingMore(false);
+    }
   }, [liveActivities, olderActivities]);
 
   async function handleLogout() {
