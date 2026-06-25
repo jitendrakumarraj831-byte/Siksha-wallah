@@ -12,6 +12,7 @@ import { PortalShell } from '@/components/portal-shell';
 import {
   User, FileText, BookOpen, LogOut, Loader, Plus, ClipboardList,
   ArrowRight, CheckCircle2, Clock, PhoneCall, AlertCircle, GraduationCap,
+  MessageCircle,
 } from 'lucide-react';
 
 const STATUS_META: Record<ApplicationStatus, { label: string; badge: string; bar: string; icon: React.ElementType }> = {
@@ -192,9 +193,10 @@ export default function DashboardPage() {
           )}
 
           {/* Quick Nav — color-coded */}
-          <div className="mb-6 grid grid-cols-3 gap-3">
+          <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
             {[
               { href: '/dashboard/profile',   icon: User,        label: 'My Profile',  bg: 'bg-blue-500',   light: 'bg-blue-50'   },
+              { href: '/dashboard/messages',  icon: MessageCircle, label: 'Counsellor Chat', bg: 'bg-amber-500', light: 'bg-amber-50' },
               { href: '/courses',             icon: GraduationCap,label: 'Courses',    bg: 'bg-violet-500', light: 'bg-violet-50' },
               { href: '/dashboard/documents', icon: FileText,    label: 'Required Docs', bg: 'bg-green-500',  light: 'bg-green-50'  },
             ].map(({ href, icon: Icon, label, bg, light }) => (

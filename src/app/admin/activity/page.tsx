@@ -166,6 +166,7 @@ export default function ActivityPage() {
             <Link href="/admin/dashboard" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Dashboard</Link>
             <Link href="/admin/students" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Students</Link>
             <Link href="/admin/applications" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Applications</Link>
+            <Link href="/admin/messages" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Messages</Link>
             <Link href="/admin/activity" className="rounded-lg bg-blue-50 px-3 py-2 text-sm font-bold text-[#003f9f]">Website Activity</Link>
           </nav>
           <div className="flex items-center gap-3">

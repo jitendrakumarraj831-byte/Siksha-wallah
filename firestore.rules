@@ -66,6 +66,19 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Student ⇄ counsellor chat. A student reads/creates only their own thread.
+    // The office replies via the Admin SDK (/api/admin/chat), which bypasses
+    // these rules.
+    match /messages/{id} {
+      allow create: if isOwner(request.resource.data.studentId)
+                    && request.resource.data.sender == 'student';
+      allow read:   if isOwner(resource.data.studentId);
+      // Student may only flip their own "readByStudent" flag — nothing else.
+      allow update: if isOwner(resource.data.studentId)
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['readByStudent']);
+      allow delete: if false;
+    }
+
     // Default deny.
     match /{document=**} {
       allow read, write: if false;
