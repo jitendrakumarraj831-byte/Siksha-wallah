@@ -1,356 +1,277 @@
-# Siksha-Wallah — Educational Platform for Indian Students
+# Siksha-Wallah — Online Admission & Counselling Platform
 
-**Status:** Production-Ready | **Version:** 1.0.0
+**Status:** Production-Ready · **Version:** 1.0.0 · **Type:** Full-stack web application
 
-A comprehensive, full-featured educational technology platform connecting students with 200+ partner colleges across India. Siksha-Wallah streamlines the admission process through intelligent course recommendations, online applications, payments, and dedicated admin management tools.
+Siksha-Wallah is a complete admission-counselling platform for an education
+consultancy. Students discover courses across 5 streams, submit applications
+online, create an account, upload documents, and chat directly with a
+counsellor. The office (admin) side gives the consultancy a full CRM to manage
+every lead, application, and conversation in one place.
 
----
-
-## 🚀 Quick Start
-
-```bash
-# Install dependencies
-npm install
-
-# Start development server (port 9002)
-npm run dev
-
-# Build for production
-npm run build
-npm start
-
-# Type checking
-npm run typecheck
-```
-
-### Environment Setup
-Create `.env.local` in root and configure:
-- Firebase credentials (Firestore + Auth)
-- Razorpay payment keys
-- Nodemailer SMTP settings
-- Google Genkit API key
+> **For the client:** This document is the official handover guide. It explains
+> exactly what has been built, the technology used, every page in the site, how
+> to run it, and what is required to take it live.
 
 ---
 
-## 💼 What's Included
+## 1. What This Platform Does (Plain Summary)
 
-### Student-Facing Features ✅
-| Feature | Status | Details |
-|---------|--------|---------|
-| **Homepage** | ✅ Live | Hero, stats counter, trust indicators, 5 stream cards, partner college showcase |
-| **Course Browsing** | ✅ Live | 5 educational streams (Teaching, Medical, Para-medical, Law, Engineering), detailed course pages |
-| **Online Application** | ✅ Live | Multi-step form (name, mobile, course, qualification), auto-save, success tracking |
-| **Student Authentication** | ✅ Live | Sign up, email login, password reset, session management via Firebase Auth |
-| **Student Dashboard** | ✅ Live | Profile management, document uploads, application tracking, payment history |
-| **AI Admission Advisor** | ✅ Live | Google Genkit + Gemini integration for personalized course guidance |
-| **Payment Gateway** | ✅ Live | Razorpay integration with order creation, verification, success/failure flows |
-| **Contact & Inquiries** | ✅ Live | Multi-channel: form submission, WhatsApp direct links, email notifications via Nodemailer |
-| **Blog** | ✅ Live | Static blog system for admission tips, success stories, course reviews |
-| **Forum Community** | ✅ Live | Discussion platform for peer-to-peer support and experiences |
-| **Student Portal** | ✅ Live | Dynamic section-based portal with personalized content |
-| **Mobile Responsiveness** | ✅ Live | Full mobile-first design, tested on all breakpoints |
-| **PWA Support** | ✅ Live | Installable app, offline support, web app manifest |
+| Audience | What they get |
+|----------|---------------|
+| **Students / Parents** | Browse 38 courses across 5 streams, read details & career scope, apply online, register an account, upload documents, track their application, and chat live with a counsellor. |
+| **The Office (Admin)** | A private dashboard to see every inquiry/lead, follow up by phone or WhatsApp, manage students & applications, reply to chats, and view an activity log of everything happening on the site. |
+| **The Business** | A professional, mobile-first, SEO-ready website that converts visitors into leads and centralises all admission operations. |
 
-### Admin Dashboard ✅
-| Feature | Status | Details |
-|---------|--------|---------|
-| **Admin Authentication** | ✅ Live | Secure login with JWT + session cookies |
-| **Dashboard Overview** | ✅ Live | Real-time stats (total inquiries, today's leads, pending calls, closed admissions) |
-| **Lead Management** | ✅ Live | Inquiry list with filtering, status tracking (pending/called/admitted), bulk actions |
-| **Student Directory** | ✅ Live | Complete student management with profile views and contact details |
-| **Application Tracking** | ✅ Live | View all submitted applications, status updates, document verification |
-| **Activity Log** | ✅ Live | Track all website events: inquiries, applications, WhatsApp clicks, page views |
-| **Staff Notes** | ✅ Live | Add internal notes to each lead (call status, next steps, special requirements) |
-| **Direct Integration** | ✅ Live | One-click call (tel:) and WhatsApp direct messaging for each lead |
-| **Export Capabilities** | ✅ Live | View & manage all inquiries in structured table format |
-
-### Technical Features ✅
-| Feature | Status | Details |
-|---------|--------|---------|
-| **Performance** | ✅ Live | Next.js 15 with Turbopack, optimized builds, image compression |
-| **Type Safety** | ✅ Live | 100% TypeScript, strict mode, Zod validation |
-| **SEO** | ✅ Live | Auto-generated sitemap, robots.txt, Open Graph meta tags |
-| **Email Delivery** | ✅ Live | Nodemailer for transactional emails (verification, password reset, confirmations) |
-| **Rate Limiting** | ✅ Live | API rate limiting to prevent abuse and spam |
-| **Database** | ✅ Live | Firebase Firestore with real-time sync and backup |
-| **Authentication** | ✅ Live | Firebase Auth for students + JWT-based admin sessions |
-| **Analytics Integration** | ✅ Live | Vercel Analytics for traffic and conversion tracking |
+**हिंदी में संक्षेप:** यह एक पूरा एडमिशन-काउंसलिंग प्लेटफ़ॉर्म है। स्टूडेंट
+कोर्स देख सकते हैं, ऑनलाइन अप्लाई कर सकते हैं, अकाउंट बना सकते हैं, डॉक्यूमेंट
+अपलोड कर सकते हैं और काउंसलर से चैट कर सकते हैं। ऑफिस के लिए एक एडमिन पैनल है
+जहाँ से सारे लीड, एप्लिकेशन और मैसेज मैनेज होते हैं।
 
 ---
 
-## 🏗️ Tech Stack
+## 2. Features — Built & Working ✅
+
+### Student-Facing Website
+| Feature | Details |
+|---------|---------|
+| **Homepage** | Hero section, animated stat counters, trust indicators, 5 stream cards, partner-college showcase, success-story carousel, FAQ. |
+| **Course Catalog** | 5 streams (Teaching, Medical & Nursing, Para-Medical, Law, Technical & Management), **38 courses** with eligibility, duration, fees, career scope and government-job info. Individual detail page per course. |
+| **Online Application Form** | Multi-step form (name, mobile, course, qualification, district) that saves the lead directly to the database. |
+| **Student Accounts** | Real sign-up / login, password reset, and email verification powered by Firebase Authentication. |
+| **Student Dashboard** | Profile management, document upload, and application status — each student sees only their own data. |
+| **Live Counsellor Chat** | Real-time in-app chat between a student and the office, built on Firestore (no third-party chat tool, no extra subscription). |
+| **Contact Page** | Contact form that emails the office, plus direct WhatsApp and phone links. |
+| **Blog** | Content section with **14 ready articles** (admission tips, course guides, success stories). |
+| **Student Portal** | Dynamic section-based portal page for college/course information. |
+| **Mobile-First Design** | Fully responsive — built to look right on phones first. |
+| **PWA / Installable** | Web-app manifest so the site can be "Added to Home Screen". |
+
+### Office / Admin Panel
+| Feature | Details |
+|---------|---------|
+| **Secure Admin Login** | Cookie-based session protected by JWT + bcrypt; routes guarded by middleware. |
+| **Dashboard Overview** | Live counts — total inquiries, today's leads, pending follow-ups, admitted. |
+| **Lead Management** | Full inquiry list with status workflow (Pending → Called → Admitted), internal staff notes, one-click phone (`tel:`) and WhatsApp messaging. |
+| **Student Directory** | List of all registered students with their details. |
+| **Application Tracking** | View submitted applications and their status. |
+| **Counsellor Chat (office side)** | Reply to student messages from the admin panel. |
+| **Activity Log** | Timeline of site events — inquiries, applications, page activity. |
+
+### Technical Foundation
+| Area | Details |
+|------|---------|
+| **Framework** | Next.js 15 (App Router) with Turbopack. |
+| **Type Safety** | 100% TypeScript; form validation with Zod. |
+| **Database** | Firebase Firestore with security rules enforcing per-user data access. |
+| **Email** | Transactional email (verification, password reset, welcome, contact) via Nodemailer. |
+| **Security** | JWT admin sessions, bcrypt hashing, API rate-limiting, Firestore rules, HTTPS. |
+| **SEO** | Auto-generated `sitemap.xml`, `robots.txt`, Open Graph image, custom 404. |
+| **Analytics** | Vercel Analytics integration. |
+
+---
+
+## 3. Not Yet Built — Optional Phase 2 (Roadmap) 🔜
+
+These are **planned add-ons, not yet implemented**. The required libraries are
+already installed, which makes future development faster, but **no working
+feature exists for them today.** They are listed here so expectations are clear.
+
+| Add-on | Current State | Effort to Complete |
+|--------|---------------|--------------------|
+| **Online Payments (Razorpay)** | Library installed; **no payment flow, order, or verification code exists yet.** | Medium |
+| **AI Admission Advisor (Google Gemini / Genkit)** | Library installed; **no AI flow or chatbot is wired into the app yet.** | Medium |
+| **Community Forum** | **Not present** in the application. | Medium–High |
+
+> If the client needs payments or the AI advisor, these should be quoted and
+> built as a separate Phase 2.
+
+---
+
+## 4. The Pages — Full Map
+
+The site has **25 distinct pages (routes)** plus a custom 404 screen, and **12
+backend API endpoints**.
+
+### Public & Student-Facing (10 pages)
+| # | Route | Page |
+|---|-------|------|
+| 1 | `/` | Homepage |
+| 2 | `/about` | About the consultancy |
+| 3 | `/courses` | Course browser (5 streams, tabbed) |
+| 4 | `/courses/[courseId]` | Single course detail |
+| 5 | `/apply` | Online application form |
+| 6 | `/contact` | Contact & enquiry |
+| 7 | `/blog` | Blog listing |
+| 8 | `/blog/[slug]` | Blog article |
+| 9 | `/login` | Login chooser (student / office) |
+| 10 | `/portal/[section]` | Student portal sections |
+
+### Authentication (4 pages)
+| # | Route | Page |
+|---|-------|------|
+| 11 | `/auth/register` | Create student account |
+| 12 | `/auth/login` | Student login |
+| 13 | `/auth/forgot-password` | Request password reset |
+| 14 | `/auth/reset-password` | Set a new password |
+
+### Student Dashboard (4 pages)
+| # | Route | Page |
+|---|-------|------|
+| 15 | `/dashboard` | Student home |
+| 16 | `/dashboard/profile` | Profile settings |
+| 17 | `/dashboard/documents` | Document upload |
+| 18 | `/dashboard/messages` | Chat with counsellor |
+
+### Office / Admin Panel (7 pages)
+| # | Route | Page |
+|---|-------|------|
+| 19 | `/admin` | Redirects to dashboard |
+| 20 | `/admin/login` | Admin login |
+| 21 | `/admin/dashboard` | Lead dashboard & overview |
+| 22 | `/admin/applications` | Applications list |
+| 23 | `/admin/students` | Student directory |
+| 24 | `/admin/activity` | Activity log |
+| 25 | `/admin/messages` | Counsellor chat (office side) |
+
+_+ `not-found.tsx` — custom 404 page._
+
+### Backend API Endpoints (12)
+`admin/login` · `admin/logout` · `admin/data` · `admin/update` · `admin/chat` ·
+`admin/debug` · `auth/send-verification` · `auth/send-reset` · `auth/welcome` ·
+`contact` · `student/applications` · `student/documents`
+
+---
+
+## 5. Tech Stack
 
 | Layer | Technology | Version |
 |-------|-----------|---------|
-| **Frontend Framework** | Next.js App Router | 15.5.9 |
-| **Runtime** | Node.js | 18+ |
-| **Language** | TypeScript | 5.x |
-| **Styling** | Tailwind CSS + shadcn/ui | 3.4.1 |
-| **Database** | Firebase Firestore | 11.9.1 |
-| **Auth** | Firebase Authentication | Built-in |
-| **Payments** | Razorpay | 2.9.6 |
-| **AI Engine** | Google Genkit + Gemini | 1.28.0 |
-| **Email** | Nodemailer | 9.0.1 |
-| **Security** | bcrypt + JWT | Latest |
-| **Deployment** | Firebase App Hosting | Ready |
-| **Hosting** | Vercel (Optional) | Ready |
+| Framework | Next.js (App Router) | 15.5.9 |
+| UI | React | 19 |
+| Language | TypeScript | 5 |
+| Styling | Tailwind CSS + shadcn/ui (Radix) | 3.4 |
+| Database | Firebase Firestore | 11.9 |
+| Auth (students) | Firebase Authentication | — |
+| Auth (admin) | JWT + bcrypt | — |
+| Email | Nodemailer | 9.0 |
+| Validation | Zod | 3.24 |
+| Analytics | Vercel Analytics | 2.0 |
+| Runtime | Node.js | 18+ |
+
+**Project size:** ~16,000 lines of code across ~90 TypeScript/React files.
 
 ---
 
-## 📁 Project Structure
+## 6. Running the Project Locally
 
-```
-src/
-├── app/                          # Next.js 15 App Router
-│   ├── (home)/
-│   │   ├── page.tsx              # 🏠 HERO: Stats, streams, colleges
-│   │   ├── layout.tsx            # Main layout
-│   ├── apply/
-│   │   └── page.tsx              # 📋 Multi-step application form
-│   ├── courses/
-│   │   ├── page.tsx              # 📚 Tabbed course browser
-│   │   └── [courseId]/page.tsx   # Course detail page
-│   ├── auth/
-│   │   ├── login/page.tsx        # Sign in
-│   │   ├── register/page.tsx     # Sign up
-│   │   ├── forgot-password/      # Password recovery
-│   │   └── reset-password/       # Password reset
-│   ├── dashboard/
-│   │   ├── page.tsx              # 📊 Student home
-│   │   ├── profile/page.tsx      # Profile settings
-│   │   ├── documents/page.tsx    # Document upload
-│   │   └── messages/page.tsx     # Student messages
-│   ├── admin/
-│   │   ├── dashboard/page.tsx    # 🎯 Admin overview & inquiry list
-│   │   ├── applications/page.tsx # View applications
-│   │   ├── students/page.tsx     # Student directory
-│   │   ├── activity/page.tsx     # Event logs
-│   │   ├── login/page.tsx        # Admin login
-│   │   └── messages/page.tsx     # Communications
-│   ├── blog/
-│   │   ├── page.tsx              # Blog listing
-│   │   └── [slug]/page.tsx       # Article detail
-│   ├── contact/page.tsx          # 📞 Contact form
-│   ├── about/page.tsx            # About page
-│   ├── api/
-│   │   ├── admin/
-│   │   │   ├── login/route.ts    # Admin authentication
-│   │   │   ├── data/route.ts     # Dashboard data
-│   │   │   └── chat/route.ts     # Admin messaging
-│   │   ├── auth/
-│   │   │   ├── send-verification/route.ts
-│   │   │   ├── send-reset/route.ts
-│   │   │   └── welcome/route.ts
-│   │   ├── contact/route.ts      # Email submission
-│   │   ├── student/
-│   │   │   ├── applications/route.ts
-│   │   │   └── documents/route.ts
-│   │   └── payment/
-│   │       ├── create-order/route.ts
-│   │       └── verify/route.ts
-│   ├── portal/[section]/page.tsx # Student portal
-│   ├── layout.tsx                # Root layout
-│   ├── not-found.tsx             # 404 page
-│   ├── sitemap.ts                # SEO sitemap
-│   ├── robots.ts                 # robots.txt
-│   └── manifest.ts               # PWA manifest
-│
-├── components/
-│   ├── site-navbar.tsx           # Navigation header
-│   ├── site-footer.tsx           # Footer
-│   ├── auth-provider.tsx         # Firebase context
-│   ├── portal-shell.tsx          # Portal layout wrapper
-│   ├── floating-contact.tsx      # Fixed contact button
-│   ├── reviews-carousel.tsx      # Success stories slider
-│   ├── count-up.tsx              # Number animation
-│   ├── animate-in.tsx            # Scroll fade-in
-│   └── ui/                       # shadcn/ui primitives
-│       (alert, badge, button, card, input, label, select,
-│        separator, sheet, skeleton, table, tabs, textarea)
-│
-├── services/                     # Firebase Firestore layer
-│   ├── student-service.ts        # Student CRUD
-│   ├── application-service.ts    # Applications CRUD
-│   ├── course-service.ts         # Course queries
-│   ├── payment-service.ts        # Payment records
-│   ├── inquiry-service.ts        # Lead management
-│   ├── activity-service.ts       # Event logging
-│   └── chat-service.ts           # Messaging
-│
-├── lib/
-│   ├── firebase.ts               # Firebase init & config
-│   ├── firebase-admin.ts         # Firebase Admin SDK
-│   ├── auth-service.ts           # Auth helpers
-│   ├── admin-session.ts          # JWT session mgmt
-│   ├── mailer.ts                 # Email templates
-│   ├── email-templates.ts        # HTML templates
-│   ├── courses-data.ts           # Course catalog
-│   ├── blog-data.ts              # Blog posts
-│   ├── reviews-data.ts           # Success stories
-│   ├── rate-limit.ts             # API throttling
-│   └── utils.ts                  # Tailwind utilities
-│
-├── hooks/
-│   ├── use-mobile.tsx            # Mobile detection
-│   └── use-toast.ts              # Toast notifications
-│
-├── ai/
-│   ├── genkit.ts                 # AI setup
-│   ├── dev.ts                    # Dev server
-│   └── flows/
-│       └── ai-admission-advisor-flow.ts
-│
-├── middleware.ts                 # Auth protection
-├── tailwind.config.ts            # Tailwind configuration
-├── tsconfig.json                 # TypeScript config
-├── next.config.ts                # Next.js config
-└── components.json               # shadcn/ui registry
-```
-
----
-
-## 🔧 Admin Capabilities
-
-### Dashboard Overview
-- Real-time inquiry counter with quick-filter stats
-- "Today's leads" filter for daily follow-up
-- "Pending calls" for immediate action items
-- "Admitted" count for success tracking
-
-### Lead Management
-- **Search & Filter**: By status, date, course, district
-- **Status Workflow**: Pending → Called → Admitted
-- **Staff Notes**: Add internal notes per lead (call timing, interests, follow-up)
-- **One-Click Actions**: 
-  - Direct phone calls (tel: protocol)
-  - WhatsApp messaging with pre-filled context
-  - Email follow-ups
-
-### Analytics
-- Activity log showing all user interactions
-- Course interest tracking
-- Conversion funnel visibility
-- Lead source attribution
-
----
-
-## 📊 Database Schema (Firestore)
-
-| Collection | Documents | Key Fields |
-|-----------|-----------|-----------|
-| `users` | Student profiles | uid, email, name, phone, createdAt, profile data |
-| `inquiries` | Form leads | fullName, mobile, course, qualification, status, note, createdAt |
-| `applications` | Admissions | studentId, course, documents, status, payment, appliedAt |
-| `courses` | Course catalog | name, stream, description, colleges, eligibility, fees |
-| `payments` | Transactions | studentId, amount, razorpayId, status, metadata, createdAt |
-| `activities` | Events | type, title, description, page, userId, timestamp |
-| `forum_posts` | Discussions | userId, title, content, replies, createdAt |
-
----
-
-## 🚢 Deployment Ready
-
-### Firebase App Hosting
 ```bash
+# 1. Install dependencies
+npm install
+
+# 2. Create .env.local (see Section 7) and add your keys
+
+# 3. Start the dev server (http://localhost:9002)
+npm run dev
+
+# 4. Production build
+npm run build
+npm start
+
+# 5. Type-check
+npm run typecheck
+```
+
+---
+
+## 7. Environment Variables Required
+
+Create a file named `.env.local` in the project root:
+
+```env
+# Firebase — client (from Firebase Console → Project Settings)
+NEXT_PUBLIC_FIREBASE_API_KEY=
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+NEXT_PUBLIC_FIREBASE_APP_ID=
+
+# Firebase — server (service-account JSON, used by the Admin SDK)
+FIREBASE_SERVICE_ACCOUNT_KEY=
+
+# Email (Gmail app-password or any SMTP provider)
+EMAIL_USER=
+EMAIL_PASSWORD=
+
+# Admin security (use a random 32+ character string)
+ADMIN_SECRET_KEY=
+```
+
+> Razorpay and Google AI keys are **only needed if/when Phase 2 (payments / AI)
+> is built** — the live site does not require them today.
+
+---
+
+## 8. Deployment
+
+The project is ready for either platform:
+
+**Firebase App Hosting**
+```bash
+npm install -g firebase-tools
+firebase login
 firebase deploy
 ```
 
-### Vercel (Alternative)
+**Vercel**
 ```bash
-vercel deploy
+# Push to GitHub, import the repo at vercel.com,
+# add the environment variables from Section 7, deploy.
 ```
 
-### Environment Variables Required
-```
-# Firebase (Public)
-NEXT_PUBLIC_FIREBASE_API_KEY
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
-NEXT_PUBLIC_FIREBASE_PROJECT_ID
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
-NEXT_PUBLIC_FIREBASE_APP_ID
-
-# Firebase (Server-side)
-FIREBASE_SERVICE_ACCOUNT_KEY
-
-# Payments
-RAZORPAY_KEY_ID
-RAZORPAY_KEY_SECRET
-NEXT_PUBLIC_RAZORPAY_KEY_ID
-
-# Email
-EMAIL_USER
-EMAIL_PASSWORD
-
-# AI
-GOOGLE_GENAI_API_KEY
-
-# Admin Auth
-ADMIN_SECRET_KEY
-```
+A `firestore.rules` file is included — deploy it so the database is secured.
 
 ---
 
-## 💰 Value Delivered
+## 9. Database Collections (Firestore)
 
-### For Students
-✅ One-stop destination for course discovery  
-✅ Personalized AI-powered recommendations  
-✅ Seamless application process  
-✅ Integrated payment handling  
-✅ Student dashboard for tracking  
-✅ Community forum for peer support  
-✅ Multiple contact channels (form, WhatsApp, email)
+| Collection | Holds |
+|-----------|-------|
+| `inquiries` | Leads from the apply / contact forms |
+| `course_applications` | Submitted applications |
+| `users` | Registered student profiles |
+| `documents` | Uploaded student documents |
+| `messages` | Student ⇄ counsellor chat |
+| `activities` | Site event / activity log |
+| `courses` | Course data (also bundled in code) |
 
-### For Your Team
-✅ Professional admin dashboard  
-✅ Real-time lead tracking  
-✅ Automated lead qualification  
-✅ Staff collaboration via notes  
-✅ Email + SMS + WhatsApp integration  
-✅ Lead scoring and prioritization  
-✅ Event analytics and funnel tracking
-
-### For Business
-✅ Trusted by 5,000+ students  
-✅ 200+ partner colleges integrated  
-✅ Nationwide reach across Bihar  
-✅ Scalable architecture (Firebase handles growth)  
-✅ Multi-stream revenue (applications, payments, partnerships)
+Access to each collection is restricted by the rules in `firestore.rules`.
 
 ---
 
-## 📈 Performance Metrics
+## 10. Going Live — Checklist
 
-- **Page Load**: < 2s (Turbopack optimized)
-- **Mobile Score**: 95+ (Lighthouse)
-- **SEO Score**: 100 (sitemap, robots, meta tags)
-- **Type Safety**: 100% TypeScript strict mode
-- **Uptime**: 99.9% (Firebase reliability)
-
----
-
-## 🔐 Security & Compliance
-
-✅ Firebase Authentication (student login)  
-✅ JWT-based admin sessions  
-✅ bcrypt password hashing  
-✅ API rate limiting  
-✅ Firestore security rules  
-✅ Environment variable protection  
-✅ HTTPS enforcement  
-✅ GDPR-ready (data privacy controls)
+- [ ] Add all environment variables (Section 7)
+- [ ] Set a strong, random `ADMIN_SECRET_KEY`
+- [ ] Create the first admin account
+- [ ] Deploy `firestore.rules`
+- [ ] Connect a custom domain + SSL
+- [ ] Test on a real phone: apply form, registration, login, chat, contact email
+- [ ] Verify the office can see leads and reply to chats
 
 ---
 
-## 📞 Support & Maintenance
+## 11. Handover Notes
 
-- **Code Quality**: 100% TypeScript, linted
-- **Documentation**: Comprehensive inline comments
-- **Monitoring**: Vercel Analytics + Firebase Console
-- **Updates**: Regular dependency updates planned
-- **Backup**: Firebase automatic daily backups
+- **Source of truth for course content:** `src/lib/courses-data.ts`
+- **Blog content:** `src/lib/blog-data.ts`
+- **Success stories:** `src/lib/reviews-data.ts`
+- **Email templates:** `src/lib/email-templates.ts`
+- All business data lives in code files above + Firestore, so content can be
+  edited without touching the layout.
+
+For the fastest setup path, see **`QUICK_START.md`**.
 
 ---
 
-**Built with Next.js 15 • Powered by Firebase • Trusted by Students Across India**
+*Built with Next.js 15 and Firebase · Mobile-first · SEO-ready · Production-ready.*
