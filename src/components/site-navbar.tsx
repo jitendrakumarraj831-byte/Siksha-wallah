@@ -35,7 +35,7 @@ export function SiteNavbar({ transparent = false }: { transparent?: boolean }) {
       <header
         className={`fixed inset-x-0 top-0 z-50 border-b transition-all md:duration-300 duration-200 ${
           scrolled
-            ? "border-gray-200 bg-white/96 shadow-md backdrop-blur-md"
+            ? "border-gray-200 bg-white/95 shadow-md backdrop-blur-md"
             : isTransparent
               ? "border-white/10 bg-[#00102e]/70 backdrop-blur-md"
               : "border-gray-100 bg-white/95 shadow-sm backdrop-blur"
@@ -68,7 +68,7 @@ export function SiteNavbar({ transparent = false }: { transparent?: boolean }) {
                 className={`rounded-lg px-3 py-2 text-sm font-semibold transition-colors ${
                   pathname === href
                     ? isTransparent
-                      ? "bg-white/18 text-white"
+                      ? "bg-white/20 text-white"
                       : "bg-blue-50 text-primary-blue"
                     : isTransparent
                       ? "text-white/85 hover:bg-white/10 hover:text-white"
