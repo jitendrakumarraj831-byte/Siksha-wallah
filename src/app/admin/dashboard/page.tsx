@@ -4,11 +4,11 @@ import { useEffect, useState, useMemo, useRef } from "react";
 import Link from "next/link";
 import { AdminHeader } from "@/components/admin-header";
 import { useAdminGuard } from "@/hooks/use-admin-guard";
-import { adminFetchData, adminUpdate } from "@/lib/admin-api";
+import { adminFetchDataResult, adminUpdate } from "@/lib/admin-api";
 import {
   Loader, Users, Phone,
   CheckCircle2, MessageCircle, Clock,
-  AlertCircle, RefreshCw, StickyNote, X, Save,
+  AlertCircle, RefreshCw, StickyNote, X, Save, Search,
 } from "lucide-react";
 import {
   getAllInquiries,
@@ -103,6 +103,7 @@ export default function AdminDashboardPage() {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState<"" | InquiryStatus>("");
   const [filterToday, setFilterToday] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
@@ -111,16 +112,12 @@ export default function AdminDashboardPage() {
 
   async function loadInquiries() {
     setLoading(true);
-    try {
-      // Prefer the secure Admin-SDK API (works once Firestore rules are locked);
-      // fall back to the direct client read for older/open-rules setups.
-      setInquiries(await adminFetchData<Inquiry[]>("inquiries", getAllInquiries));
-      setError("");
-    } catch {
-      setError("Inquiries load नहीं हो पाईं। Firebase connection check करें।");
-    } finally {
-      setLoading(false);
-    }
+    // Prefer the secure Admin-SDK API; surface a clear message if it's down
+    // instead of silently showing an empty list.
+    const result = await adminFetchDataResult<Inquiry[]>("inquiries", getAllInquiries);
+    setInquiries(result.data);
+    setError(result.ok ? "" : (result.error || "Inquiries load नहीं हो पाईं।"));
+    setLoading(false);
   }
 
   async function handleStatusChange(id: string, status: InquiryStatus) {
@@ -148,8 +145,15 @@ export default function AdminDashboardPage() {
   const filtered = useMemo(() => inquiries.filter(inq => {
     const statusMatch = !filterStatus || (inq.status || "pending") === filterStatus;
     const todayMatch = !filterToday || isToday(inq.createdAt);
-    return statusMatch && todayMatch;
-  }), [inquiries, filterStatus, filterToday]);
+    const q = search.trim().toLowerCase();
+    const searchMatch = !q ||
+      inq.fullName?.toLowerCase().includes(q) ||
+      inq.mobile?.includes(q) ||
+      inq.email?.toLowerCase().includes(q) ||
+      inq.course?.toLowerCase().includes(q) ||
+      inq.qualification?.toLowerCase().includes(q);
+    return statusMatch && todayMatch && searchMatch;
+  }), [inquiries, filterStatus, filterToday, search]);
 
   function setStatFilter(status: "" | InquiryStatus, today = false) {
     setFilterStatus(status);
@@ -205,8 +209,18 @@ export default function AdminDashboardPage() {
           </div>
         )}
 
-        {/* Filter + Refresh */}
+        {/* Search + Filter + Refresh */}
         <div className="mb-4 flex flex-wrap items-center gap-3">
+          <div className="relative min-w-[200px] flex-1">
+            <Search size={15} className="absolute left-3.5 top-2.5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="नाम, mobile, course से search करें..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="w-full rounded-xl border-2 border-gray-200 py-2 pl-10 pr-4 text-sm outline-none transition focus:border-[#003f9f]"
+            />
+          </div>
           <select
             value={filterStatus}
             onChange={e => { setFilterStatus(e.target.value as "" | InquiryStatus); setFilterToday(false); }}

@@ -64,6 +64,7 @@ export default function ActivityPage() {
   // Live real-time activities (latest 500)
   const [liveActivities, setLiveActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
 
   // Older activities loaded on demand
   const [olderActivities, setOlderActivities] = useState<Activity[]>([]);
@@ -79,9 +80,9 @@ export default function ActivityPage() {
     const load = async () => {
       try {
         const data = await fetchActivities(200);
-        if (!stop) setLiveActivities(data);
+        if (!stop) { setLiveActivities(data); setLoadError(""); }
       } catch {
-        /* keep last data; try again next tick */
+        if (!stop) setLoadError("Could not load activities. If this persists, check the admin backend at /api/admin/debug.");
       } finally {
         if (!stop) setLoading(false);
       }
@@ -187,6 +188,13 @@ export default function ActivityPage() {
             </div>
           </div>
         </div>
+
+        {loadError && (
+          <div className="mb-4 flex gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+            <span className="font-bold">⚠</span>
+            <p>{loadError}</p>
+          </div>
+        )}
 
         {/* Activity type filter chips */}
         <div className="mb-5 flex flex-wrap gap-2">

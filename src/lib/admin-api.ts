@@ -24,6 +24,45 @@ export async function adminFetchData<T>(type: string, fallback: () => Promise<T>
   return fallback();
 }
 
+export interface AdminFetchResult<T> {
+  data: T;
+  /** true when the secure Admin SDK API answered; false when we fell back. */
+  ok: boolean;
+  /** human-readable reason when the API did not answer (backend down / 401). */
+  error?: string;
+}
+
+/**
+ * Like `adminFetchData` but reports whether the secure API actually answered, so
+ * office pages can show a clear "admin backend unavailable" message instead of a
+ * silent empty list when firebase-admin isn't configured or the session expired.
+ * Still returns the client fallback's data so anything readable is shown.
+ */
+export async function adminFetchDataResult<T>(
+  type: string,
+  fallback: () => Promise<T>,
+): Promise<AdminFetchResult<T>> {
+  try {
+    const res = await fetch(`/api/admin/data?type=${type}`, { cache: "no-store", credentials: "include" });
+    if (res.ok) {
+      const json = await res.json().catch(() => null);
+      if (json?.success) return { data: json.data as T, ok: true };
+      return { data: await fallback(), ok: false, error: "Admin backend returned an unexpected response." };
+    }
+    if (res.status === 401) {
+      return { data: await fallback(), ok: false, error: "Session expired — please sign in again." };
+    }
+    const j = await res.json().catch(() => ({} as { error?: string }));
+    return {
+      data: await fallback(),
+      ok: false,
+      error: j.error || "Admin backend unavailable. Check FIREBASE_SERVICE_ACCOUNT_KEY (see /api/admin/debug).",
+    };
+  } catch {
+    return { data: await fallback(), ok: false, error: "Could not reach the admin backend." };
+  }
+}
+
 export type AdminUpdatableCollection = "inquiries" | "course_applications";
 
 /**

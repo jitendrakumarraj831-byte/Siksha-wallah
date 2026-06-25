@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Timestamp } from "firebase-admin/firestore";
 import { verifyAdminToken, ADMIN_COOKIE } from "@/lib/admin-session";
-import { getAdminDb, serialize } from "@/lib/firebase-admin";
+import { getAdminDb, serialize, isBackendUnavailableError } from "@/lib/firebase-admin";
+
+const BACKEND_DOWN_MSG =
+  "Admin backend is not configured. Set FIREBASE_SERVICE_ACCOUNT_KEY (see /api/admin/debug).";
 
 // Cookie-gated read API for the office dashboard. With this in place, Firestore
 // rules can deny all client reads of private collections.
@@ -82,6 +85,9 @@ export async function GET(request: NextRequest) {
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : "Failed to load data";
     console.error("admin/data error:", msg);
+    if (isBackendUnavailableError(e)) {
+      return NextResponse.json({ error: BACKEND_DOWN_MSG }, { status: 503 });
+    }
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

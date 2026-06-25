@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { AdminHeader } from "@/components/admin-header";
 import { useAdminGuard } from "@/hooks/use-admin-guard";
-import { adminFetchData, adminUpdate } from "@/lib/admin-api";
+import { adminFetchDataResult, adminUpdate } from "@/lib/admin-api";
 import {
   Loader, Phone, Mail, MapPin,
   BookOpen, AlertCircle,
@@ -232,6 +232,7 @@ export default function AdminApplicationsPage() {
   const { authorized, adminUser } = useAdminGuard();
   const [applications, setApplications] = useState<CourseApplication[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
   const [actionError, setActionError] = useState("");
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState<"" | ApplicationStatus>("");
@@ -240,10 +241,12 @@ export default function AdminApplicationsPage() {
   useEffect(() => {
     if (!authorized) return;
     setLoading(true);
-    // Prefer the secure Admin-SDK API; fall back to the direct client read.
-    adminFetchData<CourseApplication[]>("applications", getAllApplications)
-      .then((data) => setApplications(data))
-      .catch(() => {})
+    // Prefer the secure Admin-SDK API; surface a clear message if it's down.
+    adminFetchDataResult<CourseApplication[]>("applications", getAllApplications)
+      .then((result) => {
+        setApplications(result.data);
+        setLoadError(result.ok ? "" : (result.error || ""));
+      })
       .finally(() => setLoading(false));
   }, [authorized]);
 
@@ -329,6 +332,16 @@ export default function AdminApplicationsPage() {
             Students द्वारा submit की गई course applications — real-time updated
           </p>
         </div>
+
+        {loadError && (
+          <div className="mb-5 flex gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+            <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="font-bold">Admin backend issue</p>
+              <p className="mt-0.5 text-xs">{loadError}</p>
+            </div>
+          </div>
+        )}
 
         {/* Stats */}
         <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-5">
