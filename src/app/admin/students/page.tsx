@@ -1,21 +1,22 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { AdminMobileNav } from "@/components/admin-mobile-nav";
+import { AdminHeader } from "@/components/admin-header";
+import { useAdminGuard } from "@/hooks/use-admin-guard";
 import {
-  GraduationCap, LogOut, Loader, Users, Phone, MessageCircle,
+  Loader, Users, Phone, MessageCircle,
   Search, AlertCircle, UserCheck, UserX, Mail, MapPin, Calendar,
   BookOpen, ClipboardList, ChevronDown, ChevronUp, Clock,
   CheckCircle2, RefreshCw,
 } from "lucide-react";
 import { db } from "@/lib/firebase";
+import { adminUpdate } from "@/lib/admin-api";
 import {
   collection, getDocs, query, where,
 } from "firebase/firestore";
 import {
-  getAllApplications, updateApplicationStatus,
+  getAllApplications,
   type CourseApplication, type ApplicationStatus,
 } from "@/services/application-service";
 
@@ -278,33 +279,14 @@ function StudentCard({
 
 /* ── Main Page ─────────────────────────────────── */
 export default function AdminStudentsPage() {
-  const router = useRouter();
-  const [authorized, setAuthorized] = useState<boolean | null>(null);
-  const [adminUser, setAdminUser] = useState("Admin");
+  const { authorized, adminUser } = useAdminGuard();
   const [students, setStudents] = useState<StudentProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [actionError, setActionError] = useState("");
   const [diag, setDiag] = useState<string>("");
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState<"" | "has_app" | "no_app" | "admission_done" | "bscc">("");
-
-  useEffect(() => {
-    const cached = localStorage.getItem("sw_admin_session");
-    const cachedUser = localStorage.getItem("sw_admin_user");
-    if (cached) {
-      setAuthorized(true);
-      setAdminUser(cachedUser || "Admin");
-      return;
-    }
-    fetch("/api/admin/data?type=ping", { credentials: "include" })
-      .then(async (res) => {
-        if (res.status === 401) { router.replace("/admin/login"); return; }
-        localStorage.setItem("sw_admin_session", "1");
-        setAuthorized(true);
-        setAdminUser("Admin");
-      })
-      .catch(() => { router.replace("/admin/login"); });
-  }, [router]);
 
   useEffect(() => { if (authorized) load(); }, [authorized]);
 
@@ -415,19 +397,20 @@ export default function AdminStudentsPage() {
     }
   }
 
-  async function handleLogout() {
-    await fetch("/api/admin/logout", { method: "POST" }).catch(() => {});
-    localStorage.removeItem("sw_admin_session");
-    localStorage.removeItem("sw_admin_user");
-    router.replace("/admin/login");
-  }
-
-  function handleAppStatusChange(appId: string, status: ApplicationStatus) {
-    updateApplicationStatus(appId, status).catch(() => {});
+  async function handleAppStatusChange(appId: string, status: ApplicationStatus) {
+    // Optimistic update; revert if the server write doesn't persist.
+    const snapshot = students;
     setStudents(prev => prev.map(s => ({
       ...s,
       applications: s.applications?.map(a => a.id === appId ? { ...a, status } : a),
     })));
+    setActionError("");
+    try {
+      await adminUpdate("course_applications", appId, { status });
+    } catch (e) {
+      setStudents(snapshot);
+      setActionError(e instanceof Error ? e.message : "Status update failed.");
+    }
   }
 
   // Stats
@@ -469,34 +452,13 @@ export default function AdminStudentsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Nav */}
-      <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 shadow-sm backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-          <Link href="/" className="flex items-center gap-3">
-            <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#003f9f] text-white">
-              <GraduationCap size={20} />
-            </span>
-            <span className="font-headline text-lg font-extrabold">
-              SIKSHA<span className="text-[#dc143c]">WALLAH</span>{" "}
-              <span className="text-gray-400 font-normal text-sm">Office</span>
-            </span>
-          </Link>
-          <nav className="hidden items-center gap-1 sm:flex">
-            <Link href="/admin/dashboard" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Dashboard</Link>
-            <Link href="/admin/applications" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Applications</Link>
-            <Link href="/admin/students" className="rounded-lg bg-blue-50 px-3 py-2 text-sm font-bold text-[#003f9f]">Students</Link>
-            <Link href="/admin/messages" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Messages</Link>
-            <Link href="/admin/activity" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Website Activity</Link>
-          </nav>
-          <div className="flex items-center gap-3">
-            <AdminMobileNav />
-            <span className="hidden text-sm font-semibold text-gray-600 sm:block">Welcome, {adminUser}</span>
-            <button onClick={handleLogout} className="flex items-center gap-2 rounded-xl border-2 border-gray-200 px-4 py-2 text-sm font-bold text-gray-700 hover:border-red-300 hover:text-red-600 transition">
-              <LogOut size={16} /> Logout
-            </button>
-          </div>
+      {actionError && (
+        <div className="fixed bottom-5 left-1/2 z-[60] flex max-w-[92vw] -translate-x-1/2 items-center gap-2 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg">
+          <AlertCircle size={16} className="flex-shrink-0" /> {actionError}
+          <button onClick={() => setActionError("")} aria-label="Dismiss" className="ml-2 text-white/80 hover:text-white">✕</button>
         </div>
-      </header>
+      )}
+      <AdminHeader adminUser={adminUser} />
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
         {/* Header */}

@@ -1,20 +1,32 @@
 "use client";
 
 import { useEffect, useState, useMemo, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { AdminMobileNav } from "@/components/admin-mobile-nav";
+import { AdminHeader } from "@/components/admin-header";
+import { useAdminGuard } from "@/hooks/use-admin-guard";
 import {
-  GraduationCap, LogOut, Loader, ArrowLeft,
-  Phone, Filter, RefreshCw, LayoutDashboard,
+  Loader, ArrowLeft,
+  Phone, Filter,
   ChevronDown,
 } from "lucide-react";
 import {
-  subscribeActivities,
-  getActivitiesAfter,
   type Activity,
   type ActivityType,
 } from "@/services/activity-service";
+
+// Fetch activities through the cookie-gated Admin SDK API so the `activities`
+// collection no longer needs public client read. `before` (millis) pages older.
+async function fetchActivities(limit: number, before?: number): Promise<Activity[]> {
+  const params = new URLSearchParams({ type: "activities", limit: String(limit) });
+  if (before && before > 0) params.set("before", String(before));
+  const res = await fetch(`/api/admin/data?${params.toString()}`, {
+    cache: "no-store",
+    credentials: "include",
+  });
+  if (!res.ok) throw new Error("Failed to load activities");
+  const json = await res.json();
+  return (json?.data ?? []) as Activity[];
+}
 
 const TYPE_META: Record<ActivityType, { icon: string; label: string; color: string; detailLink?: (act: Activity) => string }> = {
   inquiry:        { icon: "📋", label: "Inquiry",          color: "bg-blue-100 text-blue-800 border-blue-200",       detailLink: () => "/admin/dashboard" },
@@ -47,13 +59,12 @@ function isToday(ts: any): boolean {
 }
 
 export default function ActivityPage() {
-  const router = useRouter();
-  const [authorized, setAuthorized] = useState<boolean | null>(null);
-  const [adminUser, setAdminUser] = useState("Admin");
+  const { authorized, adminUser } = useAdminGuard();
 
   // Live real-time activities (latest 500)
   const [liveActivities, setLiveActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
 
   // Older activities loaded on demand
   const [olderActivities, setOlderActivities] = useState<Activity[]>([]);
@@ -64,50 +75,42 @@ export default function ActivityPage() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    const cached = localStorage.getItem("sw_admin_session");
-    const cachedUser = localStorage.getItem("sw_admin_user");
-    if (cached) {
-      setAuthorized(true);
-      setAdminUser(cachedUser || "Admin");
-      return;
-    }
-    fetch("/api/admin/data?type=ping", { credentials: "include" })
-      .then(async (res) => {
-        if (res.status === 401) { router.replace("/admin/login"); return; }
-        localStorage.setItem("sw_admin_session", "1");
-        setAuthorized(true);
-        setAdminUser("Admin");
-      })
-      .catch(() => { router.replace("/admin/login"); });
-  }, [router]);
-
-  useEffect(() => {
     if (!authorized) return;
-    setLoading(true);
-    const unsub = subscribeActivities(500, (data) => {
-      setLiveActivities(data);
-      setLoading(false);
-    });
-    return () => unsub();
+    let stop = false;
+    const load = async () => {
+      try {
+        const data = await fetchActivities(200);
+        if (!stop) { setLiveActivities(data); setLoadError(""); }
+      } catch {
+        if (!stop) setLoadError("Could not load activities. If this persists, check the admin backend at /api/admin/debug.");
+      } finally {
+        if (!stop) setLoading(false);
+      }
+    };
+    load();
+    // Near-real-time: refresh the newest page while the tab is visible.
+    const id = setInterval(() => {
+      if (document.visibilityState === "visible") load();
+    }, 20000);
+    return () => { stop = true; clearInterval(id); };
   }, [authorized]);
 
   const loadMore = useCallback(async () => {
     const allSoFar = [...liveActivities, ...olderActivities];
     const last = allSoFar[allSoFar.length - 1];
-    if (!last?.createdAt) return;
+    const cursor = typeof last?.createdAt === "number" ? last.createdAt : 0;
+    if (!cursor) { setHasMore(false); return; }
     setLoadingMore(true);
-    const older = await getActivitiesAfter(last.createdAt, 200);
-    if (older.length < 200) setHasMore(false);
-    setOlderActivities(prev => [...prev, ...older]);
-    setLoadingMore(false);
+    try {
+      const older = await fetchActivities(200, cursor);
+      if (older.length < 200) setHasMore(false);
+      setOlderActivities(prev => [...prev, ...older]);
+    } catch {
+      /* leave hasMore; user can retry */
+    } finally {
+      setLoadingMore(false);
+    }
   }, [liveActivities, olderActivities]);
-
-  async function handleLogout() {
-    await fetch("/api/admin/logout", { method: "POST" }).catch(() => {});
-    localStorage.removeItem("sw_admin_session");
-    localStorage.removeItem("sw_admin_user");
-    router.replace("/admin/login");
-  }
 
   // Merge live + older
   const allActivities = useMemo(() => {
@@ -151,34 +154,7 @@ export default function ActivityPage() {
   return (
     <div className="min-h-screen bg-gray-50">
 
-      {/* Nav */}
-      <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 shadow-sm backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-          <Link href="/" className="flex items-center gap-3">
-            <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#003f9f] text-white">
-              <GraduationCap size={20} />
-            </span>
-            <span className="font-headline text-lg font-extrabold">
-              SIKSHA<span className="text-[#dc143c]">WALLAH</span>{" "}
-              <span className="text-gray-400 font-normal text-sm">Office</span>
-            </span>
-          </Link>
-          <nav className="hidden items-center gap-1 sm:flex">
-            <Link href="/admin/dashboard" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Dashboard</Link>
-            <Link href="/admin/students" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Students</Link>
-            <Link href="/admin/applications" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Applications</Link>
-            <Link href="/admin/messages" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Messages</Link>
-            <Link href="/admin/activity" className="rounded-lg bg-blue-50 px-3 py-2 text-sm font-bold text-[#003f9f]">Website Activity</Link>
-          </nav>
-          <div className="flex items-center gap-3">
-            <AdminMobileNav />
-            <span className="hidden text-sm font-semibold text-gray-600 sm:block">Welcome, {adminUser}</span>
-            <button onClick={handleLogout} className="flex items-center gap-2 rounded-xl border-2 border-gray-200 px-4 py-2 text-sm font-bold text-gray-700 hover:border-red-300 hover:text-red-600 transition">
-              <LogOut size={16} /> Logout
-            </button>
-          </div>
-        </div>
-      </header>
+      <AdminHeader adminUser={adminUser} />
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
 
@@ -212,6 +188,13 @@ export default function ActivityPage() {
             </div>
           </div>
         </div>
+
+        {loadError && (
+          <div className="mb-4 flex gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+            <span className="font-bold">⚠</span>
+            <p>{loadError}</p>
+          </div>
+        )}
 
         {/* Activity type filter chips */}
         <div className="mb-5 flex flex-wrap gap-2">

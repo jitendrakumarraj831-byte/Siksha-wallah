@@ -1,17 +1,17 @@
 "use client";
 
-import { useEffect, useState, useMemo, useRef, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, useMemo, useRef } from "react";
 import Link from "next/link";
-import { AdminMobileNav } from "@/components/admin-mobile-nav";
-import { adminFetchData } from "@/lib/admin-api";
+import { AdminHeader } from "@/components/admin-header";
+import { useAdminGuard } from "@/hooks/use-admin-guard";
+import { adminFetchDataResult, adminUpdate } from "@/lib/admin-api";
 import {
-  GraduationCap, LogOut, Loader, Users, Phone,
-  CheckCircle2, MessageCircle, Filter, Clock,
-  AlertCircle, RefreshCw, StickyNote, X, Save,
+  Loader, Users, Phone,
+  CheckCircle2, MessageCircle, Clock,
+  AlertCircle, RefreshCw, StickyNote, X, Save, Search,
 } from "lucide-react";
 import {
-  getAllInquiries, updateInquiryStatus, updateInquiryNote,
+  getAllInquiries,
   type Inquiry, type InquiryStatus,
 } from "@/services/inquiry-service";
 
@@ -43,16 +43,20 @@ function NoteCell({ inq, onSaved }: { inq: Inquiry; onSaved: (id: string, note: 
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState(inq.note || "");
   const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState("");
   const ref = useRef<HTMLTextAreaElement>(null);
 
   async function save() {
     if (!inq.id) return;
     setSaving(true);
+    setErr("");
     try {
-      await updateInquiryNote(inq.id, draft);
+      await adminUpdate("inquiries", inq.id, { note: draft });
       onSaved(inq.id, draft);
       setOpen(false);
-    } catch { /* noop */ }
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Save नहीं हुआ। दोबारा करें।");
+    }
     finally { setSaving(false); }
   }
 
@@ -87,6 +91,7 @@ function NoteCell({ inq, onSaved }: { inq: Inquiry; onSaved: (id: string, note: 
             {saving ? <Loader size={12} className="animate-spin" /> : <Save size={12} />}
             Save करें
           </button>
+          {err && <p className="mt-2 rounded-lg bg-red-50 px-2 py-1.5 text-[11px] font-semibold text-red-600">{err}</p>}
         </div>
       )}
     </div>
@@ -94,68 +99,42 @@ function NoteCell({ inq, onSaved }: { inq: Inquiry; onSaved: (id: string, note: 
 }
 
 export default function AdminDashboardPage() {
-  const router = useRouter();
-  const [authorized, setAuthorized] = useState<boolean | null>(null);
-  const [adminUser, setAdminUser] = useState("Admin");
+  const { authorized, adminUser } = useAdminGuard();
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState<"" | InquiryStatus>("");
   const [filterToday, setFilterToday] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const cached = localStorage.getItem("sw_admin_session");
-    const cachedUser = localStorage.getItem("sw_admin_user");
-    if (cached) {
-      setAuthorized(true);
-      setAdminUser(cachedUser || "Admin");
-      return;
-    }
-    // localStorage missing (e.g. cleared or private browsing) — verify via cookie
-    fetch("/api/admin/data?type=ping", { credentials: "include" })
-      .then(async (res) => {
-        if (res.status === 401) { router.replace("/admin/login"); return; }
-        // Cookie is valid — restore localStorage cache
-        localStorage.setItem("sw_admin_session", "1");
-        setAuthorized(true);
-        setAdminUser("Admin");
-      })
-      .catch(() => { router.replace("/admin/login"); });
-  }, [router]);
 
   useEffect(() => { if (authorized) loadInquiries(); }, [authorized]);
 
   async function loadInquiries() {
     setLoading(true);
-    try {
-      // Prefer the secure Admin-SDK API (works once Firestore rules are locked);
-      // fall back to the direct client read for older/open-rules setups.
-      setInquiries(await adminFetchData<Inquiry[]>("inquiries", getAllInquiries));
-      setError("");
-    } catch {
-      setError("Inquiries load नहीं हो पाईं। Firebase connection check करें।");
-    } finally {
-      setLoading(false);
-    }
+    // Prefer the secure Admin-SDK API; surface a clear message if it's down
+    // instead of silently showing an empty list.
+    const result = await adminFetchDataResult<Inquiry[]>("inquiries", getAllInquiries);
+    setInquiries(result.data);
+    setError(result.ok ? "" : (result.error || "Inquiries load नहीं हो पाईं।"));
+    setLoading(false);
   }
 
   async function handleStatusChange(id: string, status: InquiryStatus) {
+    // Optimistic update; revert if the server write doesn't persist.
+    const snapshot = inquiries;
+    setInquiries(prev => prev.map(i => i.id === id ? { ...i, status } : i));
+    setError("");
     try {
-      await updateInquiryStatus(id, status);
-      setInquiries(prev => prev.map(i => i.id === id ? { ...i, status } : i));
-    } catch { alert("Status update failed. Please try again."); }
+      await adminUpdate("inquiries", id, { status });
+    } catch (e) {
+      setInquiries(snapshot);
+      setError(e instanceof Error ? e.message : "Status update नहीं हो पाया।");
+    }
   }
 
   function handleNoteSaved(id: string, note: string) {
     setInquiries(prev => prev.map(i => i.id === id ? { ...i, note } : i));
-  }
-
-  async function handleLogout() {
-    await fetch("/api/admin/logout", { method: "POST" }).catch(() => {});
-    localStorage.removeItem("sw_admin_session");
-    localStorage.removeItem("sw_admin_user");
-    router.replace("/admin/login");
   }
 
   const total        = inquiries.length;
@@ -166,8 +145,15 @@ export default function AdminDashboardPage() {
   const filtered = useMemo(() => inquiries.filter(inq => {
     const statusMatch = !filterStatus || (inq.status || "pending") === filterStatus;
     const todayMatch = !filterToday || isToday(inq.createdAt);
-    return statusMatch && todayMatch;
-  }), [inquiries, filterStatus, filterToday]);
+    const q = search.trim().toLowerCase();
+    const searchMatch = !q ||
+      inq.fullName?.toLowerCase().includes(q) ||
+      inq.mobile?.includes(q) ||
+      inq.email?.toLowerCase().includes(q) ||
+      inq.course?.toLowerCase().includes(q) ||
+      inq.qualification?.toLowerCase().includes(q);
+    return statusMatch && todayMatch && searchMatch;
+  }), [inquiries, filterStatus, filterToday, search]);
 
   function setStatFilter(status: "" | InquiryStatus, today = false) {
     setFilterStatus(status);
@@ -184,35 +170,7 @@ export default function AdminDashboardPage() {
   return (
     <div className="min-h-screen bg-gray-50">
 
-      {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-gray-200 bg-white shadow-sm">
-        <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#003f9f] text-white">
-              <GraduationCap size={20} />
-            </span>
-            <span className="font-headline text-lg font-extrabold">
-              SIKSHA<span className="text-[#dc143c]">WALLAH</span>
-              <span className="ml-1 text-sm font-normal text-gray-400">Office</span>
-            </span>
-          </Link>
-
-          <nav className="hidden items-center gap-1 sm:flex">
-            <Link href="/admin/dashboard" className="rounded-lg bg-blue-50 px-3 py-2 text-sm font-bold text-[#003f9f]">Dashboard</Link>
-            <Link href="/admin/applications" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Applications</Link>
-            <Link href="/admin/students" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Students</Link>
-            <Link href="/admin/messages" className="rounded-lg px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100 transition">Messages</Link>
-          </nav>
-
-          <div className="flex items-center gap-3">
-            <AdminMobileNav />
-            <span className="hidden text-sm font-semibold text-gray-600 sm:block">{adminUser}</span>
-            <button onClick={handleLogout} className="flex items-center gap-2 rounded-xl border-2 border-gray-200 px-3 py-2 text-sm font-bold text-gray-700 hover:border-red-300 hover:text-red-600 transition">
-              <LogOut size={15} /> Logout
-            </button>
-          </div>
-        </div>
-      </header>
+      <AdminHeader adminUser={adminUser} />
 
       <main className="mx-auto max-w-5xl px-4 py-8">
 
@@ -251,8 +209,18 @@ export default function AdminDashboardPage() {
           </div>
         )}
 
-        {/* Filter + Refresh */}
+        {/* Search + Filter + Refresh */}
         <div className="mb-4 flex flex-wrap items-center gap-3">
+          <div className="relative min-w-[200px] flex-1">
+            <Search size={15} className="absolute left-3.5 top-2.5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="नाम, mobile, course से search करें..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="w-full rounded-xl border-2 border-gray-200 py-2 pl-10 pr-4 text-sm outline-none transition focus:border-[#003f9f]"
+            />
+          </div>
           <select
             value={filterStatus}
             onChange={e => { setFilterStatus(e.target.value as "" | InquiryStatus); setFilterToday(false); }}

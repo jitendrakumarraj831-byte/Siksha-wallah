@@ -100,6 +100,24 @@ export function getAdminInitError(): string | null {
   return lastInitError;
 }
 
+// True when an error means the Admin SDK backend isn't usable (no/invalid
+// service-account credentials, no project id). The SDK initialises lazily, so
+// these surface at query time rather than at getAdminDb(); routes use this to
+// answer 503 "backend unavailable" with a friendly message instead of leaking a
+// raw GCP credentials error to the office UI as a 500.
+export function isBackendUnavailableError(e: unknown): boolean {
+  const msg = (e instanceof Error ? e.message : String(e)).toLowerCase();
+  return (
+    msg.includes("project id") ||
+    msg.includes("default credentials") ||
+    msg.includes("credential") ||
+    msg.includes("unauthenticated") ||
+    msg.includes("could not load") ||
+    msg.includes("failed to determine") ||
+    msg.includes("getting metadata")
+  );
+}
+
 // Convert Firestore Timestamp fields to epoch millis so the client can render
 // them with `new Date(number)` (admin Timestamps don't survive JSON intact).
 export function serialize<T extends Record<string, any>>(data: T): T {

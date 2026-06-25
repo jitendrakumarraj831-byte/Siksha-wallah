@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Timestamp } from "firebase-admin/firestore";
 import { verifyAdminToken, ADMIN_COOKIE } from "@/lib/admin-session";
-import { getAdminDb, serialize } from "@/lib/firebase-admin";
+import { getAdminDb, serialize, isBackendUnavailableError } from "@/lib/firebase-admin";
+
+const BACKEND_DOWN_MSG =
+  "Admin backend is not configured. Set FIREBASE_SERVICE_ACCOUNT_KEY (see /api/admin/debug).";
 
 // Cookie-gated read API for the office dashboard. With this in place, Firestore
 // rules can deny all client reads of private collections.
@@ -28,7 +32,17 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ success: true, data: snap.docs.map((d) => ({ id: d.id, ...serialize(d.data()) })) });
       }
       case "activities": {
-        const snap = await db.collection("activities").orderBy("createdAt", "desc").limit(200).get();
+        // Paginated: ?limit=200&before=<millis>. `before` pages backward through
+        // older activities (range filter on the same field as the orderBy, so no
+        // composite index is needed).
+        const limitParam = Number(request.nextUrl.searchParams.get("limit"));
+        const max = Math.min(Math.max(Number.isFinite(limitParam) ? limitParam : 200, 1), 500);
+        const before = Number(request.nextUrl.searchParams.get("before"));
+        let q: FirebaseFirestore.Query = db.collection("activities").orderBy("createdAt", "desc");
+        if (Number.isFinite(before) && before > 0) {
+          q = q.where("createdAt", "<", Timestamp.fromMillis(before));
+        }
+        const snap = await q.limit(max).get();
         return NextResponse.json({ success: true, data: snap.docs.map((d) => ({ id: d.id, ...serialize(d.data()) })) });
       }
       case "students": {
@@ -71,6 +85,9 @@ export async function GET(request: NextRequest) {
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : "Failed to load data";
     console.error("admin/data error:", msg);
+    if (isBackendUnavailableError(e)) {
+      return NextResponse.json({ error: BACKEND_DOWN_MSG }, { status: 503 });
+    }
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

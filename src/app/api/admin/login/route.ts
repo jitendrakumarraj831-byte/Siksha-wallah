@@ -2,10 +2,22 @@ import { NextRequest, NextResponse } from "next/server";
 import { signAdminToken, ADMIN_COOKIE } from "@/lib/admin-session";
 import { rateLimit, getClientIp, tooManyRequests } from "@/lib/rate-limit";
 
-// Server-side credentials. These are NOT exposed to the browser (no NEXT_PUBLIC_).
-// Fallbacks keep the existing default working until env vars are configured.
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "admin";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "Siksha@2025!";
+// Server-side credentials — NOT exposed to the browser (no NEXT_PUBLIC_).
+//
+// SECURITY: we never ship a working credential to production. In production the
+// office login is DISABLED until ADMIN_USERNAME and ADMIN_PASSWORD are set in
+// the server environment (fail closed) — far safer than accepting a default
+// password that is visible in the public source. A zero-config fallback is kept
+// for local development only so `npm run dev` works with no setup.
+const DEV_FALLBACK = { username: "admin", password: "Siksha@2025!" };
+
+function getConfiguredCredentials(): { username: string; password: string } | null {
+  const username = process.env.ADMIN_USERNAME;
+  const password = process.env.ADMIN_PASSWORD;
+  if (username && password) return { username, password };
+  if (process.env.NODE_ENV !== "production") return DEV_FALLBACK;
+  return null; // production + unconfigured → login disabled
+}
 
 function safeEqual(a: string, b: string): boolean {
   if (a.length !== b.length) return false;
@@ -34,7 +46,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Username and password are required" }, { status: 400 });
   }
 
-  const valid = safeEqual(username, ADMIN_USERNAME) && safeEqual(password, ADMIN_PASSWORD);
+  const creds = getConfiguredCredentials();
+  if (!creds) {
+    console.error(
+      "Admin login is disabled: ADMIN_USERNAME and ADMIN_PASSWORD are not set in the production environment.",
+    );
+    return NextResponse.json(
+      { error: "Office login is not configured yet. Please set ADMIN_USERNAME and ADMIN_PASSWORD in the server environment, then redeploy." },
+      { status: 503 },
+    );
+  }
+
+  const valid = safeEqual(username, creds.username) && safeEqual(password, creds.password);
   if (!valid) {
     return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
   }

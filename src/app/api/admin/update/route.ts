@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAdminToken, ADMIN_COOKIE } from "@/lib/admin-session";
-import { getAdminDb } from "@/lib/firebase-admin";
+import { getAdminDb, isBackendUnavailableError } from "@/lib/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
 
 // Cookie-gated write API for the office dashboard (status/note updates), so
@@ -55,6 +55,9 @@ export async function POST(request: NextRequest) {
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : "Update failed";
     console.error("admin/update error:", msg);
+    if (isBackendUnavailableError(e)) {
+      return NextResponse.json({ error: "Admin backend unavailable. Check FIREBASE_SERVICE_ACCOUNT_KEY (see /api/admin/debug)." }, { status: 503 });
+    }
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

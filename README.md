@@ -196,15 +196,29 @@ NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
 NEXT_PUBLIC_FIREBASE_APP_ID=
 
-# Firebase — server (service-account JSON, used by the Admin SDK)
+# Canonical site URL (used for password-reset links). Optional in dev.
+NEXT_PUBLIC_SITE_URL=https://sikshawallahfbg.in
+
+# Firebase — server (service-account JSON, used by the Admin SDK).
+# REQUIRED in production: the office dashboard reads private collections through
+# the Admin SDK, and the hardened Firestore rules deny client reads of them.
+# On Firebase App Hosting this is provided automatically via Application Default
+# Credentials; on Vercel/other hosts paste the full service-account JSON here.
 FIREBASE_SERVICE_ACCOUNT_KEY=
 
-# Email (Gmail app-password or any SMTP provider)
-EMAIL_USER=
-EMAIL_PASSWORD=
+# Office (admin) login — REQUIRED in production. Without these, office login is
+# disabled (fail closed). ADMIN_SESSION_SECRET signs the httpOnly session cookie
+# and MUST be a random 32+ character string.
+ADMIN_USERNAME=
+ADMIN_PASSWORD=
+ADMIN_SESSION_SECRET=
 
-# Admin security (use a random 32+ character string)
-ADMIN_SECRET_KEY=
+# Email / SMTP (Titan, Gmail app-password, or any SMTP provider)
+SMTP_HOST=
+SMTP_PORT=465
+SMTP_USER=
+SMTP_PASS=
+EMAIL_FROM=admission@sikshawallahfbg.in
 ```
 
 > Razorpay and Google AI keys are **only needed if/when Phase 2 (payments / AI)
@@ -266,9 +280,10 @@ Access to each collection is restricted by the rules in `firestore.rules`.
 ## 10. Going Live — Checklist
 
 - [ ] Add all environment variables (Section 7)
-- [ ] Set a strong, random `ADMIN_SECRET_KEY`
-- [ ] Create the first admin account
-- [ ] Deploy `firestore.rules`
+- [ ] Set `ADMIN_USERNAME` / `ADMIN_PASSWORD` and a strong, random `ADMIN_SESSION_SECRET`
+- [ ] Set `FIREBASE_SERVICE_ACCOUNT_KEY` (or deploy on App Hosting) — required by the office dashboard
+- [ ] Verify `/api/admin/debug` returns `{ "ok": true }` while logged in
+- [ ] Deploy `firestore.rules` (see SECURITY.md — do this AFTER the step above)
 - [ ] Connect a custom domain + SSL
 - [ ] Test on a real phone: apply form, registration, login, chat, contact email
 - [ ] Verify the office can see leads and reply to chats

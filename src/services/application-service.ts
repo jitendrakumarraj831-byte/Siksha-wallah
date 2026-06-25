@@ -1,7 +1,7 @@
 import { db } from "@/lib/firebase";
 import {
   collection, addDoc, serverTimestamp, query, where,
-  getDocs, doc, updateDoc, onSnapshot, Unsubscribe, orderBy,
+  getDocs, onSnapshot, Unsubscribe, orderBy,
 } from "firebase/firestore";
 
 export type ApplicationStatus = "new" | "contacted" | "documents_pending" | "admission_done" | "not_interested";
@@ -69,13 +69,11 @@ export function subscribeApplications(
   });
 }
 
-export async function updateApplicationStatus(id: string, status: ApplicationStatus) {
-  await updateDoc(doc(db, COL, id), { status });
-}
-
-export async function updateApplicationNote(id: string, note: string) {
-  await updateDoc(doc(db, COL, id), { note, noteUpdatedAt: serverTimestamp() });
-}
+// NOTE: Application status/note changes are office-only writes. The office logs
+// in with a signed cookie (not a Firebase Auth user), so Firestore rules treat
+// it as anonymous and deny direct client writes. Persist changes through the
+// cookie-gated Admin SDK API via `adminUpdate("course_applications", id, …)` in
+// `@/lib/admin-api` instead.
 
 export async function getApplicationsByUser(userId: string): Promise<CourseApplication[]> {
   try {

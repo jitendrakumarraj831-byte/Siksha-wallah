@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAdminToken, ADMIN_COOKIE } from "@/lib/admin-session";
-import { getAdminDb, serialize } from "@/lib/firebase-admin";
+import { getAdminDb, serialize, isBackendUnavailableError } from "@/lib/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
+
+const BACKEND_DOWN_MSG = "Admin backend unavailable. Check FIREBASE_SERVICE_ACCOUNT_KEY (see /api/admin/debug).";
 
 // Cookie-gated chat API for the office dashboard. Students read/write their own
 // thread directly via the client SDK; the office side goes through here (Admin
@@ -65,6 +67,7 @@ export async function GET(request: NextRequest) {
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : "Failed to load messages";
     console.error("admin/chat GET error:", msg);
+    if (isBackendUnavailableError(e)) return NextResponse.json({ error: BACKEND_DOWN_MSG }, { status: 503 });
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
@@ -103,6 +106,7 @@ export async function POST(request: NextRequest) {
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : "Send failed";
     console.error("admin/chat POST error:", msg);
+    if (isBackendUnavailableError(e)) return NextResponse.json({ error: BACKEND_DOWN_MSG }, { status: 503 });
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
