@@ -229,7 +229,21 @@ firebase deploy
 # add the environment variables from Section 7, deploy.
 ```
 
-A `firestore.rules` file is included — deploy it so the database is secured.
+### ⚠️ Deploy the Firestore security rules (required)
+
+App Hosting / Vercel only deploy the **app** — they do **not** push
+`firestore.rules`. The rules must be deployed separately, and **re-deployed
+every time `firestore.rules` changes**. If you skip this, any feature that
+reads/writes a new collection from the browser (e.g. the **counsellor chat**,
+which uses the `messages` collection) will fail with `PERMISSION_DENIED`.
+
+```bash
+firebase use <your-firebase-project-id>   # one-time
+firebase deploy --only firestore:rules
+```
+
+`firebase.json` and `firestore.indexes.json` (in the repo root) tell the CLI
+where the rules and indexes live.
 
 ---
 
