@@ -60,6 +60,10 @@ export default function RegisterPage() {
       setError('Please enter a valid email address.');
       return;
     }
+    if (formData.phone.trim() && !/^\d{10}$/.test(formData.phone.replace(/\D/g, ''))) {
+      setError('Please enter a valid 10-digit mobile number.');
+      return;
+    }
     if (formData.password.length < 6) {
       setError('Password must be at least 6 characters long.');
       return;
@@ -184,10 +188,13 @@ export default function RegisterPage() {
               <input
                 type="tel"
                 name="phone"
-                placeholder="Mobile Number *"
+                placeholder="Mobile Number * (10 digits)"
                 value={formData.phone}
-                onChange={handleChange}
+                onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value.replace(/\D/g, '') }))}
                 required
+                maxLength={10}
+                inputMode="numeric"
+                pattern="\d{10}"
                 className="w-full rounded-xl border border-slate-200 py-3.5 pl-12 pr-4 focus:border-blue-500 focus:outline-none"
               />
             </label>

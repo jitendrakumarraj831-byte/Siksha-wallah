@@ -109,7 +109,7 @@ export function CounsellorNotifier() {
   if (!showPrompt) return null;
 
   return (
-    <div className="fixed bottom-6 right-5 z-50 max-w-[calc(100vw-2.5rem)]">
+    <div className="fixed bottom-32 right-5 z-50 max-w-[calc(100vw-2.5rem)] sm:bottom-28">
       <div className="flex items-start gap-3 rounded-2xl border border-blue-100 bg-white p-4 shadow-xl">
         <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-blue-50">
           <Bell size={20} className="text-[#003f9f]" />

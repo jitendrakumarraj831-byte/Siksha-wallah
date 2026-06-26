@@ -81,7 +81,7 @@ export default function AboutPage() {
               Meet Our Counsellors
             </a>
             <a
-              href="https://wa.me/916203138576?text=नमस्ते! मुझे Admission Counselling चाहिए। कृपया guide करें।"
+              href="https://wa.me/916203138576?text=%E0%A4%A8%E0%A4%AE%E0%A4%B8%E0%A5%8D%E0%A4%A4%E0%A5%87!%20%E0%A4%AE%E0%A5%81%E0%A4%9D%E0%A5%87%20Admission%20Counselling%20%E0%A4%9A%E0%A4%BE%E0%A4%B9%E0%A4%BF%E0%A4%8F%E0%A5%A4%20%E0%A4%95%E0%A5%83%E0%A4%AA%E0%A4%AF%E0%A4%BE%20guide%20%E0%A4%95%E0%A4%B0%E0%A5%87%E0%A4%82%E0%A5%A4"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2.5 rounded-2xl border-2 border-white/25 bg-white/[0.08] px-8 py-4 font-bold text-white backdrop-blur transition-all hover:bg-white/[0.15] hover:-translate-y-1 active:scale-[0.97]"
@@ -192,7 +192,7 @@ export default function AboutPage() {
                       className="flex items-center justify-center gap-1.5 rounded-xl bg-[#003f9f] px-3 py-2.5 text-xs font-bold text-white hover:bg-blue-800 transition">
                       <Phone size={13} /> Call Now
                     </a>
-                    <a href={`https://wa.me/91${phone}?text=नमस्ते! मुझे admission guidance चाहिए।`}
+                    <a href={`https://wa.me/91${phone}?text=${encodeURIComponent('नमस्ते! मुझे admission guidance चाहिए।')}`}
                       target="_blank" rel="noopener noreferrer"
                       className="flex items-center justify-center gap-1.5 rounded-xl bg-green-500 px-3 py-2.5 text-xs font-bold text-white hover:bg-green-600 transition">
                       <MessageCircle size={13} /> WhatsApp
@@ -280,7 +280,7 @@ export default function AboutPage() {
               <Phone size={18} /> Speak to a Counsellor: 6203138576
             </a>
             <a
-              href="https://wa.me/916203138576?text=नमस्ते! मुझे Admission Counselling चाहिए। कृपया guide करें।"
+              href="https://wa.me/916203138576?text=%E0%A4%A8%E0%A4%AE%E0%A4%B8%E0%A5%8D%E0%A4%A4%E0%A5%87!%20%E0%A4%AE%E0%A5%81%E0%A4%9D%E0%A5%87%20Admission%20Counselling%20%E0%A4%9A%E0%A4%BE%E0%A4%B9%E0%A4%BF%E0%A4%8F%E0%A5%A4%20%E0%A4%95%E0%A5%83%E0%A4%AA%E0%A4%AF%E0%A4%BE%20guide%20%E0%A4%95%E0%A4%B0%E0%A5%87%E0%A4%82%E0%A5%A4"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-green-600 px-7 py-4 font-extrabold text-white hover:bg-green-700 shadow-lg transition"

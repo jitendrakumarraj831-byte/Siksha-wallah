@@ -136,7 +136,7 @@ export default function ContactPage() {
                 <Phone size={18} /> Speak to a Counsellor
               </a>
               <a
-                href="https://wa.me/916203138576?text=नमस्ते! मुझे Admission Counselling चाहिए।"
+                href="https://wa.me/916203138576?text=%E0%A4%A8%E0%A4%AE%E0%A4%B8%E0%A5%8D%E0%A4%A4%E0%A5%87!%20%E0%A4%AE%E0%A5%81%E0%A4%9D%E0%A5%87%20Admission%20Counselling%20%E0%A4%9A%E0%A4%BE%E0%A4%B9%E0%A4%BF%E0%A4%8F%E0%A5%A4"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2.5 rounded-2xl border-2 border-white/25 bg-white/[0.08] px-8 py-4 font-bold text-white backdrop-blur transition-all hover:bg-white/[0.15] hover:-translate-y-1 active:scale-[0.97]"
@@ -235,7 +235,7 @@ export default function ContactPage() {
 
                 {/* WhatsApp */}
                 <a
-                  href="https://wa.me/916203138576?text=नमस्ते! मुझे Siksha Wallah से Admission Counselling चाहिए। कृपया guide करें।"
+                  href="https://wa.me/916203138576?text=%E0%A4%A8%E0%A4%AE%E0%A4%B8%E0%A5%8D%E0%A4%A4%E0%A5%87!%20%E0%A4%AE%E0%A5%81%E0%A4%9D%E0%A5%87%20Siksha%20Wallah%20%E0%A4%B8%E0%A5%87%20Admission%20Counselling%20%E0%A4%9A%E0%A4%BE%E0%A4%B9%E0%A4%BF%E0%A4%8F%E0%A5%A4%20%E0%A4%95%E0%A5%83%E0%A4%AA%E0%A4%AF%E0%A4%BE%20guide%20%E0%A4%95%E0%A4%B0%E0%A5%87%E0%A4%82%E0%A5%A4"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-3 rounded-2xl bg-green-500 px-6 py-4 font-extrabold text-white hover:bg-green-600 transition shadow-lg shadow-green-500/20"
