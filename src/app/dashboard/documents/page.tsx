@@ -180,6 +180,19 @@ export default function DocumentsPage() {
   const [globalError, setGlobalError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
+  const loadDocuments = useCallback(async () => {
+    if (!user) return;
+    setPageLoading(true);
+    try {
+      const docs = await studentService.getDocuments(user.uid);
+      setDocuments(docs);
+    } catch (e: any) {
+      setGlobalError(e.message);
+    } finally {
+      setPageLoading(false);
+    }
+  }, [user]);
+
   useEffect(() => {
     if (!authLoading && !isAuthenticated) { router.push('/auth/login'); return; }
     if (!user) return;
@@ -193,19 +206,6 @@ export default function DocumentsPage() {
     const id = setInterval(() => { loadDocuments(); }, 30_000);
     return () => clearInterval(id);
   }, [user, loadDocuments]);
-
-  const loadDocuments = useCallback(async () => {
-    if (!user) return;
-    setPageLoading(true);
-    try {
-      const docs = await studentService.getDocuments(user.uid);
-      setDocuments(docs);
-    } catch (e: any) {
-      setGlobalError(e.message);
-    } finally {
-      setPageLoading(false);
-    }
-  }, [user]);
 
   const handleUpload = useCallback(async (type: string, file: File, label: string, onProgress: (pct: number) => void) => {
     if (!user) throw new Error('Not authenticated');
