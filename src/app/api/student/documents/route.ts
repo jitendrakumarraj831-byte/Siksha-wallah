@@ -15,6 +15,34 @@ async function verifyStudent(request: NextRequest): Promise<string | null> {
   }
 }
 
+async function deleteFromCloudinary(publicId: string, resourceType = 'image'): Promise<void> {
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+  const apiKey = process.env.CLOUDINARY_API_KEY;
+  const apiSecret = process.env.CLOUDINARY_API_SECRET;
+  if (!cloudName || !apiKey || !apiSecret || !publicId) return;
+
+  const timestamp = Math.floor(Date.now() / 1000);
+  const str = `public_id=${publicId}&timestamp=${timestamp}${apiSecret}`;
+
+  const encoder = new TextEncoder();
+  const hashBuffer = await crypto.subtle.digest('SHA-1', encoder.encode(str));
+  const signature = Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, '0')).join('');
+
+  const body = new URLSearchParams();
+  body.append('public_id', publicId);
+  body.append('timestamp', String(timestamp));
+  body.append('api_key', apiKey);
+  body.append('signature', signature);
+
+  // resourceType is 'image' for jpg/png, 'raw' for pdf (when using auto upload)
+  const type = ['image', 'raw', 'video'].includes(resourceType) ? resourceType : 'image';
+  await fetch(
+    `https://api.cloudinary.com/v1_1/${cloudName}/${type}/destroy`,
+    { method: 'POST', body }
+  ).catch(() => {});
+}
+
 // GET /api/student/documents?uid=xxx
 export async function GET(request: NextRequest) {
   try {
@@ -37,11 +65,11 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/student/documents — save document metadata after Storage upload
+// POST /api/student/documents — save document metadata after Cloudinary upload
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { uid, name, type, url, storagePath, fileSize, mimeType } = body;
+    const { uid, name, type, url, publicId, resourceType, fileSize, mimeType } = body;
     if (!uid || !name || !type || !url) {
       return NextResponse.json({ error: "uid, name, type, url required" }, { status: 400 });
     }
@@ -63,17 +91,26 @@ export async function POST(request: NextRequest) {
     // If replacing, only allow replacing rejected or pending documents
     if (!existing.empty) {
       const existingDoc = existing.docs[0];
-      const existingStatus = existingDoc.data().status || "pending";
+      const existingData = existingDoc.data();
+      const existingStatus = existingData.status || "pending";
       if (existingStatus === "approved") {
+        // Also delete the newly uploaded Cloudinary file since we're rejecting the replacement
+        if (publicId) await deleteFromCloudinary(publicId, resourceType);
         return NextResponse.json({ error: "Approved document cannot be replaced. Contact the office." }, { status: 403 });
       }
-      // Delete the old doc record before saving new one
+      // Delete old Cloudinary file before replacing
+      if (existingData.publicId) {
+        await deleteFromCloudinary(existingData.publicId, existingData.resourceType);
+      }
       await existingDoc.ref.delete();
     }
 
     const ref = await db.collection("documents").add({
-      uid, name, type, url, storagePath: storagePath || null,
-      fileSize: fileSize || null, mimeType: mimeType || null,
+      uid, name, type, url,
+      publicId: publicId || null,
+      resourceType: resourceType || 'image',
+      fileSize: fileSize || null,
+      mimeType: mimeType || null,
       status: "pending",
       uploadedAt: Date.now(),
     });
@@ -104,9 +141,17 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    const docStatus = snap.data()?.status || "pending";
+    const docData = snap.data()!;
+    const docStatus = docData.status || "pending";
     if (docStatus === "approved") {
       return NextResponse.json({ error: "Approved documents cannot be deleted. Contact office." }, { status: 403 });
+    }
+
+    // Delete from Cloudinary first
+    const body = await request.json().catch(() => ({}));
+    const publicId = body.publicId || docData.publicId;
+    if (publicId) {
+      await deleteFromCloudinary(publicId, docData.resourceType || 'image');
     }
 
     await docRef.delete();
