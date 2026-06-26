@@ -76,7 +76,13 @@ export const studentService = {
         return;
       }
 
-      const ext = file.name.split('.').pop() ?? 'bin';
+      const mimeToExt: Record<string, string> = {
+        'application/pdf': 'pdf',
+        'image/jpeg': 'jpg',
+        'image/jpg': 'jpg',
+        'image/png': 'png',
+      };
+      const ext = mimeToExt[file.type] ?? (file.name.split('.').pop() || 'bin');
       const storagePath = `documents/${uid}/${Date.now()}_${docType}.${ext}`;
       const storageRef = ref(storage, storagePath);
       const task = uploadBytesResumable(storageRef, file, { contentType: file.type });

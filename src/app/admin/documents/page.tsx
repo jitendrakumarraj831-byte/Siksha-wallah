@@ -286,10 +286,22 @@ export default function AdminDocumentsPage() {
                           className="flex items-center gap-1 rounded-lg bg-blue-50 border border-blue-200 px-2 py-1 text-xs font-semibold text-blue-700 hover:bg-blue-100 transition">
                           <Eye size={11} /> View
                         </a>
-                        <a href={doc.url} download
+                        <button
+                          onClick={async () => {
+                            try {
+                              const blob = await fetch(doc.url).then(r => r.blob());
+                              const a = document.createElement('a');
+                              a.href = URL.createObjectURL(blob);
+                              a.download = `${doc.studentName || doc.uid}_${doc.type}`;
+                              a.click();
+                              URL.revokeObjectURL(a.href);
+                            } catch {
+                              window.open(doc.url, '_blank');
+                            }
+                          }}
                           className="flex items-center gap-1 rounded-lg bg-gray-100 border border-gray-200 px-2 py-1 text-xs font-semibold text-gray-700 hover:bg-gray-200 transition">
                           <Download size={11} /> DL
-                        </a>
+                        </button>
                         {doc.status !== "approved" && (
                           <button
                             onClick={() => setModal({ doc, action: "approved" })}
