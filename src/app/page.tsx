@@ -613,9 +613,9 @@ export default function Home() {
           {/* ── TOP TRUST BADGE STRIP — all clickable ── */}
           <div className="no-scrollbar flex items-center gap-3 overflow-x-auto border-b border-white/[0.08] py-4">
             {[
-              { icon: ShieldCheck,  text: "NCTE / UGC Recognised Colleges", href: "/about#colleges" },
+              { icon: ShieldCheck,  text: "NCTE / UGC Recognised Colleges", href: "/about" },
               { icon: CreditCard,   text: "Complete BSCC Loan Support",      href: "/apply" },
-              { icon: Users,        text: "5,000+ Students Guided",           href: "/#reviews" },
+              { icon: Users,        text: "5,000+ Students Guided",           href: "/#why-us" },
               { icon: Building2,    text: "200+ Partner Colleges",            href: "/about" },
               { icon: Award,        text: "11+ Years of Trusted Counselling", href: "/about" },
               { icon: CheckCircle2, text: "100% Transparent. No Hidden Fees.", href: "/contact" },
@@ -774,7 +774,7 @@ export default function Home() {
                     { name: "Rahul K.", course: "B.Ed", place: "Patna", time: "2 घंटे", href: "/courses/bed",      icon: "🎓", bg: "border-blue-400/20 bg-blue-500/[0.08]" },
                     { name: "Priya S.", course: "GNM + ₹4.2L BSCC", place: "Muzaffarpur", time: "आज",    href: "/apply",          icon: "💰", bg: "border-amber-400/20 bg-amber-500/[0.08]" },
                     { name: "Amit S.", course: "B.Tech CSE",  place: "Ara",    time: "कल",     href: "/courses/btech",   icon: "💻", bg: "border-teal-400/20 bg-teal-500/[0.08]" },
-                    { name: "Neha Y.", course: "BA.LLB",      place: "Gaya",   time: "2 दिन",  href: "/courses/ballb",   icon: "⚖️", bg: "border-purple-400/20 bg-purple-500/[0.08]" },
+                    { name: "Neha Y.", course: "BA.LLB",      place: "Gaya",   time: "2 दिन",  href: "/courses/ba-llb",  icon: "⚖️", bg: "border-purple-400/20 bg-purple-500/[0.08]" },
                   ].map(({ name, course, place, time, href, icon, bg }) => (
                     <Link
                       key={name}
@@ -998,27 +998,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* ── STATS BAR ── */}
-          <div className="grid grid-cols-2 gap-6 border-t border-white/[0.08] py-10 md:grid-cols-4">
-            {([
-              { target: 5000, suffix: "+", label: "Students Successfully Guided", icon: Users     },
-              { target: 200,  suffix: "+", label: "Approved Partner Colleges",    icon: Building2 },
-              { target: 98,   suffix: "%", label: "Parent Satisfaction Rating",   icon: Star      },
-              { target: 11,   suffix: "+", label: "Years of Trusted Counselling", icon: Award     },
-            ] as const).map(({ target, suffix, label, icon: Icon }) => (
-              <div key={label} className="text-center">
-                <div className="mb-2 flex justify-center">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-400/10 ring-1 ring-amber-400/20">
-                    <Icon size={18} className="text-amber-400" />
-                  </div>
-                </div>
-                <p className="font-headline text-3xl font-black text-amber-400 md:text-4xl">
-                  <CountUp target={target} suffix={suffix} />
-                </p>
-                <p className="mt-1 text-xs text-blue-200 md:text-sm">{label}</p>
-              </div>
-            ))}
-          </div>
 
         </div>
       </section>
