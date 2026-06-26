@@ -83,7 +83,8 @@ function CourseCard({ course, streamKey }: { course: Course; streamKey: StreamKe
           <div className="flex gap-1.5">
             <Link
               href={`/apply?course=${encodeURIComponent(course.name)}`}
-              className="flex flex-1 items-center justify-center gap-1 rounded-xl bg-primary-blue py-2 text-xs font-bold text-white hover:bg-blue-700 transition"
+              className="flex flex-1 items-center justify-center gap-1 rounded-xl bg-primary-blue py-2 text-xs font-bold text-white hover:bg-blue-700 active:bg-blue-800 transition"
+              style={{ touchAction: "manipulation" }}
             >
               <GraduationCap size={12} /> Apply
             </Link>
@@ -91,6 +92,7 @@ function CourseCard({ course, streamKey }: { course: Course; streamKey: StreamKe
               <Link
                 href={`/courses/${slug}`}
                 className={`flex flex-1 items-center justify-center gap-1 rounded-xl py-2 text-xs font-bold text-white transition bg-gradient-to-r ${colors.gradient}`}
+                style={{ touchAction: "manipulation" }}
               >
                 Details <ArrowRight size={11} />
               </Link>
@@ -99,7 +101,8 @@ function CourseCard({ course, streamKey }: { course: Course; streamKey: StreamKe
                 href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(course.name)}%20के%20बारे%20में%20जानकारी%20चाहिए।`}
                 target="_blank" rel="noopener noreferrer"
                 onClick={() => saveActivity({ type: 'whatsapp', title: `💬 WhatsApp — ${course.name}`, description: course.full, page: '/courses' })}
-                className="flex flex-1 items-center justify-center gap-1 rounded-xl border-2 border-green-500 py-2 text-xs font-bold text-green-700 hover:bg-green-500 hover:text-white transition"
+                className="flex flex-1 items-center justify-center gap-1 rounded-xl border-2 border-green-500 py-2 text-xs font-bold text-green-700 hover:bg-green-500 hover:text-white active:bg-green-600 active:text-white transition"
+                style={{ touchAction: "manipulation" }}
               >
                 <MessageCircle size={11} /> Enquire
               </a>
@@ -109,7 +112,8 @@ function CourseCard({ course, streamKey }: { course: Course; streamKey: StreamKe
             href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(course.name)}%20(${encodeURIComponent(course.full)})%20के%20बारे%20में%20fees%20aur%20admission%20की%20जानकारी%20चाहिए।`}
             target="_blank" rel="noopener noreferrer"
             onClick={() => saveActivity({ type: 'whatsapp', title: `💬 WhatsApp — ${course.name}`, description: course.full, page: '/courses' })}
-            className="flex items-center justify-center gap-1.5 rounded-xl border border-green-200 bg-green-50 py-1.5 text-[11px] font-bold text-green-700 hover:bg-green-500 hover:text-white transition"
+            className="flex items-center justify-center gap-1.5 rounded-xl border border-green-200 bg-green-50 py-1.5 text-[11px] font-bold text-green-700 hover:bg-green-500 hover:text-white active:bg-green-600 active:text-white transition"
+            style={{ touchAction: "manipulation" }}
           >
             <MessageCircle size={11} /> WhatsApp पर पूछें
           </a>
@@ -277,7 +281,13 @@ function StreamSlider({ tab }: { tab: typeof streamTabs[0] }) {
               if (el) el.scrollTo({ left: el.scrollLeft, behavior: "instant" as ScrollBehavior });
             }}
             onMouseLeave={() => setPaused(false)}
-            onTouchStart={() => setPaused(true)}
+            onTouchStart={() => {
+              setPaused(true);
+              // Snap any in-progress smooth-scroll animation so the card under
+              // the finger stops moving before the tap is recognised as a click.
+              const el = scrollRef.current;
+              if (el) el.scrollTo({ left: el.scrollLeft, behavior: "instant" as ScrollBehavior });
+            }}
             onTouchEnd={() => setPaused(false)}
             className="flex gap-4 overflow-x-auto pb-3 select-none"
             style={{
