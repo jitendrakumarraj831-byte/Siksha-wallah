@@ -613,9 +613,9 @@ export default function Home() {
           {/* ── TOP TRUST BADGE STRIP — all clickable ── */}
           <div className="no-scrollbar flex items-center gap-3 overflow-x-auto border-b border-white/[0.08] py-4">
             {[
-              { icon: ShieldCheck,  text: "NCTE / UGC Recognised Colleges", href: "/about#colleges" },
+              { icon: ShieldCheck,  text: "NCTE / UGC Recognised Colleges", href: "/about" },
               { icon: CreditCard,   text: "Complete BSCC Loan Support",      href: "/apply" },
-              { icon: Users,        text: "5,000+ Students Guided",           href: "/#reviews" },
+              { icon: Users,        text: "5,000+ Students Guided",           href: "/#why-us" },
               { icon: Building2,    text: "200+ Partner Colleges",            href: "/about" },
               { icon: Award,        text: "11+ Years of Trusted Counselling", href: "/about" },
               { icon: CheckCircle2, text: "100% Transparent. No Hidden Fees.", href: "/contact" },
@@ -705,46 +705,11 @@ export default function Home() {
               {/* Accent line */}
               <div className="mt-4 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-44" />
 
-              {/* Course quick-link chips */}
-              <div className="mt-5 flex flex-wrap items-center gap-2">
-                <GraduationCap size={14} className="flex-shrink-0 text-amber-400" />
-                {[
-                  { label: "B.Ed",    href: "/courses/bed" },
-                  { label: "GNM Nursing", href: "/courses/gnm" },
-                  { label: "MBBS",    href: "/courses/mbbs" },
-                  { label: "LLB",     href: "/courses/llb" },
-                  { label: "B.Tech",  href: "/courses/btech" },
-                  { label: "MBA",     href: "/courses/mba" },
-                ].map(({ label, href }) => (
-                  <Link
-                    key={label}
-                    href={href}
-                    className="rounded-full border border-amber-400/30 bg-amber-400/[0.08] px-3 py-1 text-[12px] font-bold text-amber-200 transition-all hover:bg-amber-400/[0.18] hover:text-amber-100 active:scale-95"
-                    style={{ touchAction: "manipulation" }}
-                  >
-                    {label}
-                  </Link>
-                ))}
-                <Link href="/courses" className="rounded-full bg-gradient-to-r from-amber-400 to-orange-400 px-3 py-1 text-[12px] font-extrabold text-gray-900 hover:opacity-90 active:scale-95" style={{ touchAction: "manipulation" }}>
-                  +44 more →
-                </Link>
-              </div>
-
-              {/* Sub-heading — inline links */}
-              <p className="mt-5 max-w-lg text-[1rem] leading-[1.85] text-blue-100 md:text-[1.05rem]">
-                Teaching, Medical, Law, Engineering, Para Medical —{" "}
-                <Link href="/courses" className="font-extrabold text-white underline underline-offset-2 decoration-amber-400/50 hover:decoration-amber-400 transition-all">
-                  50+ courses
-                </Link>
-                ,{" "}
-                <Link href="/about" className="font-extrabold text-white underline underline-offset-2 decoration-amber-400/50 hover:decoration-amber-400 transition-all">
-                  200+ verified colleges
-                </Link>{" "}
-                aur{" "}
-                <Link href="/apply" className="bg-gradient-to-r from-amber-300 to-yellow-200 bg-clip-text text-transparent font-extrabold underline underline-offset-2 decoration-amber-400/60 hover:decoration-amber-400 transition-all">
-                  BSCC Loan support
-                </Link>{" "}
-                — सब एक जगह, बिल्कुल निःशुल्क।
+              {/* Sub-headline — one tight line */}
+              <p className="mt-4 text-sm leading-relaxed text-blue-200">
+                50+ courses · 200+ verified colleges ·{" "}
+                <Link href="/apply" className="font-bold text-amber-300 hover:text-amber-200 transition-colors">BSCC Loan support</Link>
+                {" "}— बिल्कुल निःशुल्क।
               </p>
 
               {/* CTA Buttons */}
@@ -800,6 +765,64 @@ export default function Home() {
 
               {/* ── College Auto-Slider ── */}
               <CollegeSlider colleges={COLLEGES} />
+
+              {/* ── Below Slider: Recent Admissions ── */}
+              <div className="mt-4">
+                <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-blue-400/70">🕐 हाल ही में हुए Admissions</p>
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                  {[
+                    { name: "Rahul K.", course: "B.Ed", place: "Patna", time: "2 घंटे", href: "/courses/bed",      icon: "🎓", bg: "border-blue-400/20 bg-blue-500/[0.08]" },
+                    { name: "Priya S.", course: "GNM + ₹4.2L BSCC", place: "Muzaffarpur", time: "आज",    href: "/apply",          icon: "💰", bg: "border-amber-400/20 bg-amber-500/[0.08]" },
+                    { name: "Amit S.", course: "B.Tech CSE",  place: "Ara",    time: "कल",     href: "/courses/btech",   icon: "💻", bg: "border-teal-400/20 bg-teal-500/[0.08]" },
+                    { name: "Neha Y.", course: "BA.LLB",      place: "Gaya",   time: "2 दिन",  href: "/courses/ba-llb",  icon: "⚖️", bg: "border-purple-400/20 bg-purple-500/[0.08]" },
+                  ].map(({ name, course, place, time, href, icon, bg }) => (
+                    <Link
+                      key={name}
+                      href={href}
+                      className={`flex flex-col gap-0.5 rounded-xl border ${bg} px-3 py-2.5 transition-all hover:-translate-y-0.5 hover:shadow-md active:scale-95`}
+                      style={{ touchAction: "manipulation" }}
+                    >
+                      <span className="text-base leading-none">{icon}</span>
+                      <p className="text-[11px] font-extrabold text-white leading-tight mt-1">{name}</p>
+                      <p className="text-[10px] text-blue-200 leading-tight">{course}</p>
+                      <p className="text-[9px] text-white/40 mt-0.5">{time} पहले · {place}</p>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* ── Quick Action Strip ── */}
+              <div className="mt-3 grid grid-cols-3 gap-2">
+                <Link
+                  href="/courses"
+                  className="flex flex-col items-center gap-1 rounded-2xl border border-white/[0.10] bg-white/[0.05] py-3 text-center transition-all hover:bg-white/[0.10] hover:-translate-y-0.5 active:scale-95"
+                  style={{ touchAction: "manipulation" }}
+                >
+                  <BookOpen size={18} className="text-amber-400" />
+                  <span className="text-[11px] font-extrabold text-white">50+ Courses</span>
+                  <span className="text-[9px] text-blue-300">देखें →</span>
+                </Link>
+                <a
+                  href="#inquiry"
+                  className="flex flex-col items-center gap-1 rounded-2xl border border-amber-400/30 bg-amber-400/[0.10] py-3 text-center transition-all hover:bg-amber-400/[0.18] hover:-translate-y-0.5 active:scale-95"
+                  style={{ touchAction: "manipulation" }}
+                >
+                  <GraduationCap size={18} className="text-amber-400" />
+                  <span className="text-[11px] font-extrabold text-amber-300">Apply Now</span>
+                  <span className="text-[9px] text-amber-400/70">Free है →</span>
+                </a>
+                <a
+                  href={`https://wa.me/916203138576?text=${encodeURIComponent("नमस्ते! मुझे admission counselling चाहिए।")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex flex-col items-center gap-1 rounded-2xl border border-green-400/30 bg-green-500/[0.08] py-3 text-center transition-all hover:bg-green-500/[0.15] hover:-translate-y-0.5 active:scale-95"
+                  style={{ touchAction: "manipulation" }}
+                >
+                  <MessageCircle size={18} className="text-green-400" />
+                  <span className="text-[11px] font-extrabold text-green-300">WhatsApp</span>
+                  <span className="text-[9px] text-green-400/70">अभी पूछें →</span>
+                </a>
+              </div>
             </div>
 
             {/* ── RIGHT: Lead Form ── */}
@@ -975,27 +998,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* ── STATS BAR ── */}
-          <div className="grid grid-cols-2 gap-6 border-t border-white/[0.08] py-10 md:grid-cols-4">
-            {([
-              { target: 5000, suffix: "+", label: "Students Successfully Guided", icon: Users     },
-              { target: 200,  suffix: "+", label: "Approved Partner Colleges",    icon: Building2 },
-              { target: 98,   suffix: "%", label: "Parent Satisfaction Rating",   icon: Star      },
-              { target: 11,   suffix: "+", label: "Years of Trusted Counselling", icon: Award     },
-            ] as const).map(({ target, suffix, label, icon: Icon }) => (
-              <div key={label} className="text-center">
-                <div className="mb-2 flex justify-center">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-400/10 ring-1 ring-amber-400/20">
-                    <Icon size={18} className="text-amber-400" />
-                  </div>
-                </div>
-                <p className="font-headline text-3xl font-black text-amber-400 md:text-4xl">
-                  <CountUp target={target} suffix={suffix} />
-                </p>
-                <p className="mt-1 text-xs text-blue-200 md:text-sm">{label}</p>
-              </div>
-            ))}
-          </div>
 
         </div>
       </section>
