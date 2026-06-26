@@ -134,6 +134,122 @@ function StreamCards() {
 }
 
 
+/* ─── College Slider Component ────────────────────────────────────────── */
+type CollegeItem = { name: string; location: string; stream: string; img: string; href: string };
+
+function CollegeSlider({ colleges }: { colleges: readonly CollegeItem[] }) {
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const touchStartX = useRef<number | null>(null);
+  const n = colleges.length;
+
+  const prev = useCallback(() => setActive(a => (a - 1 + n) % n), [n]);
+  const next = useCallback(() => setActive(a => (a + 1) % n), [n]);
+
+  useEffect(() => {
+    if (paused) return;
+    const id = setInterval(next, 4000);
+    return () => clearInterval(id);
+  }, [paused, next]);
+
+  return (
+    <div
+      className="relative mt-8 overflow-hidden rounded-2xl"
+      style={{ height: "220px" }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onTouchStart={e => { touchStartX.current = e.touches[0].clientX; setPaused(true); }}
+      onTouchEnd={e => {
+        if (touchStartX.current !== null) {
+          const dx = e.changedTouches[0].clientX - touchStartX.current;
+          if (Math.abs(dx) > 40) dx < 0 ? next() : prev();
+          touchStartX.current = null;
+        }
+        setPaused(false);
+      }}
+    >
+      {/* Slides */}
+      {colleges.map((col, i) => (
+        <div
+          key={col.name}
+          aria-hidden={i !== active}
+          className="absolute inset-0 transition-opacity duration-700"
+          style={{ opacity: i === active ? 1 : 0, pointerEvents: i === active ? "auto" : "none" }}
+        >
+          <Link href={col.href} className="block w-full h-full group" style={{ touchAction: "manipulation" }}>
+            <Image
+              src={col.img}
+              alt={col.name}
+              fill
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
+              sizes="(max-width:768px) 100vw, 560px"
+              priority={i === 0}
+              loading={i === 0 ? "eager" : "lazy"}
+              quality={75}
+            />
+            {/* Dark gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+            {/* College info */}
+            <div className="absolute bottom-0 left-0 right-0 p-4">
+              <div className="flex items-end justify-between gap-2">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-amber-400 mb-0.5">🏛️ Partner College</p>
+                  <h4 className="font-headline text-base font-extrabold text-white leading-tight">{col.name}</h4>
+                  <p className="flex items-center gap-1 text-[11px] text-white/70 mt-0.5">
+                    <MapPin size={9} className="text-amber-400" /> {col.location}
+                  </p>
+                  <p className="text-[10px] text-blue-200 mt-1 font-medium">{col.stream}</p>
+                </div>
+                <div className="flex-shrink-0 rounded-xl bg-amber-400 px-3 py-1.5 text-[11px] font-extrabold text-gray-900 shadow-lg group-hover:bg-amber-300 transition-colors">
+                  Details →
+                </div>
+              </div>
+            </div>
+          </Link>
+        </div>
+      ))}
+
+      {/* Left / Right arrows */}
+      <button
+        onClick={prev}
+        aria-label="Previous college"
+        className="absolute left-2 top-1/2 -translate-y-1/2 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm hover:bg-black/60 active:scale-90 transition-all"
+        style={{ touchAction: "manipulation" }}
+      >
+        <ChevronDown size={16} className="rotate-90" />
+      </button>
+      <button
+        onClick={next}
+        aria-label="Next college"
+        className="absolute right-2 top-1/2 -translate-y-1/2 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm hover:bg-black/60 active:scale-90 transition-all"
+        style={{ touchAction: "manipulation" }}
+      >
+        <ChevronDown size={16} className="-rotate-90" />
+      </button>
+
+      {/* Dot indicators */}
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5">
+        {colleges.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setActive(i)}
+            aria-label={`Go to slide ${i + 1}`}
+            className={`rounded-full transition-all duration-300 ${i === active ? "w-5 h-1.5 bg-amber-400" : "w-1.5 h-1.5 bg-white/40 hover:bg-white/60"}`}
+            style={{ touchAction: "manipulation" }}
+          />
+        ))}
+      </div>
+
+      {/* Slide counter */}
+      <div className="absolute top-3 right-3 z-20 rounded-full bg-black/50 px-2 py-0.5 text-[10px] font-bold text-white/80 backdrop-blur-sm">
+        {active + 1} / {n}
+      </div>
+    </div>
+  );
+}
+
+
 /* ─── Multi-step Form ─────────────────────────────── */
 const STEPS = ["Name", "Mobile", "Course", "Qualify"];
 
@@ -421,6 +537,59 @@ export default function Home() {
     }
   }
 
+  /* ── College Slider data ── */
+  const COLLEGES = [
+    {
+      name: "Patna University",
+      location: "Ashok Rajpath, Patna, Bihar",
+      stream: "B.Ed · BA.LLB · M.A · M.Sc",
+      img: "https://images.unsplash.com/photo-1562774053-701939374585?w=720&q=75&auto=format&fit=crop",
+      href: "/about",
+    },
+    {
+      name: "Nalanda Open University",
+      location: "Patna, Bihar",
+      stream: "D.El.Ed · B.Ed · MBA · Distance",
+      img: "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=720&q=75&auto=format&fit=crop",
+      href: "/about",
+    },
+    {
+      name: "AIIMS Patna",
+      location: "Phulwarisharif, Bihar",
+      stream: "MBBS · Nursing · Paramedical",
+      img: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=720&q=75&auto=format&fit=crop",
+      href: "/courses/mbbs",
+    },
+    {
+      name: "NIT Patna",
+      location: "Ashok Rajpath, Bihar",
+      stream: "B.Tech · MCA · M.Tech",
+      img: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=720&q=75&auto=format&fit=crop",
+      href: "/courses/btech",
+    },
+    {
+      name: "Bihar State Nursing College",
+      location: "Muzaffarpur, Bihar",
+      stream: "GNM · ANM · B.Sc Nursing",
+      img: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=720&q=75&auto=format&fit=crop",
+      href: "/courses/gnm",
+    },
+    {
+      name: "Central University of Bihar",
+      location: "Gaya Road, Patna",
+      stream: "LLB · BA.LLB · BBA.LLB · LLM",
+      img: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=720&q=75&auto=format&fit=crop",
+      href: "/courses/llb",
+    },
+    {
+      name: "IGNOU Regional Centre",
+      location: "All Bihar Districts",
+      stream: "B.Ed · MBA · Distance Learning",
+      img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=720&q=75&auto=format&fit=crop",
+      href: "/about",
+    },
+  ] as const;
+
   return (
     <>
     <main className="bg-white text-gray-900">
@@ -507,7 +676,7 @@ export default function Home() {
                   style={{ touchAction: "manipulation" }}
                 >
                   <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
-                  <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Session 2026–27 &nbsp;·&nbsp; Free Counselling Open</span>
+                  <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Admissions Open &nbsp;·&nbsp; Session 2026–27</span>
                 </Link>
                 <Link
                   href="/apply"
@@ -629,75 +798,8 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* ── Photo Collage + Stats overlay ── */}
-              <div className="mt-8 grid grid-cols-12 grid-rows-2 gap-2 h-[220px] sm:h-[260px]">
-
-                {/* Large photo — college campus */}
-                <Link href="/about" className="relative col-span-7 row-span-2 overflow-hidden rounded-2xl group" style={{ touchAction: "manipulation" }}>
-                  <Image
-                    src="https://images.unsplash.com/photo-1562774053-701939374585?w=600&q=80"
-                    alt="Partner college campus"
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    sizes="(max-width:768px) 50vw, 300px"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-                  <div className="absolute bottom-3 left-3 right-3">
-                    <p className="text-[11px] font-extrabold text-white">🏛️ 200+ Partner Colleges</p>
-                    <p className="text-[10px] text-white/70">NCTE · UGC · AICTE Recognised</p>
-                  </div>
-                  <div className="absolute inset-0 ring-2 ring-inset ring-white/0 group-hover:ring-amber-400/50 rounded-2xl transition-all" />
-                </Link>
-
-                {/* Top-right — students in classroom */}
-                <Link href="/#reviews" className="relative col-span-5 row-span-1 overflow-hidden rounded-2xl group" style={{ touchAction: "manipulation" }}>
-                  <Image
-                    src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&q=80"
-                    alt="Students in classroom"
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    sizes="(max-width:768px) 35vw, 200px"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  <div className="absolute bottom-2 left-2 right-2">
-                    <p className="text-[10px] font-bold text-white">👨‍🎓 5,000+ Students</p>
-                  </div>
-                  <div className="absolute inset-0 ring-2 ring-inset ring-white/0 group-hover:ring-amber-400/50 rounded-2xl transition-all" />
-                </Link>
-
-                {/* Bottom-right — stat card */}
-                <Link href="/apply" className="relative col-span-5 row-span-1 overflow-hidden rounded-2xl group bg-gradient-to-br from-amber-400 to-orange-500 flex flex-col items-center justify-center text-center p-3" style={{ touchAction: "manipulation" }}>
-                  <span className="font-headline text-2xl font-black text-gray-900 leading-none">
-                    <CountUp target={11} suffix="+" />
-                  </span>
-                  <span className="text-[10px] font-extrabold text-gray-800 mt-0.5">Years Trusted</span>
-                  <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-gray-900/20 px-2 py-0.5 text-[9px] font-bold text-gray-900">
-                    Free Counselling →
-                  </span>
-                  <div className="absolute inset-0 ring-2 ring-inset ring-white/0 group-hover:ring-white/60 rounded-2xl transition-all" />
-                </Link>
-              </div>
-
-              {/* ── Recent admission strip ── */}
-              <div className="mt-3 flex flex-wrap gap-2">
-                {[
-                  { name: "Rahul Kumar", course: "B.Ed", time: "2 घंटे पहले", href: "/courses/bed", color: "border-green-400/30 bg-green-500/[0.08]" },
-                  { name: "Priya Singh", course: "GNM + ₹4.2L BSCC", time: "आज", href: "/apply", color: "border-amber-400/30 bg-amber-500/[0.08]" },
-                ].map(({ name, course, time, href, color }) => (
-                  <Link
-                    key={name}
-                    href={href}
-                    className={`flex items-center gap-2 rounded-xl border ${color} px-3 py-2 backdrop-blur-sm transition-all hover:-translate-y-0.5 active:scale-95`}
-                    style={{ touchAction: "manipulation" }}
-                  >
-                    <span className="text-[10px]">✅</span>
-                    <div>
-                      <p className="text-[11px] font-bold text-white leading-none">{name} — {course}</p>
-                      <p className="text-[9px] text-blue-300/80 mt-0.5">{time} · Patna, Bihar</p>
-                    </div>
-                  </Link>
-                ))}
-              </div>
+              {/* ── College Auto-Slider ── */}
+              <CollegeSlider colleges={COLLEGES} />
             </div>
 
             {/* ── RIGHT: Lead Form ── */}
