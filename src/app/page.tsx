@@ -13,6 +13,7 @@ import {
   Briefcase, BookMarked, ChevronUp, FileText, ListChecks, TrendingUp,
   Stethoscope, Scale, Cpu, FlaskConical, Landmark,
 } from "lucide-react";
+import Image from "next/image";
 import { SiteNavbar } from "@/components/site-navbar";
 import { SiteFooter } from "@/components/site-footer";
 import { CountUp } from "@/components/count-up";
@@ -535,34 +536,28 @@ export default function Home() {
               {/* Accent line */}
               <div className="mt-4 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-44" />
 
-              {/* Course highlight pill — each course name is clickable */}
-              <div className="mt-6 flex flex-wrap items-center gap-2 rounded-2xl border border-amber-400/25 bg-amber-400/[0.08] px-5 py-3">
-                <GraduationCap size={16} className="flex-shrink-0 text-amber-400" />
+              {/* Course quick-link chips */}
+              <div className="mt-5 flex flex-wrap items-center gap-2">
+                <GraduationCap size={14} className="flex-shrink-0 text-amber-400" />
                 {[
                   { label: "B.Ed",    href: "/courses/bed" },
-                  { label: "Nursing", href: "/courses/bsc-nursing" },
+                  { label: "GNM Nursing", href: "/courses/gnm" },
                   { label: "MBBS",    href: "/courses/mbbs" },
                   { label: "LLB",     href: "/courses/llb" },
                   { label: "B.Tech",  href: "/courses/btech" },
                   { label: "MBA",     href: "/courses/mba" },
-                ].map(({ label, href }, i, arr) => (
-                  <span key={label} className="inline-flex items-center gap-1">
-                    <Link
-                      href={href}
-                      className="text-sm font-bold text-amber-100 underline-offset-2 hover:underline hover:text-amber-300 transition-colors active:scale-95"
-                      style={{ touchAction: "manipulation" }}
-                    >
-                      {label}
-                    </Link>
-                    {i < arr.length - 1 && <span className="text-amber-400/50 text-xs">•</span>}
-                  </span>
+                ].map(({ label, href }) => (
+                  <Link
+                    key={label}
+                    href={href}
+                    className="rounded-full border border-amber-400/30 bg-amber-400/[0.08] px-3 py-1 text-[12px] font-bold text-amber-200 transition-all hover:bg-amber-400/[0.18] hover:text-amber-100 active:scale-95"
+                    style={{ touchAction: "manipulation" }}
+                  >
+                    {label}
+                  </Link>
                 ))}
-                <Link
-                  href="/courses"
-                  className="rounded-full bg-gradient-to-r from-amber-400 to-orange-400 px-2.5 py-0.5 text-[11px] font-extrabold text-gray-900 transition-all hover:opacity-90 hover:shadow-sm active:scale-95"
-                  style={{ touchAction: "manipulation" }}
-                >
-                  50+ Courses →
+                <Link href="/courses" className="rounded-full bg-gradient-to-r from-amber-400 to-orange-400 px-3 py-1 text-[12px] font-extrabold text-gray-900 hover:opacity-90 active:scale-95" style={{ touchAction: "manipulation" }}>
+                  +44 more →
                 </Link>
               </div>
 
@@ -634,73 +629,74 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* ── Animated Stats Mini-Grid ── */}
-              <div className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-4">
-                {[
-                  { target: 5000, suffix: "+", label: "Students Guided", icon: Users,     color: "text-amber-400", href: "/#reviews" },
-                  { target: 200,  suffix: "+", label: "Partner Colleges", icon: Building2, color: "text-blue-400",  href: "/about" },
-                  { target: 50,   suffix: "+", label: "Courses",          icon: BookOpen,  color: "text-green-400", href: "/courses" },
-                  { target: 11,   suffix: "+", label: "Years Experience", icon: Award,     color: "text-purple-400",href: "/about" },
-                ].map(({ target, suffix, label, icon: Icon, color, href }) => (
-                  <Link
-                    key={label}
-                    href={href}
-                    className="flex flex-col items-center rounded-2xl border border-white/[0.10] bg-white/[0.06] px-3 py-3 text-center backdrop-blur-sm transition-all duration-200 hover:border-white/25 hover:bg-white/[0.12] hover:-translate-y-0.5 active:scale-95"
-                    style={{ touchAction: "manipulation" }}
-                  >
-                    <Icon size={16} className={`mb-1 ${color}`} />
-                    <span className={`font-headline text-lg font-extrabold ${color}`}>
-                      <CountUp target={target} suffix={suffix} />
-                    </span>
-                    <span className="mt-0.5 text-[10px] font-medium text-blue-300 leading-tight">{label}</span>
-                  </Link>
-                ))}
+              {/* ── Photo Collage + Stats overlay ── */}
+              <div className="mt-8 grid grid-cols-12 grid-rows-2 gap-2 h-[220px] sm:h-[260px]">
+
+                {/* Large photo — college campus */}
+                <Link href="/about" className="relative col-span-7 row-span-2 overflow-hidden rounded-2xl group" style={{ touchAction: "manipulation" }}>
+                  <Image
+                    src="https://images.unsplash.com/photo-1562774053-701939374585?w=600&q=80"
+                    alt="Partner college campus"
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width:768px) 50vw, 300px"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                  <div className="absolute bottom-3 left-3 right-3">
+                    <p className="text-[11px] font-extrabold text-white">🏛️ 200+ Partner Colleges</p>
+                    <p className="text-[10px] text-white/70">NCTE · UGC · AICTE Recognised</p>
+                  </div>
+                  <div className="absolute inset-0 ring-2 ring-inset ring-white/0 group-hover:ring-amber-400/50 rounded-2xl transition-all" />
+                </Link>
+
+                {/* Top-right — students in classroom */}
+                <Link href="/#reviews" className="relative col-span-5 row-span-1 overflow-hidden rounded-2xl group" style={{ touchAction: "manipulation" }}>
+                  <Image
+                    src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&q=80"
+                    alt="Students in classroom"
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width:768px) 35vw, 200px"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="absolute bottom-2 left-2 right-2">
+                    <p className="text-[10px] font-bold text-white">👨‍🎓 5,000+ Students</p>
+                  </div>
+                  <div className="absolute inset-0 ring-2 ring-inset ring-white/0 group-hover:ring-amber-400/50 rounded-2xl transition-all" />
+                </Link>
+
+                {/* Bottom-right — stat card */}
+                <Link href="/apply" className="relative col-span-5 row-span-1 overflow-hidden rounded-2xl group bg-gradient-to-br from-amber-400 to-orange-500 flex flex-col items-center justify-center text-center p-3" style={{ touchAction: "manipulation" }}>
+                  <span className="font-headline text-2xl font-black text-gray-900 leading-none">
+                    <CountUp target={11} suffix="+" />
+                  </span>
+                  <span className="text-[10px] font-extrabold text-gray-800 mt-0.5">Years Trusted</span>
+                  <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-gray-900/20 px-2 py-0.5 text-[9px] font-bold text-gray-900">
+                    Free Counselling →
+                  </span>
+                  <div className="absolute inset-0 ring-2 ring-inset ring-white/0 group-hover:ring-white/60 rounded-2xl transition-all" />
+                </Link>
               </div>
 
-              {/* Floating achievement cards — clickable */}
-              <div className="mt-9 flex flex-wrap gap-3">
-                <Link
-                  href="/courses/bed"
-                  className="flex items-center gap-3 rounded-2xl border border-white/[0.12] bg-white/[0.06] px-4 py-3 backdrop-blur-sm transition-all duration-200 hover:border-green-400/40 hover:bg-green-500/[0.08] hover:-translate-y-0.5 active:scale-95"
-                  style={{ touchAction: "manipulation" }}
-                >
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-green-500/20 ring-1 ring-green-500/30">
-                    <CheckCircle2 size={19} className="text-green-400" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-white">✅ Recently Admitted</p>
-                    <p className="mt-0.5 text-[11px] text-blue-300">Rahul Kumar — B.Ed, Nalanda College</p>
-                    <p className="text-[10px] text-green-400/80 font-medium">2 घंटे पहले · Patna</p>
-                  </div>
-                </Link>
-                <Link
-                  href="/apply"
-                  className="flex items-center gap-3 rounded-2xl border border-white/[0.12] bg-white/[0.06] px-4 py-3 backdrop-blur-sm transition-all duration-200 hover:border-amber-400/40 hover:bg-amber-500/[0.08] hover:-translate-y-0.5 active:scale-95"
-                  style={{ touchAction: "manipulation" }}
-                >
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-amber-500/20 ring-1 ring-amber-500/30">
-                    <CreditCard size={19} className="text-amber-400" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-white">💰 BSCC Loan Approved</p>
-                    <p className="mt-0.5 text-[11px] text-blue-300">Priya Singh — ₹4.2L loan · GNM Nursing</p>
-                    <p className="text-[10px] text-amber-400/80 font-medium">आज approved · Muzaffarpur</p>
-                  </div>
-                </Link>
-                <Link
-                  href="/courses/btech"
-                  className="flex items-center gap-3 rounded-2xl border border-white/[0.12] bg-white/[0.06] px-4 py-3 backdrop-blur-sm transition-all duration-200 hover:border-blue-400/40 hover:bg-blue-500/[0.08] hover:-translate-y-0.5 active:scale-95"
-                  style={{ touchAction: "manipulation" }}
-                >
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-blue-500/20 ring-1 ring-blue-500/30">
-                    <GraduationCap size={19} className="text-blue-400" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-white">🎓 Seat Secured</p>
-                    <p className="mt-0.5 text-[11px] text-blue-300">Amit Sharma — B.Tech CSE, NIT Patna</p>
-                    <p className="text-[10px] text-blue-400/80 font-medium">कल confirmed · Ara, Bihar</p>
-                  </div>
-                </Link>
+              {/* ── Recent admission strip ── */}
+              <div className="mt-3 flex flex-wrap gap-2">
+                {[
+                  { name: "Rahul Kumar", course: "B.Ed", time: "2 घंटे पहले", href: "/courses/bed", color: "border-green-400/30 bg-green-500/[0.08]" },
+                  { name: "Priya Singh", course: "GNM + ₹4.2L BSCC", time: "आज", href: "/apply", color: "border-amber-400/30 bg-amber-500/[0.08]" },
+                ].map(({ name, course, time, href, color }) => (
+                  <Link
+                    key={name}
+                    href={href}
+                    className={`flex items-center gap-2 rounded-xl border ${color} px-3 py-2 backdrop-blur-sm transition-all hover:-translate-y-0.5 active:scale-95`}
+                    style={{ touchAction: "manipulation" }}
+                  >
+                    <span className="text-[10px]">✅</span>
+                    <div>
+                      <p className="text-[11px] font-bold text-white leading-none">{name} — {course}</p>
+                      <p className="text-[9px] text-blue-300/80 mt-0.5">{time} · Patna, Bihar</p>
+                    </div>
+                  </Link>
+                ))}
               </div>
             </div>
 
