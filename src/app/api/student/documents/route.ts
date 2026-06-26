@@ -15,7 +15,7 @@ async function verifyStudent(request: NextRequest): Promise<string | null> {
   }
 }
 
-async function deleteFromCloudinary(publicId: string): Promise<void> {
+async function deleteFromCloudinary(publicId: string, resourceType = 'image'): Promise<void> {
   const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
   const apiKey = process.env.CLOUDINARY_API_KEY;
   const apiSecret = process.env.CLOUDINARY_API_SECRET;
@@ -24,22 +24,22 @@ async function deleteFromCloudinary(publicId: string): Promise<void> {
   const timestamp = Math.floor(Date.now() / 1000);
   const str = `public_id=${publicId}&timestamp=${timestamp}${apiSecret}`;
 
-  // Use SubtleCrypto for SHA-1 signing (available in Edge/Node environments)
   const encoder = new TextEncoder();
-  const data = encoder.encode(str);
-  const hashBuffer = await crypto.subtle.digest('SHA-1', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const signature = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  const hashBuffer = await crypto.subtle.digest('SHA-1', encoder.encode(str));
+  const signature = Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, '0')).join('');
 
-  const formData = new URLSearchParams();
-  formData.append('public_id', publicId);
-  formData.append('timestamp', String(timestamp));
-  formData.append('api_key', apiKey);
-  formData.append('signature', signature);
+  const body = new URLSearchParams();
+  body.append('public_id', publicId);
+  body.append('timestamp', String(timestamp));
+  body.append('api_key', apiKey);
+  body.append('signature', signature);
 
+  // resourceType is 'image' for jpg/png, 'raw' for pdf (when using auto upload)
+  const type = ['image', 'raw', 'video'].includes(resourceType) ? resourceType : 'image';
   await fetch(
-    `https://api.cloudinary.com/v1_1/${cloudName}/image/destroy`,
-    { method: 'POST', body: formData }
+    `https://api.cloudinary.com/v1_1/${cloudName}/${type}/destroy`,
+    { method: 'POST', body }
   ).catch(() => {});
 }
 
@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { uid, name, type, url, publicId, fileSize, mimeType } = body;
+    const { uid, name, type, url, publicId, resourceType, fileSize, mimeType } = body;
     if (!uid || !name || !type || !url) {
       return NextResponse.json({ error: "uid, name, type, url required" }, { status: 400 });
     }
@@ -95,12 +95,12 @@ export async function POST(request: NextRequest) {
       const existingStatus = existingData.status || "pending";
       if (existingStatus === "approved") {
         // Also delete the newly uploaded Cloudinary file since we're rejecting the replacement
-        if (publicId) await deleteFromCloudinary(publicId);
+        if (publicId) await deleteFromCloudinary(publicId, resourceType);
         return NextResponse.json({ error: "Approved document cannot be replaced. Contact the office." }, { status: 403 });
       }
       // Delete old Cloudinary file before replacing
       if (existingData.publicId) {
-        await deleteFromCloudinary(existingData.publicId);
+        await deleteFromCloudinary(existingData.publicId, existingData.resourceType);
       }
       await existingDoc.ref.delete();
     }
@@ -108,6 +108,7 @@ export async function POST(request: NextRequest) {
     const ref = await db.collection("documents").add({
       uid, name, type, url,
       publicId: publicId || null,
+      resourceType: resourceType || 'image',
       fileSize: fileSize || null,
       mimeType: mimeType || null,
       status: "pending",
@@ -150,7 +151,7 @@ export async function DELETE(request: NextRequest) {
     const body = await request.json().catch(() => ({}));
     const publicId = body.publicId || docData.publicId;
     if (publicId) {
-      await deleteFromCloudinary(publicId);
+      await deleteFromCloudinary(publicId, docData.resourceType || 'image');
     }
 
     await docRef.delete();

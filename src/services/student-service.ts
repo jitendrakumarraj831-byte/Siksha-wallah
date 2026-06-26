@@ -95,11 +95,18 @@ export const studentService = {
       xhr.addEventListener('load', async () => {
         try {
           if (xhr.status < 200 || xhr.status >= 300) {
-            throw new Error(`Cloudinary upload failed: ${xhr.statusText}`);
+            let errMsg = `Cloudinary upload failed (HTTP ${xhr.status})`;
+            try {
+              const errBody = JSON.parse(xhr.responseText);
+              if (errBody?.error?.message) errMsg = `Cloudinary: ${errBody.error.message}`;
+            } catch {}
+            throw new Error(errMsg);
           }
           const result = JSON.parse(xhr.responseText);
           const url: string = result.secure_url;
           const publicId: string = result.public_id;
+          // resource_type is 'image' for jpg/png, 'raw' for pdf (when preset uses auto)
+          const resourceType: string = result.resource_type || 'image';
 
           const token = auth?.currentUser ? await getIdToken(auth.currentUser) : null;
           const res = await fetch('/api/student/documents', {
@@ -110,7 +117,7 @@ export const studentService = {
             },
             body: JSON.stringify({
               uid, name: docName, type: docType, url,
-              publicId, fileSize: file.size, mimeType: file.type,
+              publicId, resourceType, fileSize: file.size, mimeType: file.type,
             }),
           });
           const json = await res.json();
@@ -125,7 +132,8 @@ export const studentService = {
         reject(new Error('Network error during upload'));
       });
 
-      xhr.open('POST', `https://api.cloudinary.com/v1_1/${cloudName}/upload`);
+      // Use /auto/upload so Cloudinary correctly handles both images and PDFs
+      xhr.open('POST', `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`);
       xhr.send(formData);
     });
   },
