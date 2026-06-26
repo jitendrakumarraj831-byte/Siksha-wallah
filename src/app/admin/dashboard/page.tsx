@@ -10,6 +10,7 @@ import {
   Loader, Users, Phone,
   CheckCircle2, MessageCircle, Clock,
   AlertCircle, RefreshCw, StickyNote, X, Save, Search, Download,
+  FileCheck, Mail, ShieldCheck,
 } from "lucide-react";
 import {
   getAllInquiries,
@@ -214,6 +215,24 @@ export default function AdminDashboardPage() {
               </button>
             );
           })}
+        </div>
+
+        {/* Quick Links to new modules */}
+        <div className="mb-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {[
+            { href: "/admin/documents", icon: ShieldCheck, label: "Document Verification", color: "text-green-600 bg-green-50" },
+            { href: "/admin/contacts",  icon: Mail,         label: "Contact Messages",     color: "text-violet-600 bg-violet-50" },
+            { href: "/admin/students",  icon: Users,        label: "Student Management",   color: "text-blue-600 bg-blue-50" },
+            { href: "/admin/activity",  icon: FileCheck,    label: "Website Activity",     color: "text-amber-600 bg-amber-50" },
+          ].map(({ href, icon: Icon, label, color }) => (
+            <Link key={href} href={href}
+              className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-3 shadow-sm hover:shadow-md transition">
+              <div className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl ${color.split(' ')[1]}`}>
+                <Icon size={16} className={color.split(' ')[0]} />
+              </div>
+              <span className="text-xs font-bold text-gray-700">{label}</span>
+            </Link>
+          ))}
         </div>
 
         {error && (

@@ -21,6 +21,8 @@ export interface StudentProfile {
   role?: string;
 }
 
+export type DocumentVerificationStatus = 'pending' | 'approved' | 'rejected';
+
 export interface Document {
   id?: string;
   uid: string;
@@ -31,6 +33,10 @@ export interface Document {
   fileSize?: number;
   mimeType?: string;
   uploadedAt: number;
+  status?: DocumentVerificationStatus;
+  remarks?: string;
+  verifiedAt?: number;
+  verifiedBy?: string;
 }
 
 export const studentService = {

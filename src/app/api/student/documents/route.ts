@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminDb, getAdminAuth } from "@/lib/firebase-admin";
 
-// Verify the student's Firebase ID token from Authorization header
 async function verifyStudent(request: NextRequest): Promise<string | null> {
   try {
     const auth = getAdminAuth();
@@ -16,13 +15,12 @@ async function verifyStudent(request: NextRequest): Promise<string | null> {
   }
 }
 
-// GET /api/student/documents?uid=xxx  — returns documents for that student
+// GET /api/student/documents?uid=xxx
 export async function GET(request: NextRequest) {
   try {
     const uid = request.nextUrl.searchParams.get("uid");
     if (!uid) return NextResponse.json({ error: "uid required" }, { status: 400 });
 
-    // Verify the caller owns this uid
     const callerUid = await verifyStudent(request);
     if (!callerUid || callerUid !== uid) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -43,8 +41,10 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { uid } = body;
-    if (!uid) return NextResponse.json({ error: "uid required" }, { status: 400 });
+    const { uid, name, type, url, storagePath, fileSize, mimeType } = body;
+    if (!uid || !name || !type || !url) {
+      return NextResponse.json({ error: "uid, name, type, url required" }, { status: 400 });
+    }
 
     const callerUid = await verifyStudent(request);
     if (!callerUid || callerUid !== uid) {
@@ -54,8 +54,27 @@ export async function POST(request: NextRequest) {
     const db = getAdminDb();
     if (!db) return NextResponse.json({ error: "DB unavailable" }, { status: 503 });
 
+    // Check if a document of the same type already exists for this student
+    const existing = await db.collection("documents")
+      .where("uid", "==", uid)
+      .where("type", "==", type)
+      .get();
+
+    // If replacing, only allow replacing rejected or pending documents
+    if (!existing.empty) {
+      const existingDoc = existing.docs[0];
+      const existingStatus = existingDoc.data().status || "pending";
+      if (existingStatus === "approved") {
+        return NextResponse.json({ error: "Approved document cannot be replaced. Contact the office." }, { status: 403 });
+      }
+      // Delete the old doc record before saving new one
+      await existingDoc.ref.delete();
+    }
+
     const ref = await db.collection("documents").add({
-      ...body,
+      uid, name, type, url, storagePath: storagePath || null,
+      fileSize: fileSize || null, mimeType: mimeType || null,
+      status: "pending",
       uploadedAt: Date.now(),
     });
     return NextResponse.json({ success: true, id: ref.id });
@@ -84,6 +103,12 @@ export async function DELETE(request: NextRequest) {
     if (!snap.exists || snap.data()?.uid !== uid) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
+
+    const docStatus = snap.data()?.status || "pending";
+    if (docStatus === "approved") {
+      return NextResponse.json({ error: "Approved documents cannot be deleted. Contact office." }, { status: 403 });
+    }
+
     await docRef.delete();
     return NextResponse.json({ success: true });
   } catch (e: any) {

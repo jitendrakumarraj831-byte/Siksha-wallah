@@ -14,8 +14,11 @@ const LINKS = [
   { href: '/admin/dashboard', label: 'Dashboard' },
   { href: '/admin/applications', label: 'Applications' },
   { href: '/admin/students', label: 'Students' },
-  { href: '/admin/messages', label: 'Messages' },
+  { href: '/admin/documents', label: 'Documents' },
+  { href: '/admin/contacts', label: 'Contact Messages' },
+  { href: '/admin/messages', label: 'Student Chat' },
   { href: '/admin/activity', label: 'Website Activity' },
+  { href: '/admin/profile', label: 'Admin Profile' },
 ];
 
 export function AdminMobileNav() {
