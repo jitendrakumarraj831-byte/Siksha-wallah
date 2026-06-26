@@ -25,10 +25,29 @@ function CourseCard({ course, streamKey }: { course: Course; streamKey: StreamKe
   const tab = streamTabs.find(s => s.key === streamKey)!;
   const colors = colorMap[tab.color];
   const slug = getCourseSlug(course.name);
+  // Whole-card destination: detail page if one exists, else the stream section.
+  const cardHref = slug ? `/courses/${slug}` : `/courses#${streamKey}`;
+  const waText = `नमस्ते!%20मुझे%20${encodeURIComponent(course.name)}%20(${encodeURIComponent(course.full)})%20के%20बारे%20में%20fees%20aur%20admission%20की%20जानकारी%20चाहिए।`;
 
   return (
-    <div className="group relative flex-shrink-0 w-[272px] sm:w-[288px] flex flex-col rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200">
-      {/* Top accent */}
+    /*
+     * Stretched-link pattern:
+     *  • The invisible <Link> at z-10 covers the whole card → clicking anywhere
+     *    on the card navigates to the detail page.
+     *  • Action buttons sit at z-20, above the overlay → they receive their own
+     *    clicks without any event.stopPropagation() needed.
+     */
+    <div className="group relative flex-shrink-0 w-[272px] sm:w-[288px] flex flex-col rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-gray-200 focus-within:ring-2 focus-within:ring-primary-blue focus-within:ring-offset-1">
+      {/* Whole-card stretched link — z-10 */}
+      <Link
+        href={cardHref}
+        className="absolute inset-0 z-10 rounded-2xl"
+        aria-label={`${course.full} की पूरी details देखें`}
+        tabIndex={0}
+        style={{ touchAction: "manipulation" }}
+      />
+
+      {/* Top accent bar */}
       <div className={`h-1.5 bg-gradient-to-r ${colors.accentBar}`} />
 
       <div className="flex flex-col flex-1 p-4">
@@ -44,12 +63,12 @@ function CourseCard({ course, streamKey }: { course: Course; streamKey: StreamKe
           )}
         </div>
 
-        {/* Full name */}
-        <h3 className="font-headline text-sm font-extrabold text-gray-900 leading-snug mb-2">
+        {/* Full name — subtly shifts colour on card hover */}
+        <h3 className="font-headline text-sm font-extrabold text-gray-900 leading-snug mb-2 transition-colors duration-200 group-hover:text-primary-blue">
           {course.full}
         </h3>
 
-        {/* Duration + Fee + Salary — compact single row */}
+        {/* Duration + Fee + Salary */}
         <div className="flex flex-wrap gap-1.5 mb-2">
           <span className="flex items-center gap-1 text-[11px] text-gray-500 bg-gray-50 border border-gray-100 rounded-lg px-2 py-0.5">
             <Clock size={10} className="text-gray-400" /> {course.duration}
@@ -78,41 +97,50 @@ function CourseCard({ course, streamKey }: { course: Course; streamKey: StreamKe
           ))}
         </ul>
 
-        {/* Action buttons */}
-        <div className="flex flex-col gap-1.5 mt-auto">
+        {/* Action buttons — z-20 so they sit above the card overlay */}
+        <div className="relative z-20 flex flex-col gap-1.5 mt-auto">
           <div className="flex gap-1.5">
+            {/* Apply → application form */}
             <Link
               href={`/apply?course=${encodeURIComponent(course.name)}`}
-              className="flex flex-1 items-center justify-center gap-1 rounded-xl bg-primary-blue py-2 text-xs font-bold text-white hover:bg-blue-700 active:bg-blue-800 transition"
+              className="flex flex-1 items-center justify-center gap-1 rounded-xl bg-primary-blue py-2 text-xs font-bold text-white hover:bg-blue-700 active:scale-95 active:bg-blue-800 transition-all"
               style={{ touchAction: "manipulation" }}
+              tabIndex={0}
             >
               <GraduationCap size={12} /> Apply
             </Link>
+
+            {/* Details → course detail page; Enquire → WhatsApp (when no detail page) */}
             {slug ? (
               <Link
                 href={`/courses/${slug}`}
-                className={`flex flex-1 items-center justify-center gap-1 rounded-xl py-2 text-xs font-bold text-white transition bg-gradient-to-r ${colors.gradient}`}
+                className={`flex flex-1 items-center justify-center gap-1 rounded-xl py-2 text-xs font-bold text-white transition-all active:scale-95 bg-gradient-to-r ${colors.gradient}`}
                 style={{ touchAction: "manipulation" }}
+                tabIndex={0}
               >
                 Details <ArrowRight size={11} />
               </Link>
             ) : (
               <a
                 href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(course.name)}%20के%20बारे%20में%20जानकारी%20चाहिए।`}
-                target="_blank" rel="noopener noreferrer"
-                onClick={() => saveActivity({ type: 'whatsapp', title: `💬 WhatsApp — ${course.name}`, description: course.full, page: '/courses' })}
-                className="flex flex-1 items-center justify-center gap-1 rounded-xl border-2 border-green-500 py-2 text-xs font-bold text-green-700 hover:bg-green-500 hover:text-white active:bg-green-600 active:text-white transition"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => saveActivity({ type: "whatsapp", title: `💬 WhatsApp — ${course.name}`, description: course.full, page: "/courses" })}
+                className="flex flex-1 items-center justify-center gap-1 rounded-xl border-2 border-green-500 py-2 text-xs font-bold text-green-700 hover:bg-green-500 hover:text-white active:scale-95 active:bg-green-600 active:text-white transition-all"
                 style={{ touchAction: "manipulation" }}
               >
                 <MessageCircle size={11} /> Enquire
               </a>
             )}
           </div>
+
+          {/* WhatsApp row */}
           <a
-            href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(course.name)}%20(${encodeURIComponent(course.full)})%20के%20बारे%20में%20fees%20aur%20admission%20की%20जानकारी%20चाहिए।`}
-            target="_blank" rel="noopener noreferrer"
-            onClick={() => saveActivity({ type: 'whatsapp', title: `💬 WhatsApp — ${course.name}`, description: course.full, page: '/courses' })}
-            className="flex items-center justify-center gap-1.5 rounded-xl border border-green-200 bg-green-50 py-1.5 text-[11px] font-bold text-green-700 hover:bg-green-500 hover:text-white active:bg-green-600 active:text-white transition"
+            href={`https://wa.me/916203138576?text=${waText}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => saveActivity({ type: "whatsapp", title: `💬 WhatsApp — ${course.name}`, description: course.full, page: "/courses" })}
+            className="flex items-center justify-center gap-1.5 rounded-xl border border-green-200 bg-green-50 py-1.5 text-[11px] font-bold text-green-700 hover:bg-green-500 hover:text-white active:scale-95 active:bg-green-600 active:text-white transition-all"
             style={{ touchAction: "manipulation" }}
           >
             <MessageCircle size={11} /> WhatsApp पर पूछें
