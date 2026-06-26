@@ -27,22 +27,14 @@ function CourseCard({ course, streamKey }: { course: Course; streamKey: StreamKe
   const slug = getCourseSlug(course.name);
 
   return (
-    <div className="group relative flex-shrink-0 w-[272px] sm:w-[288px] flex flex-col rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200 cursor-pointer">
-      {/* Whole-card click → course details (stretched link). Action buttons below sit above this via z-index. */}
-      {slug && (
-        <Link
-          href={`/courses/${slug}`}
-          aria-label={`${course.name} — ${course.full} की पूरी details देखें`}
-          className="absolute inset-0 z-10"
-        />
-      )}
+    <div className="group relative flex-shrink-0 w-[272px] sm:w-[288px] flex flex-col rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200">
       {/* Top accent */}
       <div className={`h-1.5 bg-gradient-to-r ${colors.accentBar}`} />
 
-      <div className="flex flex-col flex-1 p-5">
+      <div className="flex flex-col flex-1 p-4">
         {/* Badges */}
-        <div className="flex items-center justify-between gap-2 mb-3">
-          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-black ${colors.badge}`}>
+        <div className="flex items-center justify-between gap-2 mb-2">
+          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-black ${colors.badge}`}>
             {course.name}
           </span>
           {course.bscc && (
@@ -53,29 +45,32 @@ function CourseCard({ course, streamKey }: { course: Course; streamKey: StreamKe
         </div>
 
         {/* Full name */}
-        <h3 className="font-headline text-sm font-extrabold text-gray-900 leading-snug mb-3">
+        <h3 className="font-headline text-sm font-extrabold text-gray-900 leading-snug mb-2">
           {course.full}
         </h3>
 
-        {/* Duration + Fee */}
-        <div className="flex flex-wrap gap-1.5 mb-3">
-          <span className="flex items-center gap-1 text-[11px] text-gray-500 bg-gray-50 border border-gray-100 rounded-lg px-2 py-1">
+        {/* Duration + Fee + Salary — compact single row */}
+        <div className="flex flex-wrap gap-1.5 mb-2">
+          <span className="flex items-center gap-1 text-[11px] text-gray-500 bg-gray-50 border border-gray-100 rounded-lg px-2 py-0.5">
             <Clock size={10} className="text-gray-400" /> {course.duration}
           </span>
-          <span className="flex items-center gap-1 text-[11px] text-gray-500 bg-gray-50 border border-gray-100 rounded-lg px-2 py-1">
+          <span className="flex items-center gap-1 text-[11px] text-gray-500 bg-gray-50 border border-gray-100 rounded-lg px-2 py-0.5">
             <CreditCard size={10} className="text-gray-400" /> {course.fee}
+          </span>
+          <span className="flex items-center gap-1 text-[11px] font-semibold text-green-700 bg-green-50 border border-green-100 rounded-lg px-2 py-0.5">
+            {course.salary}
           </span>
         </div>
 
         {/* Eligibility */}
-        <p className="text-[11px] text-gray-500 leading-relaxed mb-3 line-clamp-2">
+        <p className="text-[11px] text-gray-500 leading-relaxed mb-2 line-clamp-1">
           <span className="font-semibold text-gray-600">Eligibility: </span>
           {course.eligibility}
         </p>
 
-        {/* Top 3 highlights */}
-        <ul className="space-y-1 mb-4 flex-1">
-          {course.highlights.slice(0, 3).map((h, i) => (
+        {/* Top 2 highlights */}
+        <ul className="space-y-1 mb-3 flex-1">
+          {course.highlights.slice(0, 2).map((h, i) => (
             <li key={i} className="flex items-start gap-1.5 text-[11px] text-gray-600">
               <CheckCircle2 size={11} className={`mt-0.5 flex-shrink-0 ${colors.checkColor}`} />
               {h}
@@ -83,25 +78,19 @@ function CourseCard({ course, streamKey }: { course: Course; streamKey: StreamKe
           ))}
         </ul>
 
-        {/* Salary */}
-        <div className="mb-4 rounded-lg bg-gray-50 border border-gray-100 px-3 py-2">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-0.5">Expected Salary</p>
-          <p className="text-xs font-extrabold text-green-700">{course.salary}</p>
-        </div>
-
-        {/* Action buttons — raised above the stretched card link */}
-        <div className="relative z-20 flex flex-col gap-1.5 mt-auto">
+        {/* Action buttons */}
+        <div className="flex flex-col gap-1.5 mt-auto">
           <div className="flex gap-1.5">
             <Link
               href={`/apply?course=${encodeURIComponent(course.name)}`}
-              className="flex flex-1 items-center justify-center gap-1 rounded-xl bg-primary-blue py-2.5 text-xs font-bold text-white hover:bg-blue-700 transition"
+              className="flex flex-1 items-center justify-center gap-1 rounded-xl bg-primary-blue py-2 text-xs font-bold text-white hover:bg-blue-700 transition"
             >
               <GraduationCap size={12} /> Apply
             </Link>
             {slug ? (
               <Link
                 href={`/courses/${slug}`}
-                className={`flex flex-1 items-center justify-center gap-1 rounded-xl py-2.5 text-xs font-bold text-white transition bg-gradient-to-r ${colors.gradient}`}
+                className={`flex flex-1 items-center justify-center gap-1 rounded-xl py-2 text-xs font-bold text-white transition bg-gradient-to-r ${colors.gradient}`}
               >
                 Details <ArrowRight size={11} />
               </Link>
@@ -110,7 +99,7 @@ function CourseCard({ course, streamKey }: { course: Course; streamKey: StreamKe
                 href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(course.name)}%20के%20बारे%20में%20जानकारी%20चाहिए।`}
                 target="_blank" rel="noopener noreferrer"
                 onClick={() => saveActivity({ type: 'whatsapp', title: `💬 WhatsApp — ${course.name}`, description: course.full, page: '/courses' })}
-                className="flex flex-1 items-center justify-center gap-1 rounded-xl border-2 border-green-500 py-2.5 text-xs font-bold text-green-700 hover:bg-green-500 hover:text-white transition"
+                className="flex flex-1 items-center justify-center gap-1 rounded-xl border-2 border-green-500 py-2 text-xs font-bold text-green-700 hover:bg-green-500 hover:text-white transition"
               >
                 <MessageCircle size={11} /> Enquire
               </a>
@@ -120,7 +109,7 @@ function CourseCard({ course, streamKey }: { course: Course; streamKey: StreamKe
             href={`https://wa.me/916203138576?text=नमस्ते!%20मुझे%20${encodeURIComponent(course.name)}%20(${encodeURIComponent(course.full)})%20के%20बारे%20में%20fees%20aur%20admission%20की%20जानकारी%20चाहिए।`}
             target="_blank" rel="noopener noreferrer"
             onClick={() => saveActivity({ type: 'whatsapp', title: `💬 WhatsApp — ${course.name}`, description: course.full, page: '/courses' })}
-            className="flex items-center justify-center gap-1.5 rounded-xl border border-green-200 bg-green-50 py-2 text-[11px] font-bold text-green-700 hover:bg-green-500 hover:text-white transition"
+            className="flex items-center justify-center gap-1.5 rounded-xl border border-green-200 bg-green-50 py-1.5 text-[11px] font-bold text-green-700 hover:bg-green-500 hover:text-white transition"
           >
             <MessageCircle size={11} /> WhatsApp पर पूछें
           </a>
@@ -202,13 +191,16 @@ function StreamSlider({ tab }: { tab: typeof streamTabs[0] }) {
   const onPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     if (!dragStart.current || !scrollRef.current) return;
     const dx = e.clientX - dragStart.current.x;
-    if (Math.abs(dx) > 5) movedRef.current = true;
+    if (Math.abs(dx) > 10) movedRef.current = true;
     scrollRef.current.scrollLeft = dragStart.current.scrollLeft - dx;
   }, []);
 
   const onPointerUp = useCallback(() => {
     setIsDragging(false);
     dragStart.current = null;
+    // Reset after the click event fires (click fires right after pointerup).
+    // Without this, a drag followed by a normal click is incorrectly blocked.
+    setTimeout(() => { movedRef.current = false; }, 0);
   }, []);
 
   return (
@@ -277,7 +269,13 @@ function StreamSlider({ tab }: { tab: typeof streamTabs[0] }) {
             onPointerUp={onPointerUp}
             onPointerLeave={onPointerUp}
             onClickCapture={(e) => { if (movedRef.current) { e.preventDefault(); e.stopPropagation(); } }}
-            onMouseEnter={() => setPaused(true)}
+            onMouseEnter={() => {
+              setPaused(true);
+              // Stop any in-progress smooth-scroll animation instantly so the card
+              // under the cursor doesn't shift between mouseenter and click.
+              const el = scrollRef.current;
+              if (el) el.scrollTo({ left: el.scrollLeft, behavior: "instant" as ScrollBehavior });
+            }}
             onMouseLeave={() => setPaused(false)}
             onTouchStart={() => setPaused(true)}
             onTouchEnd={() => setPaused(false)}
@@ -285,7 +283,7 @@ function StreamSlider({ tab }: { tab: typeof streamTabs[0] }) {
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
-              cursor: isDragging ? "grabbing" : "grab",
+              cursor: isDragging ? "grabbing" : "default",
             }}
           >
             {tab.courses.map(course => (
