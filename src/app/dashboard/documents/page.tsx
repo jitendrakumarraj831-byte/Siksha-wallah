@@ -6,8 +6,6 @@ import Link from 'next/link';
 import { useAuth } from '@/components/auth-provider';
 import { studentService, type Document, type DocumentVerificationStatus } from '@/services/student-service';
 import { PortalShell } from '@/components/portal-shell';
-import { getIdToken } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
 import {
   ArrowLeft, Loader, AlertCircle, CheckCircle2, Upload, Trash2,
   Eye, RefreshCw, FileText, Image, X, Clock, ShieldCheck, ShieldX,
@@ -29,7 +27,7 @@ const DOCUMENT_TYPES: { type: string; label: string; accept: string; hint: strin
 ];
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
-const ALLOWED_MIME = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+const ALLOWED_MIME = ['application/pdf', 'image/jpeg', 'image/png'];
 
 function statusBadge(status?: DocumentVerificationStatus) {
   if (!status || status === 'pending') return { label: 'Pending Review', cls: 'bg-yellow-100 text-yellow-800', icon: Clock };
@@ -182,13 +180,6 @@ export default function DocumentsPage() {
   const [globalError, setGlobalError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
-  useEffect(() => {
-    if (!authLoading && !isAuthenticated) { router.push('/auth/login'); return; }
-    if (!user) return;
-    loadDocuments();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authLoading, isAuthenticated, user]);
-
   const loadDocuments = useCallback(async () => {
     if (!user) return;
     setPageLoading(true);
@@ -202,6 +193,20 @@ export default function DocumentsPage() {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) { router.push('/auth/login'); return; }
+    if (!user) return;
+    loadDocuments();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authLoading, isAuthenticated, user]);
+
+  // Poll every 30 s so status changes from office are reflected in real time
+  useEffect(() => {
+    if (!user) return;
+    const id = setInterval(() => { loadDocuments(); }, 30_000);
+    return () => clearInterval(id);
+  }, [user, loadDocuments]);
+
   const handleUpload = useCallback(async (type: string, file: File, label: string, onProgress: (pct: number) => void) => {
     if (!user) throw new Error('Not authenticated');
     await studentService.uploadDocumentFile(user.uid, file, label, type, onProgress);
@@ -212,15 +217,7 @@ export default function DocumentsPage() {
 
   const handleDelete = useCallback(async (doc: Document) => {
     if (!user || !doc.id) return;
-    const token = auth?.currentUser ? await getIdToken(auth.currentUser) : null;
-    const res = await fetch(`/api/student/documents?id=${doc.id}&uid=${user.uid}`, {
-      method: 'DELETE',
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-    });
-    if (!res.ok) {
-      const json = await res.json().catch(() => ({}));
-      throw new Error(json.error || 'Delete failed');
-    }
+    await studentService.deleteDocument(doc.id, user.uid, doc.storagePath);
     await loadDocuments();
   }, [user, loadDocuments]);
 
