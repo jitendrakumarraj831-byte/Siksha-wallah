@@ -40,9 +40,17 @@ export function rateLimit(key: string, limit: number, windowMs: number): RateLim
 }
 
 export function getClientIp(req: Request): string {
+  // Prefer x-real-ip: on Vercel this is set by the edge and cannot be spoofed
+  // by the client. Fall back to the LAST entry in x-forwarded-for (the IP added
+  // by the last trusted proxy), never the first (which is client-controlled).
+  const realIp = req.headers.get("x-real-ip");
+  if (realIp) return realIp.trim();
   const xff = req.headers.get("x-forwarded-for");
-  if (xff) return xff.split(",")[0].trim();
-  return req.headers.get("x-real-ip") || "unknown";
+  if (xff) {
+    const parts = xff.split(",");
+    return parts[parts.length - 1].trim();
+  }
+  return "unknown";
 }
 
 export function tooManyRequests(retryAfter: number): Response {

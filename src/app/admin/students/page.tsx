@@ -143,7 +143,7 @@ function StudentCard({
                       <Phone size={11} /> Call
                     </a>
                     <a
-                      href={`https://wa.me/91${student.phone}?text=Hello ${encodeURIComponent(student.name || "")}! Main Siksha Wallah se bol raha hun. Aapke course application ke baare mein baat karni thi.`}
+                      href={`https://wa.me/91${student.phone}?text=${encodeURIComponent(`Hello ${student.name || ""}! Main Siksha Wallah se bol raha hun. Aapke course application ke baare mein baat karni thi.`)}`}
                       target="_blank" rel="noopener noreferrer"
                       className="flex items-center gap-1 rounded-lg bg-[#25D366] px-3 py-1.5 text-xs font-bold text-white hover:bg-green-500"
                     >

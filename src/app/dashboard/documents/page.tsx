@@ -1,465 +1,228 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/components/auth-provider';
-import { getApplicationsByUser, type CourseApplication } from '@/services/application-service';
+import { studentService, type Document, type DocumentVerificationStatus } from '@/services/student-service';
 import { PortalShell } from '@/components/portal-shell';
+import { getIdToken } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 import {
-  ArrowLeft, Loader, AlertCircle, ClipboardList, MapPin, Clock,
-  Phone, MessageCircle, FileCheck2, Building2, Info,
+  ArrowLeft, Loader, AlertCircle, CheckCircle2, Upload, Trash2,
+  Eye, RefreshCw, FileText, Image, X, Clock, ShieldCheck, ShieldX,
 } from 'lucide-react';
 
-// ── Course → required document checklist ─────────────────────────────────────
-interface CourseDocInfo {
-  label: string;
-  type: string;
-  note?: string;
-}
-interface CourseRequirement { docs: CourseDocInfo[] }
-
-const COURSE_REQUIREMENTS: Array<{ keywords: string[]; req: CourseRequirement }> = [
-  // ── Teaching ──────────────────────────────────────────────────────────────
-  {
-    keywords: ['b.ed', 'bed', 'b ed', 'bachelor of education'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet' },
-      { type: 'marksheet', label: 'Graduation Marksheet' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Transfer Certificate (TC)' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable (SC/ST/OBC)' },
-    ]},
-  },
-  {
-    keywords: ['d.el.ed', 'deled', 'diploma in elementary education', 'd el ed', 'd.el.ed'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Transfer Certificate (TC)' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['b.p.ed', 'bped', 'b.ped', 'bachelor of physical education'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet' },
-      { type: 'marksheet', label: 'Graduation Marksheet' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Physical Fitness Certificate' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['m.ed', 'master of education'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet' },
-      { type: 'marksheet', label: 'Graduation Marksheet' },
-      { type: 'marksheet', label: 'B.Ed / M.A. Marksheet' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  // ── Medical ───────────────────────────────────────────────────────────────
-  {
-    keywords: ['mbbs', 'bachelor of medicine'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet (PCB)' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'NEET Score Card' },
-      { type: 'other',     label: 'Domicile Certificate' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['bams', 'ayurvedic', 'bachelor of ayurvedic'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet (PCB)' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'NEET Score Card' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['bds', 'bachelor of dental', 'dental surgery'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet (PCB)' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'NEET Score Card' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['b.sc nursing', 'bsc nursing', 'bsc. nursing', 'bachelor of science in nursing'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet (Biology)' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Medical Fitness Certificate' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['gnm', 'general nursing & midwifery', 'general nursing'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Medical Fitness Certificate' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['anm', 'auxiliary nursing'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['d.pharma', 'dpharma', 'diploma in pharmacy'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet (PCB/PCM)' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['b.pharma', 'bpharma', 'bachelor of pharmacy'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet (PCB/PCM)' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['bmlt', 'b.mlt', 'bachelor of medical lab', 'b.m.l.t'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet (PCB)' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  // ── Technical ─────────────────────────────────────────────────────────────
-  {
-    keywords: ['b.tech', 'btech', 'bachelor of technology'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet (PCM)' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'JEE / DCECE Score Card', note: 'If applicable' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['polytechnic', 'diploma in engineering', 'diploma engineering'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['iti', 'industrial training'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '8th / 10th Marksheet' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['bca', 'bachelor of computer application'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['mca', 'master of computer application'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet' },
-      { type: 'marksheet', label: 'Graduation Marksheet (BCA/B.Sc)' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['bba', 'bachelor of business administration'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['mba', 'master of business administration'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet' },
-      { type: 'marksheet', label: 'Graduation Marksheet' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'CAT/MAT Score Card', note: 'If applicable' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  // ── Paramedical ───────────────────────────────────────────────────────────
-  {
-    keywords: ['b.p.t', 'bpt', 'bachelor of physiotherapy', 'physiotherapy'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet (PCB)' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Medical Fitness Certificate' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['b.o.t.t', 'bott', 'operation theatre technology'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet (PCB)' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['b.r.i.t', 'brit', 'radio imaging technology', 'radiology'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet (PCB)' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['b.o.t', 'bot', 'occupational therapy'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet (PCB)' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['b.sc. biotech', 'bsc biotech', 'biotechnology'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet (PCB)' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['hospital mgmt', 'hospital management', 'b.sc. in hospital'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet (any stream)' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['d.m.l.t', 'dmlt', 'diploma in medical lab'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet (Biology)' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['d.o.t.a', 'dota', 'operation theatre assistant'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet (Biology)' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['d.m.r', 'dmr', 'diploma in medical radiology', 'x-ray'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet (Biology)' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['o.p.t', 'opt', 'ophthalmic', 'eye care'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet (Biology)' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['o.f.c.g', 'ofcg', 'orthotics', 'footwear correction'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet (Biology)' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['dresser', 'wound dressing'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet / Certificate' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-    ]},
-  },
-  // ── Law ───────────────────────────────────────────────────────────────────
-  {
-    keywords: ['llb', 'bachelor of laws', 'law degree'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet' },
-      { type: 'marksheet', label: 'Graduation Marksheet' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['ba.llb', 'ba llb', 'bachelor of arts & laws'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'CLAT Score Card', note: 'If applicable' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['bba.llb', 'bba llb', 'bachelor of business administration & laws'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'CLAT Score Card', note: 'If applicable' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
-  {
-    keywords: ['llm', 'master of laws'],
-    req: { docs: [
-      { type: 'aadhaar',   label: 'Aadhaar Card' },
-      { type: 'marksheet', label: '10th Marksheet' },
-      { type: 'marksheet', label: '12th Marksheet' },
-      { type: 'marksheet', label: 'Graduation Marksheet' },
-      { type: 'marksheet', label: 'LLB Marksheet' },
-      { type: 'photo',     label: 'Passport-Size Photo' },
-      { type: 'other',     label: 'Caste Certificate', note: 'If applicable' },
-    ]},
-  },
+const DOCUMENT_TYPES: { type: string; label: string; accept: string; hint: string }[] = [
+  { type: 'aadhaar',    label: 'Aadhaar Card',        accept: '.pdf,.jpg,.jpeg,.png', hint: 'Front & back on one page' },
+  { type: 'photo',      label: 'Passport Photo',       accept: '.jpg,.jpeg,.png',     hint: 'White background, face clearly visible' },
+  { type: 'signature',  label: 'Signature',            accept: '.jpg,.jpeg,.png',     hint: 'On white paper, black/blue ink' },
+  { type: 'class10',    label: '10th Marksheet',       accept: '.pdf,.jpg,.jpeg,.png', hint: 'Board certificate / marksheet' },
+  { type: 'class12',    label: '12th Marksheet',       accept: '.pdf,.jpg,.jpeg,.png', hint: 'Board certificate / marksheet' },
+  { type: 'graduation', label: 'Graduation Marksheet', accept: '.pdf,.jpg,.jpeg,.png', hint: 'If applicable' },
+  { type: 'tc',         label: 'Transfer Certificate', accept: '.pdf,.jpg,.jpeg,.png', hint: 'From last attended institution' },
+  { type: 'migration',  label: 'Migration Certificate',accept: '.pdf,.jpg,.jpeg,.png', hint: 'If switching board/university' },
+  { type: 'caste',      label: 'Caste Certificate',    accept: '.pdf,.jpg,.jpeg,.png', hint: 'SC/ST/OBC — if applicable' },
+  { type: 'income',     label: 'Income Certificate',   accept: '.pdf,.jpg,.jpeg,.png', hint: 'For scholarship/fee waiver' },
+  { type: 'domicile',   label: 'Domicile Certificate', accept: '.pdf,.jpg,.jpeg,.png', hint: 'State residence proof' },
+  { type: 'other',      label: 'Other Document',       accept: '.pdf,.jpg,.jpeg,.png', hint: 'Any additional required document' },
 ];
 
-function getCourseRequirements(courseName: string): CourseRequirement | null {
-  const lower = courseName.toLowerCase();
-  for (const entry of COURSE_REQUIREMENTS) {
-    if (entry.keywords.some(k => lower.includes(k))) {
-      return entry.req;
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+const ALLOWED_MIME = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+
+function statusBadge(status?: DocumentVerificationStatus) {
+  if (!status || status === 'pending') return { label: 'Pending Review', cls: 'bg-yellow-100 text-yellow-800', icon: Clock };
+  if (status === 'approved') return { label: 'Approved', cls: 'bg-green-100 text-green-800', icon: ShieldCheck };
+  return { label: 'Rejected', cls: 'bg-red-100 text-red-800', icon: ShieldX };
+}
+
+function DocRow({
+  docDef,
+  uploaded,
+  onUpload,
+  onDelete,
+}: {
+  docDef: (typeof DOCUMENT_TYPES)[0];
+  uploaded?: Document;
+  onUpload: (type: string, file: File, label: string, onProgress: (pct: number) => void) => Promise<void>;
+  onDelete: (doc: Document) => Promise<void>;
+}) {
+  const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [error, setError] = useState('');
+  const [deleting, setDeleting] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const badge = statusBadge(uploaded?.status);
+  const StatusIcon = badge.icon;
+  const canModify = !uploaded || uploaded.status === 'pending' || uploaded.status === 'rejected';
+
+  function validateFile(file: File): string | null {
+    if (!ALLOWED_MIME.includes(file.type)) return 'Only PDF, JPG, PNG files are allowed.';
+    if (file.size > MAX_FILE_SIZE) return 'File must be under 5 MB.';
+    return null;
+  }
+
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const err = validateFile(file);
+    if (err) { setError(err); return; }
+    setError('');
+    setUploading(true);
+    setProgress(0);
+    try {
+      await onUpload(docDef.type, file, docDef.label, setProgress);
+    } catch (e: any) {
+      setError(e.message);
+    } finally {
+      setUploading(false);
+      setProgress(0);
+      if (inputRef.current) inputRef.current.value = '';
     }
   }
-  return null;
+
+  async function handleDelete() {
+    if (!uploaded || !confirm(`Delete "${docDef.label}"? You can re-upload later.`)) return;
+    setDeleting(true);
+    try {
+      await onDelete(uploaded);
+    } catch (e: any) {
+      setError(e.message);
+    } finally {
+      setDeleting(false);
+    }
+  }
+
+  return (
+    <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-start gap-3 min-w-0">
+          <div className={`flex-shrink-0 flex h-10 w-10 items-center justify-center rounded-xl ${uploaded ? 'bg-blue-50' : 'bg-gray-50'}`}>
+            {uploaded?.mimeType?.startsWith('image/') ? (
+              <Image size={20} className="text-blue-500" />
+            ) : (
+              <FileText size={20} className={uploaded ? 'text-blue-500' : 'text-gray-400'} />
+            )}
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm font-bold text-gray-900">{docDef.label}</p>
+            <p className="text-xs text-gray-400">{docDef.hint}</p>
+            {uploaded && (
+              <span className={`mt-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold ${badge.cls}`}>
+                <StatusIcon size={10} /> {badge.label}
+              </span>
+            )}
+            {uploaded?.remarks && (
+              <p className="mt-1 text-xs text-red-600">Remark: {uploaded.remarks}</p>
+            )}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 flex-shrink-0">
+          {uploaded && (
+            <a href={uploaded.url} target="_blank" rel="noopener noreferrer"
+              className="flex items-center gap-1 rounded-lg border border-blue-200 bg-blue-50 px-2.5 py-1.5 text-xs font-semibold text-blue-700 hover:bg-blue-100 transition">
+              <Eye size={12} /> View
+            </a>
+          )}
+          {uploaded && canModify && (
+            <button onClick={handleDelete} disabled={deleting}
+              className="flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-2.5 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-100 transition disabled:opacity-50">
+              {deleting ? <Loader size={12} className="animate-spin" /> : <Trash2 size={12} />}
+              Delete
+            </button>
+          )}
+          {canModify && (
+            <>
+              <input ref={inputRef} type="file" accept={docDef.accept} className="hidden" onChange={handleFileChange} />
+              <button
+                onClick={() => inputRef.current?.click()}
+                disabled={uploading}
+                className="flex items-center gap-1 rounded-lg bg-[#003f9f] px-2.5 py-1.5 text-xs font-bold text-white hover:bg-blue-700 transition disabled:opacity-60"
+              >
+                {uploading ? (
+                  <><Loader size={12} className="animate-spin" /> {progress}%</>
+                ) : uploaded ? (
+                  <><RefreshCw size={12} /> Replace</>
+                ) : (
+                  <><Upload size={12} /> Upload</>
+                )}
+              </button>
+            </>
+          )}
+          {uploaded?.status === 'approved' && (
+            <span className="text-xs text-green-600 font-semibold">Locked ✓</span>
+          )}
+        </div>
+      </div>
+
+      {uploading && (
+        <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+          <div className="h-full rounded-full bg-blue-500 transition-all duration-300" style={{ width: `${progress}%` }} />
+        </div>
+      )}
+
+      {error && (
+        <div className="mt-2 flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-600">
+          <AlertCircle size={12} /> {error}
+          <button onClick={() => setError('')} className="ml-auto"><X size={12} /></button>
+        </div>
+      )}
+    </div>
+  );
 }
 
-// Common documents every student should carry, regardless of course
-const COMMON_DOCS = [
-  'Aadhaar Card (आधार कार्ड)',
-  '10th Marksheet (दसवीं अंकपत्र)',
-  '12th Marksheet (बारहवीं अंकपत्र)',
-  'Graduation Marksheet (यदि लागू हो)',
-  'Passport-Size Photos (4–6 copies)',
-  'Caste / Income / Residence Certificate (यदि लागू हो)',
-];
-
-// ── Component ─────────────────────────────────────────────────────────────────
 export default function DocumentsPage() {
   const { user, isAuthenticated, loading: authLoading } = useAuth();
   const router = useRouter();
-
-  const [applications, setApplications] = useState<CourseApplication[]>([]);
+  const [documents, setDocuments] = useState<Document[]>([]);
   const [pageLoading, setPageLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [globalError, setGlobalError] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
 
   useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      router.push('/auth/login');
-      return;
-    }
+    if (!authLoading && !isAuthenticated) { router.push('/auth/login'); return; }
     if (!user) return;
+    loadDocuments();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authLoading, isAuthenticated, user]);
 
-    getApplicationsByUser(user.uid)
-      .then(apps => setApplications(apps))
-      .catch(err => setError(err.message))
-      .finally(() => setPageLoading(false));
-  }, [authLoading, isAuthenticated, user, router]);
+  const loadDocuments = useCallback(async () => {
+    if (!user) return;
+    setPageLoading(true);
+    try {
+      const docs = await studentService.getDocuments(user.uid);
+      setDocuments(docs);
+    } catch (e: any) {
+      setGlobalError(e.message);
+    } finally {
+      setPageLoading(false);
+    }
+  }, [user]);
 
-  // Build a per-course required-document checklist for every applied course
-  const courseChecklists = applications
-    .map(app => ({ courseName: app.course, req: getCourseRequirements(app.course) }))
-    .filter(c => c.req !== null) as { courseName: string; req: CourseRequirement }[];
+  const handleUpload = useCallback(async (type: string, file: File, label: string, onProgress: (pct: number) => void) => {
+    if (!user) throw new Error('Not authenticated');
+    await studentService.uploadDocumentFile(user.uid, file, label, type, onProgress);
+    setSuccessMsg(`${label} uploaded successfully!`);
+    setTimeout(() => setSuccessMsg(''), 3000);
+    await loadDocuments();
+  }, [user, loadDocuments]);
 
-  // Deduplicate by course name
-  const seen = new Set<string>();
-  const uniqueChecklists = courseChecklists.filter(c => {
-    if (seen.has(c.courseName)) return false;
-    seen.add(c.courseName);
-    return true;
-  });
+  const handleDelete = useCallback(async (doc: Document) => {
+    if (!user || !doc.id) return;
+    const token = auth?.currentUser ? await getIdToken(auth.currentUser) : null;
+    const res = await fetch(`/api/student/documents?id=${doc.id}&uid=${user.uid}`, {
+      method: 'DELETE',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    if (!res.ok) {
+      const json = await res.json().catch(() => ({}));
+      throw new Error(json.error || 'Delete failed');
+    }
+    await loadDocuments();
+  }, [user, loadDocuments]);
 
   if (authLoading || pageLoading) {
     return (
@@ -473,144 +236,81 @@ export default function DocumentsPage() {
 
   if (!isAuthenticated) return null;
 
+  const uploadedCount = documents.length;
+  const approvedCount = documents.filter(d => d.status === 'approved').length;
+  const rejectedCount = documents.filter(d => d.status === 'rejected').length;
+
+  const docMap: Record<string, Document> = {};
+  documents.forEach(d => { docMap[d.type] = d; });
+
   return (
     <PortalShell>
-      <div className="container-shell max-w-3xl py-8">
-        <Link href="/dashboard" className="inline-flex items-center gap-2 text-blue-600 hover:underline text-sm font-semibold">
-          <ArrowLeft size={16} /> Back to My Dashboard
-        </Link>
-
-        <div className="mt-6">
-          <h1 className="text-2xl font-extrabold text-slate-900">Required Documents</h1>
-          <p className="text-sm text-slate-500 mt-0.5">
-            Admission के लिए कौन-कौन से documents चाहिए — पूरी list नीचे दी गई है।
-          </p>
-        </div>
-
-        {error && (
-          <div className="mt-4 flex gap-3 rounded-xl bg-red-50 border border-red-200 p-4 text-sm text-red-700">
-            <AlertCircle size={18} className="flex-shrink-0 mt-0.5" />
-            <p>{error}</p>
-          </div>
-        )}
-
-        {/* ── IMPORTANT: Bring originals to office ── */}
-        <div className="mt-6 rounded-2xl border-2 border-amber-400 bg-amber-50 p-5">
-          <div className="flex items-start gap-3">
-            <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-amber-100">
-              <Building2 size={22} className="text-amber-700" />
-            </span>
-            <div>
-              <p className="font-extrabold text-amber-900 text-base mb-1">
-                Documents Office में लेकर आएं
-              </p>
-              <p className="text-sm text-amber-800 leading-relaxed">
-                यहाँ कोई document <strong>upload नहीं करना है</strong>। नीचे दिए गए सभी documents की
-                <strong> original copy + एक-एक photocopy</strong> लेकर सीधे हमारे office आएं —
-                हमारा counsellor आपकी admission process पूरी करने में मदद करेगा।
-              </p>
-              <div className="mt-3 rounded-xl bg-amber-100 border border-amber-200 px-4 py-3">
-                <p className="flex items-center gap-1.5 text-xs font-extrabold text-amber-900 mb-1.5">
-                  <MapPin size={13} /> Office Address
-                </p>
-                <p className="text-xs text-amber-800">
-                  College Chowk, Near HP Petrol Pump,<br />Forbesganj, Araria, Bihar — 854318
-                </p>
-                <p className="flex items-center gap-1.5 text-xs text-amber-800 mt-2">
-                  <Clock size={13} /> Mon–Sat: 9:00 AM – 7:00 PM
-                </p>
+      <div className="min-h-screen bg-gray-50 pb-12">
+        {/* Header */}
+        <div className="bg-gradient-to-br from-[#00102e] via-[#001f6b] to-[#003f9f] px-4 py-8">
+          <div className="container-shell max-w-3xl">
+            <Link href="/dashboard" className="inline-flex items-center gap-2 text-blue-300 hover:text-white text-sm font-semibold mb-4">
+              <ArrowLeft size={16} /> Back to Dashboard
+            </Link>
+            <h1 className="text-2xl font-extrabold text-white">Document Upload</h1>
+            <p className="text-blue-300 text-sm mt-1">Upload your documents for verification. Max 5 MB per file (PDF, JPG, PNG).</p>
+            <div className="mt-4 grid grid-cols-3 gap-3">
+              <div className="rounded-xl bg-white/10 p-3 text-center">
+                <p className="text-xl font-extrabold text-white">{uploadedCount}</p>
+                <p className="text-xs text-blue-300 font-semibold">Uploaded</p>
+              </div>
+              <div className="rounded-xl bg-white/10 p-3 text-center">
+                <p className="text-xl font-extrabold text-green-400">{approvedCount}</p>
+                <p className="text-xs text-blue-300 font-semibold">Approved</p>
+              </div>
+              <div className="rounded-xl bg-white/10 p-3 text-center">
+                <p className="text-xl font-extrabold text-red-400">{rejectedCount}</p>
+                <p className="text-xs text-blue-300 font-semibold">Rejected</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* ── Course-wise Required Document Checklist ── */}
-        {uniqueChecklists.length > 0 ? (
-          <div className="mt-6 space-y-4">
-            <p className="text-sm font-bold text-slate-700">
-              आपने जिन courses के लिए apply किया है, उनके हिसाब से ज़रूरी documents:
-            </p>
-            {uniqueChecklists.map(({ courseName, req }) => (
-              <div key={courseName} className="rounded-2xl border-2 border-blue-100 bg-blue-50 p-5">
-                <div className="flex items-center gap-2 mb-4">
-                  <ClipboardList size={18} className="text-blue-600" />
-                  <h2 className="font-extrabold text-slate-900 text-sm">
-                    {courseName} — ज़रूरी Documents ({req.docs.length})
-                  </h2>
-                </div>
-                <ul className="grid gap-2.5 sm:grid-cols-2">
-                  {req.docs.map((docReq, idx) => (
-                    <li key={idx} className="flex items-start gap-2.5">
-                      <FileCheck2 size={17} className="mt-0.5 flex-shrink-0 text-blue-500" />
-                      <div>
-                        <p className="text-sm font-semibold leading-tight text-slate-800">
-                          {docReq.label}
-                        </p>
-                        {docReq.note && (
-                          <p className="text-xs text-slate-500 mt-0.5">{docReq.note}</p>
-                        )}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+        <div className="container-shell max-w-3xl -mt-4 relative">
+          {globalError && (
+            <div className="mb-4 flex gap-3 rounded-xl bg-red-50 border border-red-200 p-4 text-sm text-red-700">
+              <AlertCircle size={18} className="flex-shrink-0 mt-0.5" /> {globalError}
+            </div>
+          )}
+          {successMsg && (
+            <div className="mb-4 flex gap-3 rounded-xl bg-green-50 border border-green-200 p-4 text-sm text-green-700">
+              <CheckCircle2 size={18} className="flex-shrink-0 mt-0.5" /> {successMsg}
+            </div>
+          )}
+
+          {/* Legend */}
+          <div className="mb-4 flex flex-wrap gap-3 text-xs">
+            <span className="flex items-center gap-1 rounded-full bg-yellow-100 px-2.5 py-1 font-semibold text-yellow-800"><Clock size={10} /> Pending Review</span>
+            <span className="flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-1 font-semibold text-green-800"><ShieldCheck size={10} /> Approved</span>
+            <span className="flex items-center gap-1 rounded-full bg-red-100 px-2.5 py-1 font-semibold text-red-800"><ShieldX size={10} /> Rejected — re-upload required</span>
+          </div>
+
+          <div className="space-y-3">
+            {DOCUMENT_TYPES.map(docDef => (
+              <DocRow
+                key={docDef.type}
+                docDef={docDef}
+                uploaded={docMap[docDef.type]}
+                onUpload={handleUpload}
+                onDelete={handleDelete}
+              />
             ))}
           </div>
-        ) : (
-          /* No application yet — show common documents + prompt to apply */
-          <div className="mt-6 space-y-4">
-            <div className="rounded-2xl border-2 border-blue-100 bg-blue-50 p-5">
-              <div className="flex items-center gap-2 mb-4">
-                <ClipboardList size={18} className="text-blue-600" />
-                <h2 className="font-extrabold text-slate-900 text-sm">
-                  सामान्य ज़रूरी Documents (सभी courses के लिए)
-                </h2>
-              </div>
-              <ul className="grid gap-2.5 sm:grid-cols-2">
-                {COMMON_DOCS.map((label, idx) => (
-                  <li key={idx} className="flex items-start gap-2.5">
-                    <FileCheck2 size={17} className="mt-0.5 flex-shrink-0 text-blue-500" />
-                    <p className="text-sm font-semibold leading-tight text-slate-800">{label}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="flex items-center gap-3 rounded-xl border border-blue-200 bg-white p-4">
-              <Info size={18} className="flex-shrink-0 text-blue-500" />
-              <p className="flex-1 text-sm text-slate-600">
-                अभी आपने किसी course के लिए apply नहीं किया है। Apply करने पर उस course के हिसाब से
-                exact document list यहाँ दिखेगी।
-              </p>
-              <Link href="/apply"
-                className="flex-shrink-0 rounded-xl bg-[#003f9f] px-4 py-2 text-xs font-bold text-white hover:bg-blue-700 transition">
-                Apply करें →
-              </Link>
-            </div>
+
+          <div className="mt-6 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-800">
+            <p className="font-bold mb-1">Important Notes:</p>
+            <ul className="list-disc list-inside space-y-1 text-xs">
+              <li>Approved documents are locked and cannot be deleted or replaced.</li>
+              <li>Rejected documents must be re-uploaded with a clearer/correct copy.</li>
+              <li>Documents are reviewed by our office team within 1–2 working days.</li>
+              <li>Maximum file size: 5 MB. Allowed formats: PDF, JPG, PNG.</li>
+            </ul>
           </div>
-        )}
-
-        {/* ── Helpful tips ── */}
-        <div className="mt-8 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
-          <p className="font-bold mb-1">कुछ ज़रूरी बातें:</p>
-          <ul className="space-y-1 list-disc list-inside text-xs">
-            <li>हर document की <strong>original copy + एक photocopy</strong> साथ लाएं।</li>
-            <li>Original documents office में दिखाने के बाद आपको वापस मिल जाएंगे।</li>
-            <li>Aadhaar Card, Marksheets और Passport-size photo सभी courses के लिए ज़रूरी हैं।</li>
-            <li>कोई confusion हो तो office आने से पहले counsellor से WhatsApp/Call पर पूछ लें।</li>
-          </ul>
-        </div>
-
-        {/* ── Contact counsellor ── */}
-        <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-          <a href="tel:+916203138576"
-            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#003f9f] py-3 text-sm font-bold text-white hover:bg-blue-700 transition">
-            <Phone size={16} /> Call करें — +91 62031 38576
-          </a>
-          <a href="https://wa.me/916203138576?text=नमस्ते!%20मुझे%20admission%20documents%20के%20बारे%20में%20जानकारी%20चाहिए।"
-            target="_blank" rel="noopener noreferrer"
-            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-green-500 py-3 text-sm font-bold text-white hover:bg-green-600 transition">
-            <MessageCircle size={16} /> WhatsApp पर पूछें
-          </a>
         </div>
       </div>
     </PortalShell>

@@ -7,9 +7,15 @@ import { authService } from '@/lib/auth-service';
 import { saveActivity } from '@/services/activity-service';
 import { PortalShell } from '@/components/portal-shell';
 import { Mail, Lock, User, Phone, AlertCircle, CheckCircle2, Loader, ArrowRight } from 'lucide-react';
+import { useAuth } from '@/components/auth-provider';
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { isAuthenticated, loading: authLoading } = useAuth();
+
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) router.replace('/dashboard');
+  }, [authLoading, isAuthenticated, router]);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',

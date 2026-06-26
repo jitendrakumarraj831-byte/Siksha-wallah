@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit, getClientIp, tooManyRequests } from "@/lib/rate-limit";
 import { isMailerConfigured, sendMail, EMAIL_FROM } from "@/lib/mailer";
+import { getAdminDb } from "@/lib/firebase-admin";
 
 function sanitize(value: unknown): string {
   return String(value ?? "").replace(/[<>]/g, "").trim().slice(0, 500);
@@ -29,8 +30,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid email address." }, { status: 400 });
     }
 
+    // Always save to Firestore for admin view
+    try {
+      const db = getAdminDb();
+      if (db) {
+        await db.collection("contacts").add({
+          name, phone, email: email || null, course: course || null,
+          message: message || null, read: false, createdAt: Date.now(),
+        });
+      }
+    } catch (firestoreErr) {
+      console.error("Contact Firestore save error:", firestoreErr instanceof Error ? firestoreErr.message : firestoreErr);
+    }
+
     if (!isMailerConfigured()) {
-      console.warn("SMTP not configured — logging inquiry instead");
       return NextResponse.json({ success: true });
     }
 

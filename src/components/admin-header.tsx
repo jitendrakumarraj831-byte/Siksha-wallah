@@ -13,8 +13,11 @@ const LINKS = [
   { href: '/admin/dashboard', label: 'Dashboard' },
   { href: '/admin/applications', label: 'Applications' },
   { href: '/admin/students', label: 'Students' },
-  { href: '/admin/messages', label: 'Messages' },
-  { href: '/admin/activity', label: 'Website Activity' },
+  { href: '/admin/documents', label: 'Documents' },
+  { href: '/admin/contacts', label: 'Messages' },
+  { href: '/admin/messages', label: 'Chat' },
+  { href: '/admin/activity', label: 'Activity' },
+  { href: '/admin/profile', label: 'Profile' },
 ];
 
 export function AdminHeader({ adminUser = 'Admin' }: { adminUser?: string }) {

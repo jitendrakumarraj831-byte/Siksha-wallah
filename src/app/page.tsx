@@ -406,7 +406,7 @@ export default function Home() {
         course: formData.course,
         page: "/",
       });
-      const msg = `नमस्ते! मेरा नाम ${encodeURIComponent(formData.name)} है।%0AMobile: ${formData.mobile}%0AAdmission चाहिए: ${encodeURIComponent(formData.course)}%0AJila: ${encodeURIComponent(formData.district)}%0AKripya guide karein.`;
+      const msg = encodeURIComponent(`नमस्ते! मेरा नाम ${formData.name} है।\nMobile: ${formData.mobile}\nAdmission चाहिए: ${formData.course}\nJila: ${formData.district}\nKripya guide karein.`);
       // Log WhatsApp click
       saveActivity({
         type: "whatsapp",
@@ -2060,7 +2060,7 @@ export default function Home() {
                   try {
                     await saveInquiry({ fullName: name, mobile, course, message: `Qualification: ${qualify}` });
                   } catch (_) {}
-                  const msg = `New Inquiry from Siksha Wallah!%0AName: ${name}%0AMobile: ${mobile}%0ACourse: ${course}%0AQualification: ${qualify}`;
+                  const msg = encodeURIComponent(`New Inquiry from Siksha Wallah!\nName: ${name}\nMobile: ${mobile}\nCourse: ${course}\nQualification: ${qualify}`);
                   window.open(`https://wa.me/916203138576?text=${msg}`, "_blank");
                   f.reset();
                 }}

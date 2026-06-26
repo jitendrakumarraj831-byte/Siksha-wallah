@@ -9,10 +9,10 @@ export const ADMIN_COOKIE = "sw_admin_session";
 function getSecret(): string {
   const s = process.env.ADMIN_SESSION_SECRET;
   if (s && s.length >= 16) return s;
-  // Dev-only fallback. Production MUST set ADMIN_SESSION_SECRET (>= 16 chars).
   if (process.env.NODE_ENV === "production") {
-    console.error(
-      "ADMIN_SESSION_SECRET is not set — admin sessions are insecure. Set it in your environment.",
+    throw new Error(
+      "ADMIN_SESSION_SECRET environment variable is not set or is too short (minimum 16 characters). " +
+      "Set it in your hosting environment before deploying.",
     );
   }
   return "dev-insecure-admin-secret-change-me";

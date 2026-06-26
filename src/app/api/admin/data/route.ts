@@ -79,6 +79,8 @@ export async function GET(request: NextRequest) {
         }
         return NextResponse.json({ success: true, data: snap.docs.map((d) => ({ id: d.id, ...serialize(d.data()) })) });
       }
+      case "ping":
+        return NextResponse.json({ success: true });
       default:
         return NextResponse.json({ error: "Unknown data type" }, { status: 400 });
     }

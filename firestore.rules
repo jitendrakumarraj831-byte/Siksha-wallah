@@ -89,6 +89,21 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // Notifications — written by Admin SDK (office actions); students read/update only their own.
+    match /notifications/{id} {
+      allow read:   if isSignedIn() && resource.data.uid == request.auth.uid;
+      // Students can only mark their own notifications as read
+      allow update: if isSignedIn() && resource.data.uid == request.auth.uid
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
+      allow create, delete: if false;
+    }
+
+    // Contact form messages — public create only; reads are office-only via Admin SDK.
+    match /contacts/{id} {
+      allow create: if true;
+      allow read, update, delete: if false;
+    }
+
     // Default deny.
     match /{document=**} {
       allow read, write: if false;

@@ -12,7 +12,7 @@ import { PortalShell } from '@/components/portal-shell';
 import {
   User, FileText, BookOpen, LogOut, Loader, Plus, ClipboardList,
   ArrowRight, CheckCircle2, Clock, PhoneCall, AlertCircle, GraduationCap,
-  MessageCircle,
+  MessageCircle, Bell, Upload,
 } from 'lucide-react';
 
 const STATUS_META: Record<ApplicationStatus, { label: string; badge: string; bar: string; icon: React.ElementType }> = {
@@ -195,12 +195,14 @@ export default function DashboardPage() {
           )}
 
           {/* Quick Nav — color-coded */}
-          <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
             {[
-              { href: '/dashboard/profile',   icon: User,        label: 'My Profile',  bg: 'bg-blue-500',   light: 'bg-blue-50'   },
-              { href: '/dashboard/messages',  icon: MessageCircle, label: 'Counsellor Chat', bg: 'bg-amber-500', light: 'bg-amber-50' },
-              { href: '/courses',             icon: GraduationCap,label: 'Courses',    bg: 'bg-violet-500', light: 'bg-violet-50' },
-              { href: '/dashboard/documents', icon: FileText,    label: 'Required Docs', bg: 'bg-green-500',  light: 'bg-green-50'  },
+              { href: '/dashboard/profile',       icon: User,         label: 'My Profile',      bg: 'bg-blue-500',   light: 'bg-blue-50'   },
+              { href: '/dashboard/documents',     icon: Upload,       label: 'Upload Documents', bg: 'bg-green-500',  light: 'bg-green-50'  },
+              { href: '/dashboard/notifications', icon: Bell,         label: 'Notifications',    bg: 'bg-amber-500',  light: 'bg-amber-50'  },
+              { href: '/dashboard/messages',      icon: MessageCircle,label: 'Counsellor Chat',  bg: 'bg-violet-500', light: 'bg-violet-50' },
+              { href: '/courses',                 icon: GraduationCap,label: 'Browse Courses',   bg: 'bg-indigo-500', light: 'bg-indigo-50' },
+              { href: '/apply',                   icon: Plus,         label: 'Apply Now',        bg: 'bg-[#dc143c]',  light: 'bg-red-50'    },
             ].map(({ href, icon: Icon, label, bg, light }) => (
               <Link key={href} href={href}
                 className={`group flex flex-col items-center gap-2.5 rounded-2xl ${light} border border-transparent p-4 text-center transition hover:shadow-md hover:border-gray-200`}>
@@ -294,6 +296,29 @@ export default function DashboardPage() {
                 })}
               </div>
             )}
+          </div>
+
+          {/* My Applications link */}
+          <div className="mt-4">
+            <Link href="/dashboard/applications"
+              className="flex items-center justify-between rounded-xl border border-gray-200 bg-white px-5 py-3.5 text-sm font-bold text-gray-800 hover:shadow-sm transition">
+              <span className="flex items-center gap-2">
+                <ClipboardList size={16} className="text-blue-500" /> My Applications ({applications.length})
+              </span>
+              <ArrowRight size={14} className="text-gray-400" />
+            </Link>
+          </div>
+
+          {/* Account options */}
+          <div className="mt-3 flex gap-3">
+            <Link href="/dashboard/change-password"
+              className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white py-3 text-xs font-bold text-gray-700 hover:bg-gray-50 transition">
+              🔒 Change Password
+            </Link>
+            <button onClick={handleLogout}
+              className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 py-3 text-xs font-bold text-red-600 hover:bg-red-100 transition">
+              <LogOut size={13} /> Logout
+            </button>
           </div>
 
           {/* Help CTA */}
