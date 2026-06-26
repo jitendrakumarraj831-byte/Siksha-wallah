@@ -18,22 +18,32 @@ export function useAdminGuard(): { authorized: boolean | null; adminUser: string
   useEffect(() => {
     const cached = localStorage.getItem('sw_admin_session');
     const cachedUser = localStorage.getItem('sw_admin_user');
+
+    // Always verify the cookie against the server — never trust localStorage alone.
+    // If the local hint is present we optimistically show content (avoids flash),
+    // but a background ping evicts the hint and redirects on 401 (expired session).
     if (cached) {
       setAuthorized(true);
       setAdminUser(cachedUser || 'Admin');
-      return;
     }
+
     fetch('/api/admin/data?type=ping', { credentials: 'include' })
       .then((res) => {
         if (res.status === 401) {
+          localStorage.removeItem('sw_admin_session');
+          localStorage.removeItem('sw_admin_user');
           router.replace('/admin/login');
           return;
         }
         localStorage.setItem('sw_admin_session', '1');
-        setAuthorized(true);
-        setAdminUser(cachedUser || 'Admin');
+        if (!cached) {
+          setAuthorized(true);
+          setAdminUser(cachedUser || 'Admin');
+        }
       })
-      .catch(() => router.replace('/admin/login'));
+      .catch(() => {
+        if (!cached) router.replace('/admin/login');
+      });
   }, [router]);
 
   return { authorized, adminUser };

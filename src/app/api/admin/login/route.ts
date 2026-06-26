@@ -3,20 +3,14 @@ import { signAdminToken, ADMIN_COOKIE } from "@/lib/admin-session";
 import { rateLimit, getClientIp, tooManyRequests } from "@/lib/rate-limit";
 
 // Server-side credentials — NOT exposed to the browser (no NEXT_PUBLIC_).
-//
-// SECURITY: we never ship a working credential to production. In production the
-// office login is DISABLED until ADMIN_USERNAME and ADMIN_PASSWORD are set in
-// the server environment (fail closed) — far safer than accepting a default
-// password that is visible in the public source. A zero-config fallback is kept
-// for local development only so `npm run dev` works with no setup.
-const DEV_FALLBACK = { username: "admin", password: "Siksha@2025!" };
-
+// Set ADMIN_USERNAME and ADMIN_PASSWORD in your server environment (.env.local
+// for development, Vercel environment variables for production). Login is
+// disabled entirely until both variables are configured (fail-closed).
 function getConfiguredCredentials(): { username: string; password: string } | null {
   const username = process.env.ADMIN_USERNAME;
   const password = process.env.ADMIN_PASSWORD;
   if (username && password) return { username, password };
-  if (process.env.NODE_ENV !== "production") return DEV_FALLBACK;
-  return null; // production + unconfigured → login disabled
+  return null; // unconfigured → login disabled in all environments
 }
 
 function safeEqual(a: string, b: string): boolean {
