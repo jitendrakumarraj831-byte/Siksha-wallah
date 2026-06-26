@@ -1,9 +1,6 @@
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
-  // firebase-admin → jwks-rsa → jose (ESM-only). Bundling these breaks
-  // require() calls at runtime ("ERR_REQUIRE_ESM"). Mark them external so
-  // Next.js leaves them for Node.js to resolve natively.
   serverExternalPackages: ["firebase-admin", "firebase-admin/app", "firebase-admin/auth", "firebase-admin/firestore"],
 
   async redirects() {
