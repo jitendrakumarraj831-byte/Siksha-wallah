@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/components/auth-provider';
@@ -19,7 +19,13 @@ export default function ChangePasswordPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  if (authLoading) {
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      router.push('/auth/login');
+    }
+  }, [authLoading, isAuthenticated, router]);
+
+  if (authLoading || !isAuthenticated) {
     return (
       <PortalShell>
         <div className="flex min-h-[60vh] items-center justify-center">
@@ -27,11 +33,6 @@ export default function ChangePasswordPage() {
         </div>
       </PortalShell>
     );
-  }
-
-  if (!isAuthenticated) {
-    router.push('/auth/login');
-    return null;
   }
 
   const handleSubmit = async (e: React.FormEvent) => {

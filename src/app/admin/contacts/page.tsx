@@ -177,7 +177,7 @@ export default function AdminContactsPage() {
                       className="flex items-center gap-1.5 rounded-xl bg-[#003f9f] px-3 py-1.5 text-xs font-bold text-white hover:bg-blue-700 transition">
                       <Phone size={12} /> Call
                     </a>
-                    <a href={`https://wa.me/91${contact.phone.replace(/\D/g, '')}?text=नमस्ते ${contact.name}!`}
+                    <a href={`https://wa.me/91${contact.phone.replace(/\D/g, '')}?text=${encodeURIComponent(`नमस्ते ${contact.name}! Siksha Wallah se bol rahe hain.`)}`}
                       target="_blank" rel="noopener noreferrer"
                       className="flex items-center gap-1.5 rounded-xl bg-green-500 px-3 py-1.5 text-xs font-bold text-white hover:bg-green-600 transition">
                       WhatsApp

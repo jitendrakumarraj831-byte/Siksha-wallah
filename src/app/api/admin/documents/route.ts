@@ -29,17 +29,17 @@ export async function GET(request: NextRequest) {
     const docs = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 
     // Batch fetch student names
-    const uids = [...new Set(docs.map((d: any) => d.uid))];
+    const uids = [...new Set(docs.map((d: any) => d.uid))] as string[];
     const studentMap: Record<string, string> = {};
-    for (const studentUid of uids) {
+    await Promise.all(uids.map(async (uid) => {
       try {
-        const userSnap = await db.collection("users").doc(studentUid as string).get();
+        const userSnap = await db.collection("users").doc(uid).get();
         if (userSnap.exists) {
           const data = userSnap.data();
-          studentMap[studentUid as string] = data?.name || data?.email || (studentUid as string);
+          studentMap[uid] = data?.name || data?.email || uid;
         }
       } catch {}
-    }
+    }));
 
     const enriched = docs.map((d: any) => ({
       ...d,

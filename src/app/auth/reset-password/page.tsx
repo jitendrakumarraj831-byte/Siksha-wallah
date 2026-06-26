@@ -41,7 +41,8 @@ function ResetPasswordForm() {
     try {
       await authService.confirmPasswordReset(oobCode, password);
       setDone(true);
-      setTimeout(() => router.push('/auth/login'), 3000);
+      const t = setTimeout(() => router.push('/auth/login'), 3000);
+      return () => clearTimeout(t);
     } catch (err: any) {
       setError(err.message || 'Could not reset your password. The link may have expired — please request a new one.');
     } finally {

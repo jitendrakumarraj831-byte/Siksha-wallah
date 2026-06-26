@@ -287,7 +287,8 @@ export default function AdminApplicationsPage() {
       { key: "state", label: "State" },
       { label: "BSCC", value: (a) => (a.bsccRequired ? "Yes" : "No") },
       { label: "Status", value: (a) => STATUS_META[a.status || "new"]?.label || "New" },
-      { key: "note", label: "Note" },
+      { key: "note", label: "Staff Note" },
+      { label: "Student Message", value: (a) => (a as any).message || "" },
       { label: "Applied On", value: (a) => fmt(a.createdAt) },
     ], filtered);
   }

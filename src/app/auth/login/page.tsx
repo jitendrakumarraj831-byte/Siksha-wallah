@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { authService } from "@/lib/auth-service";
 import { saveActivity } from "@/services/activity-service";
+import { useAuth } from "@/components/auth-provider";
 import {
   GraduationCap, Lock, Mail, AlertCircle, Loader, ArrowRight,
   Eye, EyeOff,
@@ -14,6 +15,11 @@ function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "/dashboard";
+  const { isAuthenticated, loading: authLoading } = useAuth();
+
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) router.replace(redirect);
+  }, [authLoading, isAuthenticated, router, redirect]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");

@@ -9,7 +9,7 @@ import { getCourseSlug } from '@/lib/courses-data';
 import { PortalShell } from '@/components/portal-shell';
 import {
   ArrowLeft, Loader, Plus, ClipboardList, ArrowRight,
-  CheckCircle2, Clock, PhoneCall, AlertCircle,
+  CheckCircle2, Clock, PhoneCall, AlertCircle, RefreshCw,
 } from 'lucide-react';
 import { getIdToken } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
@@ -33,6 +33,7 @@ export default function ApplicationsPage() {
   const router = useRouter();
   const [applications, setApplications] = useState<CourseApplication[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) { router.push('/auth/login'); return; }
@@ -54,8 +55,9 @@ export default function ApplicationsPage() {
             }
           }
         }
-      } catch {}
-      finally { setLoading(false); }
+      } catch (e: any) {
+        setError(e?.message || 'Failed to load applications. Please refresh.');
+      } finally { setLoading(false); }
     })();
   }, [authLoading, isAuthenticated, user, router]);
 
@@ -93,7 +95,16 @@ export default function ApplicationsPage() {
         </div>
 
         <div className="container-shell max-w-2xl py-6">
-          {applications.length === 0 ? (
+          {error && (
+            <div className="mb-4 flex items-start gap-3 rounded-xl bg-red-50 border border-red-200 p-4 text-sm text-red-700">
+              <AlertCircle size={18} className="flex-shrink-0 mt-0.5" />
+              <div className="flex-1">{error}</div>
+              <button onClick={() => window.location.reload()} className="flex-shrink-0 flex items-center gap-1 text-xs font-semibold text-red-600 hover:underline">
+                <RefreshCw size={12} /> Retry
+              </button>
+            </div>
+          )}
+          {applications.length === 0 && !error ? (
             <div className="flex flex-col items-center gap-4 py-16 text-center">
               <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100">
                 <ClipboardList size={28} className="text-gray-300" />

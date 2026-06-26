@@ -45,7 +45,7 @@ function DocRow({
 }: {
   docDef: (typeof DOCUMENT_TYPES)[0];
   uploaded?: Document;
-  onUpload: (type: string, file: File, label: string) => Promise<void>;
+  onUpload: (type: string, file: File, label: string, onProgress: (pct: number) => void) => Promise<void>;
   onDelete: (doc: Document) => Promise<void>;
 }) {
   const [uploading, setUploading] = useState(false);
@@ -73,7 +73,7 @@ function DocRow({
     setUploading(true);
     setProgress(0);
     try {
-      await onUpload(docDef.type, file, docDef.label);
+      await onUpload(docDef.type, file, docDef.label, setProgress);
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -202,9 +202,9 @@ export default function DocumentsPage() {
     }
   }, [user]);
 
-  const handleUpload = useCallback(async (type: string, file: File, label: string) => {
+  const handleUpload = useCallback(async (type: string, file: File, label: string, onProgress: (pct: number) => void) => {
     if (!user) throw new Error('Not authenticated');
-    await studentService.uploadDocumentFile(user.uid, file, label, type);
+    await studentService.uploadDocumentFile(user.uid, file, label, type, onProgress);
     setSuccessMsg(`${label} uploaded successfully!`);
     setTimeout(() => setSuccessMsg(''), 3000);
     await loadDocuments();

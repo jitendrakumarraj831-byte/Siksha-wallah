@@ -9,7 +9,7 @@ import { getIdToken } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import {
   ArrowLeft, Loader, Bell, BellOff, CheckCircle2, AlertCircle,
-  ShieldCheck, ShieldX, Info,
+  ShieldCheck, ShieldX, Info, RefreshCw,
 } from 'lucide-react';
 
 interface Notification {
@@ -41,6 +41,7 @@ export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
   const [marking, setMarking] = useState(false);
+  const [error, setError] = useState('');
 
   const fetchNotifications = useCallback(async () => {
     if (!user) return;
@@ -50,12 +51,13 @@ export default function NotificationsPage() {
       const res = await fetch(`/api/student/notifications?uid=${user.uid}`, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
-      if (res.ok) {
-        const json = await res.json();
-        setNotifications(json.data || []);
-      }
-    } catch {}
-    finally { setLoading(false); }
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(json.error || 'Failed to load notifications');
+      setNotifications(json.data || []);
+      setError('');
+    } catch (e: any) {
+      setError(e.message || 'Failed to load notifications');
+    } finally { setLoading(false); }
   }, [user]);
 
   useEffect(() => {
@@ -141,7 +143,16 @@ export default function NotificationsPage() {
         </div>
 
         <div className="container-shell max-w-2xl py-6">
-          {notifications.length === 0 ? (
+          {error && (
+            <div className="mb-4 flex items-start gap-3 rounded-xl bg-red-50 border border-red-200 p-4 text-sm text-red-700">
+              <AlertCircle size={18} className="flex-shrink-0 mt-0.5" />
+              <div className="flex-1">{error}</div>
+              <button onClick={fetchNotifications} className="flex-shrink-0 flex items-center gap-1 text-xs font-semibold text-red-600 hover:underline">
+                <RefreshCw size={12} /> Retry
+              </button>
+            </div>
+          )}
+          {!error && notifications.length === 0 && (
             <div className="flex flex-col items-center gap-4 py-16 text-center">
               <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100">
                 <BellOff size={28} className="text-gray-300" />
@@ -151,7 +162,8 @@ export default function NotificationsPage() {
                 <p className="text-sm text-gray-400 mt-1">Document verification updates will appear here.</p>
               </div>
             </div>
-          ) : (
+          )}
+          {!error && notifications.length > 0 && (
             <div className="space-y-3">
               {notifications.map(notif => (
                 <div
