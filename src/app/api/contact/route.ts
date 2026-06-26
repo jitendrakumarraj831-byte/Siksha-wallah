@@ -39,7 +39,9 @@ export async function POST(req: NextRequest) {
           message: message || null, read: false, createdAt: Date.now(),
         });
       }
-    } catch {}
+    } catch (firestoreErr) {
+      console.error("Contact Firestore save error:", firestoreErr instanceof Error ? firestoreErr.message : firestoreErr);
+    }
 
     if (!isMailerConfigured()) {
       return NextResponse.json({ success: true });
