@@ -217,7 +217,7 @@ export default function DocumentsPage() {
 
   const handleDelete = useCallback(async (doc: Document) => {
     if (!user || !doc.id) return;
-    await studentService.deleteDocument(doc.id, user.uid, doc.storagePath);
+    await studentService.deleteDocument(doc.id, user.uid, doc.publicId);
     await loadDocuments();
   }, [user, loadDocuments]);
 

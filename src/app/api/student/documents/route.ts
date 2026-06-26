@@ -15,6 +15,34 @@ async function verifyStudent(request: NextRequest): Promise<string | null> {
   }
 }
 
+async function deleteFromCloudinary(publicId: string): Promise<void> {
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+  const apiKey = process.env.CLOUDINARY_API_KEY;
+  const apiSecret = process.env.CLOUDINARY_API_SECRET;
+  if (!cloudName || !apiKey || !apiSecret || !publicId) return;
+
+  const timestamp = Math.floor(Date.now() / 1000);
+  const str = `public_id=${publicId}&timestamp=${timestamp}${apiSecret}`;
+
+  // Use SubtleCrypto for SHA-1 signing (available in Edge/Node environments)
+  const encoder = new TextEncoder();
+  const data = encoder.encode(str);
+  const hashBuffer = await crypto.subtle.digest('SHA-1', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const signature = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+  const formData = new URLSearchParams();
+  formData.append('public_id', publicId);
+  formData.append('timestamp', String(timestamp));
+  formData.append('api_key', apiKey);
+  formData.append('signature', signature);
+
+  await fetch(
+    `https://api.cloudinary.com/v1_1/${cloudName}/image/destroy`,
+    { method: 'POST', body: formData }
+  ).catch(() => {});
+}
+
 // GET /api/student/documents?uid=xxx
 export async function GET(request: NextRequest) {
   try {
@@ -37,11 +65,11 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/student/documents — save document metadata after Storage upload
+// POST /api/student/documents — save document metadata after Cloudinary upload
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { uid, name, type, url, storagePath, fileSize, mimeType } = body;
+    const { uid, name, type, url, publicId, fileSize, mimeType } = body;
     if (!uid || !name || !type || !url) {
       return NextResponse.json({ error: "uid, name, type, url required" }, { status: 400 });
     }
@@ -63,17 +91,25 @@ export async function POST(request: NextRequest) {
     // If replacing, only allow replacing rejected or pending documents
     if (!existing.empty) {
       const existingDoc = existing.docs[0];
-      const existingStatus = existingDoc.data().status || "pending";
+      const existingData = existingDoc.data();
+      const existingStatus = existingData.status || "pending";
       if (existingStatus === "approved") {
+        // Also delete the newly uploaded Cloudinary file since we're rejecting the replacement
+        if (publicId) await deleteFromCloudinary(publicId);
         return NextResponse.json({ error: "Approved document cannot be replaced. Contact the office." }, { status: 403 });
       }
-      // Delete the old doc record before saving new one
+      // Delete old Cloudinary file before replacing
+      if (existingData.publicId) {
+        await deleteFromCloudinary(existingData.publicId);
+      }
       await existingDoc.ref.delete();
     }
 
     const ref = await db.collection("documents").add({
-      uid, name, type, url, storagePath: storagePath || null,
-      fileSize: fileSize || null, mimeType: mimeType || null,
+      uid, name, type, url,
+      publicId: publicId || null,
+      fileSize: fileSize || null,
+      mimeType: mimeType || null,
       status: "pending",
       uploadedAt: Date.now(),
     });
@@ -104,9 +140,17 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    const docStatus = snap.data()?.status || "pending";
+    const docData = snap.data()!;
+    const docStatus = docData.status || "pending";
     if (docStatus === "approved") {
       return NextResponse.json({ error: "Approved documents cannot be deleted. Contact office." }, { status: 403 });
+    }
+
+    // Delete from Cloudinary first
+    const body = await request.json().catch(() => ({}));
+    const publicId = body.publicId || docData.publicId;
+    if (publicId) {
+      await deleteFromCloudinary(publicId);
     }
 
     await docRef.delete();

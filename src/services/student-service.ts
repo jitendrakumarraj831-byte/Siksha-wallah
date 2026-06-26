@@ -1,10 +1,9 @@
-import { db, storage, auth } from '@/lib/firebase';
+import { db, auth } from '@/lib/firebase';
 import {
   doc,
   setDoc,
   getDoc,
 } from 'firebase/firestore';
-import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
 import { getIdToken } from 'firebase/auth';
 
 export interface StudentProfile {
@@ -29,7 +28,7 @@ export interface Document {
   name: string;
   type: string;
   url: string;
-  storagePath?: string;
+  publicId?: string;
   fileSize?: number;
   mimeType?: string;
   uploadedAt: number;
@@ -71,53 +70,63 @@ export const studentService = {
     onProgress?: (percent: number) => void,
   ): Promise<string> {
     return new Promise((resolve, reject) => {
-      if (!storage) {
-        reject(new Error('Firebase Storage is not initialized'));
+      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+      const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
+      if (!cloudName || !uploadPreset) {
+        reject(new Error('Cloudinary is not configured. Check environment variables.'));
         return;
       }
 
-      const mimeToExt: Record<string, string> = {
-        'application/pdf': 'pdf',
-        'image/jpeg': 'jpg',
-        'image/jpg': 'jpg',
-        'image/png': 'png',
-      };
-      const ext = mimeToExt[file.type] ?? (file.name.split('.').pop() || 'bin');
-      const storagePath = `documents/${uid}/${Date.now()}_${docType}.${ext}`;
-      const storageRef = ref(storage, storagePath);
-      const task = uploadBytesResumable(storageRef, file, { contentType: file.type });
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', uploadPreset);
+      formData.append('folder', `documents/${uid}`);
 
-      task.on(
-        'state_changed',
-        (snapshot) => {
-          const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+      const xhr = new XMLHttpRequest();
+
+      xhr.upload.addEventListener('progress', (e) => {
+        if (e.lengthComputable) {
+          const pct = Math.round((e.loaded / e.total) * 100);
           onProgress?.(pct);
-        },
-        (error) => reject(new Error(error.message)),
-        async () => {
-          try {
-            const url = await getDownloadURL(task.snapshot.ref);
-            // Save metadata via server API (bypasses Firestore client rules)
-            const token = auth?.currentUser ? await getIdToken(auth.currentUser) : null;
-            const res = await fetch('/api/student/documents', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                ...(token ? { Authorization: `Bearer ${token}` } : {}),
-              },
-              body: JSON.stringify({
-                uid, name: docName, type: docType, url,
-                storagePath, fileSize: file.size, mimeType: file.type,
-              }),
-            });
-            const json = await res.json();
-            if (!res.ok) throw new Error(json.error || 'Upload failed');
-            resolve(json.id);
-          } catch (err: any) {
-            reject(new Error(err.message));
+        }
+      });
+
+      xhr.addEventListener('load', async () => {
+        try {
+          if (xhr.status < 200 || xhr.status >= 300) {
+            throw new Error(`Cloudinary upload failed: ${xhr.statusText}`);
           }
-        },
-      );
+          const result = JSON.parse(xhr.responseText);
+          const url: string = result.secure_url;
+          const publicId: string = result.public_id;
+
+          const token = auth?.currentUser ? await getIdToken(auth.currentUser) : null;
+          const res = await fetch('/api/student/documents', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            },
+            body: JSON.stringify({
+              uid, name: docName, type: docType, url,
+              publicId, fileSize: file.size, mimeType: file.type,
+            }),
+          });
+          const json = await res.json();
+          if (!res.ok) throw new Error(json.error || 'Upload failed');
+          resolve(json.id);
+        } catch (err: any) {
+          reject(new Error(err.message));
+        }
+      });
+
+      xhr.addEventListener('error', () => {
+        reject(new Error('Network error during upload'));
+      });
+
+      xhr.open('POST', `https://api.cloudinary.com/v1_1/${cloudName}/upload`);
+      xhr.send(formData);
     });
   },
 
@@ -138,19 +147,20 @@ export const studentService = {
     }
   },
 
-  async deleteDocument(docId: string, uid: string, storagePath?: string): Promise<void> {
+  async deleteDocument(docId: string, uid: string, publicId?: string): Promise<void> {
     try {
       const token = auth?.currentUser ? await getIdToken(auth.currentUser) : null;
       const res = await fetch(`/api/student/documents?id=${docId}&uid=${uid}`, {
         method: 'DELETE',
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ publicId: publicId || null }),
       });
       if (!res.ok) {
         const json = await res.json().catch(() => ({}));
         throw new Error(json.error || 'Failed to delete document');
-      }
-      if (storagePath && storage) {
-        await deleteObject(ref(storage, storagePath)).catch(() => {});
       }
     } catch (error: any) {
       throw new Error(`Failed to delete document: ${error.message}`);
