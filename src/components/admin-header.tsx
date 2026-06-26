@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { GraduationCap, LogOut } from 'lucide-react';
 import { AdminMobileNav } from '@/components/admin-mobile-nav';
+import { OfficePresence } from '@/components/office-presence';
 
 // Single source of truth for the office (admin) top bar — logo, section nav with
 // active highlighting, mobile menu, signed-in name and logout. Used by every
@@ -28,6 +29,8 @@ export function AdminHeader({ adminUser = 'Admin' }: { adminUser?: string }) {
   }
 
   return (
+    <>
+    <OfficePresence />
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 shadow-sm backdrop-blur">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-2 sm:gap-3">
@@ -71,5 +74,6 @@ export function AdminHeader({ adminUser = 'Admin' }: { adminUser?: string }) {
         </div>
       </div>
     </header>
+    </>
   );
 }
