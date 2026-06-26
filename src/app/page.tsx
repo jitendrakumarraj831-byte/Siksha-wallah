@@ -457,6 +457,32 @@ export default function Home() {
             ))}
           </div>
 
+          {/* ── SOCIAL PROOF TICKER ── */}
+          <div className="overflow-hidden border-b border-white/[0.08] py-2.5">
+            <div className="flex animate-[marquee_28s_linear_infinite] whitespace-nowrap gap-8 hover:[animation-play-state:paused]">
+              {[
+                "✅ Rahul Kumar (Patna) — B.Ed admission confirmed",
+                "✅ Priya Singh (Muzaffarpur) — GNM Nursing, BSCC loan approved",
+                "✅ Amit Sharma (Ara) — B.Tech seat secured",
+                "✅ Neha Yadav (Gaya) — BA.LLB counselling done",
+                "✅ Vivek Raj (Bhagalpur) — DMLT admission, scholarship मिली",
+                "✅ Anjali Kumari (Hajipur) — D.El.Ed selected",
+                "✅ Rohit Mishra (Nalanda) — BCA placement ready",
+                "✅ Sonu Devi (Darbhanga) — ANM Nursing seat confirmed",
+              ].concat([
+                "✅ Rahul Kumar (Patna) — B.Ed admission confirmed",
+                "✅ Priya Singh (Muzaffarpur) — GNM Nursing, BSCC loan approved",
+                "✅ Amit Sharma (Ara) — B.Tech seat secured",
+                "✅ Neha Yadav (Gaya) — BA.LLB counselling done",
+              ]).map((item, i) => (
+                <span key={i} className="inline-flex flex-shrink-0 items-center gap-2 text-[11px] font-medium text-green-300/90">
+                  {item}
+                  <span className="text-white/20">•</span>
+                </span>
+              ))}
+            </div>
+          </div>
+
           {/* ── MAIN GRID ── */}
           <div className="grid grid-cols-1 gap-10 py-14 md:py-20 lg:grid-cols-[1.25fr_0.8fr] lg:gap-14 lg:items-start">
 
@@ -464,9 +490,15 @@ export default function Home() {
             <div className="order-1">
 
               {/* Platform label pill */}
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/[0.1] px-4 py-2">
-                <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
-                <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Session 2026–27 &nbsp;·&nbsp; Free Counselling Open</span>
+              <div className="mb-3 flex flex-wrap items-center gap-2">
+                <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/[0.1] px-4 py-2">
+                  <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
+                  <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Session 2026–27 &nbsp;·&nbsp; Free Counselling Open</span>
+                </div>
+                <div className="inline-flex items-center gap-1.5 rounded-full border border-red-400/30 bg-red-500/[0.12] px-3 py-1.5">
+                  <span className="h-1.5 w-1.5 animate-ping rounded-full bg-red-400 opacity-75" />
+                  <span className="text-[11px] font-extrabold text-red-300">⚡ Seats Limited — अभी Apply करें</span>
+                </div>
               </div>
 
               {/* H1 — 3-tier Hindi headline */}
@@ -535,24 +567,50 @@ export default function Home() {
                 Counsellor अभी available है — अभी form भरें।
               </p>
 
-              {/* Trust line */}
-              <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2">
+              {/* ── Quick Stream Navigation Pills ── */}
+              <div className="mt-5">
+                <p className="mb-2.5 text-[11px] font-bold uppercase tracking-widest text-blue-300/70">अपना Stream चुनें →</p>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { key: "teaching",    label: "🎓 Teaching",    color: "from-blue-500 to-indigo-600" },
+                    { key: "medical",     label: "🩺 Medical",     color: "from-rose-500 to-pink-600" },
+                    { key: "paramedical", label: "💊 Para Medical", color: "from-purple-500 to-violet-600" },
+                    { key: "law",         label: "⚖️ Law",          color: "from-amber-500 to-orange-500" },
+                    { key: "technical",   label: "💻 Technical",   color: "from-teal-500 to-cyan-600" },
+                  ].map(({ key, label, color }) => (
+                    <Link
+                      key={key}
+                      href={`/courses#${key}`}
+                      className={`inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r ${color} px-3.5 py-1.5 text-xs font-bold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:scale-95`}
+                      style={{ touchAction: "manipulation" }}
+                    >
+                      {label}
+                      <ArrowRight size={11} />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* ── Animated Stats Mini-Grid ── */}
+              <div className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-4">
                 {[
-                  "200+ Verified Colleges",
-                  "5,000+ Successful Admissions",
-                  "11+ Years of Experience",
-                  "100% Transparent · No Hidden Fee",
-                ].map((t, i, arr) => (
-                  <span key={t} className="flex items-center gap-1.5 text-xs font-medium text-blue-300">
-                    <Check size={11} className="text-amber-400" />
-                    {t}
-                    {i < arr.length - 1 && <span className="ml-1 text-white/15">|</span>}
-                  </span>
+                  { target: 5000, suffix: "+", label: "Students Guided", icon: Users, color: "text-amber-400" },
+                  { target: 200,  suffix: "+", label: "Partner Colleges", icon: Building2, color: "text-blue-400" },
+                  { target: 50,   suffix: "+", label: "Courses",          icon: BookOpen, color: "text-green-400" },
+                  { target: 11,   suffix: "+", label: "Years Experience", icon: Award, color: "text-purple-400" },
+                ].map(({ target, suffix, label, icon: Icon, color }) => (
+                  <div key={label} className="flex flex-col items-center rounded-2xl border border-white/[0.10] bg-white/[0.06] px-3 py-3 text-center backdrop-blur-sm">
+                    <Icon size={16} className={`mb-1 ${color}`} />
+                    <span className={`font-headline text-lg font-extrabold ${color}`}>
+                      <CountUp target={target} suffix={suffix} />
+                    </span>
+                    <span className="mt-0.5 text-[10px] font-medium text-blue-300 leading-tight">{label}</span>
+                  </div>
                 ))}
               </div>
 
-              {/* Floating achievement cards — desktop only */}
-              <div className="mt-9 hidden gap-3 lg:flex">
+              {/* Floating achievement cards */}
+              <div className="mt-9 flex flex-wrap gap-3">
                 <div className="flex items-center gap-3 rounded-2xl border border-white/[0.12] bg-white/[0.06] px-4 py-3 backdrop-blur-sm">
                   <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-green-500/20 ring-1 ring-green-500/30">
                     <CheckCircle2 size={19} className="text-green-400" />
