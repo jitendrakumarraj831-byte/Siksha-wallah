@@ -8,10 +8,11 @@ import {
   Loader, Users, Phone, MessageCircle,
   Search, AlertCircle, UserCheck, UserX, Mail, MapPin, Calendar,
   BookOpen, ClipboardList, ChevronDown, ChevronUp, Clock,
-  CheckCircle2, RefreshCw,
+  CheckCircle2, RefreshCw, Download,
 } from "lucide-react";
 import { db } from "@/lib/firebase";
 import { adminUpdate } from "@/lib/admin-api";
+import { exportToCsv, datedFilename } from "@/lib/csv-export";
 import {
   collection, getDocs, query, where,
 } from "firebase/firestore";
@@ -413,6 +414,22 @@ export default function AdminStudentsPage() {
     }
   }
 
+  function exportCsv() {
+    exportToCsv<StudentProfile>(datedFilename("students"), [
+      { key: "name", label: "Name" },
+      { key: "email", label: "Email" },
+      { key: "phone", label: "Phone" },
+      { label: "Profile Complete", value: (s) => (s.profileComplete ? "Yes" : "No") },
+      { label: "Applications", value: (s) => String(s.applications?.length || 0) },
+      { label: "Courses Applied", value: (s) => (s.applications || []).map(a => a.course).filter(Boolean).join(" | ") },
+      { label: "Admission Done", value: (s) => String((s.applications || []).filter(a => a.status === "admission_done").length) },
+      { label: "BSCC Requested", value: (s) => ((s.applications || []).some(a => a.bsccRequired) ? "Yes" : "No") },
+      { label: "Documents", value: (s) => String(s.documents?.length || 0) },
+      { label: "Joined", value: (s) => formatDate(s.createdAt) },
+      { label: "Last Login", value: (s) => formatDate(s.lastLogin) },
+    ], filtered);
+  }
+
   // Stats
   const stats = useMemo(() => {
     const totalApps = students.reduce((sum, s) => sum + (s.applications?.length || 0), 0);
@@ -532,6 +549,11 @@ export default function AdminStudentsPage() {
           <div className="flex items-center text-sm text-gray-400 px-2 font-semibold">
             {filtered.length} students
           </div>
+          <button onClick={exportCsv} disabled={filtered.length === 0}
+            className="ml-auto flex items-center gap-2 rounded-xl border-2 border-gray-200 px-4 py-2.5 text-sm font-bold text-gray-600 hover:border-green-500 hover:text-green-600 transition disabled:opacity-50"
+            title="Export current list to CSV">
+            <Download size={14} /> Export CSV
+          </button>
         </div>
 
         {/* List */}

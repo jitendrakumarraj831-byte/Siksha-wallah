@@ -5,9 +5,10 @@ import Link from "next/link";
 import { AdminHeader } from "@/components/admin-header";
 import { useAdminGuard } from "@/hooks/use-admin-guard";
 import { adminFetchDataResult, adminUpdate } from "@/lib/admin-api";
+import { exportToCsv, datedFilename } from "@/lib/csv-export";
 import {
   Loader, Phone, Mail, MapPin,
-  BookOpen, AlertCircle,
+  BookOpen, AlertCircle, Download,
   Filter, Search, MessageCircle, ChevronDown, ChevronUp,
 } from "lucide-react";
 import {
@@ -267,6 +268,30 @@ export default function AdminApplicationsPage() {
     setApplications(prev => prev.map(a => a.id === id ? { ...a, note } : a));
   }
 
+  function exportCsv() {
+    const fmt = (ts: any) => {
+      const d = ts?.toDate ? ts.toDate() : ts ? new Date(ts) : null;
+      return d ? d.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "";
+    };
+    exportToCsv<CourseApplication>(datedFilename("applications"), [
+      { key: "fullName", label: "Name" },
+      { key: "fatherName", label: "Father Name" },
+      { key: "mobile", label: "Mobile" },
+      { key: "email", label: "Email" },
+      { key: "course", label: "Course" },
+      { key: "stream", label: "Stream" },
+      { key: "qualification", label: "Qualification" },
+      { key: "percentage", label: "Marks/%" },
+      { key: "passingYear", label: "Passing Year" },
+      { key: "district", label: "District" },
+      { key: "state", label: "State" },
+      { label: "BSCC", value: (a) => (a.bsccRequired ? "Yes" : "No") },
+      { label: "Status", value: (a) => STATUS_META[a.status || "new"]?.label || "New" },
+      { key: "note", label: "Note" },
+      { label: "Applied On", value: (a) => fmt(a.createdAt) },
+    ], filtered);
+  }
+
   // Stats
   const stats = useMemo(() => ({
     total: applications.length,
@@ -392,6 +417,11 @@ export default function AdminApplicationsPage() {
           <div className="flex items-center text-sm font-semibold text-gray-400 px-2">
             <Filter size={13} className="mr-1" /> {filtered.length} results
           </div>
+          <button onClick={exportCsv} disabled={filtered.length === 0}
+            className="ml-auto flex items-center gap-2 rounded-xl border-2 border-gray-200 px-4 py-2.5 text-sm font-bold text-gray-600 hover:border-green-500 hover:text-green-600 transition disabled:opacity-50"
+            title="Export current list to CSV">
+            <Download size={14} /> Export CSV
+          </button>
         </div>
 
         {/* BSCC note */}
