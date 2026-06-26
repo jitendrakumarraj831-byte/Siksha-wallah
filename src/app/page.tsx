@@ -440,20 +440,25 @@ export default function Home() {
 
         <div className="container-shell relative">
 
-          {/* ── TOP TRUST BADGE STRIP ── */}
+          {/* ── TOP TRUST BADGE STRIP — all clickable ── */}
           <div className="no-scrollbar flex items-center gap-3 overflow-x-auto border-b border-white/[0.08] py-4">
             {[
-              { icon: ShieldCheck,   text: "NCTE / UGC Recognised Colleges" },
-              { icon: CreditCard,    text: "Complete BSCC Loan Support" },
-              { icon: Users,         text: "5,000+ Students Guided" },
-              { icon: Building2,     text: "200+ Partner Colleges" },
-              { icon: Award,         text: "11+ Years of Trusted Counselling" },
-              { icon: CheckCircle2,  text: "100% Transparent. No Hidden Fees." },
-            ].map(({ icon: Icon, text }) => (
-              <div key={text} className="flex flex-shrink-0 items-center gap-1.5 rounded-full border border-white/[0.12] bg-white/[0.06] px-4 py-2 text-xs font-semibold text-white/85 backdrop-blur-sm">
+              { icon: ShieldCheck,  text: "NCTE / UGC Recognised Colleges", href: "/about#colleges" },
+              { icon: CreditCard,   text: "Complete BSCC Loan Support",      href: "/apply" },
+              { icon: Users,        text: "5,000+ Students Guided",           href: "/#reviews" },
+              { icon: Building2,    text: "200+ Partner Colleges",            href: "/about" },
+              { icon: Award,        text: "11+ Years of Trusted Counselling", href: "/about" },
+              { icon: CheckCircle2, text: "100% Transparent. No Hidden Fees.", href: "/contact" },
+            ].map(({ icon: Icon, text, href }) => (
+              <Link
+                key={text}
+                href={href}
+                className="flex flex-shrink-0 items-center gap-1.5 rounded-full border border-white/[0.12] bg-white/[0.06] px-4 py-2 text-xs font-semibold text-white/85 backdrop-blur-sm transition-all duration-200 hover:border-amber-400/50 hover:bg-white/[0.12] hover:text-white active:scale-95"
+                style={{ touchAction: "manipulation" }}
+              >
                 <Icon size={13} className="flex-shrink-0 text-amber-400" />
                 {text}
-              </div>
+              </Link>
             ))}
           </div>
 
@@ -475,10 +480,14 @@ export default function Home() {
                 "✅ Amit Sharma (Ara) — B.Tech seat secured",
                 "✅ Neha Yadav (Gaya) — BA.LLB counselling done",
               ]).map((item, i) => (
-                <span key={i} className="inline-flex flex-shrink-0 items-center gap-2 text-[11px] font-medium text-green-300/90">
+                <Link
+                  key={i}
+                  href="/apply"
+                  className="inline-flex flex-shrink-0 items-center gap-2 text-[11px] font-medium text-green-300/90 hover:text-green-200 transition-colors"
+                >
                   {item}
                   <span className="text-white/20">•</span>
-                </span>
+                </Link>
               ))}
             </div>
           </div>
@@ -491,14 +500,22 @@ export default function Home() {
 
               {/* Platform label pill */}
               <div className="mb-3 flex flex-wrap items-center gap-2">
-                <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/[0.1] px-4 py-2">
+                <Link
+                  href="/apply"
+                  className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/[0.1] px-4 py-2 transition-all hover:border-amber-400/60 hover:bg-amber-400/[0.18] active:scale-95"
+                  style={{ touchAction: "manipulation" }}
+                >
                   <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
                   <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Session 2026–27 &nbsp;·&nbsp; Free Counselling Open</span>
-                </div>
-                <div className="inline-flex items-center gap-1.5 rounded-full border border-red-400/30 bg-red-500/[0.12] px-3 py-1.5">
+                </Link>
+                <Link
+                  href="/apply"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-red-400/30 bg-red-500/[0.12] px-3 py-1.5 transition-all hover:border-red-400/60 hover:bg-red-500/[0.22] active:scale-95"
+                  style={{ touchAction: "manipulation" }}
+                >
                   <span className="h-1.5 w-1.5 animate-ping rounded-full bg-red-400 opacity-75" />
                   <span className="text-[11px] font-extrabold text-red-300">⚡ Seats Limited — अभी Apply करें</span>
-                </div>
+                </Link>
               </div>
 
               {/* H1 — 3-tier Hindi headline */}
@@ -518,25 +535,51 @@ export default function Home() {
               {/* Accent line */}
               <div className="mt-4 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-44" />
 
-              {/* Course highlight pill */}
-              <div className="mt-6 inline-flex flex-wrap items-center gap-2 rounded-2xl border border-amber-400/25 bg-amber-400/[0.08] px-5 py-3">
+              {/* Course highlight pill — each course name is clickable */}
+              <div className="mt-6 flex flex-wrap items-center gap-2 rounded-2xl border border-amber-400/25 bg-amber-400/[0.08] px-5 py-3">
                 <GraduationCap size={16} className="flex-shrink-0 text-amber-400" />
-                <span className="text-sm font-semibold text-amber-100">
-                  B.Ed • Nursing • MBBS • LLB • B.Tech • MBA
-                </span>
-                <span className="rounded-full bg-gradient-to-r from-amber-400 to-orange-400 px-2.5 py-0.5 text-[11px] font-extrabold text-gray-900">
-                  50+ Courses
-                </span>
+                {[
+                  { label: "B.Ed",    href: "/courses/bed" },
+                  { label: "Nursing", href: "/courses/bsc-nursing" },
+                  { label: "MBBS",    href: "/courses/mbbs" },
+                  { label: "LLB",     href: "/courses/llb" },
+                  { label: "B.Tech",  href: "/courses/btech" },
+                  { label: "MBA",     href: "/courses/mba" },
+                ].map(({ label, href }, i, arr) => (
+                  <span key={label} className="inline-flex items-center gap-1">
+                    <Link
+                      href={href}
+                      className="text-sm font-bold text-amber-100 underline-offset-2 hover:underline hover:text-amber-300 transition-colors active:scale-95"
+                      style={{ touchAction: "manipulation" }}
+                    >
+                      {label}
+                    </Link>
+                    {i < arr.length - 1 && <span className="text-amber-400/50 text-xs">•</span>}
+                  </span>
+                ))}
+                <Link
+                  href="/courses"
+                  className="rounded-full bg-gradient-to-r from-amber-400 to-orange-400 px-2.5 py-0.5 text-[11px] font-extrabold text-gray-900 transition-all hover:opacity-90 hover:shadow-sm active:scale-95"
+                  style={{ touchAction: "manipulation" }}
+                >
+                  50+ Courses →
+                </Link>
               </div>
 
-              {/* Sub-heading */}
+              {/* Sub-heading — inline links */}
               <p className="mt-5 max-w-lg text-[1rem] leading-[1.85] text-blue-100 md:text-[1.05rem]">
                 Teaching, Medical, Law, Engineering, Para Medical —{" "}
-                <strong className="font-extrabold text-white">50+ courses, 200+ verified colleges</strong>{" "}
+                <Link href="/courses" className="font-extrabold text-white underline underline-offset-2 decoration-amber-400/50 hover:decoration-amber-400 transition-all">
+                  50+ courses
+                </Link>
+                ,{" "}
+                <Link href="/about" className="font-extrabold text-white underline underline-offset-2 decoration-amber-400/50 hover:decoration-amber-400 transition-all">
+                  200+ verified colleges
+                </Link>{" "}
                 aur{" "}
-                <strong className="bg-gradient-to-r from-amber-300 to-yellow-200 bg-clip-text text-transparent font-extrabold">
+                <Link href="/apply" className="bg-gradient-to-r from-amber-300 to-yellow-200 bg-clip-text text-transparent font-extrabold underline underline-offset-2 decoration-amber-400/60 hover:decoration-amber-400 transition-all">
                   BSCC Loan support
-                </strong>{" "}
+                </Link>{" "}
                 — सब एक जगह, बिल्कुल निःशुल्क।
               </p>
 
@@ -594,41 +637,70 @@ export default function Home() {
               {/* ── Animated Stats Mini-Grid ── */}
               <div className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-4">
                 {[
-                  { target: 5000, suffix: "+", label: "Students Guided", icon: Users, color: "text-amber-400" },
-                  { target: 200,  suffix: "+", label: "Partner Colleges", icon: Building2, color: "text-blue-400" },
-                  { target: 50,   suffix: "+", label: "Courses",          icon: BookOpen, color: "text-green-400" },
-                  { target: 11,   suffix: "+", label: "Years Experience", icon: Award, color: "text-purple-400" },
-                ].map(({ target, suffix, label, icon: Icon, color }) => (
-                  <div key={label} className="flex flex-col items-center rounded-2xl border border-white/[0.10] bg-white/[0.06] px-3 py-3 text-center backdrop-blur-sm">
+                  { target: 5000, suffix: "+", label: "Students Guided", icon: Users,     color: "text-amber-400", href: "/#reviews" },
+                  { target: 200,  suffix: "+", label: "Partner Colleges", icon: Building2, color: "text-blue-400",  href: "/about" },
+                  { target: 50,   suffix: "+", label: "Courses",          icon: BookOpen,  color: "text-green-400", href: "/courses" },
+                  { target: 11,   suffix: "+", label: "Years Experience", icon: Award,     color: "text-purple-400",href: "/about" },
+                ].map(({ target, suffix, label, icon: Icon, color, href }) => (
+                  <Link
+                    key={label}
+                    href={href}
+                    className="flex flex-col items-center rounded-2xl border border-white/[0.10] bg-white/[0.06] px-3 py-3 text-center backdrop-blur-sm transition-all duration-200 hover:border-white/25 hover:bg-white/[0.12] hover:-translate-y-0.5 active:scale-95"
+                    style={{ touchAction: "manipulation" }}
+                  >
                     <Icon size={16} className={`mb-1 ${color}`} />
                     <span className={`font-headline text-lg font-extrabold ${color}`}>
                       <CountUp target={target} suffix={suffix} />
                     </span>
                     <span className="mt-0.5 text-[10px] font-medium text-blue-300 leading-tight">{label}</span>
-                  </div>
+                  </Link>
                 ))}
               </div>
 
-              {/* Floating achievement cards */}
+              {/* Floating achievement cards — clickable */}
               <div className="mt-9 flex flex-wrap gap-3">
-                <div className="flex items-center gap-3 rounded-2xl border border-white/[0.12] bg-white/[0.06] px-4 py-3 backdrop-blur-sm">
+                <Link
+                  href="/courses/bed"
+                  className="flex items-center gap-3 rounded-2xl border border-white/[0.12] bg-white/[0.06] px-4 py-3 backdrop-blur-sm transition-all duration-200 hover:border-green-400/40 hover:bg-green-500/[0.08] hover:-translate-y-0.5 active:scale-95"
+                  style={{ touchAction: "manipulation" }}
+                >
                   <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-green-500/20 ring-1 ring-green-500/30">
                     <CheckCircle2 size={19} className="text-green-400" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-white">Recently Admitted</p>
-                    <p className="mt-0.5 text-[11px] text-blue-300">Rahul K. — B.Ed, Patna University</p>
+                    <p className="text-xs font-bold text-white">✅ Recently Admitted</p>
+                    <p className="mt-0.5 text-[11px] text-blue-300">Rahul Kumar — B.Ed, Nalanda College</p>
+                    <p className="text-[10px] text-green-400/80 font-medium">2 घंटे पहले · Patna</p>
                   </div>
-                </div>
-                <div className="flex items-center gap-3 rounded-2xl border border-white/[0.12] bg-white/[0.06] px-4 py-3 backdrop-blur-sm">
+                </Link>
+                <Link
+                  href="/apply"
+                  className="flex items-center gap-3 rounded-2xl border border-white/[0.12] bg-white/[0.06] px-4 py-3 backdrop-blur-sm transition-all duration-200 hover:border-amber-400/40 hover:bg-amber-500/[0.08] hover:-translate-y-0.5 active:scale-95"
+                  style={{ touchAction: "manipulation" }}
+                >
                   <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-amber-500/20 ring-1 ring-amber-500/30">
                     <CreditCard size={19} className="text-amber-400" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-white">BSCC Loan Approved</p>
-                    <p className="mt-0.5 text-[11px] text-blue-300">Priya S. — ₹4 Lakh loan for GNM Nursing</p>
+                    <p className="text-xs font-bold text-white">💰 BSCC Loan Approved</p>
+                    <p className="mt-0.5 text-[11px] text-blue-300">Priya Singh — ₹4.2L loan · GNM Nursing</p>
+                    <p className="text-[10px] text-amber-400/80 font-medium">आज approved · Muzaffarpur</p>
                   </div>
-                </div>
+                </Link>
+                <Link
+                  href="/courses/btech"
+                  className="flex items-center gap-3 rounded-2xl border border-white/[0.12] bg-white/[0.06] px-4 py-3 backdrop-blur-sm transition-all duration-200 hover:border-blue-400/40 hover:bg-blue-500/[0.08] hover:-translate-y-0.5 active:scale-95"
+                  style={{ touchAction: "manipulation" }}
+                >
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-blue-500/20 ring-1 ring-blue-500/30">
+                    <GraduationCap size={19} className="text-blue-400" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-white">🎓 Seat Secured</p>
+                    <p className="mt-0.5 text-[11px] text-blue-300">Amit Sharma — B.Tech CSE, NIT Patna</p>
+                    <p className="text-[10px] text-blue-400/80 font-medium">कल confirmed · Ara, Bihar</p>
+                  </div>
+                </Link>
               </div>
             </div>
 
