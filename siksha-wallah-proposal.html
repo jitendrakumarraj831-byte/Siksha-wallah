@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Siksha Wallah — Website Feature Proposal</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      background: #f4f6fb;
+      color: #1a1a2e;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    /* ── COVER PAGE ── */
+    .cover {
+      width: 100%;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #003f9f 0%, #0061cc 50%, #00a8e8 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 40px;
+      page-break-after: always;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cover::before {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      top: -150px; right: -150px;
+    }
+    .cover::after {
+      content: '';
+      position: absolute;
+      width: 350px; height: 350px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      bottom: -100px; left: -100px;
+    }
+
+    .cover-logo {
+      font-size: 48px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+    .cover-logo span { color: #ffd700; }
+
+    .cover-tagline {
+      font-size: 16px;
+      color: rgba(255,255,255,0.85);
+      font-weight: 400;
+      margin-bottom: 50px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .cover-divider {
+      width: 80px;
+      height: 4px;
+      background: #ffd700;
+      border-radius: 2px;
+      margin: 0 auto 50px;
+    }
+
+    .cover-title {
+      font-size: 36px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
+      margin-bottom: 20px;
+      max-width: 700px;
+    }
+
+    .cover-subtitle {
+      font-size: 15px;
+      color: rgba(255,255,255,0.8);
+      max-width: 600px;
+      margin-bottom: 60px;
+    }
+
+    .cover-stats {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 60px;
+    }
+
+    .stat-box {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      padding: 20px 30px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+    .stat-number {
+      font-size: 32px;
+      font-weight: 800;
+      color: #ffd700;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+
+    .cover-footer {
+      position: absolute;
+      bottom: 30px;
+      width: 100%;
+      text-align: center;
+      color: rgba(255,255,255,0.5);
+      font-size: 11px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── PAGE LAYOUT ── */
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 50px 50px;
+      background: #fff;
+      page-break-after: always;
+    }
+
+    .page:last-child { page-break-after: avoid; }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+      padding-bottom: 14px;
+      border-bottom: 2px solid #e8edf5;
+    }
+
+    .section-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #003f9f, #0061cc);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .section-number {
+      font-size: 11px;
+      font-weight: 600;
+      color: #0061cc;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a1a2e;
+    }
+
+    /* ── FEATURE CARDS ── */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .feature-card {
+      background: #f8faff;
+      border: 1px solid #e0e8f5;
+      border-radius: 10px;
+      padding: 16px;
+      border-left: 3px solid #003f9f;
+    }
+
+    .feature-card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #003f9f;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .feature-card-desc {
+      font-size: 12px;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .feature-card.accent { border-left-color: #e67e22; }
+    .feature-card.green  { border-left-color: #27ae60; }
+    .feature-card.purple { border-left-color: #8e44ad; }
+    .feature-card.red    { border-left-color: #e74c3c; }
+
+    /* ── TABLE ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      font-size: 12px;
+    }
+
+    thead tr {
+      background: linear-gradient(90deg, #003f9f, #0061cc);
+      color: #fff;
+    }
+
+    thead th {
+      padding: 11px 14px;
+      text-align: left;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    tbody tr:nth-child(even) { background: #f5f8ff; }
+    tbody tr:nth-child(odd)  { background: #fff; }
+
+    tbody td {
+      padding: 10px 14px;
+      border-bottom: 1px solid #e8edf5;
+      color: #333;
+      vertical-align: top;
+    }
+
+    tbody td:first-child { font-weight: 500; color: #1a1a2e; }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .badge-blue   { background: #dbeafe; color: #1d4ed8; }
+    .badge-green  { background: #dcfce7; color: #15803d; }
+    .badge-orange { background: #ffedd5; color: #c2410c; }
+    .badge-purple { background: #ede9fe; color: #6d28d9; }
+
+    /* ── HIGHLIGHTS / PILL TAGS ── */
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .tag {
+      background: #e8edf5;
+      color: #003f9f;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid #c9d9f0;
+    }
+
+    /* ── VALUATION BLOCK ── */
+    .val-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .val-card {
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+    .val-card.basic    { background: #f0f4ff; border: 2px solid #c7d8f8; }
+    .val-card.mid      { background: #fff7e6; border: 2px solid #ffd080; }
+    .val-card.premium  { background: #f0fff4; border: 2px solid #86efac; }
+
+    .val-tier { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .val-card.basic   .val-tier { color: #2563eb; }
+    .val-card.mid     .val-tier { color: #d97706; }
+    .val-card.premium .val-tier { color: #16a34a; }
+
+    .val-price { font-size: 22px; font-weight: 800; margin-bottom: 4px; color: #1a1a2e; }
+    .val-desc  { font-size: 11px; color: #666; }
+
+    /* ── BREAKDOWN TABLE ── */
+    .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px dashed #e0e8f5;
+    }
+    .breakdown-row:last-child { border-bottom: none; }
+    .breakdown-label { font-size: 12px; color: #444; }
+    .breakdown-range { font-size: 12px; font-weight: 600; color: #003f9f; }
+    .breakdown-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 12px;
+      padding: 14px 16px;
+      background: linear-gradient(90deg, #003f9f, #0061cc);
+      border-radius: 8px;
+      color: #fff;
+    }
+    .breakdown-total .label { font-size: 14px; font-weight: 600; }
+    .breakdown-total .price { font-size: 20px; font-weight: 800; }
+
+    /* ── PAGE HEADER (inner pages) ── */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 36px;
+      padding-bottom: 14px;
+      border-bottom: 3px solid #003f9f;
+    }
+    .page-header-brand { font-size: 15px; font-weight: 700; color: #003f9f; }
+    .page-header-label { font-size: 11px; color: #888; }
+
+    /* ── FOOTER ── */
+    .page-footer {
+      margin-top: 40px;
+      padding-top: 14px;
+      border-top: 1px solid #e0e8f5;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: #aaa;
+    }
+
+    /* ── CHECK LIST ── */
+    .checklist { list-style: none; margin: 10px 0; }
+    .checklist li {
+      padding: 5px 0;
+      font-size: 12px;
+      color: #333;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .checklist li::before {
+      content: '✓';
+      color: #16a34a;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── HIGHLIGHT BOX ── */
+    .highlight-box {
+      background: linear-gradient(135deg, #003f9f08, #0061cc12);
+      border: 1px solid #c7d8f8;
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin: 16px 0;
+    }
+
+    .highlight-box h4 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #003f9f;
+      margin-bottom: 10px;
+    }
+
+    .note-box {
+      background: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      border-radius: 0 8px 8px 0;
+      padding: 12px 16px;
+      font-size: 12px;
+      color: #78350f;
+      margin: 16px 0;
+    }
+
+    @media print {
+      body { background: #fff; }
+      .cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .page { box-shadow: none; margin: 0; }
+      thead tr { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .val-card, .feature-card, .breakdown-total { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .section-icon { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     COVER PAGE
+════════════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-logo">Siksha<span>Wallah</span></div>
+  <div class="cover-tagline">Bihar's Premier Admission Consultancy Platform</div>
+  <div class="cover-divider"></div>
+  <div class="cover-title">Complete Website Feature Document &amp; Market Valuation Report</div>
+  <div class="cover-subtitle">
+    A comprehensive overview of all developed features, technical architecture,
+    integrations, and estimated market value — prepared for client review.
+  </div>
+
+  <div class="cover-stats">
+    <div class="stat-box">
+      <div class="stat-number">31</div>
+      <div class="stat-label">Pages / Routes</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">38</div>
+      <div class="stat-label">Courses Listed</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">17</div>
+      <div class="stat-label">API Endpoints</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">3</div>
+      <div class="stat-label">User Roles</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">16K+</div>
+      <div class="stat-label">Lines of Code</div>
+    </div>
+  </div>
+
+  <div class="cover-footer">
+    Confidential Document &nbsp;|&nbsp; Prepared: June 2026 &nbsp;|&nbsp; sikshawallah.com
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════
+     PAGE 1 — TABLE OF CONTENTS
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-header-brand">SikshaWallah — Feature &amp; Valuation Report</div>
+    <div class="page-header-label">Confidential | June 2026</div>
+  </div>
+
+  <div class="section-header">
+    <div class="section-icon">📋</div>
+    <div>
+      <div class="section-number">Index</div>
+      <div class="section-title">Table of Contents</div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Section</th><th>Topic</th><th>Page</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Public Website Features (Visitor / Student)</td><td>3</td></tr>
+      <tr><td>2</td><td>Lead Generation &amp; CRM Entry Points</td><td>3</td></tr>
+      <tr><td>3</td><td>Student Account &amp; Dashboard</td><td>4</td></tr>
+      <tr><td>4</td><td>Admin / Office CRM Dashboard</td><td>4</td></tr>
+      <tr><td>5</td><td>Backend APIs &amp; Database</td><td>5</td></tr>
+      <tr><td>6</td><td>Security Architecture</td><td>5</td></tr>
+      <tr><td>7</td><td>Third-Party Integrations</td><td>6</td></tr>
+      <tr><td>8</td><td>PWA (Progressive Web App)</td><td>6</td></tr>
+      <tr><td>9</td><td>Course Catalog &amp; Content</td><td>6</td></tr>
+      <tr><td>10</td><td>Technical Stack</td><td>7</td></tr>
+      <tr><td>11</td><td>Market Valuation &amp; Cost Breakdown</td><td>8</td></tr>
+      <tr><td>12</td><td>Future Roadmap (Phase 2)</td><td>9</td></tr>
+    </tbody>
+  </table>
+
+  <div class="highlight-box">
+    <h4>About This Document</h4>
+    Yeh document Siksha Wallah website ke saare developed features ko detail mein present karta hai.
+    Iska purpose hai ki client ya koi bhi senior developer easily samajh sake ki platform mein
+    kya-kya bana hua hai, kitna kaam hua hai, aur uski market value kya hai.
+  </div>
+
+  <div class="tags">
+    <span class="tag">Next.js 15</span>
+    <span class="tag">React 19</span>
+    <span class="tag">TypeScript</span>
+    <span class="tag">Firebase</span>
+    <span class="tag">Cloudinary</span>
+    <span class="tag">Nodemailer</span>
+    <span class="tag">Tailwind CSS</span>
+    <span class="tag">Firestore</span>
+    <span class="tag">PWA</span>
+    <span class="tag">Real-time Chat</span>
+    <span class="tag">Admin CRM</span>
+    <span class="tag">Student Dashboard</span>
+  </div>
+
+  <div class="page-footer">
+    <span>SikshaWallah.com</span>
+    <span>Page 2 of 9</span>
+    <span>Confidential</span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════
+     PAGE 2 — PUBLIC + LEAD GENERATION
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-header-brand">SikshaWallah — Feature Report</div>
+    <div class="page-header-label">Section 1 &amp; 2</div>
+  </div>
+
+  <div class="section-header">
+    <div class="section-icon">🌐</div>
+    <div>
+      <div class="section-number">Section 1</div>
+      <div class="section-title">Public Website Features</div>
+    </div>
+  </div>
+
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="feature-card-title">🏠 Homepage</div>
+      <div class="feature-card-desc">Animated hero section, live counters (students, colleges, courses), 5 stream cards, partner college showcase, success story carousel, FAQ accordion, CTA buttons.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">📚 Course Catalog</div>
+      <div class="feature-card-desc">38 courses across 5 streams with tabbed interface. Filter by stream: Teaching, Medical, Para-Medical, Law, Technical/Management.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">📄 Course Detail Pages</div>
+      <div class="feature-card-desc">Individual page per course — eligibility, duration, annual fees, career scope, salary range, entrance exams, top colleges, government job opportunities, Hindi description.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">✍️ Online Application Form</div>
+      <div class="feature-card-desc">Multi-step form: name, DOB, gender, mobile, email, address, district, course, qualification, percentage, preferred college, BSCC loan requirement, available documents checklist.</div>
+    </div>
+    <div class="feature-card accent">
+      <div class="feature-card-title">📝 Blog System</div>
+      <div class="feature-card-desc">14+ articles with categories (Teaching, Medical, Finance, etc.), bilingual support (Hindi/English), read-time estimates, featured article highlighting.</div>
+    </div>
+    <div class="feature-card accent">
+      <div class="feature-card-title">📞 Contact Page</div>
+      <div class="feature-card-desc">Contact form with name, phone, email, course, message. WhatsApp &amp; phone links with click tracking. Rate limited to prevent spam.</div>
+    </div>
+    <div class="feature-card green">
+      <div class="feature-card-title">🏫 About Page</div>
+      <div class="feature-card-desc">Consultancy background, mission, team information, and why-choose-us section for new visitors.</div>
+    </div>
+    <div class="feature-card green">
+      <div class="feature-card-title">🗺️ Portal Pages</div>
+      <div class="feature-card-desc">Dynamic section-based information pages for different portal categories. Custom 404 branded error page.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section-header" style="margin-top:32px;">
+    <div class="section-icon">🎯</div>
+    <div>
+      <div class="section-number">Section 2</div>
+      <div class="section-title">Lead Generation &amp; CRM Entry Points</div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Feature</th><th>Description</th><th>Type</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Quick Apply Modal</td>
+        <td>4-step popup form on homepage: Name → Mobile → Course → Qualification. Submits directly to admin lead dashboard.</td>
+        <td><span class="badge badge-blue">Primary Lead</span></td>
+      </tr>
+      <tr>
+        <td>Full Application Form</td>
+        <td>Detailed 15+ field form at /apply. Collects complete student information including documents checklist &amp; preferred college.</td>
+        <td><span class="badge badge-blue">Primary Lead</span></td>
+      </tr>
+      <tr>
+        <td>Floating Contact Buttons</td>
+        <td>Fixed phone &amp; WhatsApp buttons visible on all pages. Each click is tracked as an activity event.</td>
+        <td><span class="badge badge-green">Engagement</span></td>
+      </tr>
+      <tr>
+        <td>WhatsApp Pre-filled Links</td>
+        <td>Auto-encoded messages with student's course interest sent to counsellor WhatsApp. Click activity tracked.</td>
+        <td><span class="badge badge-green">Engagement</span></td>
+      </tr>
+      <tr>
+        <td>Course Page CTA Buttons</td>
+        <td>"Apply Now" buttons on every course page — pre-filled with course name parameter to reduce drop-off.</td>
+        <td><span class="badge badge-orange">Conversion</span></td>
+      </tr>
+      <tr>
+        <td>Contact Form</td>
+        <td>General inquiry form on /contact. Stored separately in admin contacts inbox.</td>
+        <td><span class="badge badge-orange">Conversion</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="page-footer">
+    <span>SikshaWallah.com</span>
+    <span>Page 3 of 9</span>
+    <span>Confidential</span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════
+     PAGE 3 — STUDENT DASHBOARD + ADMIN
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-header-brand">SikshaWallah — Feature Report</div>
+    <div class="page-header-label">Section 3 &amp; 4</div>
+  </div>
+
+  <div class="section-header">
+    <div class="section-icon">👨‍🎓</div>
+    <div>
+      <div class="section-number">Section 3</div>
+      <div class="section-title">Student Account &amp; Dashboard</div>
+    </div>
+  </div>
+
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="feature-card-title">🔐 Registration &amp; Login</div>
+      <div class="feature-card-desc">Email/Password signup with Firebase Authentication. Email verification sent automatically on registration. Password strength enforced.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">🔄 Forgot / Reset Password</div>
+      <div class="feature-card-desc">Secure password reset via transactional email link. One-time-use token with expiry for security.</div>
+    </div>
+    <div class="feature-card green">
+      <div class="feature-card-title">📊 Student Dashboard</div>
+      <div class="feature-card-desc">Overview page showing profile completion percentage, application status summary, recent notifications, quick actions.</div>
+    </div>
+    <div class="feature-card green">
+      <div class="feature-card-title">👤 Profile Management</div>
+      <div class="feature-card-desc">Edit name, phone, email, qualification, full address. Profile completion indicator shown to encourage completion.</div>
+    </div>
+    <div class="feature-card accent">
+      <div class="feature-card-title">📁 Document Upload</div>
+      <div class="feature-card-desc">Upload 10+ document types (Aadhaar, 10th/12th marksheet, Caste Certificate, Income Certificate, etc.) via Cloudinary. Preview &amp; delete documents.</div>
+    </div>
+    <div class="feature-card accent">
+      <div class="feature-card-title">📋 Application Tracking</div>
+      <div class="feature-card-desc">View all submitted applications. Real-time status updates: New → Contacted → Documents Pending → Admission Done → Not Interested.</div>
+    </div>
+    <div class="feature-card purple">
+      <div class="feature-card-title">💬 Live Chat with Counsellor</div>
+      <div class="feature-card-desc">Real-time in-app messaging between student and office counsellor. Message timestamps, read receipts. Powered by Firestore real-time listeners.</div>
+    </div>
+    <div class="feature-card purple">
+      <div class="feature-card-title">🔔 Notifications</div>
+      <div class="feature-card-desc">Instant notifications for document verification (approved/rejected) and application status changes. Read/unread state with history.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section-header" style="margin-top:32px;">
+    <div class="section-icon">🏢</div>
+    <div>
+      <div class="section-number">Section 4</div>
+      <div class="section-title">Admin / Office CRM Dashboard</div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Module</th><th>Features</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Secure Admin Login</td>
+        <td>Username/password auth. Rate-limited (5 attempts/5 min per IP). httpOnly cookie sessions with HMAC-SHA256 signing. Fail-closed security.</td>
+      </tr>
+      <tr>
+        <td>Lead Dashboard</td>
+        <td>Live inquiry list. One-click call (tel:) &amp; WhatsApp links. Status workflow (Pending → Called → Admission Done). Internal notes per lead. CSV export. Today's count, pending follow-ups, total admitted.</td>
+      </tr>
+      <tr>
+        <td>Applications Management</td>
+        <td>All course applications with full student details. Status update workflow. Filter &amp; search by course/status.</td>
+      </tr>
+      <tr>
+        <td>Student Directory</td>
+        <td>All registered students. Expandable cards showing: profile, all applications, uploaded documents. Last login &amp; profile completion tracking.</td>
+      </tr>
+      <tr>
+        <td>Counsellor Chat</td>
+        <td>Inbox of all student conversations. Unread message count. Send replies. Mark as read. Student name &amp; email visible.</td>
+      </tr>
+      <tr>
+        <td>Document Verification</td>
+        <td>Preview uploaded documents. Approve / Reject / Pending workflow. Add verification remarks. Download documents. Filter by student or status.</td>
+      </tr>
+      <tr>
+        <td>Activity Log</td>
+        <td>Complete timeline of all platform events: inquiries, logins, applications, document uploads, WhatsApp clicks, course views, etc. Pagination + search + filter by event type.</td>
+      </tr>
+      <tr>
+        <td>Contact Submissions Inbox</td>
+        <td>Separate inbox for /contact form messages. Read/unread tracking. Search &amp; filter. Reply via phone/WhatsApp links.</td>
+      </tr>
+      <tr>
+        <td>Office Presence Status</td>
+        <td>Counsellor can mark themselves "online." Students see real-time availability. Heartbeat API keeps status live.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="page-footer">
+    <span>SikshaWallah.com</span>
+    <span>Page 4 of 9</span>
+    <span>Confidential</span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════
+     PAGE 4 — BACKEND + SECURITY
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-header-brand">SikshaWallah — Feature Report</div>
+    <div class="page-header-label">Section 5 &amp; 6</div>
+  </div>
+
+  <div class="section-header">
+    <div class="section-icon">⚙️</div>
+    <div>
+      <div class="section-number">Section 5</div>
+      <div class="section-title">Backend APIs &amp; Database Architecture</div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>API Endpoint</th><th>Method</th><th>Purpose</th><th>Auth</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>/api/admin/login</td><td>POST</td><td>Admin authentication with rate limiting</td><td><span class="badge badge-orange">Admin</span></td></tr>
+      <tr><td>/api/admin/logout</td><td>POST</td><td>Clear admin session cookie</td><td><span class="badge badge-orange">Admin</span></td></tr>
+      <tr><td>/api/admin/data</td><td>GET</td><td>Fetch inquiries, applications, students, documents, activities</td><td><span class="badge badge-orange">Admin</span></td></tr>
+      <tr><td>/api/admin/update</td><td>POST</td><td>Update inquiry/application status &amp; notes</td><td><span class="badge badge-orange">Admin</span></td></tr>
+      <tr><td>/api/admin/chat</td><td>GET/POST</td><td>Get conversations / send admin replies</td><td><span class="badge badge-orange">Admin</span></td></tr>
+      <tr><td>/api/admin/contacts</td><td>GET/PATCH</td><td>Contact form submissions, mark read</td><td><span class="badge badge-orange">Admin</span></td></tr>
+      <tr><td>/api/admin/presence</td><td>POST</td><td>Update counsellor online status heartbeat</td><td><span class="badge badge-orange">Admin</span></td></tr>
+      <tr><td>/api/student/applications</td><td>GET</td><td>Fetch student's own applications</td><td><span class="badge badge-blue">Student</span></td></tr>
+      <tr><td>/api/student/documents</td><td>GET/POST/DELETE</td><td>List, save, and delete student documents</td><td><span class="badge badge-blue">Student</span></td></tr>
+      <tr><td>/api/student/notifications</td><td>GET/PATCH</td><td>Fetch &amp; mark notifications as read</td><td><span class="badge badge-blue">Student</span></td></tr>
+      <tr><td>/api/auth/send-verification</td><td>POST</td><td>Send email verification link</td><td><span class="badge badge-purple">Auth</span></td></tr>
+      <tr><td>/api/auth/send-reset</td><td>POST</td><td>Send password reset email</td><td><span class="badge badge-purple">Auth</span></td></tr>
+      <tr><td>/api/auth/welcome</td><td>POST</td><td>Send welcome email on new registration</td><td><span class="badge badge-purple">Auth</span></td></tr>
+      <tr><td>/api/contact</td><td>POST</td><td>Submit contact form (rate limited)</td><td><span class="badge badge-green">Public</span></td></tr>
+      <tr><td>/api/office-status</td><td>GET</td><td>Check if counsellor is online</td><td><span class="badge badge-green">Public</span></td></tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:20px;">
+    <strong style="font-size:13px; color:#003f9f;">Firestore Database Collections (10 Collections)</strong>
+    <table style="margin-top:10px;">
+      <thead>
+        <tr><th>Collection</th><th>Purpose</th><th>Key Fields</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>inquiries</td><td>Quick apply leads</td><td>fullName, mobile, email, course, status, note, createdAt</td></tr>
+        <tr><td>course_applications</td><td>Full application forms</td><td>userId, course, stream, qualification, preferredCollege, bsccRequired, status</td></tr>
+        <tr><td>users</td><td>Student profiles</td><td>uid, name, phone, qualification, address, profileComplete, lastLogin</td></tr>
+        <tr><td>documents</td><td>Uploaded documents metadata</td><td>uid, name, type, url, publicId, status, remarks, uploadedAt</td></tr>
+        <tr><td>messages</td><td>Chat messages</td><td>studentId, sender, text, readByAdmin, readByStudent, createdAt</td></tr>
+        <tr><td>activities</td><td>Event tracking log</td><td>type, title, description, name, email, mobile, userId, createdAt</td></tr>
+        <tr><td>notifications</td><td>Student notifications</td><td>uid, title, message, type, read, createdAt</td></tr>
+        <tr><td>contacts</td><td>Contact form submissions</td><td>name, phone, email, course, message, read, createdAt</td></tr>
+        <tr><td>presence</td><td>Office online status</td><td>online, lastSeen, by</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section-header" style="margin-top:32px;">
+    <div class="section-icon">🔒</div>
+    <div>
+      <div class="section-number">Section 6</div>
+      <div class="section-title">Security Architecture</div>
+    </div>
+  </div>
+
+  <div class="feature-grid">
+    <div class="feature-card red">
+      <div class="feature-card-title">🛡️ Rate Limiting</div>
+      <div class="feature-card-desc">Admin login: 5 attempts/5 min. Email verification: 5/15 min. Contact form: 5/10 min. All per IP address.</div>
+    </div>
+    <div class="feature-card red">
+      <div class="feature-card-title">🍪 Secure Admin Sessions</div>
+      <div class="feature-card-desc">httpOnly, sameSite=lax cookies. HMAC-SHA256 signed tokens. No Firebase Auth for admin — completely separate security model.</div>
+    </div>
+    <div class="feature-card red">
+      <div class="feature-card-title">🗄️ Firestore Security Rules</div>
+      <div class="feature-card-desc">Students can only read/write their own data. Guests can submit inquiries but cannot read data. Admin uses server-side SDK (bypasses rules).</div>
+    </div>
+    <div class="feature-card red">
+      <div class="feature-card-title">✅ Input Validation</div>
+      <div class="feature-card-desc">Zod schemas validate all form inputs on both client and server. No raw unsanitised data enters the database.</div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>SikshaWallah.com</span>
+    <span>Page 5 of 9</span>
+    <span>Confidential</span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════
+     PAGE 5 — INTEGRATIONS + PWA + COURSES
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-header-brand">SikshaWallah — Feature Report</div>
+    <div class="page-header-label">Section 7, 8 &amp; 9</div>
+  </div>
+
+  <div class="section-header">
+    <div class="section-icon">🔗</div>
+    <div>
+      <div class="section-number">Section 7</div>
+      <div class="section-title">Third-Party Integrations</div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Service</th><th>Purpose</th><th>Features Used</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Firebase Firestore</td>
+        <td>Primary NoSQL Database</td>
+        <td>Real-time listeners, security rules, 9 collections, Admin SDK server access</td>
+      </tr>
+      <tr>
+        <td>Firebase Authentication</td>
+        <td>Student Login System</td>
+        <td>Email/password auth, email verification, password reset, session persistence</td>
+      </tr>
+      <tr>
+        <td>Cloudinary</td>
+        <td>Document File Storage</td>
+        <td>Image &amp; PDF upload, public URL generation, remote deletion on replace, resource type detection</td>
+      </tr>
+      <tr>
+        <td>Nodemailer SMTP</td>
+        <td>Transactional Emails</td>
+        <td>Welcome email, email verification link, password reset, contact form notification — all custom branded HTML templates</td>
+      </tr>
+      <tr>
+        <td>WhatsApp Business</td>
+        <td>Student-Counsellor Communication</td>
+        <td>Pre-filled message URLs, click tracking via activity log, counsellor direct link</td>
+      </tr>
+      <tr>
+        <td>Vercel Analytics</td>
+        <td>Website Analytics</td>
+        <td>Page views, visitor tracking, performance monitoring</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- SECTION 8 -->
+  <div class="section-header" style="margin-top:28px;">
+    <div class="section-icon">📱</div>
+    <div>
+      <div class="section-number">Section 8</div>
+      <div class="section-title">PWA — Progressive Web App</div>
+    </div>
+  </div>
+
+  <div class="feature-grid">
+    <div class="feature-card green">
+      <div class="feature-card-title">📲 Installable on Phone</div>
+      <div class="feature-card-desc">"Add to Home Screen" on Android/Chrome. App runs in standalone mode (no browser UI bar) — looks and feels like a native app.</div>
+    </div>
+    <div class="feature-card green">
+      <div class="feature-card-title">⚡ Service Worker</div>
+      <div class="feature-card-desc">Network-first caching. Static assets (CSS, JS, fonts, images) cached locally. Offline fallback to homepage. Fast repeat visits.</div>
+    </div>
+    <div class="feature-card green">
+      <div class="feature-card-title">🎨 Web App Manifest</div>
+      <div class="feature-card-desc">Custom app name, theme color (#003f9f), 192x192 and 512x512 icons. Splashscreen-like launch experience.</div>
+    </div>
+    <div class="feature-card green">
+      <div class="feature-card-title">📴 Offline Support</div>
+      <div class="feature-card-desc">Homepage and key static pages available offline. API responses excluded from cache to ensure fresh data.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 9 -->
+  <div class="section-header" style="margin-top:28px;">
+    <div class="section-icon">🎓</div>
+    <div>
+      <div class="section-number">Section 9</div>
+      <div class="section-title">Course Catalog &amp; Content</div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Stream</th><th>Courses</th><th>Count</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Teaching</td><td>B.Ed, D.El.Ed, B.P.Ed, M.Ed</td><td>4</td></tr>
+      <tr><td>Medical &amp; Nursing</td><td>MBBS, BDS, B.Sc Nursing, GNM, ANM, B.Pharma, D.Pharma, BMLT, BASLP</td><td>9</td></tr>
+      <tr><td>Para-Medical</td><td>ANM, BMLT, B.Sc MLT, D.Pharma, Physiotherapy, OT Technician, Radiology Technician</td><td>7</td></tr>
+      <tr><td>Law</td><td>LLB, BA.LLB, BBA.LLB, LLM</td><td>4</td></tr>
+      <tr><td>Technical &amp; Management</td><td>B.Tech, Polytechnic, ITI, BBA, MBA, BCA, MCA, BA, B.Com, B.Sc, MA, M.Com, M.Sc &amp; more</td><td>14+</td></tr>
+    </tbody>
+  </table>
+
+  <div class="highlight-box" style="margin-top:12px;">
+    <h4>Each Course Page Contains:</h4>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px;">
+      <ul class="checklist">
+        <li>Full course name &amp; stream</li>
+        <li>Duration (2–5.5 years)</li>
+        <li>Eligibility requirements</li>
+        <li>Annual fees range</li>
+        <li>Career scope &amp; job roles</li>
+      </ul>
+      <ul class="checklist">
+        <li>Expected salary ranges</li>
+        <li>Entrance exams required</li>
+        <li>Government job opportunities</li>
+        <li>Top colleges in Bihar</li>
+        <li>BSCC loan eligibility info</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>SikshaWallah.com</span>
+    <span>Page 6 of 9</span>
+    <span>Confidential</span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════
+     PAGE 6 — TECH STACK
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-header-brand">SikshaWallah — Feature Report</div>
+    <div class="page-header-label">Section 10</div>
+  </div>
+
+  <div class="section-header">
+    <div class="section-icon">💻</div>
+    <div>
+      <div class="section-number">Section 10</div>
+      <div class="section-title">Technical Stack &amp; Architecture</div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Layer</th><th>Technology</th><th>Version</th><th>Purpose</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Frontend Framework</td><td>Next.js (App Router)</td><td>15.x</td><td>SSR, routing, API routes, Turbopack build</td></tr>
+      <tr><td>UI Library</td><td>React</td><td>19.x</td><td>Component rendering</td></tr>
+      <tr><td>Language</td><td>TypeScript</td><td>5.x</td><td>Type-safe codebase throughout</td></tr>
+      <tr><td>Styling</td><td>Tailwind CSS</td><td>3.4</td><td>Utility-first responsive design</td></tr>
+      <tr><td>UI Components</td><td>shadcn/ui (Radix UI)</td><td>Latest</td><td>Accessible component library</td></tr>
+      <tr><td>Icons</td><td>Lucide React</td><td>Latest</td><td>Icon library</td></tr>
+      <tr><td>Database</td><td>Firebase Firestore</td><td>v10</td><td>NoSQL real-time database</td></tr>
+      <tr><td>Authentication</td><td>Firebase Auth</td><td>v10</td><td>Student login/register</td></tr>
+      <tr><td>Server Auth</td><td>Firebase Admin SDK</td><td>v12</td><td>Secure server-side DB access</td></tr>
+      <tr><td>File Storage</td><td>Cloudinary</td><td>v2</td><td>Document upload &amp; CDN</td></tr>
+      <tr><td>Email</td><td>Nodemailer</td><td>v6</td><td>SMTP transactional emails</td></tr>
+      <tr><td>Validation</td><td>Zod</td><td>v3</td><td>Schema validation on all forms</td></tr>
+      <tr><td>Analytics</td><td>Vercel Analytics</td><td>Latest</td><td>Page view &amp; performance tracking</td></tr>
+      <tr><td>Deployment</td><td>Vercel / Firebase Hosting</td><td>—</td><td>Production deployment options</td></tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top:24px;">
+    <div class="feature-grid">
+      <div class="highlight-box">
+        <h4>Codebase Size</h4>
+        <ul class="checklist">
+          <li>90+ TypeScript / React files</li>
+          <li>~16,000+ lines of code</li>
+          <li>31 distinct pages/routes</li>
+          <li>17 backend API endpoints</li>
+          <li>10 Firestore collections</li>
+        </ul>
+      </div>
+      <div class="highlight-box">
+        <h4>Architecture Pattern</h4>
+        <ul class="checklist">
+          <li>Next.js App Router (server components)</li>
+          <li>Context-based auth state management</li>
+          <li>Firestore real-time listeners for chat</li>
+          <li>Middleware-protected admin routes</li>
+          <li>Fail-closed security by default</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight-box" style="margin-top:20px; background:linear-gradient(135deg,#fff7e608,#ffd08012); border-color:#ffd080;">
+    <h4 style="color:#92400e;">Activity Tracking — 10+ Event Types Logged</h4>
+    <div class="tags" style="margin-top:8px; margin-bottom:0;">
+      <span class="tag" style="background:#fff7e6; border-color:#fcd34d; color:#92400e;">inquiry</span>
+      <span class="tag" style="background:#fff7e6; border-color:#fcd34d; color:#92400e;">contact_form</span>
+      <span class="tag" style="background:#fff7e6; border-color:#fcd34d; color:#92400e;">registration</span>
+      <span class="tag" style="background:#fff7e6; border-color:#fcd34d; color:#92400e;">student_login</span>
+      <span class="tag" style="background:#fff7e6; border-color:#fcd34d; color:#92400e;">application_submit</span>
+      <span class="tag" style="background:#fff7e6; border-color:#fcd34d; color:#92400e;">doc_upload</span>
+      <span class="tag" style="background:#fff7e6; border-color:#fcd34d; color:#92400e;">profile_update</span>
+      <span class="tag" style="background:#fff7e6; border-color:#fcd34d; color:#92400e;">whatsapp_click</span>
+      <span class="tag" style="background:#fff7e6; border-color:#fcd34d; color:#92400e;">call_click</span>
+      <span class="tag" style="background:#fff7e6; border-color:#fcd34d; color:#92400e;">course_view</span>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>SikshaWallah.com</span>
+    <span>Page 7 of 9</span>
+    <span>Confidential</span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════
+     PAGE 7 — VALUATION
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-header-brand">SikshaWallah — Feature Report</div>
+    <div class="page-header-label">Section 11 — Market Valuation</div>
+  </div>
+
+  <div class="section-header">
+    <div class="section-icon">💰</div>
+    <div>
+      <div class="section-number">Section 11</div>
+      <div class="section-title">Market Valuation &amp; Development Cost Breakdown</div>
+    </div>
+  </div>
+
+  <!-- Cost Breakdown -->
+  <div style="background:#f8faff; border:1px solid #e0e8f5; border-radius:12px; padding:20px; margin-bottom:24px;">
+    <div style="font-size:13px; font-weight:700; color:#003f9f; margin-bottom:14px; display:flex; align-items:center; gap:8px;">
+      <span>📐</span> Module-wise Development Cost (Indian Market Rates)
+    </div>
+    <div class="breakdown-row"><span class="breakdown-label">Frontend — 31 Pages, Tailwind UI, Animations</span><span class="breakdown-range">₹80,000 – ₹1,20,000</span></div>
+    <div class="breakdown-row"><span class="breakdown-label">Student Dashboard + Authentication Flow</span><span class="breakdown-range">₹40,000 – ₹60,000</span></div>
+    <div class="breakdown-row"><span class="breakdown-label">Admin CRM Dashboard (7 modules)</span><span class="breakdown-range">₹60,000 – ₹90,000</span></div>
+    <div class="breakdown-row"><span class="breakdown-label">Backend APIs (17 endpoints + middleware)</span><span class="breakdown-range">₹50,000 – ₹70,000</span></div>
+    <div class="breakdown-row"><span class="breakdown-label">Real-time Chat System (Firestore)</span><span class="breakdown-range">₹25,000 – ₹40,000</span></div>
+    <div class="breakdown-row"><span class="breakdown-label">Document Upload + Cloudinary Integration</span><span class="breakdown-range">₹20,000 – ₹30,000</span></div>
+    <div class="breakdown-row"><span class="breakdown-label">Email Automation System (4 email types)</span><span class="breakdown-range">₹15,000 – ₹25,000</span></div>
+    <div class="breakdown-row"><span class="breakdown-label">PWA — Service Worker + Offline Support</span><span class="breakdown-range">₹10,000 – ₹15,000</span></div>
+    <div class="breakdown-row"><span class="breakdown-label">Notification System + Activity Log</span><span class="breakdown-range">₹15,000 – ₹25,000</span></div>
+    <div class="breakdown-row"><span class="breakdown-label">Course Catalog (38 courses, full data entry)</span><span class="breakdown-range">₹20,000 – ₹30,000</span></div>
+    <div class="breakdown-row"><span class="breakdown-label">Blog System (14+ articles, bilingual)</span><span class="breakdown-range">₹10,000 – ₹15,000</span></div>
+    <div class="breakdown-row"><span class="breakdown-label">Security (Rate Limiting, Rules, HMAC Auth)</span><span class="breakdown-range">₹15,000 – ₹20,000</span></div>
+    <div class="breakdown-total">
+      <span class="label">Total Development Cost</span>
+      <span class="price">₹3,60,000 – ₹5,40,000</span>
+    </div>
+  </div>
+
+  <!-- Market Value Tiers -->
+  <div style="font-size:13px; font-weight:700; color:#1a1a2e; margin-bottom:14px;">Market Price by Client / Agency Tier</div>
+  <div class="val-grid">
+    <div class="val-card basic">
+      <div class="val-tier">Freelancer (Junior-Mid)</div>
+      <div class="val-price">₹2.5L – ₹3.5L</div>
+      <div class="val-desc">Typical individual freelancer quoting this project from scratch</div>
+    </div>
+    <div class="val-card mid">
+      <div class="val-tier">Mid-level Agency</div>
+      <div class="val-price">₹4L – ₹6L</div>
+      <div class="val-desc">Standard Indian IT agency rate for this scope</div>
+    </div>
+    <div class="val-card premium">
+      <div class="val-tier">Premium Agency</div>
+      <div class="val-price">₹7L – ₹12L</div>
+      <div class="val-desc">With UI/UX design, branding, and premium support</div>
+    </div>
+  </div>
+
+  <div class="note-box" style="margin-top:20px;">
+    <strong>SaaS Comparison:</strong> Comparable platforms like LeadSquared, Meritto (formerly NoPaperForms), or Creatrix Campus charge
+    <strong>₹15,000–₹50,000/month</strong> for similar CRM + student portal features.
+    At ₹20,000/month, the Siksha Wallah platform pays back its development cost in under 18 months compared to SaaS rent.
+  </div>
+
+  <div class="note-box" style="background:#f0fff4; border-color:#86efac; color:#14532d;">
+    <strong>Note:</strong> This valuation covers development cost only.
+    Additional services — hosting/server, domain, annual maintenance, SMS gateway,
+    and Phase 2 features (AI Chatbot + Online Payments) — are priced separately.
+  </div>
+
+  <div class="page-footer">
+    <span>SikshaWallah.com</span>
+    <span>Page 8 of 9</span>
+    <span>Confidential</span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════
+     PAGE 8 — ROADMAP + SUMMARY
+════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-header-brand">SikshaWallah — Feature Report</div>
+    <div class="page-header-label">Section 12 — Roadmap &amp; Summary</div>
+  </div>
+
+  <div class="section-header">
+    <div class="section-icon">🚀</div>
+    <div>
+      <div class="section-number">Section 12</div>
+      <div class="section-title">Phase 2 Roadmap — Features Ready to Build</div>
+    </div>
+  </div>
+
+  <div class="feature-grid">
+    <div class="feature-card accent">
+      <div class="feature-card-title">💳 Online Payments</div>
+      <div class="feature-card-desc">Razorpay integration groundwork already done (library installed). Admission fee collection, receipts, and payment status tracking can be added in Phase 2.</div>
+    </div>
+    <div class="feature-card purple">
+      <div class="feature-card-title">🤖 AI Admission Advisor</div>
+      <div class="feature-card-desc">Google Gemini / Genkit library already installed. An AI chatbot that recommends courses based on student's marks, interests, and budget — ready to wire up.</div>
+    </div>
+    <div class="feature-card green">
+      <div class="feature-card-title">📱 SMS Notifications</div>
+      <div class="feature-card-desc">Auto SMS to students on application status change. Integration with Twilio or MSG91 for bulk and transactional SMS.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">📊 Analytics Dashboard</div>
+      <div class="feature-card-desc">Visual charts for admin: daily inquiries, course-wise applications, conversion funnel, monthly revenue tracking.</div>
+    </div>
+  </div>
+
+  <!-- Final Summary -->
+  <div style="margin-top:32px;">
+    <div class="section-header">
+      <div class="section-icon">✅</div>
+      <div>
+        <div class="section-number">Summary</div>
+        <div class="section-title">Complete Platform Overview</div>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div class="highlight-box">
+        <h4>What Has Been Built</h4>
+        <ul class="checklist">
+          <li>31 Pages / Routes (public + protected)</li>
+          <li>17 Backend API Endpoints</li>
+          <li>10 Firestore Database Collections</li>
+          <li>3 User Roles (Guest, Student, Admin)</li>
+          <li>Real-time Student–Counsellor Chat</li>
+          <li>Document Upload + Verification System</li>
+          <li>Email Automation (4 template types)</li>
+          <li>PWA — Installable as mobile app</li>
+          <li>Activity Log with 10+ event types</li>
+          <li>38 Courses with full data</li>
+          <li>14+ Bilingual Blog Articles</li>
+          <li>Enterprise-grade Security Model</li>
+          <li>~16,000 lines of TypeScript/React code</li>
+        </ul>
+      </div>
+      <div class="highlight-box">
+        <h4>Platform Type</h4>
+        <p style="font-size:12px; color:#444; margin-bottom:10px;">
+          Siksha Wallah is a <strong>Full-Stack Admission CRM &amp; Student Portal</strong> — a category of software normally available only as expensive SaaS subscriptions.
+        </p>
+        <div style="background:#fff; border-radius:8px; padding:12px; border:1px solid #c7d8f8;">
+          <div style="font-size:22px; font-weight:800; color:#003f9f; text-align:center;">₹4L – ₹6L</div>
+          <div style="font-size:11px; color:#666; text-align:center; margin-top:4px;">Conservative Market Value</div>
+        </div>
+        <div style="background:#fff; border-radius:8px; padding:12px; border:1px solid #86efac; margin-top:10px;">
+          <div style="font-size:22px; font-weight:800; color:#16a34a; text-align:center;">₹7L – ₹12L</div>
+          <div style="font-size:11px; color:#666; text-align:center; margin-top:4px;">Premium / Agency Value</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:30px; background:linear-gradient(135deg,#003f9f,#0061cc); border-radius:12px; padding:24px; color:#fff; text-align:center;">
+    <div style="font-size:14px; font-weight:300; opacity:0.8; margin-bottom:8px;">Prepared for Client Review</div>
+    <div style="font-size:20px; font-weight:700; margin-bottom:4px;">SikshaWallah Admission Consultancy Platform</div>
+    <div style="font-size:12px; opacity:0.7;">June 2026 &nbsp;|&nbsp; Full-Stack CRM + Student Portal &nbsp;|&nbsp; Confidential</div>
+  </div>
+
+  <div class="page-footer">
+    <span>SikshaWallah.com</span>
+    <span>Page 9 of 9</span>
+    <span>Confidential</span>
+  </div>
+</div>
+
+</body>
+</html>
