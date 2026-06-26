@@ -5,10 +5,11 @@ import Link from "next/link";
 import { AdminHeader } from "@/components/admin-header";
 import { useAdminGuard } from "@/hooks/use-admin-guard";
 import { adminFetchDataResult, adminUpdate } from "@/lib/admin-api";
+import { exportToCsv, datedFilename } from "@/lib/csv-export";
 import {
   Loader, Users, Phone,
   CheckCircle2, MessageCircle, Clock,
-  AlertCircle, RefreshCw, StickyNote, X, Save, Search,
+  AlertCircle, RefreshCw, StickyNote, X, Save, Search, Download,
 } from "lucide-react";
 import {
   getAllInquiries,
@@ -137,6 +138,19 @@ export default function AdminDashboardPage() {
     setInquiries(prev => prev.map(i => i.id === id ? { ...i, note } : i));
   }
 
+  function exportCsv() {
+    exportToCsv<Inquiry>(datedFilename("inquiries"), [
+      { key: "fullName", label: "Name" },
+      { key: "mobile", label: "Mobile" },
+      { key: "email", label: "Email" },
+      { key: "course", label: "Course" },
+      { key: "qualification", label: "Qualification" },
+      { label: "Status", value: (i) => STATUS_META[(i.status || "pending") as InquiryStatus]?.label || "Pending" },
+      { key: "note", label: "Note" },
+      { label: "Date", value: (i) => formatDate(i.createdAt) },
+    ], filtered);
+  }
+
   const total        = inquiries.length;
   const todayCount   = inquiries.filter(i => isToday(i.createdAt)).length;
   const pendingCount = inquiries.filter(i => !i.status || i.status === "pending").length;
@@ -237,7 +251,12 @@ export default function AdminDashboardPage() {
             </button>
           )}
           <span className="text-sm text-gray-400">{filtered.length} / {total} दिख रहे हैं</span>
-          <button onClick={loadInquiries} className="ml-auto flex items-center gap-2 rounded-xl border-2 border-gray-200 px-4 py-2 text-sm font-bold text-gray-600 hover:border-[#003f9f] hover:text-[#003f9f] transition">
+          <button onClick={exportCsv} disabled={filtered.length === 0}
+            className="ml-auto flex items-center gap-2 rounded-xl border-2 border-gray-200 px-4 py-2 text-sm font-bold text-gray-600 hover:border-green-500 hover:text-green-600 transition disabled:opacity-50"
+            title="Export current list to CSV">
+            <Download size={13} /> Export CSV
+          </button>
+          <button onClick={loadInquiries} className="flex items-center gap-2 rounded-xl border-2 border-gray-200 px-4 py-2 text-sm font-bold text-gray-600 hover:border-[#003f9f] hover:text-[#003f9f] transition">
             <RefreshCw size={13} className={loading ? "animate-spin" : ""} /> Refresh
           </button>
         </div>
