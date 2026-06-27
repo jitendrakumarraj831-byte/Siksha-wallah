@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRef, useState, useCallback, useEffect } from "react";
 import {
   ChevronLeft, ChevronRight, Clock, CreditCard, CheckCircle2,
-  MessageCircle, GraduationCap, ArrowRight, Phone,
+  MessageCircle, GraduationCap, ArrowRight, Phone, X, BookOpen, IndianRupee, Briefcase,
 } from "lucide-react";
 import { SiteNavbar } from "@/components/site-navbar";
 import { SiteFooter } from "@/components/site-footer";
@@ -20,30 +20,179 @@ const STREAM_TAGLINES: Record<StreamKey, string> = {
   technical:   "Engineer · Software Developer · MBA — AICTE / UGC Approved",
 };
 
+/* ─── Course Info Modal ──────────────────────────────────────────── */
+function CourseInfoModal({ course, streamKey, onClose }: { course: Course; streamKey: StreamKey; onClose: () => void }) {
+  const tab = streamTabs.find(s => s.key === streamKey)!;
+  const colors = colorMap[tab.color];
+  const slug = getCourseSlug(course.name);
+  const waText = `नमस्ते!%20मुझे%20${encodeURIComponent(course.name)}%20(${encodeURIComponent(course.full)})%20के%20बारे%20में%20fees%20aur%20admission%20की%20जानकारी%20चाहिए।`;
+
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
+      onClick={onClose}
+    >
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+
+      {/* Panel */}
+      <div
+        className="relative z-10 w-full sm:max-w-lg bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Top accent */}
+        <div className={`h-1.5 bg-gradient-to-r ${colors.accentBar} flex-shrink-0`} />
+
+        {/* Header */}
+        <div className="flex items-start justify-between gap-3 px-5 pt-4 pb-3 flex-shrink-0">
+          <div className="flex-1 min-w-0">
+            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-black ${colors.badge} mb-1`}>
+              {course.name}
+            </span>
+            {course.bscc && (
+              <span className="ml-2 inline-flex items-center gap-1 text-[10px] font-bold text-green-700 bg-green-50 border border-green-200 px-2 py-0.5 rounded-full">
+                <CreditCard size={8} /> BSCC
+              </span>
+            )}
+            <h2 className="font-headline text-lg font-extrabold text-gray-900 leading-snug">{course.full}</h2>
+          </div>
+          <button
+            onClick={onClose}
+            className="flex-shrink-0 h-8 w-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 transition"
+            aria-label="Close"
+          >
+            <X size={16} />
+          </button>
+        </div>
+
+        {/* Scrollable body */}
+        <div className="overflow-y-auto flex-1 px-5 pb-2">
+          {/* Key stats */}
+          <div className="grid grid-cols-3 gap-2 mb-4">
+            <div className="rounded-xl bg-gray-50 border border-gray-100 p-2.5 text-center">
+              <Clock size={14} className="mx-auto mb-1 text-gray-400" />
+              <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wide">Duration</p>
+              <p className="text-xs font-extrabold text-gray-800 mt-0.5">{course.duration}</p>
+            </div>
+            <div className="rounded-xl bg-gray-50 border border-gray-100 p-2.5 text-center">
+              <IndianRupee size={14} className="mx-auto mb-1 text-gray-400" />
+              <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wide">Fee</p>
+              <p className="text-xs font-extrabold text-gray-800 mt-0.5">{course.fee}</p>
+            </div>
+            <div className="rounded-xl bg-green-50 border border-green-100 p-2.5 text-center">
+              <Briefcase size={14} className="mx-auto mb-1 text-green-500" />
+              <p className="text-[10px] text-green-600 font-semibold uppercase tracking-wide">Salary</p>
+              <p className="text-xs font-extrabold text-green-800 mt-0.5">{course.salary}</p>
+            </div>
+          </div>
+
+          {/* Eligibility */}
+          <div className="mb-3 rounded-xl border border-blue-100 bg-blue-50 px-4 py-3">
+            <p className="text-[10px] font-bold text-blue-500 uppercase tracking-wide mb-1">Eligibility</p>
+            <p className="text-sm text-gray-800 font-semibold">{course.eligibility}</p>
+          </div>
+
+          {/* Career scope */}
+          {course.careerScope && (
+            <div className="mb-3">
+              <div className="flex items-center gap-1.5 mb-2">
+                <BookOpen size={13} className="text-gray-500" />
+                <p className="text-xs font-extrabold text-gray-700 uppercase tracking-wide">Career Scope</p>
+              </div>
+              <p className="text-sm text-gray-600 leading-relaxed">{course.careerScope}</p>
+            </div>
+          )}
+
+          {/* Highlights */}
+          {course.highlights.length > 0 && (
+            <div className="mb-4">
+              <p className="text-xs font-extrabold text-gray-700 uppercase tracking-wide mb-2">Highlights</p>
+              <ul className="space-y-1.5">
+                {course.highlights.map((h, i) => (
+                  <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+                    <CheckCircle2 size={13} className={`mt-0.5 flex-shrink-0 ${colors.checkColor}`} />
+                    {h}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        {/* Action buttons */}
+        <div className="flex-shrink-0 px-5 py-4 border-t border-gray-100 bg-white flex flex-col gap-2">
+          <div className="flex gap-2">
+            <Link
+              href={`/apply?course=${encodeURIComponent(course.name)}`}
+              onClick={onClose}
+              className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-primary-blue py-3 text-sm font-extrabold text-white hover:bg-blue-700 transition active:scale-95"
+            >
+              <GraduationCap size={15} /> Apply Now
+            </Link>
+            {slug ? (
+              <Link
+                href={`/courses/${slug}`}
+                onClick={onClose}
+                className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl py-3 text-sm font-extrabold text-white transition active:scale-95 bg-gradient-to-r ${colors.gradient}`}
+              >
+                Full Details <ArrowRight size={13} />
+              </Link>
+            ) : (
+              <a
+                href={`https://wa.me/916203138576?text=${waText}`}
+                target="_blank" rel="noopener noreferrer"
+                onClick={onClose}
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-xl border-2 border-green-500 py-3 text-sm font-extrabold text-green-700 hover:bg-green-500 hover:text-white transition active:scale-95"
+              >
+                <MessageCircle size={13} /> Enquire
+              </a>
+            )}
+          </div>
+          <a
+            href={`https://wa.me/916203138576?text=${waText}`}
+            target="_blank" rel="noopener noreferrer"
+            onClick={onClose}
+            className="flex items-center justify-center gap-1.5 rounded-xl border border-green-200 bg-green-50 py-2.5 text-sm font-bold text-green-700 hover:bg-green-500 hover:text-white transition"
+          >
+            <MessageCircle size={13} /> WhatsApp पर पूछें
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── Course Card (inside slider) ────────────────────────────────── */
 function CourseCard({ course, streamKey }: { course: Course; streamKey: StreamKey }) {
   const tab = streamTabs.find(s => s.key === streamKey)!;
   const colors = colorMap[tab.color];
   const slug = getCourseSlug(course.name);
-  // Whole-card destination: detail page if one exists, else the stream section.
-  const cardHref = slug ? `/courses/${slug}` : `/courses#${streamKey}`;
   const waText = `नमस्ते!%20मुझे%20${encodeURIComponent(course.name)}%20(${encodeURIComponent(course.full)})%20के%20बारे%20में%20fees%20aur%20admission%20की%20जानकारी%20चाहिए।`;
+  const [modalOpen, setModalOpen] = useState(false);
 
   return (
-    /*
-     * Stretched-link pattern:
-     *  • The invisible <Link> at z-10 covers the whole card → clicking anywhere
-     *    on the card navigates to the detail page.
-     *  • Action buttons sit at z-20, above the overlay → they receive their own
-     *    clicks without any event.stopPropagation() needed.
-     */
+    <>
+    {modalOpen && (
+      <CourseInfoModal course={course} streamKey={streamKey} onClose={() => setModalOpen(false)} />
+    )}
     <div className="group relative flex-shrink-0 w-[272px] sm:w-[288px] flex flex-col rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-gray-200 focus-within:ring-2 focus-within:ring-primary-blue focus-within:ring-offset-1">
-      {/* Whole-card stretched link — z-10 */}
-      <Link
-        href={cardHref}
-        className="absolute inset-0 z-10 rounded-2xl"
-        aria-label={`${course.full} की पूरी details देखें`}
-        tabIndex={0}
+      {/* Whole-card clickable area — opens quick-info modal */}
+      <button
+        type="button"
+        onClick={() => setModalOpen(true)}
+        className="absolute inset-0 z-10 rounded-2xl focus:outline-none"
+        aria-label={`${course.full} की basic information देखें`}
         style={{ touchAction: "manipulation" }}
       />
 
@@ -148,6 +297,7 @@ function CourseCard({ course, streamKey }: { course: Course; streamKey: StreamKe
         </div>
       </div>
     </div>
+    </>
   );
 }
 

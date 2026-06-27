@@ -146,6 +146,7 @@ function ApplyForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (step !== 4) return;
     const e1 = validateStep1();
     if (e1) { setError(e1); return; }
     const e2 = validateStep2();
@@ -401,7 +402,7 @@ function ApplyForm() {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} onKeyDown={e => { if (e.key === "Enter" && step < 4) e.preventDefault(); }}>
                 {/* ── STEP 1: Personal ── */}
                 {step === 1 && (
                   <div className="rounded-2xl bg-white border-t-4 border-[#003f9f] border-x-2 border-b-2 border-x-gray-100 border-b-gray-100 p-7 shadow-sm">
