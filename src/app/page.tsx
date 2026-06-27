@@ -234,9 +234,11 @@ function CollegeSlider({ colleges, fullWidth }: { colleges: readonly CollegeItem
             key={i}
             onClick={() => setActive(i)}
             aria-label={`Go to slide ${i + 1}`}
-            className={`rounded-full transition-all duration-300 ${i === active ? "w-5 h-1.5 bg-amber-400" : "w-1.5 h-1.5 bg-white/40 hover:bg-white/60"}`}
+            className="flex items-center justify-center w-6 h-6"
             style={{ touchAction: "manipulation" }}
-          />
+          >
+            <span className={`block rounded-full transition-all duration-300 ${i === active ? "w-5 h-1.5 bg-amber-400" : "w-1.5 h-1.5 bg-white/40 hover:bg-white/60"}`} />
+          </button>
         ))}
       </div>
 

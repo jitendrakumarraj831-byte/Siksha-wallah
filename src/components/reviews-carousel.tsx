@@ -133,12 +133,14 @@ export function ReviewsCarousel({
                   key={index}
                   onClick={() => handleDotClick(index)}
                   aria-label={`Go to review ${index + 1}`}
-                  className={`h-2 rounded-full transition-all duration-300 ${
+                  className="flex items-center justify-center h-6 min-w-[24px]"
+                >
+                  <span className={`block h-2 rounded-full transition-all duration-300 ${
                     index === currentIndex
                       ? "bg-amber-400 w-8"
                       : "bg-white/[0.2] w-2 hover:bg-white/[0.3]"
-                  }`}
-                />
+                  }`} />
+                </button>
               ))}
             </div>
 
