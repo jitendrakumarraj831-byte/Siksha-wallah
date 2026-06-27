@@ -140,28 +140,38 @@ export const authService = {
       if (err.message && !err.message.includes('fetch')) throw err;
     }
 
-    // Fallback: Firebase built-in sender (slower but always works).
+    // Fallback: Firebase built-in sender.
+    // handleCodeInApp: true makes Firebase send the oobCode directly to our
+    // custom /auth/reset-password page instead of Firebase's own action page,
+    // so the user lands on our UI and can set a new password there.
     if (!auth) throw new Error('Firebase Auth not initialized');
-    // Use the canonical production domain — never window.location.origin, which
-    // on preview deployments (*.vercel.app) is NOT an authorized Firebase domain
-    // and triggers auth/unauthorized-continue-uri ("Configuration error").
     const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://sikshawallahfbg.in')
       .replace(/\/$/, '');
     try {
-      // First try with a continue URL back to the login page.
-      await sendPasswordResetEmail(auth, email, { url: `${siteUrl}/auth/login` });
+      await sendPasswordResetEmail(auth, email, {
+        url: `${siteUrl}/auth/reset-password`,
+        handleCodeInApp: true,
+      });
     } catch (error: any) {
-      // If the continue URL's domain isn't authorized, retry with Firebase's
-      // default action handler (no custom URL) so the email still goes out.
+      // Domain not authorized for handleCodeInApp — fall back to plain reset
+      // (user goes through Firebase's page but email still goes out).
       if (
         error?.code === 'auth/unauthorized-continue-uri' ||
-        error?.code === 'auth/invalid-continue-uri'
+        error?.code === 'auth/invalid-continue-uri' ||
+        error?.code === 'auth/missing-android-pkg-name' ||
+        error?.code === 'auth/missing-ios-bundle-id'
       ) {
         try {
-          await sendPasswordResetEmail(auth, email);
+          await sendPasswordResetEmail(auth, email, { url: `${siteUrl}/auth/login` });
           return;
         } catch (e2: any) {
-          throw new Error(friendlyAuthError(e2.code));
+          // Last resort: send without any continue URL
+          try {
+            await sendPasswordResetEmail(auth, email);
+            return;
+          } catch (e3: any) {
+            throw new Error(friendlyAuthError(e3.code));
+          }
         }
       }
       throw new Error(friendlyAuthError(error.code));
