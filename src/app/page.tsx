@@ -137,7 +137,7 @@ function StreamCards() {
 /* ─── College Slider Component ────────────────────────────────────────── */
 type CollegeItem = { name: string; location: string; stream: string; img: string; href: string };
 
-function CollegeSlider({ colleges }: { colleges: readonly CollegeItem[] }) {
+function CollegeSlider({ colleges, fullWidth }: { colleges: readonly CollegeItem[]; fullWidth?: boolean }) {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const touchStartX = useRef<number | null>(null);
@@ -154,8 +154,7 @@ function CollegeSlider({ colleges }: { colleges: readonly CollegeItem[] }) {
 
   return (
     <div
-      className="relative mt-8 overflow-hidden rounded-2xl"
-      style={{ height: "220px" }}
+      className={`relative overflow-hidden rounded-2xl ${fullWidth ? "mt-0 h-[240px] md:h-[420px] lg:h-[520px]" : "mt-8 h-[220px]"}`}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onTouchStart={e => { touchStartX.current = e.touches[0].clientX; setPaused(true); }}
@@ -182,7 +181,7 @@ function CollegeSlider({ colleges }: { colleges: readonly CollegeItem[] }) {
               alt={col.name}
               fill
               className="object-cover transition-transform duration-700 group-hover:scale-105"
-              sizes="(max-width:768px) 100vw, 560px"
+              sizes="100vw"
               priority={i === 0}
               loading={i === 0 ? "eager" : "lazy"}
               quality={75}
@@ -798,8 +797,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* ── College Auto-Slider ── */}
-              <CollegeSlider colleges={COLLEGES} />
             </div>
 
             {/* ── RIGHT: Lead Form ── */}
@@ -973,6 +970,11 @@ export default function Home() {
                 </>
               )}
             </div>
+          </div>
+
+          {/* ── College Auto-Slider — full width ── */}
+          <div className="pb-10">
+            <CollegeSlider colleges={COLLEGES} fullWidth />
           </div>
 
           {/* ── STATS BAR ── */}
