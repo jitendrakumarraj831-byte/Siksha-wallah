@@ -598,403 +598,150 @@ export default function Home() {
       {/* ── HERO ── */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] text-white">
 
-        {/* Subtle dot-grid background */}
-        <div className="pointer-events-none absolute inset-0 opacity-[0.07]"
-          style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+        {/* Dot-grid background */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.06]"
+          style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.9) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
 
         {/* Glow orbs */}
-        <div className="pointer-events-none absolute -top-40 -right-32 h-[480px] w-[480px] rounded-full bg-amber-400 opacity-[0.10] blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-blue-500 opacity-[0.13] blur-3xl" />
-        <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-96 w-96 rounded-full bg-indigo-700 opacity-[0.08] blur-3xl" />
+        <div className="pointer-events-none absolute -top-40 -right-32 h-[520px] w-[520px] rounded-full bg-amber-400 opacity-[0.09] blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-blue-500 opacity-[0.12] blur-3xl" />
+        <div className="pointer-events-none absolute top-1/3 left-1/2 -translate-x-1/2 h-[500px] w-[500px] rounded-full bg-indigo-600 opacity-[0.07] blur-3xl" />
 
         <div className="container-shell relative">
 
-          {/* ── TOP TRUST BADGE STRIP — all clickable ── */}
-          <div className="no-scrollbar flex items-center gap-3 overflow-x-auto border-b border-white/[0.08] py-4">
-            {[
-              { icon: ShieldCheck,  text: "NCTE / UGC Recognised Colleges", href: "/about#colleges" },
-              { icon: CreditCard,   text: "Complete BSCC Loan Support",      href: "/apply" },
-              { icon: Users,        text: "5,000+ Students Guided",           href: "/#reviews" },
-              { icon: Building2,    text: "200+ Partner Colleges",            href: "/about" },
-              { icon: Award,        text: "11+ Years of Trusted Counselling", href: "/about" },
-              { icon: CheckCircle2, text: "100% Transparent. No Hidden Fees.", href: "/contact" },
-            ].map(({ icon: Icon, text, href }) => (
-              <Link
-                key={text}
-                href={href}
-                className="flex flex-shrink-0 items-center gap-1.5 rounded-full border border-white/[0.12] bg-white/[0.06] px-4 py-2 text-xs font-semibold text-white/85 backdrop-blur-sm transition-all duration-200 hover:border-amber-400/50 hover:bg-white/[0.12] hover:text-white active:scale-95"
-                style={{ touchAction: "manipulation" }}
-              >
-                <Icon size={13} className="flex-shrink-0 text-amber-400" />
-                {text}
-              </Link>
-            ))}
+          {/* ── SESSION STRIP ── */}
+          <div className="flex items-center justify-between border-b border-white/[0.08] py-3.5 gap-4">
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-amber-300">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
+                Admissions Open · Session 2026–27
+              </span>
+              <span className="hidden sm:flex items-center gap-1.5 text-[11px] text-white/40">
+                <span className="h-px w-4 bg-white/20" />
+              </span>
+              {[
+                { icon: ShieldCheck, text: "NCTE / UGC Approved" },
+                { icon: CreditCard,  text: "BSCC Loan Support" },
+                { icon: Building2,   text: "200+ Colleges" },
+              ].map(({ icon: Icon, text }) => (
+                <span key={text} className="hidden sm:flex items-center gap-1.5 text-[11px] font-semibold text-white/60">
+                  <Icon size={12} className="text-amber-400/80" />
+                  {text}
+                </span>
+              ))}
+            </div>
+            <Link
+              href="/apply"
+              className="flex-shrink-0 flex items-center gap-1.5 rounded-full bg-red-500/20 border border-red-400/30 px-3 py-1.5 text-[11px] font-extrabold text-red-300 hover:bg-red-500/30 transition-all active:scale-95"
+              style={{ touchAction: "manipulation" }}
+            >
+              <span className="h-1.5 w-1.5 animate-ping rounded-full bg-red-400 opacity-75" />
+              Seats Limited
+            </Link>
           </div>
 
-          {/* ── SOCIAL PROOF TICKER ── */}
-          <div className="overflow-hidden border-b border-white/[0.08] py-2.5">
-            <div className="flex animate-[marquee_28s_linear_infinite] whitespace-nowrap gap-8 hover:[animation-play-state:paused]">
+          {/* ── MAIN HERO CONTENT — centered ── */}
+          <div className="py-16 md:py-24 text-center">
+
+            {/* Eyebrow badge */}
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-amber-400/25 bg-amber-400/[0.08] px-5 py-2.5 backdrop-blur-sm">
+              <GraduationCap size={14} className="text-amber-400" />
+              <span className="text-xs font-extrabold uppercase tracking-[0.2em] text-amber-300">Bihar&apos;s Most Trusted Admission Consultancy</span>
+            </div>
+
+            {/* H1 */}
+            <h1 className="font-headline font-black tracking-tight leading-[1.08]">
+              <span className="block text-[1.8rem] text-white/70 md:text-[2.6rem] lg:text-[3rem] [text-shadow:0_2px_16px_rgba(255,255,255,0.08)]">
+                किस Course में है
+              </span>
+              <span className="block text-[3.4rem] md:text-[5.2rem] lg:text-[6.2rem] bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent [filter:drop-shadow(0_4px_32px_rgba(251,191,36,0.55))]">
+                आपका Future?
+              </span>
+              <span className="block text-[1.7rem] text-white md:text-[2.4rem] lg:text-[2.8rem] [text-shadow:0_2px_16px_rgba(255,255,255,0.10)]">
+                हम बताएंगे —{" "}
+                <span className="bg-gradient-to-r from-amber-300 to-yellow-200 bg-clip-text text-transparent">बिल्कुल मुफ़्त।</span>
+              </span>
+            </h1>
+
+            {/* Subtitle */}
+            <p className="mx-auto mt-6 max-w-2xl text-[1rem] leading-[1.9] text-blue-100/80 md:text-[1.1rem]">
+              Teaching · Medical · Law · Engineering · Para Medical —{" "}
+              <span className="font-semibold text-white">50+ courses</span>,{" "}
+              <span className="font-semibold text-white">200+ verified colleges</span> aur{" "}
+              <span className="font-semibold text-amber-300">BSCC Loan support</span> — सब एक जगह।
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+              <a
+                href="/apply"
+                className="group relative flex items-center justify-center gap-2.5 overflow-hidden rounded-2xl bg-gradient-to-r from-amber-400 to-orange-400 px-10 py-4 text-base font-extrabold text-gray-900 shadow-2xl shadow-amber-500/30 transition-all duration-200 hover:-translate-y-1 hover:shadow-amber-500/50 active:scale-[0.97]"
+                style={{ touchAction: "manipulation" }}
+              >
+                <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
+                <Sparkles size={18} className="flex-shrink-0" />
+                अभी Free Counselling लें
+                <ArrowRight size={17} className="flex-shrink-0 transition-transform duration-200 group-hover:translate-x-1" />
+              </a>
+              <a
+                href="https://wa.me/916203138576"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2.5 rounded-2xl border-2 border-green-400/50 bg-green-500/10 px-10 py-4 font-bold text-white backdrop-blur-sm transition-all duration-200 hover:bg-green-500/20 hover:-translate-y-1 hover:border-green-400 active:scale-[0.97]"
+                style={{ touchAction: "manipulation" }}
+              >
+                <MessageCircle size={17} className="text-green-400" />
+                WhatsApp पर बात करें
+              </a>
+            </div>
+
+            {/* Stream Pills */}
+            <div className="mt-8 flex flex-wrap justify-center gap-2.5">
+              <span className="text-[11px] font-bold uppercase tracking-widest text-blue-300/60 self-center mr-1">Stream चुनें:</span>
               {[
-                "✅ Rahul Kumar (Patna) — B.Ed admission confirmed",
-                "✅ Priya Singh (Muzaffarpur) — GNM Nursing, BSCC loan approved",
-                "✅ Amit Sharma (Ara) — B.Tech seat secured",
-                "✅ Neha Yadav (Gaya) — BA.LLB counselling done",
-                "✅ Vivek Raj (Bhagalpur) — DMLT admission, scholarship मिली",
-                "✅ Anjali Kumari (Hajipur) — D.El.Ed selected",
-                "✅ Rohit Mishra (Nalanda) — BCA placement ready",
-                "✅ Sonu Devi (Darbhanga) — ANM Nursing seat confirmed",
-              ].concat([
-                "✅ Rahul Kumar (Patna) — B.Ed admission confirmed",
-                "✅ Priya Singh (Muzaffarpur) — GNM Nursing, BSCC loan approved",
-                "✅ Amit Sharma (Ara) — B.Tech seat secured",
-                "✅ Neha Yadav (Gaya) — BA.LLB counselling done",
-              ]).map((item, i) => (
+                { key: "teaching",    label: "🎓 Teaching",     color: "from-blue-500 to-indigo-600" },
+                { key: "medical",     label: "🩺 Medical",      color: "from-rose-500 to-pink-600" },
+                { key: "paramedical", label: "💊 Para Medical",  color: "from-purple-500 to-violet-600" },
+                { key: "law",         label: "⚖️ Law",           color: "from-amber-500 to-orange-500" },
+                { key: "technical",   label: "💻 Technical",    color: "from-teal-500 to-cyan-600" },
+              ].map(({ key, label, color }) => (
                 <Link
-                  key={i}
-                  href="/apply"
-                  className="inline-flex flex-shrink-0 items-center gap-2 text-[11px] font-medium text-green-300/90 hover:text-green-200 transition-colors"
+                  key={key}
+                  href={`/courses#${key}`}
+                  className={`inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r ${color} px-4 py-2 text-xs font-bold text-white shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg active:scale-95`}
+                  style={{ touchAction: "manipulation" }}
                 >
-                  {item}
-                  <span className="text-white/20">•</span>
+                  {label}
+                  <ArrowRight size={11} />
                 </Link>
               ))}
             </div>
+
           </div>
 
-          {/* ── MAIN GRID ── */}
-          <div className="grid grid-cols-1 gap-10 py-14 md:py-20 lg:grid-cols-[1.25fr_0.8fr] lg:gap-14 lg:items-start">
-
-            {/* ── LEFT: text + CTAs + floating cards ── */}
-            <div className="order-1">
-
-              {/* Platform label pill */}
-              <div className="mb-3 flex flex-wrap items-center gap-2">
-                <Link
-                  href="/apply"
-                  className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/[0.1] px-4 py-2 transition-all hover:border-amber-400/60 hover:bg-amber-400/[0.18] active:scale-95"
-                  style={{ touchAction: "manipulation" }}
-                >
-                  <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" />
-                  <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-amber-300">Admissions Open &nbsp;·&nbsp; Session 2026–27</span>
-                </Link>
-                <Link
-                  href="/apply"
-                  className="inline-flex items-center gap-1.5 rounded-full border border-red-400/30 bg-red-500/[0.12] px-3 py-1.5 transition-all hover:border-red-400/60 hover:bg-red-500/[0.22] active:scale-95"
-                  style={{ touchAction: "manipulation" }}
-                >
-                  <span className="h-1.5 w-1.5 animate-ping rounded-full bg-red-400 opacity-75" />
-                  <span className="text-[11px] font-extrabold text-red-300">⚡ Seats Limited — अभी Apply करें</span>
-                </Link>
-              </div>
-
-              {/* H1 — 3-tier Hindi headline */}
-              <h1 className="font-headline font-black tracking-tight leading-[1.12]">
-                <span className="block text-[1.9rem] text-white/75 md:text-[2.8rem] lg:text-[3.2rem] [text-shadow:0_2px_16px_rgba(255,255,255,0.08)]">
-                  किस Course में है
-                </span>
-                <span className="block text-[3.2rem] md:text-[4.8rem] lg:text-[5.6rem] bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 bg-clip-text text-transparent [filter:drop-shadow(0_4px_28px_rgba(251,191,36,0.50))]">
-                  आपका Future?
-                </span>
-                <span className="block text-[1.7rem] text-white md:text-[2.4rem] lg:text-[2.8rem] [text-shadow:0_2px_16px_rgba(255,255,255,0.12)]">
-                  हम बताएंगे —{" "}
-                  <span className="bg-gradient-to-r from-amber-300 to-yellow-200 bg-clip-text text-transparent">मुफ़्त।</span>
-                </span>
-              </h1>
-
-              {/* Accent line */}
-              <div className="mt-4 h-[3px] w-28 rounded-full bg-gradient-to-r from-amber-400 via-orange-400 to-transparent md:w-44" />
-
-              {/* Course quick-link chips */}
-              <div className="mt-5 flex flex-wrap items-center gap-2">
-                <GraduationCap size={14} className="flex-shrink-0 text-amber-400" />
-                {[
-                  { label: "B.Ed",    href: "/courses/bed" },
-                  { label: "GNM Nursing", href: "/courses/gnm" },
-                  { label: "MBBS",    href: "/courses/mbbs" },
-                  { label: "LLB",     href: "/courses/llb" },
-                  { label: "B.Tech",  href: "/courses/btech" },
-                  { label: "MBA",     href: "/courses/mba" },
-                ].map(({ label, href }) => (
-                  <Link
-                    key={label}
-                    href={href}
-                    className="rounded-full border border-amber-400/30 bg-amber-400/[0.08] px-3 py-1 text-[12px] font-bold text-amber-200 transition-all hover:bg-amber-400/[0.18] hover:text-amber-100 active:scale-95"
-                    style={{ touchAction: "manipulation" }}
-                  >
-                    {label}
-                  </Link>
-                ))}
-                <Link href="/courses" className="rounded-full bg-gradient-to-r from-amber-400 to-orange-400 px-3 py-1 text-[12px] font-extrabold text-gray-900 hover:opacity-90 active:scale-95" style={{ touchAction: "manipulation" }}>
-                  +44 more →
-                </Link>
-              </div>
-
-              {/* Sub-heading — inline links */}
-              <p className="mt-5 max-w-lg text-[1rem] leading-[1.85] text-blue-100 md:text-[1.05rem]">
-                Teaching, Medical, Law, Engineering, Para Medical —{" "}
-                <Link href="/courses" className="font-extrabold text-white underline underline-offset-2 decoration-amber-400/50 hover:decoration-amber-400 transition-all">
-                  50+ courses
-                </Link>
-                ,{" "}
-                <Link href="/about" className="font-extrabold text-white underline underline-offset-2 decoration-amber-400/50 hover:decoration-amber-400 transition-all">
-                  200+ verified colleges
-                </Link>{" "}
-                aur{" "}
-                <Link href="/apply" className="bg-gradient-to-r from-amber-300 to-yellow-200 bg-clip-text text-transparent font-extrabold underline underline-offset-2 decoration-amber-400/60 hover:decoration-amber-400 transition-all">
-                  BSCC Loan support
-                </Link>{" "}
-                — सब एक जगह, बिल्कुल निःशुल्क।
-              </p>
-
-              {/* CTA Buttons */}
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <a
-                  href="#inquiry"
-                  className="group relative flex items-center justify-center gap-2.5 overflow-hidden rounded-2xl bg-gradient-to-r from-amber-400 to-orange-400 px-8 py-4 text-base font-extrabold text-gray-900 shadow-xl shadow-amber-500/30 transition-all duration-200 hover:-translate-y-1 hover:shadow-2xl hover:shadow-amber-500/50 active:scale-[0.97]"
-                >
-                  <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
-                  <Sparkles size={18} className="flex-shrink-0" />
-                  अभी Free Counselling लें
-                  <ArrowRight size={17} className="flex-shrink-0 transition-transform duration-200 group-hover:translate-x-1" />
-                </a>
-                <a
-                  href="https://wa.me/916203138576"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2.5 rounded-2xl border-2 border-green-400/60 bg-green-500/10 px-8 py-4 font-bold text-white backdrop-blur transition-all duration-200 hover:bg-green-500/20 hover:-translate-y-1 hover:border-green-400 active:scale-[0.97]"
-                >
-                  <MessageCircle size={17} className="text-green-400" />
-                  WhatsApp पर बात करें
-                </a>
-              </div>
-              {/* Mobile urgency nudge */}
-              <p className="mt-3 text-xs text-amber-300/80 md:hidden">
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse mr-1.5 align-middle" />
-                Counsellor अभी available है — अभी form भरें।
-              </p>
-
-              {/* ── Quick Stream Navigation Pills ── */}
-              <div className="mt-5">
-                <p className="mb-2.5 text-[11px] font-bold uppercase tracking-widest text-blue-300/70">अपना Stream चुनें →</p>
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    { key: "teaching",    label: "🎓 Teaching",    color: "from-blue-500 to-indigo-600" },
-                    { key: "medical",     label: "🩺 Medical",     color: "from-rose-500 to-pink-600" },
-                    { key: "paramedical", label: "💊 Para Medical", color: "from-purple-500 to-violet-600" },
-                    { key: "law",         label: "⚖️ Law",          color: "from-amber-500 to-orange-500" },
-                    { key: "technical",   label: "💻 Technical",   color: "from-teal-500 to-cyan-600" },
-                  ].map(({ key, label, color }) => (
-                    <Link
-                      key={key}
-                      href={`/courses#${key}`}
-                      className={`inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r ${color} px-3.5 py-1.5 text-xs font-bold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:scale-95`}
-                      style={{ touchAction: "manipulation" }}
-                    >
-                      {label}
-                      <ArrowRight size={11} />
-                    </Link>
-                  ))}
-                </div>
-              </div>
-
-            </div>
-
-            {/* ── RIGHT: Lead Form ── */}
-            <div id="inquiry" className="order-2 rounded-3xl border border-white/[0.15] bg-white/[0.08] p-6 shadow-2xl backdrop-blur-xl md:p-8">
-
-              {/* Form header */}
-              <div className="mb-6 text-center">
-                <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-amber-400/30 bg-amber-400/[0.1] px-3 py-1.5">
-                  <Sparkles size={11} className="text-amber-400" />
-                  <span className="text-[11px] font-bold text-amber-300">100% Free • No Hidden Charges</span>
-                </div>
-                <h3 className="font-headline text-[1.35rem] font-extrabold leading-tight text-white">
-                  Free Admission Counselling
-                </h3>
-                <p className="mt-1.5 text-xs text-blue-300">
-                  Share a few details and receive personalised guidance within minutes.
-                </p>
-              </div>
-
-              {formSubmitted ? (
-                <div className="flex flex-col items-center gap-4 py-8 text-center">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-500/20 ring-2 ring-green-500/40">
-                    <CheckCircle2 size={36} className="text-green-400" />
-                  </div>
-                  <h3 className="font-headline text-2xl font-extrabold">Thank You</h3>
-                  <p className="text-sm text-blue-100">हमारी counselling team जल्द ही WhatsApp पर आपसे संपर्क करेगी।</p>
-                  <button
-                    onClick={() => { setFormSubmitted(false); setStep(0); setFormData({ name: "", mobile: "", course: "", district: "" }); }}
-                    className="rounded-xl bg-gradient-to-r from-amber-400 to-orange-400 px-6 py-3 font-bold text-gray-900 transition-all hover:opacity-90 active:scale-95"
-                  >
-                    Send Another Enquiry
-                  </button>
-                </div>
-              ) : (
-                <>
-                  {/* Progress dots */}
-                  <div className="mb-6 flex items-center justify-center gap-2">
-                    {STEPS.map((_, i) => (
-                      <div key={i} className={`h-2 rounded-full transition-all duration-300 ease-out ${
-                        i === step ? "w-8 bg-amber-400" : i < step ? "w-3 bg-amber-400/50" : "w-3 bg-white/20"
-                      }`} />
-                    ))}
-                  </div>
-
-                  <div className="space-y-4">
-                    {step === 0 && (
-                      <>
-                        <label className="block text-sm font-bold text-blue-100">
-                          Student&apos;s Full Name <span className="text-amber-400">*</span>
-                        </label>
-                        <input
-                          value={formData.name}
-                          onChange={(e) => { setFormError(""); setFormData({ ...formData, name: e.target.value }); }}
-                          placeholder="अपना पूरा नाम दर्ज करें"
-                          autoComplete="name"
-                          className="w-full rounded-xl border border-white/20 bg-white/[0.12] px-4 py-3.5 text-white placeholder-blue-300/60 outline-none transition focus:border-amber-400 focus:bg-white/[0.18] focus:ring-2 focus:ring-amber-400/25"
-                        />
-                      </>
-                    )}
-                    {step === 1 && (
-                      <>
-                        <label className="block text-sm font-bold text-blue-100">
-                          Mobile Number <span className="text-amber-400">*</span>
-                        </label>
-                        <input
-                          value={formData.mobile}
-                          onChange={(e) => { setFormError(""); setFormData({ ...formData, mobile: e.target.value.replace(/\D/g, "").slice(0, 10) }); }}
-                          type="tel"
-                          inputMode="numeric"
-                          placeholder="Your 10-digit mobile number"
-                          autoComplete="tel"
-                          className="w-full rounded-xl border border-white/20 bg-white/[0.12] px-4 py-3.5 text-white placeholder-blue-300/60 outline-none transition focus:border-amber-400 focus:bg-white/[0.18] focus:ring-2 focus:ring-amber-400/25"
-                        />
-                      </>
-                    )}
-                    {step === 2 && (
-                      <>
-                        <label className="block text-sm font-bold text-blue-100">
-                          Course of Interest <span className="text-amber-400">*</span>
-                        </label>
-                        <select
-                          value={formData.course}
-                          onChange={(e) => setFormData({ ...formData, course: e.target.value })}
-                          className="w-full rounded-xl border border-white/20 bg-[#001e5a] px-4 py-3.5 text-white outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-400/25"
-                        >
-                          <option value="">-- Select a course --</option>
-                          <optgroup label="Teaching (शिक्षण)">
-                            <option>B.Ed</option><option>D.El.Ed</option><option>B.P.Ed</option><option>M.Ed</option>
-                          </optgroup>
-                          <optgroup label="Medical & Nursing (चिकित्सा)">
-                            <option>MBBS</option><option>BDS</option><option>B.Sc Nursing</option>
-                            <option>GNM</option><option>ANM</option><option>B.Pharma</option>
-                            <option>D.Pharma</option><option>BMLT</option>
-                          </optgroup>
-                          <optgroup label="Para Medical (पैरामेडिकल)">
-                            <option>BPT</option><option>BMLT</option><option>DMLT</option>
-                            <option>BOT</option><option>B.Sc Biotechnology</option>
-                          </optgroup>
-                          <optgroup label="Law (कानून)">
-                            <option>LLB</option><option>BA.LLB</option><option>BBA.LLB</option><option>LLM</option>
-                          </optgroup>
-                          <optgroup label="Engineering, IT & Management">
-                            <option>B.Tech</option><option>Polytechnic</option><option>ITI</option>
-                            <option>BCA</option><option>MCA</option><option>BBA</option><option>MBA</option>
-                          </optgroup>
-                          <option>Not yet decided — I want guidance</option>
-                        </select>
-                      </>
-                    )}
-                    {step === 3 && (
-                      <>
-                        <label className="block text-sm font-bold text-blue-100">
-                          Your District <span className="text-amber-400">*</span>
-                        </label>
-                        <select
-                          value={formData.district}
-                          onChange={(e) => setFormData({ ...formData, district: e.target.value })}
-                          className="w-full rounded-xl border border-white/20 bg-[#001e5a] px-4 py-3.5 text-white outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-400/25"
-                        >
-                          <option value="">-- Select your district --</option>
-                          <option>Araria</option><option>Arwal</option><option>Aurangabad</option>
-                          <option>Banka</option><option>Begusarai</option><option>Bhagalpur</option>
-                          <option>Bhojpur</option><option>Buxar</option><option>Darbhanga</option>
-                          <option>East Champaran</option><option>Gaya</option><option>Gopalganj</option>
-                          <option>Jamui</option><option>Jehanabad</option><option>Kaimur</option>
-                          <option>Katihar</option><option>Khagaria</option><option>Kishanganj</option>
-                          <option>Lakhisarai</option><option>Madhepura</option><option>Madhubani</option>
-                          <option>Munger</option><option>Muzaffarpur</option><option>Nalanda</option>
-                          <option>Nawada</option><option>Patna</option><option>Purnia</option>
-                          <option>Rohtas</option><option>Saharsa</option><option>Samastipur</option>
-                          <option>Saran</option><option>Sheikhpura</option><option>Sheohar</option>
-                          <option>Sitamarhi</option><option>Siwan</option><option>Supaul</option>
-                          <option>Vaishali</option><option>West Champaran</option>
-                          <option>I&apos;m from outside Bihar</option>
-                        </select>
-                      </>
-                    )}
-
-                    {formError && (
-                      <p className="flex items-center gap-1.5 text-sm font-semibold text-amber-300">
-                        <X size={14} className="flex-shrink-0" /> {formError}
-                      </p>
-                    )}
-
-                    <div className="flex gap-2 pt-1">
-                      {step > 0 && (
-                        <button
-                          onClick={() => { setFormError(""); setStep(step - 1); }}
-                          className="flex-1 rounded-xl border border-white/25 py-3.5 text-sm font-semibold text-white transition hover:bg-white/10 active:scale-[0.97]"
-                        >
-                          ← Back
-                        </button>
-                      )}
-                      <button
-                        onClick={nextStep}
-                        className="group relative flex flex-1 items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-amber-400 to-orange-400 py-3.5 font-extrabold text-gray-900 shadow-lg shadow-amber-500/25 transition-all hover:-translate-y-0.5 hover:shadow-amber-500/40 active:scale-[0.97]"
-                      >
-                        <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
-                        {step < STEPS.length - 1 ? (
-                          <>Continue <ArrowRight size={15} className="flex-shrink-0 transition-transform group-hover:translate-x-1" /></>
-                        ) : (
-                          "Get My Free Counselling →"
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  <p className="mt-5 text-center text-[11px] text-blue-300/70">
-                    100% free • No spam, ever • Your information stays private
-                  </p>
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* ── College Auto-Slider — full width ── */}
+          {/* ── College Slider — full width ── */}
           <div className="pb-10">
             <CollegeSlider colleges={COLLEGES} fullWidth />
           </div>
 
           {/* ── STATS BAR ── */}
-          <div className="grid grid-cols-2 gap-6 border-t border-white/[0.08] py-10 md:grid-cols-4">
+          <div className="grid grid-cols-2 gap-8 border-t border-white/[0.08] py-10 md:grid-cols-4">
             {([
-              { target: 5000, suffix: "+", label: "Students Successfully Guided", icon: Users     },
-              { target: 200,  suffix: "+", label: "Approved Partner Colleges",    icon: Building2 },
-              { target: 98,   suffix: "%", label: "Parent Satisfaction Rating",   icon: Star      },
-              { target: 11,   suffix: "+", label: "Years of Trusted Counselling", icon: Award     },
+              { target: 5000, suffix: "+", label: "Students Guided",          icon: Users     },
+              { target: 200,  suffix: "+", label: "Partner Colleges",         icon: Building2 },
+              { target: 98,   suffix: "%", label: "Parent Satisfaction",      icon: Star      },
+              { target: 11,   suffix: "+", label: "Years of Counselling",     icon: Award     },
             ] as const).map(({ target, suffix, label, icon: Icon }) => (
               <div key={label} className="text-center">
                 <div className="mb-2 flex justify-center">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-400/10 ring-1 ring-amber-400/20">
-                    <Icon size={18} className="text-amber-400" />
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-400/10 ring-1 ring-amber-400/20">
+                    <Icon size={19} className="text-amber-400" />
                   </div>
                 </div>
                 <p className="font-headline text-3xl font-black text-amber-400 md:text-4xl">
                   <CountUp target={target} suffix={suffix} />
                 </p>
-                <p className="mt-1 text-xs text-blue-200 md:text-sm">{label}</p>
+                <p className="mt-1 text-xs text-blue-200/80 md:text-sm">{label}</p>
               </div>
             ))}
           </div>
