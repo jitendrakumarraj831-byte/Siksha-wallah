@@ -661,11 +661,11 @@ export default function Home() {
             </div>
           </div>
 
-          {/* ── MAIN GRID ── */}
-          <div className="grid grid-cols-1 gap-10 py-14 md:py-20 lg:grid-cols-[1.25fr_0.8fr] lg:gap-14 lg:items-start">
+          {/* ── MAIN CONTENT ── */}
+          <div className="py-14 md:py-20">
 
-            {/* ── LEFT: text + CTAs + floating cards ── */}
-            <div className="order-1">
+            {/* ── Hero text + CTAs ── */}
+            <div className="max-w-3xl">
 
               {/* Platform label pill */}
               <div className="mb-3 flex flex-wrap items-center gap-2">
@@ -749,7 +749,7 @@ export default function Home() {
               {/* CTA Buttons */}
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <a
-                  href="#inquiry"
+                  href="/apply"
                   className="group relative flex items-center justify-center gap-2.5 overflow-hidden rounded-2xl bg-gradient-to-r from-amber-400 to-orange-400 px-8 py-4 text-base font-extrabold text-gray-900 shadow-xl shadow-amber-500/30 transition-all duration-200 hover:-translate-y-1 hover:shadow-2xl hover:shadow-amber-500/50 active:scale-[0.97]"
                 >
                   <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
@@ -797,178 +797,6 @@ export default function Home() {
                 </div>
               </div>
 
-            </div>
-
-            {/* ── RIGHT: Lead Form ── */}
-            <div id="inquiry" className="order-2 rounded-3xl border border-white/[0.15] bg-white/[0.08] p-6 shadow-2xl backdrop-blur-xl md:p-8">
-
-              {/* Form header */}
-              <div className="mb-6 text-center">
-                <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-amber-400/30 bg-amber-400/[0.1] px-3 py-1.5">
-                  <Sparkles size={11} className="text-amber-400" />
-                  <span className="text-[11px] font-bold text-amber-300">100% Free • No Hidden Charges</span>
-                </div>
-                <h3 className="font-headline text-[1.35rem] font-extrabold leading-tight text-white">
-                  Free Admission Counselling
-                </h3>
-                <p className="mt-1.5 text-xs text-blue-300">
-                  Share a few details and receive personalised guidance within minutes.
-                </p>
-              </div>
-
-              {formSubmitted ? (
-                <div className="flex flex-col items-center gap-4 py-8 text-center">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-500/20 ring-2 ring-green-500/40">
-                    <CheckCircle2 size={36} className="text-green-400" />
-                  </div>
-                  <h3 className="font-headline text-2xl font-extrabold">Thank You</h3>
-                  <p className="text-sm text-blue-100">हमारी counselling team जल्द ही WhatsApp पर आपसे संपर्क करेगी।</p>
-                  <button
-                    onClick={() => { setFormSubmitted(false); setStep(0); setFormData({ name: "", mobile: "", course: "", district: "" }); }}
-                    className="rounded-xl bg-gradient-to-r from-amber-400 to-orange-400 px-6 py-3 font-bold text-gray-900 transition-all hover:opacity-90 active:scale-95"
-                  >
-                    Send Another Enquiry
-                  </button>
-                </div>
-              ) : (
-                <>
-                  {/* Progress dots */}
-                  <div className="mb-6 flex items-center justify-center gap-2">
-                    {STEPS.map((_, i) => (
-                      <div key={i} className={`h-2 rounded-full transition-all duration-300 ease-out ${
-                        i === step ? "w-8 bg-amber-400" : i < step ? "w-3 bg-amber-400/50" : "w-3 bg-white/20"
-                      }`} />
-                    ))}
-                  </div>
-
-                  <div className="space-y-4">
-                    {step === 0 && (
-                      <>
-                        <label className="block text-sm font-bold text-blue-100">
-                          Student&apos;s Full Name <span className="text-amber-400">*</span>
-                        </label>
-                        <input
-                          value={formData.name}
-                          onChange={(e) => { setFormError(""); setFormData({ ...formData, name: e.target.value }); }}
-                          placeholder="अपना पूरा नाम दर्ज करें"
-                          autoComplete="name"
-                          className="w-full rounded-xl border border-white/20 bg-white/[0.12] px-4 py-3.5 text-white placeholder-blue-300/60 outline-none transition focus:border-amber-400 focus:bg-white/[0.18] focus:ring-2 focus:ring-amber-400/25"
-                        />
-                      </>
-                    )}
-                    {step === 1 && (
-                      <>
-                        <label className="block text-sm font-bold text-blue-100">
-                          Mobile Number <span className="text-amber-400">*</span>
-                        </label>
-                        <input
-                          value={formData.mobile}
-                          onChange={(e) => { setFormError(""); setFormData({ ...formData, mobile: e.target.value.replace(/\D/g, "").slice(0, 10) }); }}
-                          type="tel"
-                          inputMode="numeric"
-                          placeholder="Your 10-digit mobile number"
-                          autoComplete="tel"
-                          className="w-full rounded-xl border border-white/20 bg-white/[0.12] px-4 py-3.5 text-white placeholder-blue-300/60 outline-none transition focus:border-amber-400 focus:bg-white/[0.18] focus:ring-2 focus:ring-amber-400/25"
-                        />
-                      </>
-                    )}
-                    {step === 2 && (
-                      <>
-                        <label className="block text-sm font-bold text-blue-100">
-                          Course of Interest <span className="text-amber-400">*</span>
-                        </label>
-                        <select
-                          value={formData.course}
-                          onChange={(e) => setFormData({ ...formData, course: e.target.value })}
-                          className="w-full rounded-xl border border-white/20 bg-[#001e5a] px-4 py-3.5 text-white outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-400/25"
-                        >
-                          <option value="">-- Select a course --</option>
-                          <optgroup label="Teaching (शिक्षण)">
-                            <option>B.Ed</option><option>D.El.Ed</option><option>B.P.Ed</option><option>M.Ed</option>
-                          </optgroup>
-                          <optgroup label="Medical & Nursing (चिकित्सा)">
-                            <option>MBBS</option><option>BDS</option><option>B.Sc Nursing</option>
-                            <option>GNM</option><option>ANM</option><option>B.Pharma</option>
-                            <option>D.Pharma</option><option>BMLT</option>
-                          </optgroup>
-                          <optgroup label="Para Medical (पैरामेडिकल)">
-                            <option>BPT</option><option>BMLT</option><option>DMLT</option>
-                            <option>BOT</option><option>B.Sc Biotechnology</option>
-                          </optgroup>
-                          <optgroup label="Law (कानून)">
-                            <option>LLB</option><option>BA.LLB</option><option>BBA.LLB</option><option>LLM</option>
-                          </optgroup>
-                          <optgroup label="Engineering, IT & Management">
-                            <option>B.Tech</option><option>Polytechnic</option><option>ITI</option>
-                            <option>BCA</option><option>MCA</option><option>BBA</option><option>MBA</option>
-                          </optgroup>
-                          <option>Not yet decided — I want guidance</option>
-                        </select>
-                      </>
-                    )}
-                    {step === 3 && (
-                      <>
-                        <label className="block text-sm font-bold text-blue-100">
-                          Your District <span className="text-amber-400">*</span>
-                        </label>
-                        <select
-                          value={formData.district}
-                          onChange={(e) => setFormData({ ...formData, district: e.target.value })}
-                          className="w-full rounded-xl border border-white/20 bg-[#001e5a] px-4 py-3.5 text-white outline-none transition focus:border-amber-400 focus:ring-2 focus:ring-amber-400/25"
-                        >
-                          <option value="">-- Select your district --</option>
-                          <option>Araria</option><option>Arwal</option><option>Aurangabad</option>
-                          <option>Banka</option><option>Begusarai</option><option>Bhagalpur</option>
-                          <option>Bhojpur</option><option>Buxar</option><option>Darbhanga</option>
-                          <option>East Champaran</option><option>Gaya</option><option>Gopalganj</option>
-                          <option>Jamui</option><option>Jehanabad</option><option>Kaimur</option>
-                          <option>Katihar</option><option>Khagaria</option><option>Kishanganj</option>
-                          <option>Lakhisarai</option><option>Madhepura</option><option>Madhubani</option>
-                          <option>Munger</option><option>Muzaffarpur</option><option>Nalanda</option>
-                          <option>Nawada</option><option>Patna</option><option>Purnia</option>
-                          <option>Rohtas</option><option>Saharsa</option><option>Samastipur</option>
-                          <option>Saran</option><option>Sheikhpura</option><option>Sheohar</option>
-                          <option>Sitamarhi</option><option>Siwan</option><option>Supaul</option>
-                          <option>Vaishali</option><option>West Champaran</option>
-                          <option>I&apos;m from outside Bihar</option>
-                        </select>
-                      </>
-                    )}
-
-                    {formError && (
-                      <p className="flex items-center gap-1.5 text-sm font-semibold text-amber-300">
-                        <X size={14} className="flex-shrink-0" /> {formError}
-                      </p>
-                    )}
-
-                    <div className="flex gap-2 pt-1">
-                      {step > 0 && (
-                        <button
-                          onClick={() => { setFormError(""); setStep(step - 1); }}
-                          className="flex-1 rounded-xl border border-white/25 py-3.5 text-sm font-semibold text-white transition hover:bg-white/10 active:scale-[0.97]"
-                        >
-                          ← Back
-                        </button>
-                      )}
-                      <button
-                        onClick={nextStep}
-                        className="group relative flex flex-1 items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-amber-400 to-orange-400 py-3.5 font-extrabold text-gray-900 shadow-lg shadow-amber-500/25 transition-all hover:-translate-y-0.5 hover:shadow-amber-500/40 active:scale-[0.97]"
-                      >
-                        <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
-                        {step < STEPS.length - 1 ? (
-                          <>Continue <ArrowRight size={15} className="flex-shrink-0 transition-transform group-hover:translate-x-1" /></>
-                        ) : (
-                          "Get My Free Counselling →"
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  <p className="mt-5 text-center text-[11px] text-blue-300/70">
-                    100% free • No spam, ever • Your information stays private
-                  </p>
-                </>
-              )}
             </div>
           </div>
 
