@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyAdminToken, ADMIN_COOKIE } from "@/lib/admin-session";
 import { getAdminDb, getAdminInitError } from "@/lib/firebase-admin";
+import { isMailerConfigured, verifyMailer, smtpConfigShape } from "@/lib/mailer";
 
 // Cookie-gated diagnostic endpoint. Visit /api/admin/debug while logged in
 // to check if Firebase Admin SDK is initialised correctly.
@@ -48,6 +49,16 @@ export async function GET(request: NextRequest) {
     sdkError = e instanceof Error ? e.message : String(e);
   }
 
+  // SMTP diagnostics — confirms whether the Titan/SMTP sender can actually
+  // connect & authenticate. This is the path used for password-reset and
+  // verification emails when configured; if it fails the code falls back to
+  // Firebase's built-in sender.
+  const smtp = smtpConfigShape();
+  let smtpVerify: { ok: boolean; error?: string } = { ok: false, error: "SMTP not configured" };
+  if (isMailerConfigured()) {
+    smtpVerify = await verifyMailer();
+  }
+
   return NextResponse.json({
     ok: canRead,
     sdkStatus,
@@ -60,6 +71,10 @@ export async function GET(request: NextRequest) {
       siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? null,
       nodeEnv: process.env.NODE_ENV,
     },
+    smtp: { ...smtp, verify: smtpVerify },
+    emailSendPath: isMailerConfigured() && smtpVerify.ok
+      ? "SMTP (custom branded email)"
+      : "Firebase built-in sender (SMTP unavailable)",
     session: { user: session.u },
   });
 }
