@@ -5,6 +5,7 @@ import { useRef, useState, useCallback, useEffect } from "react";
 import {
   ChevronLeft, ChevronRight, Clock, CreditCard, CheckCircle2,
   MessageCircle, GraduationCap, ArrowRight, Phone, X, BookOpen, IndianRupee, Briefcase,
+  Landmark, FileText, Building2, BadgeCheck, Sparkles,
 } from "lucide-react";
 import { SiteNavbar } from "@/components/site-navbar";
 import { SiteFooter } from "@/components/site-footer";
@@ -97,27 +98,91 @@ function CourseInfoModal({ course, streamKey, onClose }: { course: Course; strea
             </div>
           </div>
 
+          {/* Hindi simple explanation — सबसे पहले, ताकि कोई भी student आसानी से समझे */}
+          {course.hindiDesc && (
+            <div className="mb-4 rounded-xl border border-amber-100 bg-amber-50/60 px-4 py-3">
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <Sparkles size={13} className="text-amber-500" />
+                <p className="text-xs font-extrabold text-amber-700 uppercase tracking-wide">आसान भाषा में समझें</p>
+              </div>
+              <p className="text-sm text-gray-700 leading-relaxed">{course.hindiDesc}</p>
+            </div>
+          )}
+
           {/* Eligibility */}
-          <div className="mb-3 rounded-xl border border-blue-100 bg-blue-50 px-4 py-3">
-            <p className="text-[10px] font-bold text-blue-500 uppercase tracking-wide mb-1">Eligibility</p>
+          <div className="mb-4 rounded-xl border border-blue-100 bg-blue-50 px-4 py-3">
+            <div className="flex items-center gap-1.5 mb-1">
+              <BadgeCheck size={13} className="text-blue-500" />
+              <p className="text-[11px] font-extrabold text-blue-600 uppercase tracking-wide">Eligibility — कौन apply कर सकता है</p>
+            </div>
             <p className="text-sm text-gray-800 font-semibold">{course.eligibility}</p>
           </div>
 
+          {/* Entrance exam */}
+          {course.entranceExam && (
+            <div className="mb-4">
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <FileText size={13} className="text-gray-500" />
+                <p className="text-xs font-extrabold text-gray-700 uppercase tracking-wide">Entrance / Admission</p>
+              </div>
+              <p className="text-sm text-gray-600 leading-relaxed">{course.entranceExam}</p>
+            </div>
+          )}
+
           {/* Career scope */}
           {course.careerScope && (
-            <div className="mb-3">
-              <div className="flex items-center gap-1.5 mb-2">
+            <div className="mb-4">
+              <div className="flex items-center gap-1.5 mb-1.5">
                 <BookOpen size={13} className="text-gray-500" />
-                <p className="text-xs font-extrabold text-gray-700 uppercase tracking-wide">Career Scope</p>
+                <p className="text-xs font-extrabold text-gray-700 uppercase tracking-wide">Career Scope — आगे क्या बनेंगे</p>
               </div>
               <p className="text-sm text-gray-600 leading-relaxed">{course.careerScope}</p>
+            </div>
+          )}
+
+          {/* Government jobs */}
+          {course.govtJobs && (
+            <div className="mb-4 rounded-xl border border-green-100 bg-green-50/60 px-4 py-3">
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <Landmark size={13} className="text-green-600" />
+                <p className="text-xs font-extrabold text-green-700 uppercase tracking-wide">Government Jobs</p>
+              </div>
+              <p className="text-sm text-gray-700 leading-relaxed">{course.govtJobs}</p>
+            </div>
+          )}
+
+          {/* Study mode */}
+          {course.mode && (
+            <div className="mb-4">
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <GraduationCap size={13} className="text-gray-500" />
+                <p className="text-xs font-extrabold text-gray-700 uppercase tracking-wide">Study Mode</p>
+              </div>
+              <p className="text-sm text-gray-600 leading-relaxed">{course.mode}</p>
+            </div>
+          )}
+
+          {/* Top colleges */}
+          {course.topColleges && course.topColleges.length > 0 && (
+            <div className="mb-4">
+              <div className="flex items-center gap-1.5 mb-2">
+                <Building2 size={13} className="text-gray-500" />
+                <p className="text-xs font-extrabold text-gray-700 uppercase tracking-wide">Top Colleges</p>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {course.topColleges.map((c, i) => (
+                  <span key={i} className="inline-flex items-center rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1 text-[11px] font-semibold text-gray-600">
+                    {c}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
 
           {/* Highlights */}
           {course.highlights.length > 0 && (
             <div className="mb-4">
-              <p className="text-xs font-extrabold text-gray-700 uppercase tracking-wide mb-2">Highlights</p>
+              <p className="text-xs font-extrabold text-gray-700 uppercase tracking-wide mb-2">Key Highlights</p>
               <ul className="space-y-1.5">
                 {course.highlights.map((h, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm text-gray-600">

@@ -12,7 +12,59 @@ import { useAuth } from "@/components/auth-provider";
 import {
   GraduationCap, User, Phone, Mail, BookOpen, MapPin, CheckCircle2,
   Send, Loader, AlertCircle, ArrowRight, MessageCircle, FileText,
+  Upload, Trash2,
 } from "lucide-react";
+
+// Documents the student MUST upload (PDF only, max 2MB each).
+const REQUIRED_UPLOADS = [
+  { key: "aadhaar", label: "Aadhaar Card (आधार कार्ड)" },
+  { key: "marksheet10", label: "10th Marksheet (दसवीं अंकपत्र)" },
+  { key: "marksheet12", label: "12th Marksheet (बारहवीं अंकपत्र)" },
+  { key: "photo", label: "Passport Size Photo (PDF में)" },
+] as const;
+
+const MAX_UPLOAD_BYTES = 2 * 1024 * 1024; // 2 MB
+
+type UploadedDoc = { name: string; url: string };
+
+// Direct unsigned Cloudinary upload — works for guests too (no auth/firestore).
+function uploadPdfToCloudinary(
+  file: File,
+  folderKey: string,
+  onProgress?: (pct: number) => void,
+): Promise<UploadedDoc> {
+  return new Promise((resolve, reject) => {
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+    if (!cloudName || !uploadPreset) {
+      reject(new Error("Document upload service अभी उपलब्ध नहीं है। कृपया बाद में प्रयास करें।"));
+      return;
+    }
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("upload_preset", uploadPreset);
+    fd.append("folder", `applications/${folderKey}`);
+
+    const xhr = new XMLHttpRequest();
+    xhr.upload.addEventListener("progress", e => {
+      if (e.lengthComputable) onProgress?.(Math.round((e.loaded / e.total) * 100));
+    });
+    xhr.addEventListener("load", () => {
+      try {
+        if (xhr.status < 200 || xhr.status >= 300) {
+          throw new Error(`Upload failed (HTTP ${xhr.status})`);
+        }
+        const result = JSON.parse(xhr.responseText);
+        resolve({ name: file.name, url: result.secure_url });
+      } catch (err: any) {
+        reject(new Error(err.message || "Upload failed"));
+      }
+    });
+    xhr.addEventListener("error", () => reject(new Error("Network error during upload")));
+    xhr.open("POST", `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`);
+    xhr.send(fd);
+  });
+}
 
 const COURSES = [
   // Teaching
@@ -85,6 +137,10 @@ function ApplyForm() {
   const [appId, setAppId] = useState("");
   const [availableDocs, setAvailableDocs] = useState<string[]>([]);
   const [tcAccepted, setTcAccepted] = useState(false);
+  // Uploaded PDF documents, keyed by REQUIRED_UPLOADS[].key
+  const [uploads, setUploads] = useState<Record<string, UploadedDoc>>({});
+  const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({});
+  const [uploadingKey, setUploadingKey] = useState<string>("");
 
   // Pre-fill course from URL param ?course=
   useEffect(() => {
@@ -115,6 +171,49 @@ function ApplyForm() {
     );
   }
 
+  async function handleFileUpload(key: string, file: File | undefined) {
+    if (!file) return;
+    setError("");
+    // Validate: PDF only, max 2MB
+    const isPdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+    if (!isPdf) {
+      setError("केवल PDF file ही upload करें। (Only PDF format allowed)");
+      return;
+    }
+    if (file.size > MAX_UPLOAD_BYTES) {
+      setError("File का size 2MB से अधिक है। कृपया छोटी PDF upload करें। (Max 2MB)");
+      return;
+    }
+    setUploadingKey(key);
+    setUploadProgress(p => ({ ...p, [key]: 0 }));
+    try {
+      const folderKey = (user?.uid || form.mobile || "guest").toString();
+      const doc = await uploadPdfToCloudinary(file, folderKey, pct =>
+        setUploadProgress(p => ({ ...p, [key]: pct }))
+      );
+      setUploads(u => ({ ...u, [key]: doc }));
+    } catch (err: any) {
+      setError(err.message || "Document upload नहीं हो पाया। कृपया दोबारा प्रयास करें।");
+    } finally {
+      setUploadingKey("");
+    }
+  }
+
+  function removeUpload(key: string) {
+    setUploads(u => {
+      const next = { ...u };
+      delete next[key];
+      return next;
+    });
+    setUploadProgress(p => {
+      const next = { ...p };
+      delete next[key];
+      return next;
+    });
+  }
+
+  const allRequiredUploaded = REQUIRED_UPLOADS.every(d => uploads[d.key]);
+
   function validateStep1() {
     if (!form.fullName.trim()) return "कृपया अपना पूरा नाम दर्ज करें।";
     if (!form.mobile.trim() || form.mobile.length < 10) return "कृपया एक सही 10-अंकों का mobile number दर्ज करें।";
@@ -139,6 +238,10 @@ function ApplyForm() {
       if (e) { setError(e); return; }
     }
     if (step === 3) {
+      if (!allRequiredUploaded) {
+        setError("कृपया सभी ज़रूरी documents (PDF) upload करें — यह अनिवार्य है।");
+        return;
+      }
       if (!tcAccepted) { setError("कृपया Terms & Conditions स्वीकार करें।"); return; }
     }
     setStep(s => s + 1);
@@ -151,6 +254,7 @@ function ApplyForm() {
     if (e1) { setError(e1); return; }
     const e2 = validateStep2();
     if (e2) { setError(e2); return; }
+    if (!allRequiredUploaded) { setStep(3); setError("कृपया सभी ज़रूरी documents (PDF) upload करें — यह अनिवार्य है।"); return; }
     if (!tcAccepted) { setError("कृपया Terms & Conditions स्वीकार करें।"); return; }
     setLoading(true);
     setError("");
@@ -175,6 +279,10 @@ function ApplyForm() {
         bsccRequired: form.bsccRequired,
         message: form.message || undefined,
         availableDocs: availableDocs.length > 0 ? availableDocs : undefined,
+        uploadedDocuments: Object.entries(uploads).map(([key, doc]) => ({
+          name: REQUIRED_UPLOADS.find(d => d.key === key)?.label || doc.name,
+          url: doc.url,
+        })),
       });
       setAppId(id.slice(0, 8).toUpperCase());
       saveInquiry({
@@ -395,6 +503,32 @@ function ApplyForm() {
         <section className="py-12 bg-gray-50">
           <div className="container-shell">
             <div className="max-w-2xl mx-auto">
+              {/* Selected-course banner — always shows which course is being applied for */}
+              <div className="mb-6 flex items-center gap-3 rounded-2xl border-2 border-[#003f9f] bg-blue-50 px-5 py-4">
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-[#003f9f] text-white">
+                  <GraduationCap size={20} />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-blue-500">आप किस course के लिए apply कर रहे हैं</p>
+                  {form.course ? (
+                    <p className="text-base font-extrabold text-[#003f9f] truncate">{form.course}</p>
+                  ) : (
+                    <p className="text-sm font-semibold text-amber-600">
+                      अभी course select नहीं हुआ — Step 2 में अपना course चुनें।
+                    </p>
+                  )}
+                </div>
+                {step !== 2 && (
+                  <button
+                    type="button"
+                    onClick={() => { setStep(2); setError(""); }}
+                    className="ml-auto flex-shrink-0 rounded-lg border-2 border-[#003f9f] px-3 py-1.5 text-xs font-bold text-[#003f9f] hover:bg-[#003f9f] hover:text-white transition"
+                  >
+                    {form.course ? "बदलें" : "चुनें"}
+                  </button>
+                )}
+              </div>
+
               {error && (
                 <div className="mb-6 flex gap-3 rounded-xl bg-red-50 border border-red-200 p-4 text-sm text-red-700">
                   <AlertCircle size={18} className="flex-shrink-0 mt-0.5" />
@@ -705,6 +839,79 @@ function ApplyForm() {
                       </div>
                     </div>
 
+                    {/* ── Mandatory PDF document upload ── */}
+                    <div className="rounded-2xl bg-white border-2 border-[#003f9f] shadow-sm p-5">
+                      <div className="flex items-center gap-3 mb-1">
+                        <Upload size={20} className="text-[#003f9f]" />
+                        <div>
+                          <h2 className="font-headline text-base font-extrabold text-gray-900">
+                            Documents Upload करें <span className="text-red-500">*</span>
+                          </h2>
+                          <p className="text-xs text-gray-500">सभी ज़रूरी documents upload करना अनिवार्य है</p>
+                        </div>
+                      </div>
+                      <div className="mb-4 rounded-lg bg-blue-50 border border-blue-100 px-3 py-2 text-[11px] font-semibold text-blue-700">
+                        ⚠️ केवल <strong>PDF</strong> file · अधिकतम <strong>2MB</strong> per file
+                      </div>
+
+                      <div className="space-y-3">
+                        {REQUIRED_UPLOADS.map(doc => {
+                          const uploaded = uploads[doc.key];
+                          const pct = uploadProgress[doc.key];
+                          const isUploading = uploadingKey === doc.key;
+                          return (
+                            <div key={doc.key} className={`rounded-xl border-2 px-4 py-3 transition ${uploaded ? "border-green-400 bg-green-50" : "border-gray-200 bg-gray-50"}`}>
+                              <div className="flex items-center gap-3">
+                                <FileText size={18} className={uploaded ? "text-green-500" : "text-gray-400"} />
+                                <div className="flex-1 min-w-0">
+                                  <p className={`text-sm font-semibold ${uploaded ? "text-green-800" : "text-gray-700"}`}>
+                                    {doc.label} <span className="text-red-500">*</span>
+                                  </p>
+                                  {uploaded && (
+                                    <p className="text-[11px] text-green-600 truncate">✅ {uploaded.name}</p>
+                                  )}
+                                </div>
+                                {uploaded ? (
+                                  <button
+                                    type="button"
+                                    onClick={() => removeUpload(doc.key)}
+                                    className="flex-shrink-0 flex items-center gap-1 rounded-lg border border-red-200 px-2.5 py-1.5 text-xs font-bold text-red-600 hover:bg-red-50 transition"
+                                  >
+                                    <Trash2 size={12} /> हटाएं
+                                  </button>
+                                ) : (
+                                  <label className={`flex-shrink-0 flex items-center gap-1 rounded-lg bg-[#003f9f] px-3 py-1.5 text-xs font-bold text-white hover:bg-blue-700 transition cursor-pointer ${isUploading ? "opacity-60 pointer-events-none" : ""}`}>
+                                    {isUploading
+                                      ? <><Loader size={12} className="animate-spin" /> {pct ?? 0}%</>
+                                      : <><Upload size={12} /> Upload PDF</>
+                                    }
+                                    <input
+                                      type="file"
+                                      accept="application/pdf,.pdf"
+                                      className="hidden"
+                                      disabled={isUploading}
+                                      onChange={e => { handleFileUpload(doc.key, e.target.files?.[0]); e.target.value = ""; }}
+                                    />
+                                  </label>
+                                )}
+                              </div>
+                              {isUploading && typeof pct === "number" && (
+                                <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-gray-200">
+                                  <div className="h-full rounded-full bg-[#003f9f] transition-all" style={{ width: `${pct}%` }} />
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      <p className={`mt-3 text-xs font-bold ${allRequiredUploaded ? "text-green-600" : "text-gray-400"}`}>
+                        {allRequiredUploaded
+                          ? "✅ सभी ज़रूरी documents upload हो गए।"
+                          : `${Object.keys(uploads).length}/${REQUIRED_UPLOADS.length} documents uploaded — आगे बढ़ने के लिए सभी upload करें।`}
+                      </p>
+                    </div>
+
                     {/* Terms & Conditions */}
                     <div className="rounded-2xl border-2 border-gray-200 bg-white p-5">
                       <h3 className="font-extrabold text-gray-900 text-sm mb-3">📋 Terms & Conditions</h3>
@@ -828,7 +1035,22 @@ function ApplyForm() {
                       )}
                     </div>
 
-                    {/* Documents summary */}
+                    {/* Uploaded documents summary */}
+                    <div className="rounded-2xl bg-white border-2 border-[#003f9f] px-5 py-4">
+                      <p className="font-bold text-[#003f9f] text-sm mb-2">📎 Uploaded Documents ({Object.keys(uploads).length}/{REQUIRED_UPLOADS.length})</p>
+                      <div className="space-y-1.5">
+                        {REQUIRED_UPLOADS.map(d => (
+                          <div key={d.key} className="flex items-center gap-2 text-sm">
+                            {uploads[d.key]
+                              ? <><span className="text-green-500 font-bold">✅</span><span className="text-gray-700">{d.label}</span></>
+                              : <><span className="text-red-400">❌</span><span className="text-gray-400">{d.label}</span></>
+                            }
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Documents checklist summary */}
                     <div className="rounded-2xl bg-green-50 border-2 border-green-200 px-5 py-4">
                       <p className="font-bold text-green-900 text-sm mb-2">✅ Available Documents ({availableDocs.length}/{ALL_DOCS.length})</p>
                       {availableDocs.length > 0

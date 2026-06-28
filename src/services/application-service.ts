@@ -32,6 +32,8 @@ export interface CourseApplication {
   message?: string;
   // Document availability checklist (student self-declared)
   availableDocs?: string[];   // list of doc labels student has
+  // Uploaded documents (PDF files uploaded during application)
+  uploadedDocuments?: { name: string; url: string }[];
   // Admin fields
   status?: ApplicationStatus;
   note?: string;
