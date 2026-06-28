@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { GraduationCap, Phone, Menu, X, ChevronRight, MessageCircle, ShieldCheck } from "lucide-react";
+import { GraduationCap, Phone, Menu, X, ChevronRight, MessageCircle, ShieldCheck, User, LogOut } from "lucide-react";
+import { useAuth } from "@/components/auth-provider";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -17,6 +18,15 @@ export function SiteNavbar({ transparent = false }: { transparent?: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const { isAuthenticated, userProfile, logout } = useAuth();
+  const dashboardHref = userProfile?.role === "admin" ? "/admin/dashboard" : "/dashboard";
+
+  const handleLogout = async () => {
+    await logout();
+    setMenuOpen(false);
+    router.push("/");
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -104,27 +114,54 @@ export function SiteNavbar({ transparent = false }: { transparent?: boolean }) {
             >
               <MessageCircle size={13} aria-hidden="true" /> <span className="hidden xl:inline">Chat on </span>WhatsApp
             </a>
-            <Link
-              href="/admin/login"
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-bold transition ${
-                isTransparent
-                  ? "text-white/85 hover:bg-white/10 hover:text-white"
-                  : "text-gray-700 hover:bg-gray-50 hover:text-primary-blue"
-              }`}
-              aria-label="Office / Counsellor login"
-            >
-              <ShieldCheck size={13} aria-hidden="true" /> Office Login
-            </Link>
-            <Link
-              href="/auth/login"
-              className={`rounded-lg border-2 px-3.5 py-2 text-sm font-bold transition ${
-                isTransparent
-                  ? "border-white/40 bg-white/10 text-white hover:bg-white/20 hover:border-white/60"
-                  : "border-primary-blue text-primary-blue hover:bg-primary-blue hover:text-white"
-              }`}
-            >
-              Student Login
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <Link
+                  href={dashboardHref}
+                  className={`flex items-center gap-1.5 rounded-lg border-2 px-3.5 py-2 text-sm font-bold transition ${
+                    isTransparent
+                      ? "border-white/40 bg-white/10 text-white hover:bg-white/20 hover:border-white/60"
+                      : "border-primary-blue text-primary-blue hover:bg-primary-blue hover:text-white"
+                  }`}
+                >
+                  <User size={13} aria-hidden="true" /> {userProfile?.name?.split(" ")[0] || "Dashboard"}
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-bold transition ${
+                    isTransparent
+                      ? "text-white/85 hover:bg-white/10 hover:text-white"
+                      : "text-gray-700 hover:bg-gray-50 hover:text-primary-red"
+                  }`}
+                >
+                  <LogOut size={13} aria-hidden="true" /> Logout
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/admin/login"
+                className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-bold transition ${
+                  isTransparent
+                    ? "text-white/85 hover:bg-white/10 hover:text-white"
+                    : "text-gray-700 hover:bg-gray-50 hover:text-primary-blue"
+                }`}
+                aria-label="Office / Counsellor login"
+              >
+                <ShieldCheck size={13} aria-hidden="true" /> Office Login
+              </Link>
+            )}
+            {!isAuthenticated && (
+              <Link
+                href="/auth/login"
+                className={`rounded-lg border-2 px-3.5 py-2 text-sm font-bold transition ${
+                  isTransparent
+                    ? "border-white/40 bg-white/10 text-white hover:bg-white/20 hover:border-white/60"
+                    : "border-primary-blue text-primary-blue hover:bg-primary-blue hover:text-white"
+                }`}
+              >
+                Student Login
+              </Link>
+            )}
             <Link
               href="/apply"
               className="rounded-lg bg-primary-red px-4 py-2 text-sm font-bold text-white shadow-sm shadow-red-200 transition hover:bg-red-700 hover:shadow-red-300"
@@ -178,20 +215,37 @@ export function SiteNavbar({ transparent = false }: { transparent?: boolean }) {
               >
                 <MessageCircle size={14} aria-hidden="true" /> Chat with a Counsellor on WhatsApp
               </a>
-              <div className="grid grid-cols-2 gap-2">
-                <Link
-                  href="/admin/login"
-                  className="flex items-center justify-center rounded-xl border-2 border-gray-200 py-2.5 text-sm font-bold text-gray-700 transition hover:border-gray-400"
-                >
-                  Counsellor Portal
-                </Link>
-                <Link
-                  href="/auth/login"
-                  className="flex items-center justify-center rounded-xl border-2 border-primary-blue py-2.5 text-sm font-bold text-primary-blue transition hover:bg-primary-blue hover:text-white"
-                >
-                  Student Login
-                </Link>
-              </div>
+              {isAuthenticated ? (
+                <div className="grid grid-cols-2 gap-2">
+                  <Link
+                    href={dashboardHref}
+                    className="flex items-center justify-center gap-1.5 rounded-xl border-2 border-primary-blue py-2.5 text-sm font-bold text-primary-blue transition hover:bg-primary-blue hover:text-white"
+                  >
+                    <User size={14} aria-hidden="true" /> My Dashboard
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center justify-center gap-1.5 rounded-xl border-2 border-red-200 bg-red-50 py-2.5 text-sm font-bold text-primary-red transition hover:bg-red-100"
+                  >
+                    <LogOut size={14} aria-hidden="true" /> Logout
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-2">
+                  <Link
+                    href="/admin/login"
+                    className="flex items-center justify-center rounded-xl border-2 border-gray-200 py-2.5 text-sm font-bold text-gray-700 transition hover:border-gray-400"
+                  >
+                    Counsellor Portal
+                  </Link>
+                  <Link
+                    href="/auth/login"
+                    className="flex items-center justify-center rounded-xl border-2 border-primary-blue py-2.5 text-sm font-bold text-primary-blue transition hover:bg-primary-blue hover:text-white"
+                  >
+                    Student Login
+                  </Link>
+                </div>
+              )}
               <Link
                 href="/apply"
                 className="flex items-center justify-center rounded-xl bg-primary-red py-3 text-sm font-bold text-white transition hover:bg-red-700"
