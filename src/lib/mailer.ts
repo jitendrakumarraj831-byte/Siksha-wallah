@@ -2,15 +2,32 @@ import nodemailer, { type Transporter } from 'nodemailer';
 
 let _transporter: Transporter | null = null;
 
+// Read an env var, trimming whitespace and a single pair of wrapping quotes.
+// Stray spaces/quotes creep in when values are pasted into a hosting dashboard
+// (Vercel etc.) and are a very common cause of "535 authentication failed"
+// even when the value looks correct at a glance.
+function cleanEnv(v: string | undefined): string | undefined {
+  if (v == null) return undefined;
+  let s = v.trim();
+  if (s.length >= 2 && ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith("'") && s.endsWith("'")))) {
+    s = s.slice(1, -1);
+  }
+  return s;
+}
+
 function createTransporter(): Transporter {
-  const port = Number(process.env.SMTP_PORT ?? 465);
+  const port = Number(cleanEnv(process.env.SMTP_PORT) ?? 465);
+  // Honour an explicit SMTP_SECURE flag if provided; otherwise default by port
+  // (465 = implicit TLS, 587 = STARTTLS).
+  const secureEnv = cleanEnv(process.env.SMTP_SECURE);
+  const secure = secureEnv ? secureEnv.toLowerCase() === 'true' : port === 465;
   return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
+    host: cleanEnv(process.env.SMTP_HOST),
     port,
-    secure: port === 465,
+    secure,
     auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
+      user: cleanEnv(process.env.SMTP_USER),
+      pass: cleanEnv(process.env.SMTP_PASS),
     },
     // Fail fast in serverless: if the SMTP port is blocked or the host is slow,
     // don't let the function hang — error out so the caller can fall back to
@@ -27,7 +44,7 @@ export function getMailer(): Transporter {
 }
 
 export function isMailerConfigured(): boolean {
-  return !!(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
+  return !!(cleanEnv(process.env.SMTP_HOST) && cleanEnv(process.env.SMTP_USER) && cleanEnv(process.env.SMTP_PASS));
 }
 
 // Live SMTP connectivity/auth check (used by the diagnostic endpoint). Returns
@@ -43,19 +60,31 @@ export async function verifyMailer(): Promise<{ ok: boolean; error?: string }> {
 
 // Non-secret view of the SMTP configuration for diagnostics.
 export function smtpConfigShape(): Record<string, unknown> {
+  const user = cleanEnv(process.env.SMTP_USER);
+  const from = EMAIL_FROM();
   return {
     configured: isMailerConfigured(),
-    host: process.env.SMTP_HOST ?? null,
-    port: process.env.SMTP_PORT ?? "465 (default)",
-    secure: Number(process.env.SMTP_PORT ?? 465) === 465,
-    hasUser: !!process.env.SMTP_USER,
-    hasPass: !!process.env.SMTP_PASS,
-    from: EMAIL_FROM(),
+    host: cleanEnv(process.env.SMTP_HOST) ?? null,
+    port: cleanEnv(process.env.SMTP_PORT) ?? "465 (default)",
+    secure: cleanEnv(process.env.SMTP_SECURE)
+      ? cleanEnv(process.env.SMTP_SECURE)!.toLowerCase() === "true"
+      : Number(cleanEnv(process.env.SMTP_PORT) ?? 465) === 465,
+    hasUser: !!user,
+    user: user ?? null,
+    hasPass: !!cleanEnv(process.env.SMTP_PASS),
+    from,
+    fromMatchesUser: !!user && from.toLowerCase() === user.toLowerCase(),
   };
 }
 
+// From address. Supports both EMAIL_FROM and FROM_EMAIL names, and defaults to
+// the authenticated SMTP user — Titan rejects sends whose From doesn't match the
+// authenticated mailbox, so keeping them aligned avoids a separate failure.
 export const EMAIL_FROM = () =>
-  process.env.EMAIL_FROM ?? 'admission@sikshawallahfbg.in';
+  cleanEnv(process.env.EMAIL_FROM) ??
+  cleanEnv(process.env.FROM_EMAIL) ??
+  cleanEnv(process.env.SMTP_USER) ??
+  'admission@sikshawallahfbg.in';
 
 export async function sendMail(opts: {
   to: string;
