@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { SiteNavbar } from "@/components/site-navbar";
 import { SiteFooter } from "@/components/site-footer";
@@ -12,7 +12,7 @@ import { useAuth } from "@/components/auth-provider";
 import {
   GraduationCap, User, Phone, Mail, BookOpen, CheckCircle2,
   Send, Loader, AlertCircle, MessageCircle, FileText,
-  Upload, Trash2, Paperclip,
+  Upload, Trash2, Paperclip, X,
 } from "lucide-react";
 
 const MAX_UPLOAD_BYTES = 2 * 1024 * 1024; // 2 MB
@@ -116,6 +116,13 @@ const newId = () => `${Date.now()}-${_uid++}`;
 function ApplyForm() {
   const { user, userProfile, loading: authLoading } = useAuth();
   const searchParams = useSearchParams();
+  const router = useRouter();
+
+  // Close the gate / form and go back (or home if no history).
+  const goBack = () => {
+    if (typeof window !== "undefined" && window.history.length > 1) router.back();
+    else router.push("/");
+  };
   const [form, setForm] = useState<FormData>(EMPTY);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -376,7 +383,15 @@ function ApplyForm() {
         <SiteNavbar />
         <main className="min-h-screen bg-gray-100 px-4 py-12">
           <div className="mx-auto w-full max-w-md">
-            <div className="rounded-2xl bg-white shadow-xl ring-1 ring-gray-200 overflow-hidden">
+            <div className="relative rounded-2xl bg-white shadow-xl ring-1 ring-gray-200 overflow-hidden">
+              <button
+                type="button"
+                onClick={goBack}
+                aria-label="बंद करें"
+                className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/30 transition"
+              >
+                <X size={18} />
+              </button>
               <div className="border-b-4 border-[#003f9f] bg-gradient-to-r from-[#00102e] to-[#003590] px-7 py-7 text-white text-center">
                 <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-white/10 border border-white/20">
                   <User size={26} />
