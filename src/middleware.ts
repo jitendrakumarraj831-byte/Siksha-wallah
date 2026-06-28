@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAdminToken, ADMIN_COOKIE } from '@/lib/admin-session';
+import { verifyAdminToken, signAdminToken, ADMIN_COOKIE } from '@/lib/admin-session';
+
+const ADMIN_SESSION_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+const ADMIN_RENEW_THRESHOLD_MS = 25 * 24 * 60 * 60 * 1000; // refresh once <25 days remain
 
 const protectedStudentRoutes = ['/dashboard'];
 // Protect everything under /admin except the public login page.
@@ -29,6 +32,20 @@ export async function middleware(request: NextRequest) {
       const loginUrl = new URL('/admin/login', request.url);
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
+    }
+    // Sliding renewal — keep the office logged in as long as it's being used.
+    // Refresh the 30-day window whenever less than 25 days remain.
+    if (session.exp - Date.now() < ADMIN_RENEW_THRESHOLD_MS) {
+      const res = NextResponse.next();
+      const fresh = await signAdminToken(session.u, ADMIN_SESSION_MS);
+      res.cookies.set(ADMIN_COOKIE, fresh, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: ADMIN_SESSION_MS / 1000,
+      });
+      return res;
     }
   }
 

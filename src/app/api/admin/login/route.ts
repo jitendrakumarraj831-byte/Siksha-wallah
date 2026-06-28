@@ -56,14 +56,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
   }
 
-  const token = await signAdminToken(username);
+  // Long-lived office session — stays logged in until the user explicitly
+  // logs out (30 days), instead of forcing a daily re-login.
+  const SESSION_MS = 30 * 24 * 60 * 60 * 1000;
+  const token = await signAdminToken(username, SESSION_MS);
   const res = NextResponse.json({ success: true, user: username });
   res.cookies.set(ADMIN_COOKIE, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    maxAge: 24 * 60 * 60,
+    maxAge: SESSION_MS / 1000,
   });
   return res;
 }
