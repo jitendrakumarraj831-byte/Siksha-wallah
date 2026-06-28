@@ -213,17 +213,24 @@ function AppCard({ app, onStatusChange, onNoteSaved, isNew }: {
             <div className="mt-3 rounded-xl bg-blue-50 border border-blue-200 px-4 py-3 text-xs">
               <p className="font-bold text-blue-800 mb-2">📎 Uploaded Documents (PDF) ({app.uploadedDocuments.length}):</p>
               <div className="flex flex-col gap-1.5">
-                {app.uploadedDocuments.map((d: { name: string; url: string }, i: number) => (
-                  <a
-                    key={i}
-                    href={d.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 font-semibold text-blue-700 hover:underline"
-                  >
-                    📄 {d.name.split(" (")[0]} — देखें / Download ↗
-                  </a>
-                ))}
+                {app.uploadedDocuments.map((d: { name: string; url: string }, i: number) => {
+                  // Force a clean download via Cloudinary's fl_attachment flag.
+                  const dlUrl = d.url.includes("/upload/")
+                    ? d.url.replace("/upload/", "/upload/fl_attachment/")
+                    : d.url;
+                  return (
+                    <div key={i} className="flex items-center gap-3">
+                      <a href={d.url} target="_blank" rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 font-semibold text-blue-700 hover:underline">
+                        📄 {d.name.split(" (")[0]} — देखें ↗
+                      </a>
+                      <a href={dlUrl} target="_blank" rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 font-semibold text-green-700 hover:underline">
+                        ⬇ Download
+                      </a>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
