@@ -69,6 +69,17 @@ export const studentService = {
     docType: string,
     onProgress?: (percent: number) => void,
   ): Promise<string> {
+    // Mobile browsers often leave file.type empty — infer a sensible MIME type
+    // from the filename extension so the saved metadata stays accurate.
+    const inferMimeFromName = (name: string): string => {
+      const n = name.toLowerCase();
+      if (n.endsWith('.pdf')) return 'application/pdf';
+      if (n.endsWith('.png')) return 'image/png';
+      if (n.endsWith('.jpg') || n.endsWith('.jpeg')) return 'image/jpeg';
+      return '';
+    };
+    const mimeType = file.type || inferMimeFromName(file.name);
+
     return new Promise((resolve, reject) => {
       const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
       const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
@@ -117,7 +128,7 @@ export const studentService = {
             },
             body: JSON.stringify({
               uid, name: docName, type: docType, url,
-              publicId, resourceType, fileSize: file.size, mimeType: file.type,
+              publicId, resourceType, fileSize: file.size, mimeType,
             }),
           });
           const json = await res.json();
