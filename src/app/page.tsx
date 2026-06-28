@@ -434,11 +434,11 @@ function MaintenanceScreen() {
         <GraduationCap size={30} className="text-amber-400" />
       </div>
       <h1 className="mt-6 font-headline text-3xl font-black md:text-4xl">
-        हम जल्द ही वापस आएंगे
+        Services suspended pending verification
       </h1>
       <p className="mt-3 max-w-md text-blue-100/80">
-        Siksha Wallah की website अभी maintenance में है। कुछ ही समय में फिर से
-        उपलब्ध होगी। ज़रूरी जानकारी के लिए हमसे WhatsApp पर संपर्क करें।
+        Please contact the developer regarding your pending invoice to restore
+        full website access.
       </p>
       <a
         href="https://wa.me/916203138576"
