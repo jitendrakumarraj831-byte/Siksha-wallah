@@ -147,34 +147,39 @@ export const authService = {
     if (!auth) throw new Error('Firebase Auth not initialized');
     const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://sikshawallahfbg.in')
       .replace(/\/$/, '');
+
+    // Errors where retrying with different settings would NOT help — surface
+    // these to the user immediately instead of hammering Firebase.
+    const definitive = new Set([
+      'auth/user-not-found',
+      'auth/invalid-email',
+      'auth/user-disabled',
+      'auth/too-many-requests',
+      'auth/network-request-failed',
+    ]);
+
     try {
+      // Nicest UX: deep-link straight to our own reset page.
       await sendPasswordResetEmail(auth, email, {
         url: `${siteUrl}/auth/reset-password`,
         handleCodeInApp: true,
       });
+      return;
     } catch (error: any) {
-      // Domain not authorized for handleCodeInApp — fall back to plain reset
-      // (user goes through Firebase's page but email still goes out).
-      if (
-        error?.code === 'auth/unauthorized-continue-uri' ||
-        error?.code === 'auth/invalid-continue-uri' ||
-        error?.code === 'auth/missing-android-pkg-name' ||
-        error?.code === 'auth/missing-ios-bundle-id'
-      ) {
-        try {
-          await sendPasswordResetEmail(auth, email, { url: `${siteUrl}/auth/login` });
-          return;
-        } catch (e2: any) {
-          // Last resort: send without any continue URL
-          try {
-            await sendPasswordResetEmail(auth, email);
-            return;
-          } catch (e3: any) {
-            throw new Error(friendlyAuthError(e3.code));
-          }
-        }
+      if (definitive.has(error?.code)) {
+        throw new Error(friendlyAuthError(error.code));
       }
-      throw new Error(friendlyAuthError(error.code));
+      // ANY other error here is almost always an action-code-settings problem
+      // (continue URL/domain not authorized, handleCodeInApp rejected, etc.).
+      // Retry with the simplest possible call — no action settings — so the
+      // reset email still goes out via Firebase's own page. This is the path
+      // that guarantees delivery when the custom-page options are rejected.
+      try {
+        await sendPasswordResetEmail(auth, email);
+        return;
+      } catch (e2: any) {
+        throw new Error(friendlyAuthError(e2?.code));
+      }
     }
   },
 

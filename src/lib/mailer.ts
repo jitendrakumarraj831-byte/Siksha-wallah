@@ -12,6 +12,12 @@ function createTransporter(): Transporter {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
     },
+    // Fail fast in serverless: if the SMTP port is blocked or the host is slow,
+    // don't let the function hang — error out so the caller can fall back to
+    // Firebase's built-in sender instead of leaving the user with nothing.
+    connectionTimeout: 10_000,
+    greetingTimeout: 10_000,
+    socketTimeout: 15_000,
   });
 }
 
@@ -22,6 +28,30 @@ export function getMailer(): Transporter {
 
 export function isMailerConfigured(): boolean {
   return !!(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
+}
+
+// Live SMTP connectivity/auth check (used by the diagnostic endpoint). Returns
+// a plain result instead of throwing so callers can report it safely.
+export async function verifyMailer(): Promise<{ ok: boolean; error?: string }> {
+  try {
+    await getMailer().verify();
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, error: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+// Non-secret view of the SMTP configuration for diagnostics.
+export function smtpConfigShape(): Record<string, unknown> {
+  return {
+    configured: isMailerConfigured(),
+    host: process.env.SMTP_HOST ?? null,
+    port: process.env.SMTP_PORT ?? "465 (default)",
+    secure: Number(process.env.SMTP_PORT ?? 465) === 465,
+    hasUser: !!process.env.SMTP_USER,
+    hasPass: !!process.env.SMTP_PASS,
+    from: EMAIL_FROM(),
+  };
 }
 
 export const EMAIL_FROM = () =>

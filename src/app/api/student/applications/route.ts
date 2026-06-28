@@ -39,12 +39,18 @@ export async function GET(request: NextRequest) {
     const db = getAdminDb();
     if (!db) return NextResponse.json({ error: "DB unavailable" }, { status: 503 });
 
-    // Query 1: applications explicitly linked to this user's UID
-    // No orderBy here — composite index not guaranteed; we sort in JS below
-    const byUid = await db
-      .collection("course_applications")
-      .where("userId", "==", uid)
-      .get();
+    // Run both reads in parallel — they're independent, so there's no reason to
+    // wait for the first to finish before starting the second.
+    //  Query 1: applications explicitly linked to this user's UID.
+    //  Query 2: applications submitted with the same email but possibly WITHOUT
+    //           a userId (covers applying before logging in).
+    // No orderBy here — composite index not guaranteed; we sort in JS below.
+    const [byUid, byEmail] = await Promise.all([
+      db.collection("course_applications").where("userId", "==", uid).get(),
+      caller.email
+        ? db.collection("course_applications").where("email", "==", caller.email).get()
+        : Promise.resolve(null),
+    ]);
 
     const seenIds = new Set<string>();
     const apps: Record<string, any>[] = [];
@@ -54,14 +60,7 @@ export async function GET(request: NextRequest) {
       apps.push(serializeDoc(d));
     }
 
-    // Query 2: applications submitted with the same email but WITHOUT a userId
-    // (covers the case where the student applied before logging in)
-    if (caller.email) {
-      const byEmail = await db
-        .collection("course_applications")
-        .where("email", "==", caller.email)
-        .get();
-
+    if (byEmail) {
       for (const d of byEmail.docs) {
         if (seenIds.has(d.id)) continue;
         const data = d.data();
