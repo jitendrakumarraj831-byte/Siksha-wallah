@@ -28,18 +28,21 @@ export async function GET(request: NextRequest) {
     // Enrich with student name
     const docs = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 
-    // Batch fetch student names
-    const uids = [...new Set(docs.map((d: any) => d.uid))] as string[];
+    // Batch fetch student names in a single round trip (getAll) instead of one
+    // Firestore read per student — far fewer RPCs when many docs are returned.
+    const uids = [...new Set(docs.map((d: any) => d.uid).filter(Boolean))] as string[];
     const studentMap: Record<string, string> = {};
-    await Promise.all(uids.map(async (uid) => {
+    if (uids.length) {
       try {
-        const userSnap = await db.collection("users").doc(uid).get();
-        if (userSnap.exists) {
-          const data = userSnap.data();
-          studentMap[uid] = data?.name || data?.email || uid;
+        const userSnaps = await db.getAll(...uids.map((u) => db.collection("users").doc(u)));
+        for (const userSnap of userSnaps) {
+          if (userSnap.exists) {
+            const data = userSnap.data();
+            studentMap[userSnap.id] = data?.name || data?.email || userSnap.id;
+          }
         }
       } catch {}
-    }));
+    }
 
     const enriched = docs.map((d: any) => ({
       ...d,
