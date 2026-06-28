@@ -77,6 +77,71 @@ export function smtpConfigShape(): Record<string, unknown> {
   };
 }
 
+// Deep, SECRET-SAFE diagnostics for the 535 investigation. Never returns the
+// password itself — only its shape — plus the exact values Nodemailer resolves
+// and which env-var NAMES are actually present in the environment.
+export function smtpDiagnostics(): Record<string, unknown> {
+  const rawUser = process.env.SMTP_USER;
+  const rawPass = process.env.SMTP_PASS;
+  const cleanedUser = cleanEnv(rawUser);
+  const cleanedPass = cleanEnv(rawPass);
+
+  // Names only (never values) of every mail-related env var actually set. This
+  // catches mistakes like SMTP_PASSWORD instead of SMTP_PASS, MAIL_USER, typos.
+  const presentMailEnvNames = Object.keys(process.env)
+    .filter((k) => /smtp|mail|email/i.test(k))
+    .sort();
+
+  const passShape = rawPass == null
+    ? { present: false }
+    : {
+        present: true,
+        rawLength: rawPass.length,
+        cleanedLength: cleanedPass?.length ?? 0,
+        trimmedQuotesOrSpaces: rawPass.length !== (cleanedPass?.length ?? 0),
+        hasLeadingWhitespace: /^\s/.test(rawPass),
+        hasTrailingWhitespace: /\s$/.test(rawPass),
+        hasInnerWhitespace: /\s/.test(cleanedPass ?? ""),
+        hasNonAscii: /[^\x20-\x7E]/.test(cleanedPass ?? ""),
+      };
+
+  const userShape = rawUser == null
+    ? { present: false }
+    : {
+        present: true,
+        resolved: cleanedUser ?? null,
+        trimmedQuotesOrSpaces: rawUser.length !== (cleanedUser?.length ?? 0),
+        looksLikeEmail: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanedUser ?? ""),
+      };
+
+  // Exactly what createTransporter() feeds Nodemailer — same code path.
+  const port = Number(cleanEnv(process.env.SMTP_PORT) ?? 465);
+  const secureEnv = cleanEnv(process.env.SMTP_SECURE);
+  const resolved = {
+    host: cleanEnv(process.env.SMTP_HOST) ?? null,
+    port,
+    secure: secureEnv ? secureEnv.toLowerCase() === "true" : port === 465,
+    user: cleanedUser ?? null,
+    authMethod: "LOGIN/PLAIN (Nodemailer default)",
+  };
+
+  return {
+    resolvedNodemailerAuth: resolved,
+    fromAddress: EMAIL_FROM(),
+    presentMailEnvNames,
+    readsTheseVarNames: {
+      host: "SMTP_HOST",
+      port: "SMTP_PORT",
+      secure: "SMTP_SECURE",
+      user: "SMTP_USER",
+      pass: "SMTP_PASS",
+      from: "EMAIL_FROM (or FROM_EMAIL, else SMTP_USER)",
+    },
+    userShape,
+    passShape,
+  };
+}
+
 // From address. Supports both EMAIL_FROM and FROM_EMAIL names, and defaults to
 // the authenticated SMTP user — Titan rejects sends whose From doesn't match the
 // authenticated mailbox, so keeping them aligned avoids a separate failure.
