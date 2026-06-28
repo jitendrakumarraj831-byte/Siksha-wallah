@@ -50,10 +50,14 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (err: any) {
+    // Don't reveal whether an account exists — treat unknown email as success.
     if (err.code === "auth/user-not-found" || err.code === "auth/invalid-email") {
       return NextResponse.json({ success: true });
     }
-    console.error("Password reset error:", err);
-    return NextResponse.json({ error: "Failed to send reset email. Please try again." }, { status: 500 });
+    // SMTP send or admin link generation failed for some other reason. Rather
+    // than a hard 500, tell the client to fall back to Firebase's built-in
+    // sender so the user still receives a working reset link seamlessly.
+    console.error("Password reset (SMTP route) failed, falling back to Firebase:", err);
+    return NextResponse.json({ success: false, useFirebase: true });
   }
 }
