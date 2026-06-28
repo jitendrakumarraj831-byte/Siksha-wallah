@@ -355,6 +355,75 @@ function ApplyForm() {
     );
   }
 
+  /* ───────────────── AUTH GATE — account required to apply ───────────────── */
+  // While auth state is resolving, show a loader.
+  if (authLoading) {
+    return (
+      <>
+        <SiteNavbar />
+        <main className="min-h-screen flex items-center justify-center bg-gray-100">
+          <Loader size={28} className="animate-spin text-[#003f9f]" />
+        </main>
+        <SiteFooter />
+      </>
+    );
+  }
+
+  // Not logged in → student must create an account / login first. No guest apply.
+  if (!user) {
+    return (
+      <>
+        <SiteNavbar />
+        <main className="min-h-screen bg-gray-100 px-4 py-12">
+          <div className="mx-auto w-full max-w-md">
+            <div className="rounded-2xl bg-white shadow-xl ring-1 ring-gray-200 overflow-hidden">
+              <div className="border-b-4 border-[#003f9f] bg-gradient-to-r from-[#00102e] to-[#003590] px-7 py-7 text-white text-center">
+                <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-white/10 border border-white/20">
+                  <User size={26} />
+                </div>
+                <h1 className="font-headline text-xl font-extrabold">Apply करने के लिए Account ज़रूरी है</h1>
+                <p className="text-xs text-blue-100 mt-1">Admission application भरने से पहले login करें या free account बनाएं।</p>
+              </div>
+              <div className="px-7 py-7">
+                <div className="mb-5 space-y-2">
+                  {[
+                    "अपनी application कभी भी track कर सकें",
+                    "Documents safe और एक ही जगह सुरक्षित रहें",
+                    "Counsellor से सीधे dashboard में बात करें",
+                  ].map(t => (
+                    <div key={t} className="flex items-start gap-2 text-sm text-gray-600">
+                      <CheckCircle2 size={15} className="mt-0.5 flex-shrink-0 text-green-500" />
+                      {t}
+                    </div>
+                  ))}
+                </div>
+                <Link
+                  href="/auth/register?redirect=/apply"
+                  className="mb-2 flex items-center justify-center gap-2 rounded-xl bg-[#003f9f] py-3.5 font-extrabold text-white hover:bg-blue-700 transition"
+                >
+                  Free Account बनाएं →
+                </Link>
+                <Link
+                  href="/auth/login?redirect=/apply"
+                  className="flex items-center justify-center gap-2 rounded-xl border-2 border-[#003f9f] py-3 font-bold text-[#003f9f] hover:bg-blue-50 transition"
+                >
+                  पहले से account है? Login करें
+                </Link>
+                <p className="mt-5 text-center text-xs text-gray-400">
+                  मदद चाहिए?{" "}
+                  <a href="https://wa.me/916203138576" target="_blank" rel="noopener noreferrer" className="font-bold text-green-600 hover:underline">WhatsApp करें</a>
+                  {" "}या{" "}
+                  <a href="tel:+916203138576" className="font-bold text-[#003f9f] hover:underline">Call करें</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </main>
+        <SiteFooter />
+      </>
+    );
+  }
+
   /* ───────────────── APPLICATION FORM (single page, PDF-style) ───────────────── */
   const inputCls = "w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm outline-none focus:border-[#003f9f] focus:ring-1 focus:ring-[#003f9f] transition";
   const labelCls = "mb-1 block text-[13px] font-semibold text-gray-700";
@@ -364,19 +433,10 @@ function ApplyForm() {
       <SiteNavbar />
       <main className="bg-gray-100 py-8 sm:py-12">
         <div className="container-shell">
-          {/* Login status banner */}
-          {!authLoading && (
-            <div className={`mx-auto max-w-3xl mb-4 rounded-xl border px-4 py-2.5 text-sm text-center font-semibold ${user ? "bg-green-50 border-green-200 text-green-700" : "bg-amber-50 border-amber-200 text-amber-700"}`}>
-              {user
-                ? `Signed in as ${userProfile?.name || user.email} — यह application आपके dashboard में save होगी।`
-                : <>आप guest के रूप में apply कर रहे हैं। Track करने के लिए{" "}
-                    <Link href="/auth/login" className="underline font-bold">log in</Link>
-                    {" "}या{" "}
-                    <Link href="/auth/register" className="underline font-bold">free account बनाएं</Link>।
-                  </>
-              }
-            </div>
-          )}
+          {/* Signed-in banner */}
+          <div className="mx-auto max-w-3xl mb-4 rounded-xl border border-green-200 bg-green-50 px-4 py-2.5 text-sm text-center font-semibold text-green-700">
+            Signed in as {userProfile?.name || user.email} — यह application आपके dashboard में save होगी।
+          </div>
 
           {error && (
             <div className="mx-auto max-w-3xl mb-4 flex gap-3 rounded-xl bg-red-50 border border-red-200 p-4 text-sm text-red-700">

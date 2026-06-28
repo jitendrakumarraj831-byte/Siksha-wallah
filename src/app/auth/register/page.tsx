@@ -13,9 +13,17 @@ export default function RegisterPage() {
   const router = useRouter();
   const { isAuthenticated, loading: authLoading } = useAuth();
 
+  // Optional ?redirect= target — carried through register → login → destination.
+  const [redirectTo, setRedirectTo] = useState('');
   useEffect(() => {
-    if (!authLoading && isAuthenticated) router.replace('/dashboard');
-  }, [authLoading, isAuthenticated, router]);
+    const r = new URLSearchParams(window.location.search).get('redirect');
+    if (r) setRedirectTo(r);
+  }, []);
+  const loginHref = redirectTo ? `/auth/login?redirect=${encodeURIComponent(redirectTo)}` : '/auth/login';
+
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) router.replace(redirectTo || '/dashboard');
+  }, [authLoading, isAuthenticated, router, redirectTo]);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -34,7 +42,7 @@ export default function RegisterPage() {
       setCountdown(c => {
         if (c <= 1) {
           clearInterval(timer);
-          router.push('/auth/login');
+          router.push(loginHref);
           return 0;
         }
         return c - 1;
@@ -115,7 +123,7 @@ export default function RegisterPage() {
             </div>
             <p className="mt-3 text-sm text-slate-400">{countdown} second{countdown !== 1 ? 's' : ''} में redirect होंगे</p>
             <Link
-              href="/auth/login"
+              href={loginHref}
               className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#003f9f] px-6 py-3.5 font-extrabold text-white transition hover:bg-blue-700"
             >
               अभी Login करें <ArrowRight size={18} />
@@ -252,7 +260,7 @@ export default function RegisterPage() {
 
             <p className="text-center text-sm text-slate-600">
               Already have an account?{' '}
-              <Link href="/auth/login" className="font-bold text-blue-600 hover:underline">
+              <Link href={loginHref} className="font-bold text-blue-600 hover:underline">
                 Sign in here
               </Link>
             </p>
