@@ -63,7 +63,10 @@ function uploadPdfToCloudinary(
       }
     });
     xhr.addEventListener("error", () => reject(new Error("Network error during upload")));
-    xhr.open("POST", `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`);
+    // Upload as `raw` (not image/auto) so PDFs are stored & delivered as plain
+    // files. This avoids Cloudinary's "PDF/ZIP image delivery" restriction that
+    // otherwise blocks opening the document (ERR_INVALID_RESPONSE).
+    xhr.open("POST", `https://api.cloudinary.com/v1_1/${cloudName}/raw/upload`);
     xhr.send(fd);
   });
 }
