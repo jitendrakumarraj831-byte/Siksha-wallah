@@ -167,7 +167,6 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
                 ["My Dashboard", "/dashboard"],
                 ["Upload Documents", "/dashboard/documents"],
                 ["My Applications", "/dashboard/applications"],
-                ["Notifications", "/dashboard/notifications"],
               ].map(([label, href]) => (
                 <Link key={href} href={href} className="hover:text-white transition">{label}</Link>
               ))}

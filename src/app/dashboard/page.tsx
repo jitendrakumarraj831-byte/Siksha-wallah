@@ -12,7 +12,7 @@ import { PortalShell } from '@/components/portal-shell';
 import {
   User, FileText, BookOpen, LogOut, Loader, Plus, ClipboardList,
   ArrowRight, CheckCircle2, Clock, PhoneCall, AlertCircle, GraduationCap,
-  MessageCircle, Bell, Upload,
+  MessageCircle, Upload,
 } from 'lucide-react';
 
 const STATUS_META: Record<ApplicationStatus, { label: string; badge: string; bar: string; icon: React.ElementType }> = {
@@ -199,7 +199,6 @@ export default function DashboardPage() {
             {[
               { href: '/dashboard/profile',       icon: User,         label: 'My Profile',      bg: 'bg-blue-500',   light: 'bg-blue-50'   },
               { href: '/dashboard/documents',     icon: Upload,       label: 'Upload Documents', bg: 'bg-green-500',  light: 'bg-green-50'  },
-              { href: '/dashboard/notifications', icon: Bell,         label: 'Notifications',    bg: 'bg-amber-500',  light: 'bg-amber-50'  },
               { href: '/dashboard/messages',      icon: MessageCircle,label: 'Counsellor Chat',  bg: 'bg-violet-500', light: 'bg-violet-50' },
               { href: '/courses',                 icon: GraduationCap,label: 'Browse Courses',   bg: 'bg-indigo-500', light: 'bg-indigo-50' },
               { href: '/apply',                   icon: Plus,         label: 'Apply Now',        bg: 'bg-[#dc143c]',  light: 'bg-red-50'    },
