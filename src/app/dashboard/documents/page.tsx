@@ -28,6 +28,18 @@ const DOCUMENT_TYPES: { type: string; label: string; accept: string; hint: strin
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 const ALLOWED_MIME = ['application/pdf', 'image/jpeg', 'image/png'];
+const ALLOWED_EXT = ['.pdf', '.jpg', '.jpeg', '.png'];
+
+// Mobile browsers (Android file pickers especially, and some iOS cases) often
+// report an empty or non-standard MIME type (e.g. "" or "image/jpg" or
+// "application/octet-stream") for a perfectly valid file. So accept a file if
+// EITHER its MIME type OR its filename extension is allowed — this fixes valid
+// uploads being wrongly rejected on phones.
+function isAllowedFile(file: File): boolean {
+  if (ALLOWED_MIME.includes(file.type)) return true;
+  const name = file.name.toLowerCase();
+  return ALLOWED_EXT.some((ext) => name.endsWith(ext));
+}
 
 function statusBadge(status?: DocumentVerificationStatus) {
   if (!status || status === 'pending') return { label: 'Pending Review', cls: 'bg-yellow-100 text-yellow-800', icon: Clock };
@@ -57,7 +69,7 @@ function DocRow({
   const canModify = !uploaded || uploaded.status === 'pending' || uploaded.status === 'rejected';
 
   function validateFile(file: File): string | null {
-    if (!ALLOWED_MIME.includes(file.type)) return 'Only PDF, JPG, PNG files are allowed.';
+    if (!isAllowedFile(file)) return 'Only PDF, JPG, PNG files are allowed.';
     if (file.size > MAX_FILE_SIZE) return 'File must be under 5 MB.';
     return null;
   }
