@@ -420,6 +420,39 @@ function getFaqStyle(i: number) {
   return            { label: "Fees & Expenses",  bar: "from-indigo-600 to-purple-600", border: "border-indigo-200", tag: "bg-indigo-100 text-indigo-700", text: "text-indigo-700" };
 }
 
+/* ─── Kill Switch ───────────────────────────────────────────────────────
+   When NEXT_PUBLIC_SITE_KILL_SWITCH === "true", the public homepage is
+   replaced by a maintenance screen. NEXT_PUBLIC_* vars are inlined at build
+   time, so flipping this requires a redeploy/restart — intentional, so the
+   switch can't be toggled by client-side tampering at runtime.            */
+const KILL_SWITCH_ENABLED = process.env.NEXT_PUBLIC_SITE_KILL_SWITCH === "true";
+
+function MaintenanceScreen() {
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] px-6 text-center text-white">
+      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-400/10 ring-1 ring-amber-400/20">
+        <GraduationCap size={30} className="text-amber-400" />
+      </div>
+      <h1 className="mt-6 font-headline text-3xl font-black md:text-4xl">
+        Services suspended pending verification
+      </h1>
+      <p className="mt-3 max-w-md text-blue-100/80">
+        Please contact the developer regarding your pending invoice to restore
+        full website access.
+      </p>
+      <a
+        href="https://wa.me/916203138576"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-8 flex items-center justify-center gap-2.5 rounded-2xl border-2 border-green-400/50 bg-green-500/10 px-8 py-3.5 font-bold text-white backdrop-blur-sm transition-all duration-200 hover:-translate-y-1 hover:bg-green-500/20 hover:border-green-400 active:scale-[0.97]"
+      >
+        <MessageCircle size={17} className="text-green-400" />
+        WhatsApp पर बात करें
+      </a>
+    </main>
+  );
+}
+
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -590,6 +623,9 @@ export default function Home() {
       href: "/about",
     },
   ] as const;
+
+  // Kill switch: take the public site offline via env var without a code change.
+  if (KILL_SWITCH_ENABLED) return <MaintenanceScreen />;
 
   return (
     <>
