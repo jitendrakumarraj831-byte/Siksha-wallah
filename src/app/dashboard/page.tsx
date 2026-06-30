@@ -352,16 +352,12 @@ export default function DashboardPage() {
             </Link>
           </div>
 
-          {/* Account options */}
-          <div className="mt-3 flex gap-3">
+          {/* Account options — logout lives in the header to avoid duplication */}
+          <div className="mt-3">
             <Link href="/dashboard/change-password"
-              className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white py-3 text-xs font-bold text-gray-700 hover:bg-gray-50 transition">
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white py-3 text-xs font-bold text-gray-700 hover:bg-gray-50 transition">
               🔒 Change Password
             </Link>
-            <button onClick={handleLogout}
-              className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 py-3 text-xs font-bold text-red-600 hover:bg-red-100 transition">
-              <LogOut size={13} /> Logout
-            </button>
           </div>
 
           {/* Help CTA */}
