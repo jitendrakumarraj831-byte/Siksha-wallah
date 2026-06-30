@@ -9,10 +9,40 @@ import { getCourseSlug } from '@/lib/courses-data';
 import { PortalShell } from '@/components/portal-shell';
 import {
   ArrowLeft, Loader, Plus, ClipboardList, ArrowRight,
-  CheckCircle2, Clock, PhoneCall, AlertCircle, RefreshCw, Upload,
+  CheckCircle2, Clock, PhoneCall, AlertCircle, RefreshCw, Upload, Download,
 } from 'lucide-react';
 import { getIdToken } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
+import { receiptNo, downloadApplicationReceipt, TIMELINE_STEPS, timelineStep } from '@/lib/receipt';
+
+// Compact horizontal status stepper built from the application's existing status.
+function ApplicationTimeline({ status }: { status?: ApplicationStatus }) {
+  if (status === 'not_interested') {
+    return <p className="mt-3 text-xs font-semibold text-gray-400">This application has been closed.</p>;
+  }
+  const current = timelineStep(status);
+  return (
+    <ol className="mt-3 flex items-start">
+      {TIMELINE_STEPS.map((s, i) => {
+        const done = i <= current;
+        return (
+          <li key={s.status} className="flex flex-1 flex-col items-center text-center min-w-0">
+            <div className="flex w-full items-center">
+              <span className={`h-0.5 flex-1 ${i === 0 ? 'opacity-0' : done ? 'bg-green-500' : 'bg-gray-200'}`} />
+              <span className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${done ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-500'}`}>
+                {done ? '✓' : i + 1}
+              </span>
+              <span className={`h-0.5 flex-1 ${i === TIMELINE_STEPS.length - 1 ? 'opacity-0' : i < current ? 'bg-green-500' : 'bg-gray-200'}`} />
+            </div>
+            <span className={`mt-1 px-0.5 text-[9px] leading-tight ${i === current ? 'font-bold text-[#003f9f]' : done ? 'text-gray-600' : 'text-gray-400'}`}>
+              {s.label}
+            </span>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
 
 const STATUS_META: Record<ApplicationStatus, { label: string; badge: string; bar: string; icon: React.ElementType }> = {
   new:               { label: 'Application Received',  badge: 'bg-blue-100 text-blue-700',    bar: 'bg-blue-500',   icon: ClipboardList  },
@@ -129,12 +159,18 @@ export default function ApplicationsPage() {
                     <div className="flex gap-4">
                       <div className={`w-1 flex-shrink-0 rounded-full ${meta.bar}`} />
                       <div className="flex-1 min-w-0">
-                        <Link
-                          href={slug ? `/courses/${slug}` : '/courses'}
-                          className="font-bold text-[#003f9f] hover:underline text-sm"
-                        >
-                          {app.course} →
-                        </Link>
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <Link
+                            href={slug ? `/courses/${slug}` : '/courses'}
+                            className="font-bold text-[#003f9f] hover:underline text-sm"
+                          >
+                            {app.course} →
+                          </Link>
+                          <span className="rounded-md bg-gray-100 px-2 py-0.5 font-mono text-[11px] font-bold tracking-wide text-gray-600"
+                            title="Application receipt number">
+                            {receiptNo(app.id)}
+                          </span>
+                        </div>
 
                         <div className="flex items-center gap-1.5 mt-1.5">
                           <StatusIcon size={12} className="flex-shrink-0" />
@@ -142,6 +178,8 @@ export default function ApplicationsPage() {
                             {meta.label}
                           </span>
                         </div>
+
+                        <ApplicationTimeline status={app.status} />
 
                         {app.status === 'documents_pending' && (
                           <Link href="/dashboard/documents"
@@ -156,8 +194,16 @@ export default function ApplicationsPage() {
                           </div>
                         )}
 
-                        <div className="mt-2 flex items-center gap-1 text-[11px] text-gray-400">
-                          <Clock size={10} /> Applied on {formatDate(app.createdAt)}
+                        <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-gray-100 pt-3">
+                          <div className="flex items-center gap-1 text-[11px] text-gray-400">
+                            <Clock size={10} /> Applied on {formatDate(app.createdAt)}
+                          </div>
+                          <button
+                            onClick={() => downloadApplicationReceipt(app)}
+                            className="inline-flex items-center gap-1.5 rounded-lg border border-[#003f9f]/30 bg-blue-50 px-3 py-1.5 text-xs font-bold text-[#003f9f] hover:bg-blue-100 transition"
+                          >
+                            <Download size={12} /> Download Receipt
+                          </button>
                         </div>
                       </div>
                     </div>

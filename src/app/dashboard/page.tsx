@@ -8,6 +8,7 @@ import { db } from '@/lib/firebase';
 import { useAuth } from '@/components/auth-provider';
 import { type CourseApplication, type ApplicationStatus } from '@/services/application-service';
 import { getCourseSlug } from '@/lib/courses-data';
+import { receiptNo } from '@/lib/receipt';
 import { PortalShell } from '@/components/portal-shell';
 import {
   User, FileText, BookOpen, LogOut, Loader, Plus, ClipboardList,
@@ -291,6 +292,10 @@ export default function DashboardPage() {
                               </Link>
                             );
                           })()}
+                          <span className="rounded-md bg-gray-100 px-2 py-0.5 font-mono text-[10px] font-bold tracking-wide text-gray-500"
+                            title="Application receipt number">
+                            {receiptNo(app.id)}
+                          </span>
                         </div>
 
                         <div className="flex items-center gap-1.5">

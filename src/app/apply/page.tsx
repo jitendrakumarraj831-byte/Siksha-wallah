@@ -8,6 +8,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { saveApplication } from "@/services/application-service";
 import { saveActivity } from "@/services/activity-service";
 import { saveInquiry } from "@/services/inquiry-service";
+import { receiptNo } from "@/lib/receipt";
 import { useAuth } from "@/components/auth-provider";
 import {
   GraduationCap, User, Phone, Mail, BookOpen, CheckCircle2,
@@ -236,14 +237,15 @@ function ApplyForm() {
         message: form.message || undefined,
         uploadedDocuments: uploadedDocs.map(u => ({ name: u.name, url: u.url! })),
       });
-      setAppId(id.slice(0, 8).toUpperCase());
+      const rno = receiptNo(id);
+      setAppId(rno);
       saveInquiry({
         fullName: form.fullName,
         mobile: form.mobile,
         email: form.email || undefined,
         course: form.course,
         qualification: form.qualification,
-        message: form.message || `Apply page — Ref: ${id.slice(0, 8).toUpperCase()}`,
+        message: form.message || `Apply page — Ref: ${rno}`,
         status: "pending",
       }).catch(() => {});
       saveActivity({
@@ -287,7 +289,7 @@ function ApplyForm() {
 
             <div className="mb-4 rounded-2xl border-2 border-[#003f9f] bg-white px-6 py-4 text-center">
               <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Application Reference ID</p>
-              <p className="font-headline text-3xl font-extrabold text-[#003f9f]">#{appId}</p>
+              <p className="font-headline text-3xl font-extrabold text-[#003f9f]">{appId}</p>
               <p className="text-xs text-gray-400 mt-1">यह ID save करके रखें — status track करने के काम आएगी।</p>
             </div>
 
@@ -327,7 +329,7 @@ function ApplyForm() {
             </p>
             <div className="flex flex-col gap-2 mb-5">
               <a
-                href={`https://wa.me/916203138576?text=नमस्ते!%20मैंने%20${encodeURIComponent(form.course)}%20के%20लिए%20apply%20किया%20है।%20नाम:%20${encodeURIComponent(form.fullName)}%20।%20Reference%20ID:%20%23${appId}`}
+                href={`https://wa.me/916203138576?text=नमस्ते!%20मैंने%20${encodeURIComponent(form.course)}%20के%20लिए%20apply%20किया%20है।%20नाम:%20${encodeURIComponent(form.fullName)}%20।%20Reference%20ID:%20${appId}`}
                 target="_blank" rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 rounded-xl bg-green-500 py-3 font-extrabold text-white hover:bg-green-600 transition"
               >
