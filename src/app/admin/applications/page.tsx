@@ -16,6 +16,7 @@ import {
   type CourseApplication,
   type ApplicationStatus,
 } from "@/services/application-service";
+import { receiptNo } from "@/lib/receipt";
 
 const STATUS_META: Record<ApplicationStatus, { label: string; color: string; icon: string }> = {
   new:               { label: "New",               color: "bg-blue-100 text-blue-800 border-blue-200",    icon: "🆕" },
@@ -119,6 +120,7 @@ function AppCard({ app, onStatusChange, onNoteSaved, isNew }: {
             <span className="rounded-lg bg-blue-50 px-2 py-0.5 font-bold text-blue-700">{app.course}</span>
             <span className="rounded-lg bg-gray-100 px-2 py-0.5 font-semibold text-gray-600">{app.qualification}</span>
             {app.bsccRequired && <span className="rounded-lg bg-amber-100 px-2 py-0.5 font-semibold text-amber-700">💳 BSCC</span>}
+            <span className="rounded-lg bg-gray-100 px-2 py-0.5 font-mono font-bold text-gray-500" title="Receipt number">{receiptNo(app.id)}</span>
           </div>
         </div>
 
@@ -300,6 +302,7 @@ export default function AdminApplicationsPage() {
       return d ? d.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "";
     };
     exportToCsv<CourseApplication>(datedFilename("applications"), [
+      { label: "Receipt No", value: (a) => receiptNo(a.id) },
       { key: "fullName", label: "Name" },
       { key: "fatherName", label: "Father Name" },
       { key: "mobile", label: "Mobile" },

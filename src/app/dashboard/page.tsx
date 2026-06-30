@@ -8,11 +8,12 @@ import { db } from '@/lib/firebase';
 import { useAuth } from '@/components/auth-provider';
 import { type CourseApplication, type ApplicationStatus } from '@/services/application-service';
 import { getCourseSlug } from '@/lib/courses-data';
+import { receiptNo } from '@/lib/receipt';
 import { PortalShell } from '@/components/portal-shell';
 import {
   User, FileText, BookOpen, LogOut, Loader, Plus, ClipboardList,
   ArrowRight, CheckCircle2, Clock, PhoneCall, AlertCircle, GraduationCap,
-  MessageCircle, Upload,
+  MessageCircle, Upload, Bell,
 } from 'lucide-react';
 
 const STATUS_META: Record<ApplicationStatus, { label: string; badge: string; bar: string; icon: React.ElementType }> = {
@@ -46,6 +47,7 @@ export default function DashboardPage() {
   const appsRef = useRef<HTMLDivElement>(null);
   const [applications, setApplications] = useState<CourseApplication[]>([]);
   const [loading, setLoading] = useState(true);
+  const [unreadNotifs, setUnreadNotifs] = useState(0);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -93,6 +95,31 @@ export default function DashboardPage() {
       }
     })();
   }, [authLoading, isAuthenticated, user, router]);
+
+  // Unread notification count — drives the badge on the Notifications nav card so
+  // students discover document-verification updates without opening the page.
+  useEffect(() => {
+    if (!user) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const token = await user.getIdToken().catch(() => null);
+        if (!token) return;
+        const res = await fetch(`/api/student/notifications?uid=${user.uid}`, {
+          headers: { Authorization: `Bearer ${token}` },
+          cache: 'no-store',
+        });
+        if (!res.ok) return;
+        const json = await res.json().catch(() => null);
+        if (!cancelled && json?.success && Array.isArray(json.data)) {
+          setUnreadNotifs(json.data.filter((n: { read?: boolean }) => !n.read).length);
+        }
+      } catch {
+        /* non-critical — badge just stays hidden */
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [user]);
 
   const handleLogout = async () => {
     await logout();
@@ -197,16 +224,22 @@ export default function DashboardPage() {
           {/* Quick Nav — color-coded */}
           <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
             {[
-              { href: '/dashboard/profile',       icon: User,         label: 'My Profile',      bg: 'bg-blue-500',   light: 'bg-blue-50'   },
-              { href: '/dashboard/documents',     icon: Upload,       label: 'Upload Documents', bg: 'bg-green-500',  light: 'bg-green-50'  },
-              { href: '/dashboard/messages',      icon: MessageCircle,label: 'Counsellor Chat',  bg: 'bg-violet-500', light: 'bg-violet-50' },
-              { href: '/courses',                 icon: GraduationCap,label: 'Browse Courses',   bg: 'bg-indigo-500', light: 'bg-indigo-50' },
-              { href: '/apply',                   icon: Plus,         label: 'Apply Now',        bg: 'bg-[#dc143c]',  light: 'bg-red-50'    },
-            ].map(({ href, icon: Icon, label, bg, light }) => (
+              { href: '/dashboard/profile',       icon: User,         label: 'My Profile',      bg: 'bg-blue-500',   light: 'bg-blue-50',   badge: 0 },
+              { href: '/dashboard/documents',     icon: Upload,       label: 'Upload Documents', bg: 'bg-green-500',  light: 'bg-green-50',  badge: 0 },
+              { href: '/dashboard/notifications', icon: Bell,         label: 'Notifications',    bg: 'bg-amber-500',  light: 'bg-amber-50',  badge: unreadNotifs },
+              { href: '/dashboard/messages',      icon: MessageCircle,label: 'Counsellor Chat',  bg: 'bg-violet-500', light: 'bg-violet-50', badge: 0 },
+              { href: '/courses',                 icon: GraduationCap,label: 'Browse Courses',   bg: 'bg-indigo-500', light: 'bg-indigo-50', badge: 0 },
+              { href: '/apply',                   icon: Plus,         label: 'Apply Now',        bg: 'bg-[#dc143c]',  light: 'bg-red-50',    badge: 0 },
+            ].map(({ href, icon: Icon, label, bg, light, badge }) => (
               <Link key={href} href={href}
                 className={`group flex flex-col items-center gap-2.5 rounded-2xl ${light} border border-transparent p-4 text-center transition hover:shadow-md hover:border-gray-200`}>
-                <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${bg} text-white shadow-sm transition group-hover:scale-110`}>
+                <div className={`relative flex h-12 w-12 items-center justify-center rounded-xl ${bg} text-white shadow-sm transition group-hover:scale-110`}>
                   <Icon size={22} />
+                  {badge > 0 && (
+                    <span className="absolute -top-1.5 -right-1.5 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[#dc143c] px-1 text-[10px] font-extrabold text-white ring-2 ring-white">
+                      {badge > 9 ? '9+' : badge}
+                    </span>
+                  )}
                 </div>
                 <span className="text-xs font-bold text-gray-700">{label}</span>
               </Link>
@@ -259,6 +292,10 @@ export default function DashboardPage() {
                               </Link>
                             );
                           })()}
+                          <span className="rounded-md bg-gray-100 px-2 py-0.5 font-mono text-[10px] font-bold tracking-wide text-gray-500"
+                            title="Application receipt number">
+                            {receiptNo(app.id)}
+                          </span>
                         </div>
 
                         <div className="flex items-center gap-1.5">
@@ -267,6 +304,13 @@ export default function DashboardPage() {
                             {meta.label}
                           </span>
                         </div>
+
+                        {app.status === 'documents_pending' && (
+                          <Link href="/dashboard/documents"
+                            className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-orange-500 px-3 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-orange-600 transition">
+                            <Upload size={12} /> Upload Documents <ArrowRight size={12} />
+                          </Link>
+                        )}
 
                         {app.note && (
                           <div className="mt-2 rounded-lg bg-yellow-50 border border-yellow-100 px-3 py-1.5 text-xs text-yellow-800">
@@ -308,16 +352,12 @@ export default function DashboardPage() {
             </Link>
           </div>
 
-          {/* Account options */}
-          <div className="mt-3 flex gap-3">
+          {/* Account options — logout lives in the header to avoid duplication */}
+          <div className="mt-3">
             <Link href="/dashboard/change-password"
-              className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white py-3 text-xs font-bold text-gray-700 hover:bg-gray-50 transition">
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white py-3 text-xs font-bold text-gray-700 hover:bg-gray-50 transition">
               🔒 Change Password
             </Link>
-            <button onClick={handleLogout}
-              className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 py-3 text-xs font-bold text-red-600 hover:bg-red-100 transition">
-              <LogOut size={13} /> Logout
-            </button>
           </div>
 
           {/* Help CTA */}

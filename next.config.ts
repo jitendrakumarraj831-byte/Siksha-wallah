@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
       { source: "/student-credit-card", destination: "/#bscc", permanent: true },
       { source: "/student-login", destination: "/auth/login", permanent: true },
       { source: "/student-dashboard", destination: "/dashboard", permanent: true },
+      // The separate /login chooser duplicated the student + office login links
+      // already shown in the navbar/footer. Removed; send any old links to the
+      // student login (office staff use /admin/login).
+      { source: "/login", destination: "/auth/login", permanent: true },
     ];
   },
   typescript: {

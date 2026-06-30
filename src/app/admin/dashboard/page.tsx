@@ -369,31 +369,6 @@ export default function AdminDashboardPage() {
           )}
         </div>
 
-        {/* Quick links */}
-        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
-          <Link href="/admin/applications" className="flex items-center gap-3 rounded-2xl border-2 border-gray-100 bg-white p-4 hover:border-[#003f9f] transition">
-            <span className="text-2xl">🎓</span>
-            <div>
-              <p className="font-bold text-gray-800 text-sm">Applications</p>
-              <p className="text-xs text-gray-400">Online form submissions</p>
-            </div>
-          </Link>
-          <Link href="/admin/students" className="flex items-center gap-3 rounded-2xl border-2 border-gray-100 bg-white p-4 hover:border-[#003f9f] transition">
-            <span className="text-2xl">👤</span>
-            <div>
-              <p className="font-bold text-gray-800 text-sm">Students</p>
-              <p className="text-xs text-gray-400">Registered accounts</p>
-            </div>
-          </Link>
-          <Link href="/admin/activity" className="flex items-center gap-3 rounded-2xl border-2 border-gray-100 bg-white p-4 hover:border-[#003f9f] transition col-span-2 sm:col-span-1">
-            <span className="text-2xl">📊</span>
-            <div>
-              <p className="font-bold text-gray-800 text-sm">Website Activity</p>
-              <p className="text-xs text-gray-400">Visitors & events</p>
-            </div>
-          </Link>
-        </div>
-
       </main>
     </div>
   );

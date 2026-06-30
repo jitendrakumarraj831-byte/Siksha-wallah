@@ -1,35 +1,54 @@
-"use client";
-
-import { use, useState } from "react";
-import Link from "next/link";
+import { use } from "react";
 import { notFound } from "next/navigation";
 import { PortalShell } from "@/components/portal-shell";
-import { ArrowRight, BellRing, BookOpen, Building2, CalendarCheck, CheckCircle2, Clock, Download, FileText, GraduationCap, IndianRupee, Laptop, MapPin, Search, ShieldCheck, Star, Upload } from "lucide-react";
 
-const courses = [
-  ["B.Ed", "2 Years", "Graduation", "Teaching"], ["D.El.Ed", "2 Years", "10+2", "Teaching"], ["B.Sc Nursing", "4 Years", "10+2 Science", "Medical"], ["GNM", "3 Years", "10+2", "Medical"], ["B.Pharm", "4 Years", "10+2 Science", "Pharmacy"], ["D.Pharm", "2 Years", "10+2 Science", "Pharmacy"], ["BCA", "3 Years", "10+2", "IT"], ["MBA", "2 Years", "Graduation", "Management"], ["Polytechnic", "3 Years", "10th", "Engineering"],
-];
-const colleges = [
-  ["Verified Teaching College", "Bihar", "B.Ed · D.El.Ed", "NCTE"], ["School of Nursing Sciences", "Kolkata", "B.Sc Nursing · GNM", "INC"], ["Institute of Pharmacy", "Patna", "B.Pharm · D.Pharm", "PCI"], ["University of Management", "Delhi NCR", "BBA · MBA · BCA", "UGC"],
-];
+// Legal/policy pages only. The site footer links here for Privacy Policy and
+// Terms. (Earlier course/college/admission/counselling prototype sections that
+// duplicated the real /courses, /apply and /contact pages — with off-brand
+// styling and placeholder data — were removed.)
 
-function Hero({eyebrow,title,text}:{eyebrow:string,title:string,text:string}) { return <section className="bg-[#07152f] py-16 text-white"><div className="container-shell"><p className="text-sm font-extrabold uppercase tracking-[.2em] text-[#67c8ff]">{eyebrow}</p><h1 className="mt-3 max-w-4xl font-display text-4xl font-extrabold sm:text-6xl">{title}</h1><p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">{text}</p></div></section> }
-function FormSuccess({show}:{show:boolean}) { return show?<div className="mb-6 flex items-center gap-3 rounded-xl bg-green-50 p-4 text-sm font-bold text-green-700"><CheckCircle2/> Details received. Our counsellor will contact you shortly.</div>:null }
+const POLICIES: Record<string, string> = {
+  privacy: "Privacy Policy",
+  terms: "Terms & Conditions",
+  refund: "Refund Policy",
+};
+
+function Hero({ eyebrow, title, text }: { eyebrow: string; title: string; text: string }) {
+  return (
+    <section className="bg-[#07152f] py-16 text-white">
+      <div className="container-shell">
+        <p className="text-sm font-extrabold uppercase tracking-[.2em] text-[#67c8ff]">{eyebrow}</p>
+        <h1 className="mt-3 max-w-4xl font-display text-4xl font-extrabold sm:text-6xl">{title}</h1>
+        <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">{text}</p>
+      </div>
+    </section>
+  );
+}
 
 export default function PortalSection({ params }: { params: Promise<{ section: string }> }) {
-  const { section } = use(params); const [search,setSearch]=useState(""); const [sent,setSent]=useState(false);
-  const submit=(e:React.FormEvent)=>{e.preventDefault();setSent(true)};
-  const filteredCourses=courses.filter(row=>row.join(" ").toLowerCase().includes(search.toLowerCase()));
-  const input="w-full rounded-xl border border-slate-200 bg-white px-4 py-3.5 outline-none focus:border-[#1357e6]";
+  const { section } = use(params);
+  const title = POLICIES[section];
+  if (!title) notFound();
 
-  let content: React.ReactNode;
-  if(section==="courses") content=<><Hero eyebrow="Course directory" title="Choose the right course for your future." text="Compare duration, eligibility and career streams. Speak with a counsellor before making your final decision."/><section className="container-shell py-14"><div className="relative max-w-xl"><Search className="absolute left-4 top-4 text-slate-400" size={20}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search B.Ed, Nursing, Pharmacy, BCA..." className={`${input} pl-12`}/></div><div className="mt-8 overflow-hidden rounded-2xl border bg-white"><div className="hidden grid-cols-5 bg-slate-100 p-4 text-xs font-extrabold uppercase text-slate-500 md:grid"><span>Course</span><span>Duration</span><span>Eligibility</span><span>Stream</span><span></span></div>{filteredCourses.map(([name,duration,eligibility,stream])=><div key={name} className="grid gap-2 border-t p-4 first:border-0 md:grid-cols-5 md:items-center"><b>{name}</b><span className="text-sm text-slate-600">{duration}</span><span className="text-sm text-slate-600">{eligibility}</span><span className="text-sm text-slate-600">{stream}</span><Link href="/portal/admission" className="flex items-center gap-1 text-sm font-extrabold text-[#1357e6]">Get details <ArrowRight size={15}/></Link></div>)}</div></section></>;
-  else if(section==="colleges") content=<><Hero eyebrow="Verified institutions" title="Compare colleges with confidence." text="Shortlist institutions by programme, location, recognition and budget with personalised expert guidance."/><section className="container-shell py-14"><div className="grid gap-5 md:grid-cols-2">{colleges.map(([name,location,programmes,approval])=><article key={name} className="rounded-2xl border bg-white p-6"><div className="flex justify-between"><span className="grid h-12 w-12 place-items-center rounded-xl bg-blue-50 text-[#1357e6]"><Building2/></span><span className="flex h-8 items-center gap-1 rounded-full bg-green-50 px-3 text-xs font-bold text-green-700"><ShieldCheck size={14}/> {approval} recognised</span></div><h2 className="mt-5 font-display text-xl font-extrabold">{name}</h2><p className="mt-2 flex items-center gap-2 text-sm text-slate-500"><MapPin size={15}/>{location}</p><p className="mt-4 text-sm"><b>Programmes:</b> {programmes}</p><div className="mt-5 flex gap-3"><Link href="/portal/counselling" className="rounded-lg bg-[#1357e6] px-4 py-2.5 text-sm font-bold text-white">Compare & enquire</Link></div></article>)}</div><p className="mt-6 text-xs text-slate-500">Institution names shown here are category placeholders. Final college recommendations and recognition details are verified during counselling.</p></section></>;
-  else if(section==="admission") content=<><Hero eyebrow="Online admission" title="Start your application in a few minutes." text="Submit your basic profile now. Our team will verify eligibility and guide you through documents, college selection and admission."/><section className="container-shell py-14"><form onSubmit={submit} className="mx-auto max-w-3xl rounded-2xl border bg-white p-6 shadow-sm sm:p-9"><FormSuccess show={sent}/><h2 className="font-display text-2xl font-extrabold">Student details</h2><div className="mt-6 grid gap-4 sm:grid-cols-2"><input required className={input} placeholder="Full name"/><input required type="tel" className={input} placeholder="Mobile number"/><input required type="email" className={input} placeholder="Email address"/><input className={input} placeholder="City / District"/><select required className={input} defaultValue=""><option value="" disabled>Select course</option>{courses.map(c=><option key={c[0]}>{c[0]}</option>)}</select><select className={input}><option>Highest qualification</option><option>10th</option><option>12th</option><option>Graduation</option><option>Post Graduation</option></select></div><div className="mt-5 rounded-xl border border-dashed border-blue-300 bg-blue-50 p-5"><div className="flex items-center gap-3"><Upload className="text-[#1357e6]"/><div><b className="text-sm">Documents can be uploaded after verification</b><p className="text-xs text-slate-500">Marksheets, Aadhaar, photograph and certificates.</p></div></div></div><label className="mt-5 flex gap-3 text-xs text-slate-600"><input required type="checkbox"/> I consent to receive admission-related calls and messages.</label><button className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-[#1357e6] px-6 py-4 font-extrabold text-white">Submit application <ArrowRight size={18}/></button></form></section></>;
-  else if(section==="notices") content=<><Hero eyebrow="Notices & deadlines" title="Never miss an important education update." text="Admission dates, document deadlines, counselling schedules, scholarships and examination announcements."/><section className="container-shell py-14"><div className="grid gap-4">{[["Admission","B.Ed and D.El.Ed admission enquiry open for 2026 session","30 Jun 2026"],["Scholarship","Scholarship profile verification assistance available","Ongoing"],["Counselling","Free career counselling slots released for this week","Book now"],["Documents","Keep marksheets, ID proof and photographs ready for applications","Important"]].map(([tag,title,date])=><article key={title} className="flex flex-col justify-between gap-4 rounded-2xl border bg-white p-5 sm:flex-row sm:items-center"><div className="flex gap-4"><span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-blue-50 text-[#1357e6]"><BellRing size={20}/></span><div><span className="text-[10px] font-extrabold uppercase tracking-wider text-[#1357e6]">{tag}</span><h2 className="mt-1 font-display font-extrabold">{title}</h2></div></div><span className="shrink-0 text-sm font-bold text-slate-500">{date}</span></article>)}</div></section></>;
-  else if(section==="counselling") content=<><Hero eyebrow="Free career counselling" title="Talk to an expert. Leave with a clear plan." text="Book a one-to-one session for course selection, college comparison, eligibility, fees, scholarships and finance guidance."/><section className="container-shell grid gap-8 py-14 lg:grid-cols-[.8fr_1.2fr]"><div className="rounded-2xl bg-[#07152f] p-7 text-white"><CalendarCheck size={32} className="text-[#67c8ff]"/><h2 className="mt-5 font-display text-2xl font-extrabold">What we discuss</h2><div className="mt-6 space-y-4 text-sm text-slate-300">{["Your interests and career goals","Eligibility and suitable programmes","College, fees and recognition","Scholarships and education finance","Step-by-step admission roadmap"].map(x=><p key={x} className="flex gap-2"><CheckCircle2 size={17} className="shrink-0 text-[#67c8ff]"/>{x}</p>)}</div></div><form onSubmit={submit} className="rounded-2xl border bg-white p-7"><FormSuccess show={sent}/><h2 className="font-display text-2xl font-extrabold">Book your session</h2><div className="mt-6 grid gap-4 sm:grid-cols-2"><input required className={input} placeholder="Student name"/><input required className={input} placeholder="Mobile number"/><input type="date" required className={input}/><select className={input}><option>Preferred time</option><option>10 AM – 12 PM</option><option>12 PM – 3 PM</option><option>3 PM – 6 PM</option></select><textarea className={`${input} sm:col-span-2`} rows={4} placeholder="Course or career question"/></div><button className="mt-5 rounded-xl bg-[#1357e6] px-6 py-4 font-extrabold text-white">Confirm free counselling</button></form></section></>;
-  else if(section==="learning") content=<><Hero eyebrow="Learning centre" title="Classes, notes and practice—wherever you are." text="A student learning space for recorded lessons, live sessions, study notes, quizzes, progress and certificates."/><section className="container-shell py-14"><div className="grid gap-5 md:grid-cols-3">{[[Laptop,"Recorded Classes","Watch topic-wise lessons anytime."],[BookOpen,"Notes & Resources","Download organised study material."],[GraduationCap,"Quizzes & Certificates","Test progress and earn certificates."]].map(([Icon,title,text]:any)=><article key={title} className="rounded-2xl border bg-white p-6"><span className="grid h-12 w-12 place-items-center rounded-xl bg-blue-50 text-[#1357e6]"><Icon/></span><h2 className="mt-5 font-display text-xl font-extrabold">{title}</h2><p className="mt-2 text-sm text-slate-500">{text}</p><Link href="/auth/login" className="mt-6 flex items-center gap-2 text-sm font-extrabold text-[#1357e6]">Student login <ArrowRight size={15}/></Link></article>)}</div><div className="mt-8 rounded-2xl border bg-white p-6"><h2 className="font-display text-xl font-extrabold">Upcoming live sessions</h2><div className="mt-5 divide-y">{[["Career Planning Masterclass","Saturday · 11:00 AM"],["B.Ed Admission Guidance","Sunday · 12:30 PM"],["Scholarship & Student Credit Card","Monday · 4:00 PM"]].map(([name,time])=><div key={name} className="flex justify-between gap-4 py-4"><span className="font-bold">{name}</span><span className="flex items-center gap-1 text-sm text-slate-500"><Clock size={15}/>{time}</span></div>)}</div></div></section></>;
-  else if(["privacy","terms","refund"].includes(section)) { const titles:any={privacy:"Privacy Policy",terms:"Terms & Conditions",refund:"Refund Policy"}; content=<><Hero eyebrow="Policies" title={titles[section]} text="Clear information about how Siksha Wallah handles services, communication and student information."/><section className="container-shell py-14"><article className="prose prose-slate max-w-none rounded-2xl border bg-white p-7 sm:p-10"><h2>Policy overview</h2><p>We collect only the information needed to provide counselling and admission support. Student details are handled carefully and are not sold to third parties.</p><h2>Service information</h2><p>Course, fee, recognition and admission information may change. Students should verify final details in official institution documents before payment or enrolment.</p><h2>Payments and refunds</h2><p>Any service fee, payment schedule and refund eligibility must be confirmed in writing before payment. Third-party college or university fees follow the respective institution’s policy.</p><h2>Contact</h2><p>For questions, call +91 62031 38576 or visit College Chowk, Forbesganj.</p></article></section></>;
-  } else notFound();
-  return <PortalShell>{content}</PortalShell>;
+  return (
+    <PortalShell>
+      <Hero
+        eyebrow="Policies"
+        title={title}
+        text="Clear information about how Siksha Wallah handles its services, communication and student information."
+      />
+      <section className="container-shell py-14">
+        <article className="prose prose-slate max-w-none rounded-2xl border bg-white p-7 sm:p-10">
+          <h2>Policy overview</h2>
+          <p>We collect only the information needed to provide counselling and admission support. Student details are handled carefully and are not sold to third parties.</p>
+          <h2>Service information</h2>
+          <p>Course, fee, recognition and admission information may change. Students should verify final details in official institution documents before payment or enrolment.</p>
+          <h2>Payments and refunds</h2>
+          <p>Any service fee, payment schedule and refund eligibility must be confirmed in writing before payment. Third-party college or university fees follow the respective institution&rsquo;s policy.</p>
+          <h2>Contact</h2>
+          <p>For questions, call +91 62031 38576 or visit College Chowk, Forbesganj.</p>
+        </article>
+      </section>
+    </PortalShell>
+  );
 }
