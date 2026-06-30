@@ -79,6 +79,26 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Server-side validation — students upload a single PDF of at most 2 MB.
+    // Mirrors the client-side checks so a tampered request can't bypass them.
+    const sizeNum = Number(fileSize);
+    if (Number.isFinite(sizeNum) && sizeNum > 2 * 1024 * 1024) {
+      return NextResponse.json(
+        { error: "Please upload a single PDF containing all required documents. Maximum allowed size is 2 MB." },
+        { status: 400 },
+      );
+    }
+    const claimedPdf =
+      mimeType
+        ? mimeType === "application/pdf"
+        : (typeof url === "string" && url.toLowerCase().split("?")[0].endsWith(".pdf")) || resourceType === "raw";
+    if (!claimedPdf) {
+      return NextResponse.json(
+        { error: "Only PDF files are allowed. Please upload a single PDF containing all required documents." },
+        { status: 400 },
+      );
+    }
+
     const db = getAdminDb();
     if (!db) return NextResponse.json({ error: "DB unavailable" }, { status: 503 });
 

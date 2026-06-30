@@ -8,180 +8,44 @@ import { studentService, type Document, type DocumentVerificationStatus } from '
 import { PortalShell } from '@/components/portal-shell';
 import {
   ArrowLeft, Loader, AlertCircle, CheckCircle2, Upload, Trash2,
-  Eye, RefreshCw, FileText, Image, X, Clock, ShieldCheck, ShieldX,
+  Eye, FileText, X, Clock, ShieldCheck, ShieldX, RefreshCw, FileUp,
 } from 'lucide-react';
 
-const DOCUMENT_TYPES: { type: string; label: string; accept: string; hint: string }[] = [
-  { type: 'aadhaar',    label: 'Aadhaar Card',        accept: '.pdf,.jpg,.jpeg,.png', hint: 'Front & back on one page' },
-  { type: 'photo',      label: 'Passport Photo',       accept: '.jpg,.jpeg,.png',     hint: 'White background, face clearly visible' },
-  { type: 'signature',  label: 'Signature',            accept: '.jpg,.jpeg,.png',     hint: 'On white paper, black/blue ink' },
-  { type: 'class10',    label: '10th Marksheet',       accept: '.pdf,.jpg,.jpeg,.png', hint: 'Board certificate / marksheet' },
-  { type: 'class12',    label: '12th Marksheet',       accept: '.pdf,.jpg,.jpeg,.png', hint: 'Board certificate / marksheet' },
-  { type: 'graduation', label: 'Graduation Marksheet', accept: '.pdf,.jpg,.jpeg,.png', hint: 'If applicable' },
-  { type: 'tc',         label: 'Transfer Certificate', accept: '.pdf,.jpg,.jpeg,.png', hint: 'From last attended institution' },
-  { type: 'migration',  label: 'Migration Certificate',accept: '.pdf,.jpg,.jpeg,.png', hint: 'If switching board/university' },
-  { type: 'caste',      label: 'Caste Certificate',    accept: '.pdf,.jpg,.jpeg,.png', hint: 'SC/ST/OBC — if applicable' },
-  { type: 'income',     label: 'Income Certificate',   accept: '.pdf,.jpg,.jpeg,.png', hint: 'For scholarship/fee waiver' },
-  { type: 'domicile',   label: 'Domicile Certificate', accept: '.pdf,.jpg,.jpeg,.png', hint: 'State residence proof' },
-  { type: 'other',      label: 'Other Document',       accept: '.pdf,.jpg,.jpeg,.png', hint: 'Any additional required document' },
+// ── Single-PDF document upload ──────────────────────────────────────────────
+// Students combine ALL required documents into ONE PDF and upload it here.
+// Only PDF is accepted and the file must be 2 MB or smaller. The Cloudinary →
+// Firestore → office-verification workflow is unchanged: this still goes through
+// studentService.uploadDocumentFile + /api/student/documents, and the office
+// previews/downloads/verifies the saved PDF exactly as before.
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB
+const COMBINED_TYPE = 'all_documents'; // the single combined-PDF record
+const SIZE_ERROR = 'Please upload a single PDF containing all required documents. Maximum allowed size is 2 MB.';
+const TYPE_ERROR = 'Only PDF files are allowed. Please upload a single PDF containing all required documents.';
+
+// Guidance only — what the student should combine into the one PDF.
+const RECOMMENDED_DOCS = [
+  'Aadhaar Card', '10th Marksheet', '12th Marksheet', 'Graduation Marksheet (if any)',
+  'Passport Photo', 'Signature', 'Caste / Income / Domicile (if any)',
 ];
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
-const ALLOWED_MIME = ['application/pdf', 'image/jpeg', 'image/png'];
-const ALLOWED_EXT = ['.pdf', '.jpg', '.jpeg', '.png'];
+function isPdf(file: File): boolean {
+  // Some mobile pickers report an empty/odd MIME type, so accept when EITHER the
+  // MIME type OR the filename extension says PDF.
+  if (file.type === 'application/pdf') return true;
+  return file.name.toLowerCase().endsWith('.pdf');
+}
 
-// Mobile browsers (Android file pickers especially, and some iOS cases) often
-// report an empty or non-standard MIME type (e.g. "" or "image/jpg" or
-// "application/octet-stream") for a perfectly valid file. So accept a file if
-// EITHER its MIME type OR its filename extension is allowed — this fixes valid
-// uploads being wrongly rejected on phones.
-function isAllowedFile(file: File): boolean {
-  if (ALLOWED_MIME.includes(file.type)) return true;
-  const name = file.name.toLowerCase();
-  return ALLOWED_EXT.some((ext) => name.endsWith(ext));
+function formatSize(bytes?: number): string {
+  if (bytes === undefined || bytes === null) return '—';
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
 }
 
 function statusBadge(status?: DocumentVerificationStatus) {
   if (!status || status === 'pending') return { label: 'Pending Review', cls: 'bg-yellow-100 text-yellow-800', icon: Clock };
   if (status === 'approved') return { label: 'Approved', cls: 'bg-green-100 text-green-800', icon: ShieldCheck };
   return { label: 'Rejected', cls: 'bg-red-100 text-red-800', icon: ShieldX };
-}
-
-function DocRow({
-  docDef,
-  uploaded,
-  onUpload,
-  onDelete,
-}: {
-  docDef: (typeof DOCUMENT_TYPES)[0];
-  uploaded?: Document;
-  onUpload: (type: string, file: File, label: string, onProgress: (pct: number) => void) => Promise<void>;
-  onDelete: (doc: Document) => Promise<void>;
-}) {
-  const [uploading, setUploading] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [error, setError] = useState('');
-  const [deleting, setDeleting] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const badge = statusBadge(uploaded?.status);
-  const StatusIcon = badge.icon;
-  const canModify = !uploaded || uploaded.status === 'pending' || uploaded.status === 'rejected';
-
-  function validateFile(file: File): string | null {
-    if (!isAllowedFile(file)) return 'Only PDF, JPG, PNG files are allowed.';
-    if (file.size > MAX_FILE_SIZE) return 'File must be under 5 MB.';
-    return null;
-  }
-
-  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const err = validateFile(file);
-    if (err) { setError(err); return; }
-    setError('');
-    setUploading(true);
-    setProgress(0);
-    try {
-      await onUpload(docDef.type, file, docDef.label, setProgress);
-    } catch (e: any) {
-      setError(e.message);
-    } finally {
-      setUploading(false);
-      setProgress(0);
-      if (inputRef.current) inputRef.current.value = '';
-    }
-  }
-
-  async function handleDelete() {
-    if (!uploaded || !confirm(`Delete "${docDef.label}"? You can re-upload later.`)) return;
-    setDeleting(true);
-    try {
-      await onDelete(uploaded);
-    } catch (e: any) {
-      setError(e.message);
-    } finally {
-      setDeleting(false);
-    }
-  }
-
-  return (
-    <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-start gap-3 min-w-0">
-          <div className={`flex-shrink-0 flex h-10 w-10 items-center justify-center rounded-xl ${uploaded ? 'bg-blue-50' : 'bg-gray-50'}`}>
-            {uploaded?.mimeType?.startsWith('image/') ? (
-              <Image size={20} className="text-blue-500" />
-            ) : (
-              <FileText size={20} className={uploaded ? 'text-blue-500' : 'text-gray-400'} />
-            )}
-          </div>
-          <div className="min-w-0">
-            <p className="text-sm font-bold text-gray-900">{docDef.label}</p>
-            <p className="text-xs text-gray-400">{docDef.hint}</p>
-            {uploaded && (
-              <span className={`mt-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold ${badge.cls}`}>
-                <StatusIcon size={10} /> {badge.label}
-              </span>
-            )}
-            {uploaded?.remarks && (
-              <p className="mt-1 text-xs text-red-600">Remark: {uploaded.remarks}</p>
-            )}
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 flex-shrink-0">
-          {uploaded && (
-            <a href={uploaded.url} target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-1 rounded-lg border border-blue-200 bg-blue-50 px-2.5 py-1.5 text-xs font-semibold text-blue-700 hover:bg-blue-100 transition">
-              <Eye size={12} /> View
-            </a>
-          )}
-          {uploaded && canModify && (
-            <button onClick={handleDelete} disabled={deleting}
-              className="flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-2.5 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-100 transition disabled:opacity-50">
-              {deleting ? <Loader size={12} className="animate-spin" /> : <Trash2 size={12} />}
-              Delete
-            </button>
-          )}
-          {canModify && (
-            <>
-              <input ref={inputRef} type="file" accept={docDef.accept} className="hidden" onChange={handleFileChange} />
-              <button
-                onClick={() => inputRef.current?.click()}
-                disabled={uploading}
-                className="flex items-center gap-1 rounded-lg bg-[#003f9f] px-2.5 py-1.5 text-xs font-bold text-white hover:bg-blue-700 transition disabled:opacity-60"
-              >
-                {uploading ? (
-                  <><Loader size={12} className="animate-spin" /> {progress}%</>
-                ) : uploaded ? (
-                  <><RefreshCw size={12} /> Replace</>
-                ) : (
-                  <><Upload size={12} /> Upload</>
-                )}
-              </button>
-            </>
-          )}
-          {uploaded?.status === 'approved' && (
-            <span className="text-xs text-green-600 font-semibold">Locked ✓</span>
-          )}
-        </div>
-      </div>
-
-      {uploading && (
-        <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
-          <div className="h-full rounded-full bg-blue-500 transition-all duration-300" style={{ width: `${progress}%` }} />
-        </div>
-      )}
-
-      {error && (
-        <div className="mt-2 flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-600">
-          <AlertCircle size={12} /> {error}
-          <button onClick={() => setError('')} className="ml-auto"><X size={12} /></button>
-        </div>
-      )}
-    </div>
-  );
 }
 
 export default function DocumentsPage() {
@@ -192,9 +56,14 @@ export default function DocumentsPage() {
   const [globalError, setGlobalError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectError, setSelectError] = useState('');
+  const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const loadDocuments = useCallback(async () => {
     if (!user) return;
-    setPageLoading(true);
     try {
       const docs = await studentService.getDocuments(user.uid);
       setDocuments(docs);
@@ -212,26 +81,72 @@ export default function DocumentsPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authLoading, isAuthenticated, user]);
 
-  // Poll every 30 s so status changes from office are reflected in real time
+  // Poll every 30 s so verification status changes from the office appear here.
   useEffect(() => {
     if (!user) return;
     const id = setInterval(() => { loadDocuments(); }, 30_000);
     return () => clearInterval(id);
   }, [user, loadDocuments]);
 
-  const handleUpload = useCallback(async (type: string, file: File, label: string, onProgress: (pct: number) => void) => {
-    if (!user) throw new Error('Not authenticated');
-    await studentService.uploadDocumentFile(user.uid, file, label, type, onProgress);
-    setSuccessMsg(`${label} uploaded successfully!`);
-    setTimeout(() => setSuccessMsg(''), 3000);
-    await loadDocuments();
-  }, [user, loadDocuments]);
+  const combinedDoc = documents.find(d => d.type === COMBINED_TYPE);
+  // Any documents from the older per-type uploader stay visible (read-only) so
+  // nothing a student uploaded earlier is lost.
+  const legacyDocs = documents.filter(d => d.type !== COMBINED_TYPE);
+  const isApprovedLocked = combinedDoc?.status === 'approved';
+  const canUpload = !!selectedFile && !selectError && !uploading && !isApprovedLocked;
 
-  const handleDelete = useCallback(async (doc: Document) => {
-    if (!user || !doc.id) return;
-    await studentService.deleteDocument(doc.id, user.uid, doc.publicId);
-    await loadDocuments();
-  }, [user, loadDocuments]);
+  function validateAndSet(file: File | undefined) {
+    if (!file) return;
+    // Client-side validation (server validates again in /api/student/documents).
+    if (!isPdf(file)) { setSelectError(TYPE_ERROR); setSelectedFile(null); return; }
+    if (file.size > MAX_FILE_SIZE) { setSelectError(SIZE_ERROR); setSelectedFile(null); return; }
+    setSelectError('');
+    setSelectedFile(file);
+  }
+
+  function handleSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    setSuccessMsg('');
+    setGlobalError('');
+    validateAndSet(e.target.files?.[0]);
+    // Reset so selecting the same file again still fires onChange.
+    if (inputRef.current) inputRef.current.value = '';
+  }
+
+  function clearSelection() {
+    setSelectedFile(null);
+    setSelectError('');
+    setProgress(0);
+  }
+
+  async function handleUpload() {
+    if (!user || !canUpload || !selectedFile) return;
+    setUploading(true);
+    setProgress(0);
+    setGlobalError('');
+    try {
+      await studentService.uploadDocumentFile(user.uid, selectedFile, selectedFile.name, COMBINED_TYPE, setProgress);
+      setSuccessMsg('Upload Successful');
+      setSelectedFile(null);
+      await loadDocuments();
+    } catch (e: any) {
+      setGlobalError(e.message || 'Upload failed. Please try again.');
+    } finally {
+      setUploading(false);
+      setProgress(0);
+    }
+  }
+
+  async function handleDelete() {
+    if (!user || !combinedDoc?.id) return;
+    if (!confirm('Delete your uploaded PDF? You can upload a new one afterwards.')) return;
+    try {
+      await studentService.deleteDocument(combinedDoc.id, user.uid, combinedDoc.publicId);
+      setSuccessMsg('');
+      await loadDocuments();
+    } catch (e: any) {
+      setGlobalError(e.message);
+    }
+  }
 
   if (authLoading || pageLoading) {
     return (
@@ -245,12 +160,8 @@ export default function DocumentsPage() {
 
   if (!isAuthenticated) return null;
 
-  const uploadedCount = documents.length;
-  const approvedCount = documents.filter(d => d.status === 'approved').length;
-  const rejectedCount = documents.filter(d => d.status === 'rejected').length;
-
-  const docMap: Record<string, Document> = {};
-  documents.forEach(d => { docMap[d.type] = d; });
+  const badge = statusBadge(combinedDoc?.status);
+  const StatusIcon = badge.icon;
 
   return (
     <PortalShell>
@@ -262,21 +173,18 @@ export default function DocumentsPage() {
               <ArrowLeft size={16} /> Back to Dashboard
             </Link>
             <h1 className="text-2xl font-extrabold text-white">Document Upload</h1>
-            <p className="text-blue-300 text-sm mt-1">Upload your documents for verification. Max 5 MB per file (PDF, JPG, PNG).</p>
-            <div className="mt-4 grid grid-cols-3 gap-3">
-              <div className="rounded-xl bg-white/10 p-3 text-center">
-                <p className="text-xl font-extrabold text-white">{uploadedCount}</p>
-                <p className="text-xs text-blue-300 font-semibold">Uploaded</p>
+            <p className="text-blue-300 text-sm mt-1">
+              Combine all your documents into <strong className="text-white">one PDF</strong> and upload it here. Only PDF · Maximum 2 MB.
+            </p>
+            {combinedDoc && (
+              <div className="mt-4 inline-flex items-center gap-2 rounded-xl bg-white/10 px-3 py-2">
+                <StatusIcon size={14} className="text-white" />
+                <span className="text-xs font-bold text-white">Current status:</span>
+                <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold ${badge.cls}`}>
+                  {badge.label}
+                </span>
               </div>
-              <div className="rounded-xl bg-white/10 p-3 text-center">
-                <p className="text-xl font-extrabold text-green-400">{approvedCount}</p>
-                <p className="text-xs text-blue-300 font-semibold">Approved</p>
-              </div>
-              <div className="rounded-xl bg-white/10 p-3 text-center">
-                <p className="text-xl font-extrabold text-red-400">{rejectedCount}</p>
-                <p className="text-xs text-blue-300 font-semibold">Rejected</p>
-              </div>
-            </div>
+            )}
           </div>
         </div>
 
@@ -284,40 +192,182 @@ export default function DocumentsPage() {
           {globalError && (
             <div className="mb-4 flex gap-3 rounded-xl bg-red-50 border border-red-200 p-4 text-sm text-red-700">
               <AlertCircle size={18} className="flex-shrink-0 mt-0.5" /> {globalError}
+              <button onClick={() => setGlobalError('')} className="ml-auto flex-shrink-0"><X size={16} /></button>
             </div>
           )}
           {successMsg && (
-            <div className="mb-4 flex gap-3 rounded-xl bg-green-50 border border-green-200 p-4 text-sm text-green-700">
-              <CheckCircle2 size={18} className="flex-shrink-0 mt-0.5" /> {successMsg}
+            <div className="mb-4 flex items-center gap-3 rounded-xl bg-green-50 border border-green-200 p-4 text-sm font-semibold text-green-700">
+              <CheckCircle2 size={18} className="flex-shrink-0" /> {successMsg}
             </div>
           )}
 
-          {/* Legend */}
-          <div className="mb-4 flex flex-wrap gap-3 text-xs">
-            <span className="flex items-center gap-1 rounded-full bg-yellow-100 px-2.5 py-1 font-semibold text-yellow-800"><Clock size={10} /> Pending Review</span>
-            <span className="flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-1 font-semibold text-green-800"><ShieldCheck size={10} /> Approved</span>
-            <span className="flex items-center gap-1 rounded-full bg-red-100 px-2.5 py-1 font-semibold text-red-800"><ShieldX size={10} /> Rejected — re-upload required</span>
-          </div>
+          {/* Current uploaded PDF */}
+          {combinedDoc && (
+            <div className="mb-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-gray-400">Your uploaded document</p>
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3 min-w-0">
+                  <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-blue-50">
+                    <FileText size={22} className="text-blue-500" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-bold text-gray-900">{combinedDoc.name}</p>
+                    <p className="text-xs text-gray-400">{formatSize(combinedDoc.fileSize)} · PDF</p>
+                    <span className={`mt-1.5 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold ${badge.cls}`}>
+                      <StatusIcon size={10} /> {badge.label}
+                    </span>
+                    {combinedDoc.status === 'rejected' && combinedDoc.remarks && (
+                      <p className="mt-1.5 text-xs text-red-600">Reason: {combinedDoc.remarks}</p>
+                    )}
+                  </div>
+                </div>
+                <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                  <a href={combinedDoc.url} target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-1 rounded-lg border border-blue-200 bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700 hover:bg-blue-100 transition">
+                    <Eye size={12} /> View
+                  </a>
+                  {!isApprovedLocked && (
+                    <button onClick={handleDelete}
+                      className="flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-100 transition">
+                      <Trash2 size={12} /> Delete
+                    </button>
+                  )}
+                  {isApprovedLocked && (
+                    <span className="text-xs font-semibold text-green-600">Locked ✓</span>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
 
-          <div className="space-y-3">
-            {DOCUMENT_TYPES.map(docDef => (
-              <DocRow
-                key={docDef.type}
-                docDef={docDef}
-                uploaded={docMap[docDef.type]}
-                onUpload={handleUpload}
-                onDelete={handleDelete}
-              />
-            ))}
-          </div>
+          {/* Uploader — hidden once the PDF is approved (locked) */}
+          {isApprovedLocked ? (
+            <div className="rounded-2xl border border-green-200 bg-green-50 p-5 text-sm text-green-800">
+              <p className="flex items-center gap-2 font-bold"><ShieldCheck size={16} /> Your document is verified and approved.</p>
+              <p className="mt-1 text-xs">Approved documents are locked. To change anything, please contact the office.</p>
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+              <p className="mb-3 text-sm font-bold text-gray-900">
+                {combinedDoc ? 'Replace your PDF' : 'Upload your documents (single PDF)'}
+              </p>
 
+              <div className="mb-3 rounded-lg bg-blue-50 border border-blue-100 px-3 py-2 text-[12px] font-semibold text-blue-700">
+                ⚠️ Only <strong>PDF</strong> format · Maximum <strong>2 MB</strong> · One single file containing all documents.
+              </div>
+
+              {/* Select button */}
+              <label className={`flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[#003f9f]/50 bg-blue-50/40 px-4 py-8 text-center cursor-pointer hover:bg-blue-50 transition ${uploading ? 'opacity-70 pointer-events-none' : ''}`}>
+                <FileUp size={28} className="text-[#003f9f]" />
+                <p className="text-sm font-extrabold text-[#003f9f]">Select your PDF</p>
+                <p className="text-xs text-gray-500">Click to choose a single PDF (all documents combined)</p>
+                <input
+                  ref={inputRef}
+                  type="file"
+                  accept="application/pdf,.pdf"
+                  className="hidden"
+                  disabled={uploading}
+                  onChange={handleSelect}
+                />
+              </label>
+
+              {/* Recommended documents guidance */}
+              <div className="mt-3 text-xs text-gray-500">
+                <p className="mb-1 font-semibold text-gray-600">📋 Include these in your PDF:</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {RECOMMENDED_DOCS.map(d => (
+                    <span key={d} className="rounded-md border border-gray-200 bg-white px-2 py-0.5 text-[11px] font-medium text-gray-600">{d}</span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Selection error */}
+              {selectError && (
+                <div className="mt-3 flex items-start gap-2 rounded-lg bg-red-50 border border-red-200 px-3 py-2.5 text-xs font-semibold text-red-700">
+                  <AlertCircle size={14} className="flex-shrink-0 mt-0.5" /> {selectError}
+                </div>
+              )}
+
+              {/* Selected file preview — name + size shown before upload */}
+              {selectedFile && !selectError && (
+                <div className="mt-3 rounded-xl border border-green-300 bg-green-50 px-3 py-3">
+                  <div className="flex items-center gap-2.5">
+                    <FileText size={18} className="flex-shrink-0 text-green-600" />
+                    <div className="flex-1 min-w-0">
+                      <p className="truncate text-sm font-bold text-gray-800">{selectedFile.name}</p>
+                      <p className="text-[11px] font-semibold text-green-700">{formatSize(selectedFile.size)} · ready to upload</p>
+                    </div>
+                    {!uploading && (
+                      <button onClick={clearSelection} aria-label="Remove selected file"
+                        className="flex-shrink-0 flex items-center gap-1 rounded-md border border-gray-200 px-2 py-1 text-[11px] font-bold text-gray-500 hover:bg-gray-100 transition">
+                        <X size={12} /> Remove
+                      </button>
+                    )}
+                  </div>
+                  {uploading && (
+                    <div className="mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-green-100">
+                      <div className="h-full rounded-full bg-green-500 transition-all duration-300" style={{ width: `${progress}%` }} />
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Upload button — disabled until a valid PDF is selected */}
+              <button
+                onClick={handleUpload}
+                disabled={!canUpload}
+                className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-[#003f9f] py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {uploading ? (
+                  <><Loader size={16} className="animate-spin" /> Uploading… {progress}%</>
+                ) : combinedDoc ? (
+                  <><RefreshCw size={16} /> Replace PDF</>
+                ) : (
+                  <><Upload size={16} /> Upload PDF</>
+                )}
+              </button>
+            </div>
+          )}
+
+          {/* Earlier per-type uploads (read-only) — only if the student has any */}
+          {legacyDocs.length > 0 && (
+            <div className="mt-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+              <p className="mb-3 text-xs font-bold uppercase tracking-wide text-gray-400">Earlier uploads</p>
+              <div className="space-y-2">
+                {legacyDocs.map(doc => {
+                  const lb = statusBadge(doc.status);
+                  const LbIcon = lb.icon;
+                  return (
+                    <div key={doc.id} className="flex items-center justify-between gap-3 rounded-xl border border-gray-100 bg-gray-50 px-3 py-2.5">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <FileText size={16} className="flex-shrink-0 text-gray-400" />
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-semibold text-gray-700">{doc.name}</p>
+                          <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ${lb.cls}`}>
+                            <LbIcon size={9} /> {lb.label}
+                          </span>
+                        </div>
+                      </div>
+                      <a href={doc.url} target="_blank" rel="noopener noreferrer"
+                        className="flex-shrink-0 flex items-center gap-1 rounded-lg border border-blue-200 bg-blue-50 px-2.5 py-1.5 text-xs font-semibold text-blue-700 hover:bg-blue-100 transition">
+                        <Eye size={12} /> View
+                      </a>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Notes */}
           <div className="mt-6 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-800">
             <p className="font-bold mb-1">Important Notes:</p>
             <ul className="list-disc list-inside space-y-1 text-xs">
-              <li>Approved documents are locked and cannot be deleted or replaced.</li>
-              <li>Rejected documents must be re-uploaded with a clearer/correct copy.</li>
+              <li>Upload all required documents combined into a <strong>single PDF</strong> file.</li>
+              <li>Only PDF format is accepted. Maximum file size is <strong>2 MB</strong>.</li>
+              <li>Once your PDF is approved by the office, it is locked and cannot be changed.</li>
+              <li>If your PDF is rejected, please re-upload a corrected/clearer copy.</li>
               <li>Documents are reviewed by our office team within 1–2 working days.</li>
-              <li>Maximum file size: 5 MB. Allowed formats: PDF, JPG, PNG.</li>
             </ul>
           </div>
         </div>
