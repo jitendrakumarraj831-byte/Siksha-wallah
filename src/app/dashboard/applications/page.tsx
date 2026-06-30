@@ -9,7 +9,7 @@ import { getCourseSlug } from '@/lib/courses-data';
 import { PortalShell } from '@/components/portal-shell';
 import {
   ArrowLeft, Loader, Plus, ClipboardList, ArrowRight,
-  CheckCircle2, Clock, PhoneCall, AlertCircle, RefreshCw,
+  CheckCircle2, Clock, PhoneCall, AlertCircle, RefreshCw, Upload,
 } from 'lucide-react';
 import { getIdToken } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
@@ -142,6 +142,13 @@ export default function ApplicationsPage() {
                             {meta.label}
                           </span>
                         </div>
+
+                        {app.status === 'documents_pending' && (
+                          <Link href="/dashboard/documents"
+                            className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-orange-500 px-3 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-orange-600 transition">
+                            <Upload size={12} /> Upload Documents <ArrowRight size={12} />
+                          </Link>
+                        )}
 
                         {app.note && (
                           <div className="mt-2 rounded-lg bg-yellow-50 border border-yellow-100 px-3 py-1.5 text-xs text-yellow-800">

@@ -300,6 +300,13 @@ export default function DashboardPage() {
                           </span>
                         </div>
 
+                        {app.status === 'documents_pending' && (
+                          <Link href="/dashboard/documents"
+                            className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-orange-500 px-3 py-1.5 text-xs font-bold text-white shadow-sm hover:bg-orange-600 transition">
+                            <Upload size={12} /> Upload Documents <ArrowRight size={12} />
+                          </Link>
+                        )}
+
                         {app.note && (
                           <div className="mt-2 rounded-lg bg-yellow-50 border border-yellow-100 px-3 py-1.5 text-xs text-yellow-800">
                             <span className="font-bold">Counsellor Note:</span> {app.note}
