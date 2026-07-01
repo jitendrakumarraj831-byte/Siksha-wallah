@@ -21,7 +21,10 @@ const LEGACY_KEY = "sw-install-dismissed"; // older boolean flag (migrated below
 const DAY_MS = 24 * 60 * 60 * 1000;
 const SNOOZE_DAYS = 14; // wait this long after "Maybe later" before asking again
 const FOREVER_DAYS = 3650; // effectively never (used once installed)
-const SHOW_DELAY_MS = 2500; // small delay so it doesn't slam the page on open
+// Show 30s after the site opens — long enough that the student has started
+// looking around before we interrupt. Once shown, the per-session guard keeps it
+// from reappearing for the rest of this visit whether they install or dismiss.
+const SHOW_DELAY_MS = 30_000;
 
 function readSnoozeUntil(): number {
   try {
