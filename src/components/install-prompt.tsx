@@ -19,18 +19,22 @@ const SNOOZE_KEY = "sw-install-snooze-until"; // epoch ms; hidden until this tim
 const SESSION_KEY = "sw-install-shown-session"; // sessionStorage: shown this visit
 const LEGACY_KEY = "sw-install-dismissed"; // older boolean flag (migrated below)
 const DAY_MS = 24 * 60 * 60 * 1000;
-const SNOOZE_DAYS = 14; // wait this long after "Maybe later" before asking again
+// Reach model: show at most ONCE PER DEVICE PER DAY. localStorage is per-device,
+// so each phone/browser is counted separately and independently — however many
+// times a person reopens the site in a day, they only see it once that day. The
+// cooldown is applied the moment it is shown (not only on dismiss), so even a
+// student who ignores it isn't asked again until the next day.
+const COOLDOWN_DAYS = 1;
 const FOREVER_DAYS = 3650; // effectively never (used once installed)
 // Show 30s after the site opens — long enough that the student has started
-// looking around before we interrupt. Once shown, the per-session guard keeps it
-// from reappearing for the rest of this visit whether they install or dismiss.
+// looking around before we interrupt.
 const SHOW_DELAY_MS = 30_000;
 
 function readSnoozeUntil(): number {
   try {
     // Migrate the old permanent flag to a finite cooldown, then use it.
     if (localStorage.getItem(LEGACY_KEY) === "1") {
-      const until = Date.now() + SNOOZE_DAYS * DAY_MS;
+      const until = Date.now() + COOLDOWN_DAYS * DAY_MS;
       localStorage.setItem(SNOOZE_KEY, String(until));
       localStorage.removeItem(LEGACY_KEY);
       return until;
@@ -89,6 +93,9 @@ export function InstallPrompt() {
     const show = () => {
       if (!canAutoShow()) return;
       markShownThisSession();
+      // Apply the daily cooldown the moment it appears — so reopening the site
+      // later today won't show it again, whether or not the student interacts.
+      setSnooze(COOLDOWN_DAYS);
       setVisible(true);
     };
 
@@ -129,10 +136,11 @@ export function InstallPrompt() {
     };
   }, []);
 
-  // "Maybe later" / close / tap-outside → hide and snooze for SNOOZE_DAYS.
+  // "Maybe later" / close / tap-outside → hide (daily cooldown was already set
+  // when it was shown, so it won't reappear again today on this device).
   const dismiss = () => {
     setVisible(false);
-    setSnooze(SNOOZE_DAYS);
+    setSnooze(COOLDOWN_DAYS);
   };
 
   const handleInstall = async () => {
@@ -144,8 +152,8 @@ export function InstallPrompt() {
       setVisible(false);
       setSnooze(FOREVER_DAYS);
     } else {
-      // User declined the native sheet → treat like "maybe later".
-      setSnooze(SNOOZE_DAYS);
+      // User declined the native sheet → treat like "maybe later" (next day).
+      setSnooze(COOLDOWN_DAYS);
     }
     setDeferred(null);
   };
