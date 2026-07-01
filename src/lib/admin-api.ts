@@ -73,7 +73,11 @@ export type AdminUpdatableCollection = "inquiries" | "course_applications";
 export async function adminUpdate(
   collection: AdminUpdatableCollection,
   id: string,
-  changes: { status?: string; note?: string },
+  changes: {
+    status?: string; note?: string;
+    paymentStatus?: string; amountPaid?: number; amountDue?: number;
+    paymentDate?: string; paymentMode?: string;
+  },
 ): Promise<void> {
   let res: Response;
   try {

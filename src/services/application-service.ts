@@ -6,6 +6,10 @@ import {
 
 export type ApplicationStatus = "new" | "contacted" | "documents_pending" | "admission_done" | "not_interested";
 
+// Office-only payment tracking. Optional/additive fields on the existing
+// course_applications doc — same pattern as `note`/`noteUpdatedAt` below.
+export type PaymentStatus = "pending" | "partial" | "paid";
+
 export interface CourseApplication {
   id?: string;
   userId?: string;          // Firebase Auth UID — set when logged-in student applies
@@ -39,6 +43,13 @@ export interface CourseApplication {
   note?: string;
   noteUpdatedAt?: any;
   createdAt?: any;
+  // Payment — office-only writes; students only ever view these.
+  paymentStatus?: PaymentStatus;
+  amountPaid?: number;
+  amountDue?: number;
+  paymentDate?: any;
+  paymentMode?: string;
+  paymentUpdatedAt?: any;
 }
 
 const COL = "course_applications";

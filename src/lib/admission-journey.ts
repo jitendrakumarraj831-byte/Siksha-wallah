@@ -20,7 +20,7 @@
 //   · Which students are fully completed?
 // ─────────────────────────────────────────────────────────────────────────────
 
-import type { CourseApplication, ApplicationStatus } from "@/services/application-service";
+import type { CourseApplication, ApplicationStatus, PaymentStatus } from "@/services/application-service";
 import { receiptNo } from "@/lib/receipt";
 
 /* ── Canonical admission timeline ─────────────────────────────────────────────
@@ -312,4 +312,227 @@ export function summarizeOffice(
 
   const actionableToday = counts.verify_docs + counts.needs_action + counts.admission_waiting + counts.follow_up;
   return { counts, rows, actionableToday };
+}
+
+/* ── Required documents (student checklist) ──────────────────────────────────
+   Students still upload ONE combined PDF (see /dashboard/documents) — this list
+   is guidance on what must be inside it. Every item shares the combined PDF's
+   verification state, so the checklist can never disagree with the real upload. */
+export interface RequiredDocument {
+  key: string;
+  label: string;
+  labelHi: string;
+}
+
+export const REQUIRED_DOCUMENTS: RequiredDocument[] = [
+  { key: "aadhaar",     label: "Aadhaar Card",              labelHi: "आधार कार्ड" },
+  { key: "photo",       label: "Passport Photo",            labelHi: "पासपोर्ट फोटो" },
+  { key: "signature",   label: "Signature",                 labelHi: "हस्ताक्षर" },
+  { key: "marksheet10", label: "10th Marksheet",            labelHi: "दसवीं अंकपत्र" },
+  { key: "marksheet12", label: "12th Marksheet",            labelHi: "बारहवीं अंकपत्र" },
+  { key: "graduation",  label: "Graduation (if required)",  labelHi: "स्नातक (यदि आवश्यक हो)" },
+  { key: "caste",       label: "Caste Certificate",         labelHi: "जाति प्रमाण पत्र" },
+  { key: "income",      label: "Income Certificate",        labelHi: "आय प्रमाण पत्र" },
+  { key: "residence",   label: "Residence Certificate",     labelHi: "निवास प्रमाण पत्र" },
+];
+
+export type RequiredDocState = "pending" | "uploaded" | "verified";
+
+/** Maps the single combined-PDF's real status onto each checklist item. A
+ *  rejected upload goes back to "pending" — it needs a fresh upload. */
+export function requiredDocState(doc?: DocLike): RequiredDocState {
+  const s = docState(doc);
+  if (s === "approved") return "verified";
+  if (s === "pending") return "uploaded";
+  return "pending";
+}
+
+/* ── Payment (office-only writes; students only view) ─────────────────────── */
+export interface PaymentSummary {
+  status: PaymentStatus;
+  label: string;
+  labelHi: string;
+  tone: Tone;
+  amountPaid?: number;
+  amountDue?: number;
+  paymentDate?: unknown;
+  paymentMode?: string;
+  receipt: string;
+  isPaid: boolean;
+}
+
+const PAYMENT_META: Record<PaymentStatus, { label: string; labelHi: string; tone: Tone }> = {
+  pending: { label: "Payment Pending",   labelHi: "भुगतान लंबित",     tone: "warn" },
+  partial: { label: "Partially Paid",    labelHi: "आंशिक भुगतान",     tone: "warn" },
+  paid:    { label: "Payment Received",  labelHi: "भुगतान प्राप्त",   tone: "success" },
+};
+
+export function summarizePayment(app: CourseApplication): PaymentSummary {
+  const status = app.paymentStatus || "pending";
+  const meta = PAYMENT_META[status];
+  return {
+    status,
+    label: meta.label,
+    labelHi: meta.labelHi,
+    tone: meta.tone,
+    amountPaid: app.amountPaid,
+    amountDue: app.amountDue,
+    paymentDate: app.paymentDate,
+    paymentMode: app.paymentMode,
+    receipt: receiptNo(app.id),
+    isPaid: status === "paid",
+  };
+}
+
+/* ── Admission Progress checklist (8 steps, student dashboard) ───────────────
+   Each item's completion is judged on its OWN criterion — never forced into a
+   sequence — so the checklist always tells the truth even if steps finish out
+   of the usual order. "Current" (blue) is simply the first not-yet-done item in
+   display order; everything after it stays grey until it is actually true. */
+export type ChecklistState = "done" | "current" | "pending";
+
+export interface ChecklistItem {
+  key: string;
+  label: string;
+  labelHi: string;
+  state: ChecklistState;
+}
+
+export interface AdmissionChecklist {
+  items: ChecklistItem[];
+  percent: number;
+  isComplete: boolean;
+  isClosed: boolean;
+}
+
+const CHECKLIST_LABELS: { key: string; label: string; labelHi: string }[] = [
+  { key: "personal",  label: "Personal Details",       labelHi: "व्यक्तिगत विवरण" },
+  { key: "education", label: "Education Details",      labelHi: "शैक्षणिक विवरण" },
+  { key: "course",    label: "Course Selected",        labelHi: "कोर्स चयनित" },
+  { key: "docs_up",   label: "Documents Uploaded",     labelHi: "दस्तावेज़ अपलोड" },
+  { key: "docs_ver",  label: "Documents Verified",     labelHi: "दस्तावेज़ सत्यापित" },
+  { key: "payment",   label: "Payment Received",       labelHi: "भुगतान प्राप्त" },
+  { key: "submitted", label: "Application Submitted",  labelHi: "आवेदन जमा" },
+  { key: "confirmed", label: "Admission Confirmed",    labelHi: "प्रवेश की पुष्टि" },
+];
+
+export function computeChecklist(app: CourseApplication, doc?: DocLike): AdmissionChecklist {
+  const status = (app.status || "new") as ApplicationStatus;
+  const isClosed = status === "not_interested";
+  const ds = docState(doc);
+  const payment = summarizePayment(app);
+
+  const done = [
+    true,                         // Personal Details — required at apply time
+    true,                         // Education Details — required at apply time
+    !!app.course,                 // Course Selected
+    ds !== "none",                // Documents Uploaded
+    ds === "approved",            // Documents Verified
+    payment.isPaid,               // Payment Received
+    true,                         // Application Submitted — the record exists
+    status === "admission_done",  // Admission Confirmed
+  ];
+
+  const firstPendingIdx = done.findIndex((d) => !d);
+  const items: ChecklistItem[] = CHECKLIST_LABELS.map((l, i) => ({
+    ...l,
+    state: isClosed ? "pending" : done[i] ? "done" : i === firstPendingIdx ? "current" : "pending",
+  }));
+
+  const isComplete = !isClosed && done.every(Boolean);
+  const completedCount = isClosed ? 0 : done.filter(Boolean).length;
+  // Only ever 100% once every step is actually true — never rounds up early.
+  const percent = isComplete ? 100 : Math.min(Math.round((completedCount / done.length) * 100), 99);
+
+  return { items, percent, isComplete, isClosed };
+}
+
+/* ── Single clear Application Status (student dashboard) ─────────────────────
+   One status the student can read in seconds, each with a plain-language
+   explanation of what it means and what happens next. */
+export type OverallStatusKey =
+  | "submitted" | "under_review" | "documents_pending" | "payment_pending"
+  | "verified" | "admission_confirmed" | "completed" | "closed";
+
+export interface OverallStatus {
+  key: OverallStatusKey;
+  label: string;
+  labelHi: string;
+  explanation: string;
+  explanationHi: string;
+  tone: Tone;
+}
+
+export function computeOverallStatus(app: CourseApplication, doc?: DocLike): OverallStatus {
+  const status = (app.status || "new") as ApplicationStatus;
+  const ds = docState(doc);
+  const payment = summarizePayment(app);
+
+  if (status === "not_interested") {
+    return {
+      key: "closed", label: "Application Closed", labelHi: "आवेदन बंद",
+      explanation: "This application is no longer active. You can apply again any time.",
+      explanationHi: "यह आवेदन अब सक्रिय नहीं है। आप कभी भी दोबारा apply कर सकते हैं।",
+      tone: "muted",
+    };
+  }
+  if (status === "admission_done") {
+    if (payment.isPaid) {
+      return {
+        key: "completed", label: "Completed", labelHi: "पूर्ण",
+        explanation: "Your admission process is fully complete. Congratulations!",
+        explanationHi: "आपकी admission प्रक्रिया पूरी तरह से पूर्ण है। बधाई हो!",
+        tone: "success",
+      };
+    }
+    return {
+      key: "admission_confirmed", label: "Admission Confirmed", labelHi: "प्रवेश की पुष्टि",
+      explanation: "Your admission is confirmed. Please clear the remaining payment to finish the process.",
+      explanationHi: "आपका प्रवेश confirm हो गया है। प्रक्रिया पूरी करने के लिए शेष भुगतान करें।",
+      tone: "success",
+    };
+  }
+  if (ds === "approved") {
+    if (!payment.isPaid) {
+      return {
+        key: "payment_pending", label: "Payment Pending", labelHi: "भुगतान लंबित",
+        explanation: "Your documents are verified. Please complete the payment to proceed.",
+        explanationHi: "आपके दस्तावेज़ सत्यापित हैं। आगे बढ़ने के लिए भुगतान पूरा करें।",
+        tone: "warn",
+      };
+    }
+    return {
+      key: "verified", label: "Verified", labelHi: "सत्यापित",
+      explanation: "Your documents and payment are verified. The office will confirm your admission shortly.",
+      explanationHi: "आपके दस्तावेज़ और भुगतान सत्यापित हैं। कार्यालय जल्द ही आपका प्रवेश confirm करेगा।",
+      tone: "info",
+    };
+  }
+  if (ds === "none" || ds === "rejected" || status === "documents_pending") {
+    const rejected = ds === "rejected";
+    return {
+      key: "documents_pending", label: "Documents Pending", labelHi: "दस्तावेज़ लंबित",
+      explanation: rejected
+        ? "Your document was rejected. Please upload a corrected copy."
+        : "Please upload your documents to continue your admission process.",
+      explanationHi: rejected
+        ? "आपका दस्तावेज़ अस्वीकृत कर दिया गया। कृपया सही कॉपी दोबारा अपलोड करें।"
+        : "अपनी admission प्रक्रिया जारी रखने के लिए दस्तावेज़ अपलोड करें।",
+      tone: "warn",
+    };
+  }
+  if (status === "contacted") {
+    return {
+      key: "under_review", label: "Under Review", labelHi: "समीक्षा में",
+      explanation: "Our counsellor is reviewing your application and will guide you on next steps.",
+      explanationHi: "हमारा counsellor आपके आवेदन की समीक्षा कर रहा है और अगले कदम बताएगा।",
+      tone: "active",
+    };
+  }
+  return {
+    key: "submitted", label: "Application Submitted", labelHi: "आवेदन जमा हुआ",
+    explanation: "We have received your application. Our counsellor will contact you shortly.",
+    explanationHi: "हमें आपका आवेदन मिल गया है। हमारा counsellor जल्द ही संपर्क करेगा।",
+    tone: "info",
+  };
 }

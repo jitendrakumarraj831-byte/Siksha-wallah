@@ -15,8 +15,16 @@ import {
   getAllApplications,
   type CourseApplication,
   type ApplicationStatus,
+  type PaymentStatus,
 } from "@/services/application-service";
 import { receiptNo } from "@/lib/receipt";
+
+const PAYMENT_STATUS_META: Record<PaymentStatus, { label: string; color: string }> = {
+  pending: { label: "Pending",   color: "bg-orange-100 text-orange-700 border-orange-200" },
+  partial: { label: "Partial",   color: "bg-amber-100 text-amber-700 border-amber-200" },
+  paid:    { label: "Paid",      color: "bg-green-100 text-green-700 border-green-200" },
+};
+const PAYMENT_MODES = ["Cash", "UPI", "Bank Transfer", "Cheque", "Card", "Online"];
 
 const STATUS_META: Record<ApplicationStatus, { label: string; color: string; icon: string }> = {
   new:               { label: "New",               color: "bg-blue-100 text-blue-800 border-blue-200",    icon: "🆕" },
@@ -82,10 +90,85 @@ function NoteCell({ app, onSaved }: { app: CourseApplication; onSaved: (id: stri
   );
 }
 
-function AppCard({ app, onStatusChange, onNoteSaved, isNew }: {
+function PaymentCell({ app, onSaved }: {
+  app: CourseApplication;
+  onSaved: (id: string, changes: Partial<CourseApplication>) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [status, setStatus] = useState<PaymentStatus>(app.paymentStatus || "pending");
+  const [amountPaid, setAmountPaid] = useState(app.amountPaid?.toString() || "");
+  const [amountDue, setAmountDue] = useState(app.amountDue?.toString() || "");
+  const [paymentMode, setPaymentMode] = useState(app.paymentMode || "");
+  const [paymentDate, setPaymentDate] = useState(app.paymentDate || "");
+  const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState("");
+
+  const meta = PAYMENT_STATUS_META[app.paymentStatus || "pending"];
+
+  async function save() {
+    if (!app.id) return;
+    setSaving(true);
+    setErr("");
+    try {
+      const changes: Partial<CourseApplication> = {
+        paymentStatus: status,
+        amountPaid: amountPaid === "" ? undefined : Number(amountPaid),
+        amountDue: amountDue === "" ? undefined : Number(amountDue),
+        paymentMode: paymentMode || undefined,
+        paymentDate: paymentDate || undefined,
+      };
+      await adminUpdate("course_applications", app.id, changes as any);
+      onSaved(app.id, changes);
+      setOpen(false);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Save failed");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (!open) return (
+    <button onClick={() => setOpen(true)} className="flex items-center gap-1.5">
+      <span className={`rounded-full border px-2 py-0.5 text-xs font-bold ${meta.color}`}>{meta.label}</span>
+      <span className="text-xs text-blue-600 hover:underline">Edit</span>
+    </button>
+  );
+
+  return (
+    <div className="space-y-1.5">
+      <select value={status} onChange={e => setStatus(e.target.value as PaymentStatus)}
+        className="w-full rounded-lg border border-gray-200 bg-white px-2 py-1.5 text-xs font-semibold outline-none focus:border-blue-400">
+        {Object.entries(PAYMENT_STATUS_META).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
+      </select>
+      <div className="flex gap-1.5">
+        <input type="number" min="0" placeholder="Paid ₹" value={amountPaid} onChange={e => setAmountPaid(e.target.value)}
+          className="w-1/2 rounded-lg border border-gray-200 px-2 py-1.5 text-xs outline-none focus:border-blue-400" />
+        <input type="number" min="0" placeholder="Due ₹" value={amountDue} onChange={e => setAmountDue(e.target.value)}
+          className="w-1/2 rounded-lg border border-gray-200 px-2 py-1.5 text-xs outline-none focus:border-blue-400" />
+      </div>
+      <select value={paymentMode} onChange={e => setPaymentMode(e.target.value)}
+        className="w-full rounded-lg border border-gray-200 bg-white px-2 py-1.5 text-xs font-semibold outline-none focus:border-blue-400">
+        <option value="">Mode…</option>
+        {PAYMENT_MODES.map(m => <option key={m} value={m}>{m}</option>)}
+      </select>
+      <input type="date" value={paymentDate} onChange={e => setPaymentDate(e.target.value)}
+        className="w-full rounded-lg border border-gray-200 px-2 py-1.5 text-xs outline-none focus:border-blue-400" />
+      <div className="flex items-center gap-1">
+        <button onClick={save} disabled={saving} className="rounded-lg bg-blue-600 px-2 py-1 text-xs font-bold text-white hover:bg-blue-700">
+          {saving ? "…" : "Save"}
+        </button>
+        <button onClick={() => setOpen(false)} className="text-xs text-gray-400 hover:text-red-500">✕</button>
+      </div>
+      {err && <p className="text-[11px] font-semibold text-red-600">{err}</p>}
+    </div>
+  );
+}
+
+function AppCard({ app, onStatusChange, onNoteSaved, onPaymentSaved, isNew }: {
   app: CourseApplication;
   onStatusChange: (id: string, s: ApplicationStatus) => void;
   onNoteSaved: (id: string, note: string) => void;
+  onPaymentSaved: (id: string, changes: Partial<CourseApplication>) => void;
   isNew: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
@@ -192,6 +275,10 @@ function AppCard({ app, onStatusChange, onNoteSaved, isNew }: {
                 )}
               </div>
             </InfoBlock>
+
+            <InfoBlock title="Payment">
+              <PaymentCell app={app} onSaved={onPaymentSaved} />
+            </InfoBlock>
           </div>
 
           {app.message && (
@@ -294,6 +381,10 @@ export default function AdminApplicationsPage() {
 
   function handleNoteSaved(id: string, note: string) {
     setApplications(prev => prev.map(a => a.id === id ? { ...a, note } : a));
+  }
+
+  function handlePaymentSaved(id: string, changes: Partial<CourseApplication>) {
+    setApplications(prev => prev.map(a => a.id === id ? { ...a, ...changes } : a));
   }
 
   function exportCsv() {
@@ -485,6 +576,7 @@ export default function AdminApplicationsPage() {
                 app={app}
                 onStatusChange={handleStatusChange}
                 onNoteSaved={handleNoteSaved}
+                onPaymentSaved={handlePaymentSaved}
                 isNew={!app.status || app.status === "new"}
               />
             ))}

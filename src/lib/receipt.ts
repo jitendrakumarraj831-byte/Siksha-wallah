@@ -169,14 +169,171 @@ function buildReceiptHtml(app: CourseApplication): string {
 
 /** Open a printable receipt in a new window (user saves it as PDF). */
 export function downloadApplicationReceipt(app: CourseApplication): void {
-  const html = buildReceiptHtml(app);
+  openPrintable(buildReceiptHtml(app));
+}
+
+function openPrintable(html: string): void {
   const w = window.open("", "_blank", "width=820,height=900");
   if (!w) {
-    alert("Please allow pop-ups for this site to download your receipt.");
+    alert("Please allow pop-ups for this site to download this file.");
     return;
   }
   w.document.open();
   w.document.write(html);
   w.document.close();
   w.focus();
+}
+
+function buildApplicationFormHtml(app: CourseApplication): string {
+  const rno = receiptNo(app.id);
+  const row = (k: string, v?: string) =>
+    v ? `<tr><td class="k">${esc(k)}</td><td class="v">${esc(v)}</td></tr>` : "";
+
+  return `<!doctype html>
+<html lang="en"><head><meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>${esc(rno)} — Admission Application Form</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif; color: #0f172a; margin: 0; background: #f1f5f9; }
+  .sheet { max-width: 720px; margin: 24px auto; background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; overflow: hidden; }
+  .head { background: linear-gradient(135deg,#00102e,#003f9f); color: #fff; padding: 24px 28px; }
+  .brand { font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: #fcd34d; font-weight: 700; }
+  .title { font-size: 22px; font-weight: 800; margin: 2px 0 0; }
+  .sub { font-size: 12px; color: #bfdbfe; margin-top: 4px; }
+  .rno { margin-top: 14px; display: inline-block; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.25);
+         padding: 8px 14px; border-radius: 10px; }
+  .rno b { font-size: 20px; letter-spacing: .06em; }
+  .body { padding: 24px 28px; }
+  h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: #003f9f; margin: 22px 0 8px; }
+  table { width: 100%; border-collapse: collapse; }
+  td { padding: 6px 0; font-size: 13px; vertical-align: top; }
+  td.k { color: #64748b; width: 40%; } td.v { font-weight: 600; }
+  .sign { margin-top: 40px; display: flex; justify-content: space-between; font-size: 12px; color: #64748b; }
+  .sign div { border-top: 1px solid #cbd5e1; padding-top: 6px; width: 45%; text-align: center; }
+  .foot { padding: 16px 28px; border-top: 1px dashed #cbd5e1; font-size: 11px; color: #94a3b8; text-align: center; }
+  .actions { text-align: center; margin: 16px; }
+  .actions button { background: #003f9f; color: #fff; border: 0; padding: 11px 22px; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; }
+  @media print { body { background: #fff; } .sheet { border: 0; margin: 0; max-width: none; } .actions { display: none; } }
+</style></head>
+<body>
+  <div class="actions"><button onclick="window.print()">⬇ Download / Print Application Form</button></div>
+  <div class="sheet">
+    <div class="head">
+      <div class="brand">Siksha Wallah Consultancy</div>
+      <div class="title">Admission Application Form</div>
+      <div class="sub">Session 2026–27 · College Chowk, Forbesganj, Araria (Bihar)</div>
+      <div class="rno"><span style="font-size:11px;color:#bfdbfe;display:block;">Receipt Number</span><b>${esc(rno)}</b></div>
+    </div>
+    <div class="body">
+      <h2>Personal Details</h2>
+      <table>
+        ${row("Full Name", app.fullName)}
+        ${row("Father's Name", app.fatherName)}
+        ${row("Date of Birth", app.dob)}
+        ${row("Gender", app.gender)}
+        ${row("Mobile", app.mobile ? `+91 ${app.mobile}` : "")}
+        ${row("Email", app.email)}
+        ${row("Address", app.address)}
+        ${row("District / State", [app.district, app.state].filter(Boolean).join(", "))}
+      </table>
+
+      <h2>Education Details</h2>
+      <table>
+        ${row("Qualification", app.qualification)}
+        ${row("Stream", app.stream)}
+        ${row("Passing Year", app.passingYear)}
+        ${row("Marks / %", app.percentage)}
+        ${row("School / College", app.schoolCollege)}
+      </table>
+
+      <h2>Course Applied</h2>
+      <table>
+        ${row("Course", app.course)}
+        ${row("Preferred College", app.preferredCollege)}
+        ${row("BSCC Loan", app.bsccRequired ? "Requested" : undefined)}
+        ${row("Applied On", formatReceiptDate(app.createdAt))}
+      </table>
+
+      <div class="sign">
+        <div>Student Signature</div>
+        <div>Office Signature</div>
+      </div>
+    </div>
+    <div class="foot">
+      This is a computer-generated form. Keep your receipt number (${esc(rno)}) for all future correspondence.
+    </div>
+  </div>
+  <script>window.onload = function(){ setTimeout(function(){ try { window.print(); } catch(e){} }, 350); };</script>
+</body></html>`;
+}
+
+/** Open a printable copy of everything the student submitted (name, education,
+ *  course) — the same client-side print pattern as the receipt, no backend. */
+export function downloadApplicationForm(app: CourseApplication): void {
+  openPrintable(buildApplicationFormHtml(app));
+}
+
+function buildAdmissionLetterHtml(app: CourseApplication): string {
+  const rno = receiptNo(app.id);
+  const dateStr = new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" });
+
+  return `<!doctype html>
+<html lang="en"><head><meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>${esc(rno)} — Admission Letter</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, Segoe UI, Roboto, Arial, sans-serif; color: #0f172a; margin: 0; background: #f1f5f9; }
+  .sheet { max-width: 720px; margin: 24px auto; background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; overflow: hidden; }
+  .head { background: linear-gradient(135deg,#00102e,#003f9f); color: #fff; padding: 28px; text-align: center; }
+  .brand { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: #fcd34d; font-weight: 700; }
+  .title { font-size: 24px; font-weight: 800; margin: 6px 0 0; }
+  .sub { font-size: 12px; color: #bfdbfe; margin-top: 4px; }
+  .body { padding: 32px 36px; font-size: 14px; line-height: 1.8; color: #1e293b; }
+  .rno { text-align: right; font-size: 12px; color: #64748b; margin-bottom: 8px; }
+  .congrats { text-align: center; font-size: 20px; font-weight: 800; color: #16a34a; margin: 18px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 18px 0; }
+  td { padding: 6px 0; font-size: 13px; } td.k { color: #64748b; width: 40%; } td.v { font-weight: 700; }
+  .stamp { margin-top: 40px; display: flex; justify-content: space-between; align-items: flex-end; font-size: 12px; color: #64748b; }
+  .foot { padding: 16px 28px; border-top: 1px dashed #cbd5e1; font-size: 11px; color: #94a3b8; text-align: center; }
+  .actions { text-align: center; margin: 16px; }
+  .actions button { background: #003f9f; color: #fff; border: 0; padding: 11px 22px; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; }
+  @media print { body { background: #fff; } .sheet { border: 0; margin: 0; max-width: none; } .actions { display: none; } }
+</style></head>
+<body>
+  <div class="actions"><button onclick="window.print()">⬇ Download / Print Admission Letter</button></div>
+  <div class="sheet">
+    <div class="head">
+      <div class="brand">Siksha Wallah Consultancy</div>
+      <div class="title">Admission Confirmation Letter</div>
+      <div class="sub">Session 2026–27 · College Chowk, Forbesganj, Araria (Bihar)</div>
+    </div>
+    <div class="body">
+      <div class="rno">Date: ${esc(dateStr)} &nbsp;·&nbsp; Receipt No: ${esc(rno)}</div>
+      <p>Dear <strong>${esc(app.fullName)}</strong>,</p>
+      <p>We are pleased to confirm that your admission has been approved. Welcome aboard!</p>
+      <div class="congrats">🎉 Admission Confirmed 🎉</div>
+      <table>
+        <tr><td class="k">Student Name</td><td class="v">${esc(app.fullName)}</td></tr>
+        <tr><td class="k">Course</td><td class="v">${esc(app.course)}</td></tr>
+        <tr><td class="k">Receipt Number</td><td class="v">${esc(rno)}</td></tr>
+        <tr><td class="k">Applied On</td><td class="v">${esc(formatReceiptDate(app.createdAt))}</td></tr>
+      </table>
+      <p>Please keep this letter and your receipt number safe — you may be asked to present it at the office. For any questions, contact your counsellor or visit our office.</p>
+      <div class="stamp">
+        <div>College Chowk, Forbesganj, Araria, Bihar — 854318<br/>+91 62031 38576</div>
+        <div style="text-align:right;">Authorized Signatory<br/><strong>Siksha Wallah Consultancy</strong></div>
+      </div>
+    </div>
+    <div class="foot">This is a computer-generated letter and is valid without a physical signature.</div>
+  </div>
+  <script>window.onload = function(){ setTimeout(function(){ try { window.print(); } catch(e){} }, 350); };</script>
+</body></html>`;
+}
+
+/** Only meaningful once admission is confirmed — callers should gate the
+ *  button on `status === "admission_done"` before offering this download. */
+export function downloadAdmissionLetter(app: CourseApplication): void {
+  openPrintable(buildAdmissionLetterHtml(app));
 }
