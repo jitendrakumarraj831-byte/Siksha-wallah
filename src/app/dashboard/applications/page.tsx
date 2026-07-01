@@ -11,38 +11,12 @@ import {
   ArrowLeft, Loader, Plus, ClipboardList, ArrowRight,
   CheckCircle2, Clock, PhoneCall, AlertCircle, RefreshCw, Upload, Download,
 } from 'lucide-react';
-import { getIdToken } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
-import { receiptNo, downloadApplicationReceipt, TIMELINE_STEPS, timelineStep } from '@/lib/receipt';
+import { receiptNo, downloadApplicationReceipt } from '@/lib/receipt';
+import { AdmissionTimeline } from '@/components/admission-timeline';
 
-// Compact horizontal status stepper built from the application's existing status.
-function ApplicationTimeline({ status }: { status?: ApplicationStatus }) {
-  if (status === 'not_interested') {
-    return <p className="mt-3 text-xs font-semibold text-gray-400">This application has been closed.</p>;
-  }
-  const current = timelineStep(status);
-  return (
-    <ol className="mt-3 flex items-start">
-      {TIMELINE_STEPS.map((s, i) => {
-        const done = i <= current;
-        return (
-          <li key={s.status} className="flex flex-1 flex-col items-center text-center min-w-0">
-            <div className="flex w-full items-center">
-              <span className={`h-0.5 flex-1 ${i === 0 ? 'opacity-0' : done ? 'bg-green-500' : 'bg-gray-200'}`} />
-              <span className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${done ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-500'}`}>
-                {done ? '✓' : i + 1}
-              </span>
-              <span className={`h-0.5 flex-1 ${i === TIMELINE_STEPS.length - 1 ? 'opacity-0' : i < current ? 'bg-green-500' : 'bg-gray-200'}`} />
-            </div>
-            <span className={`mt-1 px-0.5 text-[9px] leading-tight ${i === current ? 'font-bold text-[#003f9f]' : done ? 'text-gray-600' : 'text-gray-400'}`}>
-              {s.label}
-            </span>
-          </li>
-        );
-      })}
-    </ol>
-  );
-}
+// The admission timeline is now the single shared <AdmissionTimeline> component
+// (see @/components/admission-timeline) so the student portal and office portal
+// always render the exact same journey.
 
 const STATUS_META: Record<ApplicationStatus, { label: string; badge: string; bar: string; icon: React.ElementType }> = {
   new:               { label: 'Application Received',  badge: 'bg-blue-100 text-blue-700',    bar: 'bg-blue-500',   icon: ClipboardList  },
@@ -179,7 +153,7 @@ export default function ApplicationsPage() {
                           </span>
                         </div>
 
-                        <ApplicationTimeline status={app.status} />
+                        <AdmissionTimeline status={app.status} variant="compact" className="mt-3" />
 
                         {app.status === 'documents_pending' && (
                           <Link href="/dashboard/documents"
