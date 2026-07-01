@@ -10,7 +10,54 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
 }
 
-const DISMISS_KEY = "sw-install-dismissed";
+// ── Re-appearance policy ─────────────────────────────────────────────────────
+// The prompt was reappearing because (a) a dismissal was permanent-or-nothing
+// with no cooldown, and (b) Chrome re-fires `beforeinstallprompt` on navigation,
+// and the old handler re-opened the modal without re-checking dismissal. We now
+// suppress with a timestamp cooldown AND show at most once per browser session.
+const SNOOZE_KEY = "sw-install-snooze-until"; // epoch ms; hidden until this time
+const SESSION_KEY = "sw-install-shown-session"; // sessionStorage: shown this visit
+const LEGACY_KEY = "sw-install-dismissed"; // older boolean flag (migrated below)
+const DAY_MS = 24 * 60 * 60 * 1000;
+const SNOOZE_DAYS = 14; // wait this long after "Maybe later" before asking again
+const FOREVER_DAYS = 3650; // effectively never (used once installed)
+const SHOW_DELAY_MS = 2500; // small delay so it doesn't slam the page on open
+
+function readSnoozeUntil(): number {
+  try {
+    // Migrate the old permanent flag to a finite cooldown, then use it.
+    if (localStorage.getItem(LEGACY_KEY) === "1") {
+      const until = Date.now() + SNOOZE_DAYS * DAY_MS;
+      localStorage.setItem(SNOOZE_KEY, String(until));
+      localStorage.removeItem(LEGACY_KEY);
+      return until;
+    }
+    const raw = localStorage.getItem(SNOOZE_KEY);
+    return raw ? Number(raw) || 0 : 0;
+  } catch {
+    return 0;
+  }
+}
+function isSnoozed(): boolean {
+  return Date.now() < readSnoozeUntil();
+}
+function setSnooze(days: number): void {
+  try {
+    localStorage.setItem(SNOOZE_KEY, String(Date.now() + days * DAY_MS));
+  } catch {}
+}
+function shownThisSession(): boolean {
+  try {
+    return sessionStorage.getItem(SESSION_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+function markShownThisSession(): void {
+  try {
+    sessionStorage.setItem(SESSION_KEY, "1");
+  } catch {}
+}
 
 export function InstallPrompt() {
   const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(null);
@@ -31,47 +78,58 @@ export function InstallPrompt() {
       (window.navigator as Navigator & { standalone?: boolean }).standalone === true;
     if (standalone) return;
 
-    // Respect a previous dismissal.
-    if (localStorage.getItem(DISMISS_KEY) === "1") return;
+    let showTimer: ReturnType<typeof setTimeout> | undefined;
+
+    // Central gate: may we auto-open the modal right now? Re-checked on every
+    // trigger so a re-fired browser event during a cooldown can't sneak it back.
+    const canAutoShow = () => !isSnoozed() && !shownThisSession();
+    const show = () => {
+      if (!canAutoShow()) return;
+      markShownThisSession();
+      setVisible(true);
+    };
 
     const ua = window.navigator.userAgent.toLowerCase();
     const ios = /iphone|ipad|ipod/.test(ua);
     const inSafari = ios && !/crios|fxios|edgios/.test(ua);
     if (ios) {
       // iOS Safari never fires `beforeinstallprompt` — show manual steps instead.
-      if (inSafari) {
+      if (inSafari && canAutoShow()) {
         setIsIOS(true);
-        setVisible(true);
+        showTimer = setTimeout(show, SHOW_DELAY_MS);
       }
-      return;
+      return () => { if (showTimer) clearTimeout(showTimer); };
     }
 
     const onBeforeInstall = (e: Event) => {
       e.preventDefault();
+      // Always capture the event so Install still works if shown later…
       setDeferred(e as BeforeInstallPromptEvent);
-      setVisible(true);
+      // …but only auto-open within policy (not snoozed, once per session).
+      if (canAutoShow()) {
+        if (showTimer) clearTimeout(showTimer);
+        showTimer = setTimeout(show, SHOW_DELAY_MS);
+      }
     };
     const onInstalled = () => {
       setVisible(false);
       setDeferred(null);
-      try {
-        localStorage.setItem(DISMISS_KEY, "1");
-      } catch {}
+      setSnooze(FOREVER_DAYS); // installed → don't ask again
     };
 
     window.addEventListener("beforeinstallprompt", onBeforeInstall);
     window.addEventListener("appinstalled", onInstalled);
     return () => {
+      if (showTimer) clearTimeout(showTimer);
       window.removeEventListener("beforeinstallprompt", onBeforeInstall);
       window.removeEventListener("appinstalled", onInstalled);
     };
   }, []);
 
+  // "Maybe later" / close / tap-outside → hide and snooze for SNOOZE_DAYS.
   const dismiss = () => {
     setVisible(false);
-    try {
-      localStorage.setItem(DISMISS_KEY, "1");
-    } catch {}
+    setSnooze(SNOOZE_DAYS);
   };
 
   const handleInstall = async () => {
@@ -81,9 +139,10 @@ export function InstallPrompt() {
     const choice = await deferred.userChoice;
     if (choice.outcome === "accepted") {
       setVisible(false);
-      try {
-        localStorage.setItem(DISMISS_KEY, "1");
-      } catch {}
+      setSnooze(FOREVER_DAYS);
+    } else {
+      // User declined the native sheet → treat like "maybe later".
+      setSnooze(SNOOZE_DAYS);
     }
     setDeferred(null);
   };
