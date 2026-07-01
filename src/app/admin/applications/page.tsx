@@ -10,6 +10,7 @@ import {
   Loader, Phone, Mail, MapPin,
   BookOpen, AlertCircle, Download,
   Filter, Search, MessageCircle, ChevronDown, ChevronUp,
+  FileText, Eye, ShieldCheck, ShieldX, Clock,
 } from "lucide-react";
 import {
   getAllApplications,
@@ -18,6 +19,30 @@ import {
   type PaymentStatus,
 } from "@/services/application-service";
 import { receiptNo } from "@/lib/receipt";
+import { representativeDoc, type DocLike } from "@/lib/admission-journey";
+
+interface DocRecord extends DocLike {
+  id: string;
+  uid: string;
+  url: string;
+  name: string;
+  fileSize?: number;
+  remarks?: string;
+  verifiedAt?: number;
+}
+
+const DOC_STATUS_META: Record<"pending" | "approved" | "rejected", { label: string; cls: string; icon: React.ElementType }> = {
+  pending:  { label: "Pending Review", cls: "bg-yellow-100 text-yellow-800", icon: Clock },
+  approved: { label: "Approved",       cls: "bg-green-100 text-green-800",  icon: ShieldCheck },
+  rejected: { label: "Rejected",       cls: "bg-red-100 text-red-700",      icon: ShieldX },
+};
+
+function formatSize(bytes?: number): string {
+  if (!bytes) return "—";
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+}
 
 const PAYMENT_STATUS_META: Record<PaymentStatus, { label: string; color: string }> = {
   pending: { label: "Pending",   color: "bg-orange-100 text-orange-700 border-orange-200" },
@@ -164,11 +189,98 @@ function PaymentCell({ app, onSaved }: {
   );
 }
 
-function AppCard({ app, onStatusChange, onNoteSaved, onPaymentSaved, isNew }: {
+function DocumentsCell({ doc, onVerified }: {
+  doc?: DocRecord;
+  onVerified: (id: string, changes: Partial<DocRecord>) => void;
+}) {
+  const [rejecting, setRejecting] = useState(false);
+  const [remarks, setRemarks] = useState(doc?.remarks || "");
+  const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState("");
+
+  if (!doc) {
+    return <p className="text-xs italic text-gray-400">No document uploaded yet.</p>;
+  }
+
+  const meta = DOC_STATUS_META[doc.status || "pending"];
+  const Icon = meta.icon;
+
+  async function verify(status: "approved" | "rejected", withRemarks?: string) {
+    setSaving(true);
+    setErr("");
+    try {
+      const res = await fetch("/api/admin/documents", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: doc!.id, status, remarks: withRemarks }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Update failed");
+      onVerified(doc!.id, { status, remarks: withRemarks, verifiedAt: Date.now() });
+      setRejecting(false);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Update failed");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div>
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <p className="truncate text-xs font-bold text-gray-800">{doc.name}</p>
+          <p className="text-[11px] text-gray-400">{formatSize(doc.fileSize)}</p>
+        </div>
+        <span className={`flex-shrink-0 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold ${meta.cls}`}>
+          <Icon size={10} /> {meta.label}
+        </span>
+      </div>
+      {doc.remarks && doc.status === "rejected" && (
+        <p className="mt-1 text-[11px] text-red-600">Reason: {doc.remarks}</p>
+      )}
+      <div className="mt-2 flex flex-wrap items-center gap-1.5">
+        <a href={doc.url} target="_blank" rel="noopener noreferrer"
+          className="flex items-center gap-1 rounded-lg bg-blue-50 border border-blue-200 px-2 py-1 text-xs font-semibold text-blue-700 hover:bg-blue-100">
+          <Eye size={11} /> View
+        </a>
+        {doc.status !== "approved" && (
+          <button onClick={() => verify("approved")} disabled={saving}
+            className="flex items-center gap-1 rounded-lg bg-green-50 border border-green-200 px-2 py-1 text-xs font-bold text-green-700 hover:bg-green-100 disabled:opacity-50">
+            <ShieldCheck size={11} /> Approve
+          </button>
+        )}
+        {doc.status !== "rejected" && !rejecting && (
+          <button onClick={() => setRejecting(true)} disabled={saving}
+            className="flex items-center gap-1 rounded-lg bg-red-50 border border-red-200 px-2 py-1 text-xs font-bold text-red-600 hover:bg-red-100 disabled:opacity-50">
+            <ShieldX size={11} /> Reject
+          </button>
+        )}
+      </div>
+      {rejecting && (
+        <div className="mt-2 flex items-center gap-1">
+          <input autoFocus value={remarks} onChange={e => setRemarks(e.target.value)}
+            placeholder="Rejection reason…"
+            className="w-full rounded-lg border border-red-300 px-2 py-1 text-xs outline-none focus:border-red-500" />
+          <button onClick={() => verify("rejected", remarks)} disabled={saving || !remarks.trim()}
+            className="flex-shrink-0 rounded-lg bg-red-600 px-2 py-1 text-xs font-bold text-white hover:bg-red-700 disabled:opacity-50">
+            {saving ? "…" : "Confirm"}
+          </button>
+          <button onClick={() => setRejecting(false)} className="flex-shrink-0 text-xs text-gray-400 hover:text-gray-600">✕</button>
+        </div>
+      )}
+      {err && <p className="mt-1 text-[11px] font-semibold text-red-600">{err}</p>}
+    </div>
+  );
+}
+
+function AppCard({ app, doc, onStatusChange, onNoteSaved, onPaymentSaved, onDocVerified, isNew }: {
   app: CourseApplication;
+  doc?: DocRecord;
   onStatusChange: (id: string, s: ApplicationStatus) => void;
   onNoteSaved: (id: string, note: string) => void;
   onPaymentSaved: (id: string, changes: Partial<CourseApplication>) => void;
+  onDocVerified: (id: string, changes: Partial<DocRecord>) => void;
   isNew: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
@@ -276,6 +388,10 @@ function AppCard({ app, onStatusChange, onNoteSaved, onPaymentSaved, isNew }: {
               </div>
             </InfoBlock>
 
+            <InfoBlock title="Documents">
+              <DocumentsCell doc={doc} onVerified={onDocVerified} />
+            </InfoBlock>
+
             <InfoBlock title="Payment">
               <PaymentCell app={app} onSaved={onPaymentSaved} />
             </InfoBlock>
@@ -347,6 +463,7 @@ function Row({ k, v }: { k: string; v: string }) {
 export default function AdminApplicationsPage() {
   const { authorized, adminUser } = useAdminGuard();
   const [applications, setApplications] = useState<CourseApplication[]>([]);
+  const [docsByUser, setDocsByUser] = useState<Record<string, DocRecord[]>>({});
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [actionError, setActionError] = useState("");
@@ -364,6 +481,20 @@ export default function AdminApplicationsPage() {
         setLoadError(result.ok ? "" : (result.error || ""));
       })
       .finally(() => setLoading(false));
+
+    // Documents — so Status + Documents + Payment can all be handled from this
+    // one card instead of jumping to a separate /admin/documents page.
+    fetch("/api/admin/documents", { credentials: "include" })
+      .then(res => (res.ok ? res.json() : null))
+      .then(json => {
+        if (!json?.success || !Array.isArray(json.data)) return;
+        const byUser: Record<string, DocRecord[]> = {};
+        for (const d of json.data as DocRecord[]) {
+          if (d.uid) (byUser[d.uid] ||= []).push(d);
+        }
+        setDocsByUser(byUser);
+      })
+      .catch(() => {});
   }, [authorized]);
 
   async function handleStatusChange(id: string, status: ApplicationStatus) {
@@ -385,6 +516,16 @@ export default function AdminApplicationsPage() {
 
   function handlePaymentSaved(id: string, changes: Partial<CourseApplication>) {
     setApplications(prev => prev.map(a => a.id === id ? { ...a, ...changes } : a));
+  }
+
+  function handleDocVerified(docId: string, changes: Partial<DocRecord>) {
+    setDocsByUser(prev => {
+      const next: Record<string, DocRecord[]> = {};
+      for (const [uid, docs] of Object.entries(prev)) {
+        next[uid] = docs.map(d => d.id === docId ? { ...d, ...changes } : d);
+      }
+      return next;
+    });
   }
 
   function exportCsv() {
@@ -574,9 +715,11 @@ export default function AdminApplicationsPage() {
               <AppCard
                 key={app.id}
                 app={app}
+                doc={app.userId ? representativeDoc(docsByUser[app.userId]) as DocRecord | undefined : undefined}
                 onStatusChange={handleStatusChange}
                 onNoteSaved={handleNoteSaved}
                 onPaymentSaved={handlePaymentSaved}
+                onDocVerified={handleDocVerified}
                 isNew={!app.status || app.status === "new"}
               />
             ))}
