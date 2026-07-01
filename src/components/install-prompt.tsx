@@ -10,7 +10,61 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
 }
 
-const DISMISS_KEY = "sw-install-dismissed";
+// ── Re-appearance policy ─────────────────────────────────────────────────────
+// The prompt was reappearing because (a) a dismissal was permanent-or-nothing
+// with no cooldown, and (b) Chrome re-fires `beforeinstallprompt` on navigation,
+// and the old handler re-opened the modal without re-checking dismissal. We now
+// suppress with a timestamp cooldown AND show at most once per browser session.
+const SNOOZE_KEY = "sw-install-snooze-until"; // epoch ms; hidden until this time
+const SESSION_KEY = "sw-install-shown-session"; // sessionStorage: shown this visit
+const LEGACY_KEY = "sw-install-dismissed"; // older boolean flag (migrated below)
+const DAY_MS = 24 * 60 * 60 * 1000;
+// Reach model: show at most ONCE PER DEVICE PER DAY. localStorage is per-device,
+// so each phone/browser is counted separately and independently — however many
+// times a person reopens the site in a day, they only see it once that day. The
+// cooldown is applied the moment it is shown (not only on dismiss), so even a
+// student who ignores it isn't asked again until the next day.
+const COOLDOWN_DAYS = 1;
+const FOREVER_DAYS = 3650; // effectively never (used once installed)
+// Show 30s after the site opens — long enough that the student has started
+// looking around before we interrupt.
+const SHOW_DELAY_MS = 30_000;
+
+function readSnoozeUntil(): number {
+  try {
+    // Migrate the old permanent flag to a finite cooldown, then use it.
+    if (localStorage.getItem(LEGACY_KEY) === "1") {
+      const until = Date.now() + COOLDOWN_DAYS * DAY_MS;
+      localStorage.setItem(SNOOZE_KEY, String(until));
+      localStorage.removeItem(LEGACY_KEY);
+      return until;
+    }
+    const raw = localStorage.getItem(SNOOZE_KEY);
+    return raw ? Number(raw) || 0 : 0;
+  } catch {
+    return 0;
+  }
+}
+function isSnoozed(): boolean {
+  return Date.now() < readSnoozeUntil();
+}
+function setSnooze(days: number): void {
+  try {
+    localStorage.setItem(SNOOZE_KEY, String(Date.now() + days * DAY_MS));
+  } catch {}
+}
+function shownThisSession(): boolean {
+  try {
+    return sessionStorage.getItem(SESSION_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+function markShownThisSession(): void {
+  try {
+    sessionStorage.setItem(SESSION_KEY, "1");
+  } catch {}
+}
 
 export function InstallPrompt() {
   const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(null);
@@ -31,47 +85,62 @@ export function InstallPrompt() {
       (window.navigator as Navigator & { standalone?: boolean }).standalone === true;
     if (standalone) return;
 
-    // Respect a previous dismissal.
-    if (localStorage.getItem(DISMISS_KEY) === "1") return;
+    let showTimer: ReturnType<typeof setTimeout> | undefined;
+
+    // Central gate: may we auto-open the modal right now? Re-checked on every
+    // trigger so a re-fired browser event during a cooldown can't sneak it back.
+    const canAutoShow = () => !isSnoozed() && !shownThisSession();
+    const show = () => {
+      if (!canAutoShow()) return;
+      markShownThisSession();
+      // Apply the daily cooldown the moment it appears — so reopening the site
+      // later today won't show it again, whether or not the student interacts.
+      setSnooze(COOLDOWN_DAYS);
+      setVisible(true);
+    };
 
     const ua = window.navigator.userAgent.toLowerCase();
     const ios = /iphone|ipad|ipod/.test(ua);
     const inSafari = ios && !/crios|fxios|edgios/.test(ua);
     if (ios) {
       // iOS Safari never fires `beforeinstallprompt` — show manual steps instead.
-      if (inSafari) {
+      if (inSafari && canAutoShow()) {
         setIsIOS(true);
-        setVisible(true);
+        showTimer = setTimeout(show, SHOW_DELAY_MS);
       }
-      return;
+      return () => { if (showTimer) clearTimeout(showTimer); };
     }
 
     const onBeforeInstall = (e: Event) => {
       e.preventDefault();
+      // Always capture the event so Install still works if shown later…
       setDeferred(e as BeforeInstallPromptEvent);
-      setVisible(true);
+      // …but only auto-open within policy (not snoozed, once per session).
+      if (canAutoShow()) {
+        if (showTimer) clearTimeout(showTimer);
+        showTimer = setTimeout(show, SHOW_DELAY_MS);
+      }
     };
     const onInstalled = () => {
       setVisible(false);
       setDeferred(null);
-      try {
-        localStorage.setItem(DISMISS_KEY, "1");
-      } catch {}
+      setSnooze(FOREVER_DAYS); // installed → don't ask again
     };
 
     window.addEventListener("beforeinstallprompt", onBeforeInstall);
     window.addEventListener("appinstalled", onInstalled);
     return () => {
+      if (showTimer) clearTimeout(showTimer);
       window.removeEventListener("beforeinstallprompt", onBeforeInstall);
       window.removeEventListener("appinstalled", onInstalled);
     };
   }, []);
 
+  // "Maybe later" / close / tap-outside → hide (daily cooldown was already set
+  // when it was shown, so it won't reappear again today on this device).
   const dismiss = () => {
     setVisible(false);
-    try {
-      localStorage.setItem(DISMISS_KEY, "1");
-    } catch {}
+    setSnooze(COOLDOWN_DAYS);
   };
 
   const handleInstall = async () => {
@@ -81,9 +150,10 @@ export function InstallPrompt() {
     const choice = await deferred.userChoice;
     if (choice.outcome === "accepted") {
       setVisible(false);
-      try {
-        localStorage.setItem(DISMISS_KEY, "1");
-      } catch {}
+      setSnooze(FOREVER_DAYS);
+    } else {
+      // User declined the native sheet → treat like "maybe later" (next day).
+      setSnooze(COOLDOWN_DAYS);
     }
     setDeferred(null);
   };
