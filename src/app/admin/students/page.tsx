@@ -8,10 +8,11 @@ import {
   Loader, Users, Phone, MessageCircle,
   Search, AlertCircle, UserCheck, UserX, Mail, MapPin, Calendar,
   BookOpen, ClipboardList, ChevronDown, ChevronUp, Clock,
-  CheckCircle2, RefreshCw, Download,
+  CheckCircle2, RefreshCw, Download, ArrowRight, Trash2,
 } from "lucide-react";
 import { db } from "@/lib/firebase";
-import { adminUpdate } from "@/lib/admin-api";
+import { adminDeleteStudent } from "@/lib/admin-api";
+import { ConfirmDeleteModal } from "@/components/confirm-delete-modal";
 import { exportToCsv, datedFilename } from "@/lib/csv-export";
 import {
   collection, getDocs, query, where,
@@ -72,12 +73,13 @@ function timeAgo(ts: any): string {
 
 /* ── Student Card ─────────────────────────────── */
 function StudentCard({
-  student, onAppStatusChange,
+  student, onDeleted,
 }: {
   student: StudentProfile;
-  onAppStatusChange: (appId: string, status: ApplicationStatus) => void;
+  onDeleted: (id: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
   const apps = student.applications || [];
 
   return (
@@ -224,15 +226,14 @@ function StudentCard({
                       </div>
                       <div className="flex-shrink-0 text-right">
                         <p className="text-xs text-gray-400 mb-2">{timeAgo(app.createdAt)}</p>
-                        <select
-                          value={app.status || "new"}
-                          onChange={e => app.id && onAppStatusChange(app.id, e.target.value as ApplicationStatus)}
-                          className="rounded-lg border border-gray-200 bg-white px-2 py-1 text-xs font-semibold outline-none focus:border-blue-400"
+                        {/* Status/documents/payment are edited from the Applications page only —
+                            one place to avoid two pages disagreeing about the same application. */}
+                        <Link
+                          href={`/admin/applications?q=${encodeURIComponent(app.course || student.name || "")}`}
+                          className="inline-flex items-center gap-1 rounded-lg border border-[#003f9f]/20 px-2 py-1 text-xs font-bold text-[#003f9f] hover:bg-blue-50"
                         >
-                          {Object.entries(APP_STATUS_META).map(([k, v]) => (
-                            <option key={k} value={k}>{v.icon} {v.label}</option>
-                          ))}
-                        </select>
+                          Manage <ArrowRight size={11} />
+                        </Link>
                       </div>
                     </div>
                   );
@@ -272,7 +273,24 @@ function StudentCard({
               </div>
             </div>
           )}
+
+          {/* Danger zone */}
+          <div className="flex justify-end border-t border-gray-200 px-5 py-3">
+            <button onClick={() => setConfirmingDelete(true)}
+              className="flex items-center gap-1.5 rounded-lg border border-red-200 bg-white px-3 py-1.5 text-xs font-bold text-red-500 hover:bg-red-50 transition">
+              <Trash2 size={12} /> Delete Student Account
+            </button>
+          </div>
         </div>
+      )}
+      {confirmingDelete && (
+        <ConfirmDeleteModal
+          title="Delete Student Account"
+          message={`Permanently delete ${student.name || student.email}'s login, profile, all ${apps.length} application(s), and all uploaded documents.`}
+          confirmWord={student.email}
+          onClose={() => setConfirmingDelete(false)}
+          onConfirm={async () => { await adminDeleteStudent(student.id); onDeleted(student.id); }}
+        />
       )}
     </div>
   );
@@ -284,7 +302,6 @@ export default function AdminStudentsPage() {
   const [students, setStudents] = useState<StudentProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [actionError, setActionError] = useState("");
   const [diag, setDiag] = useState<string>("");
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState<"" | "has_app" | "no_app" | "admission_done" | "bscc">("");
@@ -398,20 +415,8 @@ export default function AdminStudentsPage() {
     }
   }
 
-  async function handleAppStatusChange(appId: string, status: ApplicationStatus) {
-    // Optimistic update; revert if the server write doesn't persist.
-    const snapshot = students;
-    setStudents(prev => prev.map(s => ({
-      ...s,
-      applications: s.applications?.map(a => a.id === appId ? { ...a, status } : a),
-    })));
-    setActionError("");
-    try {
-      await adminUpdate("course_applications", appId, { status });
-    } catch (e) {
-      setStudents(snapshot);
-      setActionError(e instanceof Error ? e.message : "Status update failed.");
-    }
+  function handleStudentDeleted(id: string) {
+    setStudents(prev => prev.filter(s => s.id !== id));
   }
 
   function exportCsv() {
@@ -469,12 +474,6 @@ export default function AdminStudentsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {actionError && (
-        <div className="fixed bottom-5 left-1/2 z-[60] flex max-w-[92vw] -translate-x-1/2 items-center gap-2 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg">
-          <AlertCircle size={16} className="flex-shrink-0" /> {actionError}
-          <button onClick={() => setActionError("")} aria-label="Dismiss" className="ml-2 text-white/80 hover:text-white">✕</button>
-        </div>
-      )}
       <AdminHeader adminUser={adminUser} />
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
@@ -575,7 +574,7 @@ export default function AdminStudentsPage() {
               <StudentCard
                 key={student.id}
                 student={student}
-                onAppStatusChange={handleAppStatusChange}
+                onDeleted={handleStudentDeleted}
               />
             ))}
           </div>

@@ -10,7 +10,7 @@ import {
   Loader, Phone, Mail, MapPin,
   BookOpen, AlertCircle, Download,
   Filter, Search, MessageCircle, ChevronDown, ChevronUp,
-  FileText, Eye, ShieldCheck, ShieldX, Clock,
+  FileText, Eye, ShieldCheck, ShieldX, Clock, Trash2,
 } from "lucide-react";
 import {
   getAllApplications,
@@ -20,6 +20,8 @@ import {
 } from "@/services/application-service";
 import { receiptNo } from "@/lib/receipt";
 import { representativeDoc, type DocLike } from "@/lib/admission-journey";
+import { adminDeleteApplication, adminDeleteDocument } from "@/lib/admin-api";
+import { ConfirmDeleteModal } from "@/components/confirm-delete-modal";
 
 interface DocRecord extends DocLike {
   id: string;
@@ -189,14 +191,17 @@ function PaymentCell({ app, onSaved }: {
   );
 }
 
-function DocumentsCell({ doc, onVerified }: {
+function DocumentsCell({ doc, studentName, onVerified, onDeleted }: {
   doc?: DocRecord;
+  studentName: string;
   onVerified: (id: string, changes: Partial<DocRecord>) => void;
+  onDeleted: (id: string) => void;
 }) {
   const [rejecting, setRejecting] = useState(false);
   const [remarks, setRemarks] = useState(doc?.remarks || "");
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState("");
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   if (!doc) {
     return <p className="text-xs italic text-gray-400">No document uploaded yet.</p>;
@@ -256,7 +261,20 @@ function DocumentsCell({ doc, onVerified }: {
             <ShieldX size={11} /> Reject
           </button>
         )}
+        <button onClick={() => setConfirmingDelete(true)} disabled={saving}
+          className="flex items-center gap-1 rounded-lg bg-gray-50 border border-gray-200 px-2 py-1 text-xs font-bold text-gray-500 hover:border-red-300 hover:text-red-600 disabled:opacity-50">
+          <Trash2 size={11} /> Delete
+        </button>
       </div>
+      {confirmingDelete && (
+        <ConfirmDeleteModal
+          title="Delete Document"
+          message={`Permanently delete ${studentName}'s uploaded document (${doc.name}) — the file and its record will be removed.`}
+          confirmWord={studentName}
+          onClose={() => setConfirmingDelete(false)}
+          onConfirm={async () => { await adminDeleteDocument(doc!.id); onDeleted(doc!.id); }}
+        />
+      )}
       {rejecting && (
         <div className="mt-2 flex items-center gap-1">
           <input autoFocus value={remarks} onChange={e => setRemarks(e.target.value)}
@@ -274,16 +292,19 @@ function DocumentsCell({ doc, onVerified }: {
   );
 }
 
-function AppCard({ app, doc, onStatusChange, onNoteSaved, onPaymentSaved, onDocVerified, isNew }: {
+function AppCard({ app, doc, onStatusChange, onNoteSaved, onPaymentSaved, onDocVerified, onDocDeleted, onAppDeleted, isNew }: {
   app: CourseApplication;
   doc?: DocRecord;
   onStatusChange: (id: string, s: ApplicationStatus) => void;
   onNoteSaved: (id: string, note: string) => void;
   onPaymentSaved: (id: string, changes: Partial<CourseApplication>) => void;
   onDocVerified: (id: string, changes: Partial<DocRecord>) => void;
+  onDocDeleted: (id: string) => void;
+  onAppDeleted: (id: string) => void;
   isNew: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
   const meta = STATUS_META[app.status || "new"];
 
   return (
@@ -389,7 +410,7 @@ function AppCard({ app, doc, onStatusChange, onNoteSaved, onPaymentSaved, onDocV
             </InfoBlock>
 
             <InfoBlock title="Documents">
-              <DocumentsCell doc={doc} onVerified={onDocVerified} />
+              <DocumentsCell doc={doc} studentName={app.fullName} onVerified={onDocVerified} onDeleted={onDocDeleted} />
             </InfoBlock>
 
             <InfoBlock title="Payment">
@@ -439,7 +460,24 @@ function AppCard({ app, doc, onStatusChange, onNoteSaved, onPaymentSaved, onDocV
               </div>
             </div>
           )}
+
+          {/* Danger zone */}
+          <div className="mt-4 flex justify-end border-t border-gray-200 pt-3">
+            <button onClick={() => setConfirmingDelete(true)}
+              className="flex items-center gap-1.5 rounded-lg border border-red-200 bg-white px-3 py-1.5 text-xs font-bold text-red-500 hover:bg-red-50 transition">
+              <Trash2 size={12} /> Delete This Application
+            </button>
+          </div>
         </div>
+      )}
+      {confirmingDelete && (
+        <ConfirmDeleteModal
+          title="Delete Application"
+          message={`Permanently delete ${app.fullName}'s "${app.course}" application. This does not delete their student account or documents.`}
+          confirmWord={app.fullName}
+          onClose={() => setConfirmingDelete(false)}
+          onConfirm={async () => { if (app.id) { await adminDeleteApplication(app.id); onAppDeleted(app.id); } }}
+        />
       )}
     </div>
   );
@@ -470,6 +508,13 @@ export default function AdminApplicationsPage() {
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState<"" | ApplicationStatus>("");
   const [filterCourse, setFilterCourse] = useState("");
+
+  // Prefill search from ?q= — lets "Manage" links from the Students page land
+  // straight on the right application instead of a blank search box.
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search).get("q");
+    if (q) setSearch(q);
+  }, []);
 
   useEffect(() => {
     if (!authorized) return;
@@ -526,6 +571,20 @@ export default function AdminApplicationsPage() {
       }
       return next;
     });
+  }
+
+  function handleDocDeleted(docId: string) {
+    setDocsByUser(prev => {
+      const next: Record<string, DocRecord[]> = {};
+      for (const [uid, docs] of Object.entries(prev)) {
+        next[uid] = docs.filter(d => d.id !== docId);
+      }
+      return next;
+    });
+  }
+
+  function handleAppDeleted(id: string) {
+    setApplications(prev => prev.filter(a => a.id !== id));
   }
 
   function exportCsv() {
@@ -720,6 +779,8 @@ export default function AdminApplicationsPage() {
                 onNoteSaved={handleNoteSaved}
                 onPaymentSaved={handlePaymentSaved}
                 onDocVerified={handleDocVerified}
+                onDocDeleted={handleDocDeleted}
+                onAppDeleted={handleAppDeleted}
                 isNew={!app.status || app.status === "new"}
               />
             ))}

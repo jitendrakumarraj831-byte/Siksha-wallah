@@ -102,3 +102,41 @@ export async function adminUpdate(
   const data = await res.json().catch(() => ({} as { error?: string }));
   throw new Error(data.error || "Change save नहीं हो पाया। दोबारा कोशिश करें।");
 }
+
+// Destructive deletes — separate small helpers (rather than overloading
+// adminUpdate) since callers must show a confirm-before-delete UI, not an
+// optimistic update.
+async function adminDelete(path: string, body: Record<string, string>): Promise<void> {
+  let res: Response;
+  try {
+    res = await fetch(path, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(body),
+    });
+  } catch {
+    throw new Error("Network error — delete नहीं हो पाया। Internet check करके दोबारा करें।");
+  }
+  if (res.ok) return;
+  if (res.status === 401) throw new Error("Session expire हो गई है। दोबारा login करें।");
+  if (res.status === 503) throw new Error("Admin backend abhi available nahi hai. Thodi der baad try karein.");
+  const data = await res.json().catch(() => ({} as { error?: string }));
+  throw new Error(data.error || "Delete नहीं हो पाया। दोबारा कोशिश करें।");
+}
+
+/** Permanently deletes a student's entire account: Auth login, profile,
+ *  every application and every uploaded document. Irreversible. */
+export async function adminDeleteStudent(uid: string): Promise<void> {
+  return adminDelete("/api/admin/students", { uid });
+}
+
+/** Permanently deletes one admission application. Irreversible. */
+export async function adminDeleteApplication(id: string): Promise<void> {
+  return adminDelete("/api/admin/applications", { id });
+}
+
+/** Permanently deletes one uploaded document (Firestore record + Cloudinary file). Irreversible. */
+export async function adminDeleteDocument(id: string): Promise<void> {
+  return adminDelete("/api/admin/documents", { id });
+}
