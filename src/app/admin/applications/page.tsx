@@ -10,13 +10,48 @@ import {
   Loader, Phone, Mail, MapPin,
   BookOpen, AlertCircle, Download,
   Filter, Search, MessageCircle, ChevronDown, ChevronUp,
+  FileText, Eye, ShieldCheck, ShieldX, Clock, Trash2,
 } from "lucide-react";
 import {
   getAllApplications,
   type CourseApplication,
   type ApplicationStatus,
+  type PaymentStatus,
 } from "@/services/application-service";
 import { receiptNo } from "@/lib/receipt";
+import { representativeDoc, type DocLike } from "@/lib/admission-journey";
+import { adminDeleteApplication, adminDeleteDocument } from "@/lib/admin-api";
+import { ConfirmDeleteModal } from "@/components/confirm-delete-modal";
+
+interface DocRecord extends DocLike {
+  id: string;
+  uid: string;
+  url: string;
+  name: string;
+  fileSize?: number;
+  remarks?: string;
+  verifiedAt?: number;
+}
+
+const DOC_STATUS_META: Record<"pending" | "approved" | "rejected", { label: string; cls: string; icon: React.ElementType }> = {
+  pending:  { label: "Pending Review", cls: "bg-yellow-100 text-yellow-800", icon: Clock },
+  approved: { label: "Approved",       cls: "bg-green-100 text-green-800",  icon: ShieldCheck },
+  rejected: { label: "Rejected",       cls: "bg-red-100 text-red-700",      icon: ShieldX },
+};
+
+function formatSize(bytes?: number): string {
+  if (!bytes) return "—";
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+}
+
+const PAYMENT_STATUS_META: Record<PaymentStatus, { label: string; color: string }> = {
+  pending: { label: "Pending",   color: "bg-orange-100 text-orange-700 border-orange-200" },
+  partial: { label: "Partial",   color: "bg-amber-100 text-amber-700 border-amber-200" },
+  paid:    { label: "Paid",      color: "bg-green-100 text-green-700 border-green-200" },
+};
+const PAYMENT_MODES = ["Cash", "UPI", "Bank Transfer", "Cheque", "Card", "Online"];
 
 const STATUS_META: Record<ApplicationStatus, { label: string; color: string; icon: string }> = {
   new:               { label: "New",               color: "bg-blue-100 text-blue-800 border-blue-200",    icon: "🆕" },
@@ -82,13 +117,194 @@ function NoteCell({ app, onSaved }: { app: CourseApplication; onSaved: (id: stri
   );
 }
 
-function AppCard({ app, onStatusChange, onNoteSaved, isNew }: {
+function PaymentCell({ app, onSaved }: {
   app: CourseApplication;
+  onSaved: (id: string, changes: Partial<CourseApplication>) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [status, setStatus] = useState<PaymentStatus>(app.paymentStatus || "pending");
+  const [amountPaid, setAmountPaid] = useState(app.amountPaid?.toString() || "");
+  const [amountDue, setAmountDue] = useState(app.amountDue?.toString() || "");
+  const [paymentMode, setPaymentMode] = useState(app.paymentMode || "");
+  const [paymentDate, setPaymentDate] = useState(app.paymentDate || "");
+  const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState("");
+
+  const meta = PAYMENT_STATUS_META[app.paymentStatus || "pending"];
+
+  async function save() {
+    if (!app.id) return;
+    setSaving(true);
+    setErr("");
+    try {
+      const changes: Partial<CourseApplication> = {
+        paymentStatus: status,
+        amountPaid: amountPaid === "" ? undefined : Number(amountPaid),
+        amountDue: amountDue === "" ? undefined : Number(amountDue),
+        paymentMode: paymentMode || undefined,
+        paymentDate: paymentDate || undefined,
+      };
+      await adminUpdate("course_applications", app.id, changes as any);
+      onSaved(app.id, changes);
+      setOpen(false);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Save failed");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (!open) return (
+    <button onClick={() => setOpen(true)} className="flex items-center gap-1.5">
+      <span className={`rounded-full border px-2 py-0.5 text-xs font-bold ${meta.color}`}>{meta.label}</span>
+      <span className="text-xs text-blue-600 hover:underline">Edit</span>
+    </button>
+  );
+
+  return (
+    <div className="space-y-1.5">
+      <select value={status} onChange={e => setStatus(e.target.value as PaymentStatus)}
+        className="w-full rounded-lg border border-gray-200 bg-white px-2 py-1.5 text-xs font-semibold outline-none focus:border-blue-400">
+        {Object.entries(PAYMENT_STATUS_META).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
+      </select>
+      <div className="flex gap-1.5">
+        <input type="number" min="0" placeholder="Paid ₹" value={amountPaid} onChange={e => setAmountPaid(e.target.value)}
+          className="w-1/2 rounded-lg border border-gray-200 px-2 py-1.5 text-xs outline-none focus:border-blue-400" />
+        <input type="number" min="0" placeholder="Due ₹" value={amountDue} onChange={e => setAmountDue(e.target.value)}
+          className="w-1/2 rounded-lg border border-gray-200 px-2 py-1.5 text-xs outline-none focus:border-blue-400" />
+      </div>
+      <select value={paymentMode} onChange={e => setPaymentMode(e.target.value)}
+        className="w-full rounded-lg border border-gray-200 bg-white px-2 py-1.5 text-xs font-semibold outline-none focus:border-blue-400">
+        <option value="">Mode…</option>
+        {PAYMENT_MODES.map(m => <option key={m} value={m}>{m}</option>)}
+      </select>
+      <input type="date" value={paymentDate} onChange={e => setPaymentDate(e.target.value)}
+        className="w-full rounded-lg border border-gray-200 px-2 py-1.5 text-xs outline-none focus:border-blue-400" />
+      <div className="flex items-center gap-1">
+        <button onClick={save} disabled={saving} className="rounded-lg bg-blue-600 px-2 py-1 text-xs font-bold text-white hover:bg-blue-700">
+          {saving ? "…" : "Save"}
+        </button>
+        <button onClick={() => setOpen(false)} className="text-xs text-gray-400 hover:text-red-500">✕</button>
+      </div>
+      {err && <p className="text-[11px] font-semibold text-red-600">{err}</p>}
+    </div>
+  );
+}
+
+function DocumentsCell({ doc, studentName, onVerified, onDeleted }: {
+  doc?: DocRecord;
+  studentName: string;
+  onVerified: (id: string, changes: Partial<DocRecord>) => void;
+  onDeleted: (id: string) => void;
+}) {
+  const [rejecting, setRejecting] = useState(false);
+  const [remarks, setRemarks] = useState(doc?.remarks || "");
+  const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState("");
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+
+  if (!doc) {
+    return <p className="text-xs italic text-gray-400">No document uploaded yet.</p>;
+  }
+
+  const meta = DOC_STATUS_META[doc.status || "pending"];
+  const Icon = meta.icon;
+
+  async function verify(status: "approved" | "rejected", withRemarks?: string) {
+    setSaving(true);
+    setErr("");
+    try {
+      const res = await fetch("/api/admin/documents", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: doc!.id, status, remarks: withRemarks }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Update failed");
+      onVerified(doc!.id, { status, remarks: withRemarks, verifiedAt: Date.now() });
+      setRejecting(false);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Update failed");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div>
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <p className="truncate text-xs font-bold text-gray-800">{doc.name}</p>
+          <p className="text-[11px] text-gray-400">{formatSize(doc.fileSize)}</p>
+        </div>
+        <span className={`flex-shrink-0 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold ${meta.cls}`}>
+          <Icon size={10} /> {meta.label}
+        </span>
+      </div>
+      {doc.remarks && doc.status === "rejected" && (
+        <p className="mt-1 text-[11px] text-red-600">Reason: {doc.remarks}</p>
+      )}
+      <div className="mt-2 flex flex-wrap items-center gap-1.5">
+        <a href={doc.url} target="_blank" rel="noopener noreferrer"
+          className="flex items-center gap-1 rounded-lg bg-blue-50 border border-blue-200 px-2 py-1 text-xs font-semibold text-blue-700 hover:bg-blue-100">
+          <Eye size={11} /> View
+        </a>
+        {doc.status !== "approved" && (
+          <button onClick={() => verify("approved")} disabled={saving}
+            className="flex items-center gap-1 rounded-lg bg-green-50 border border-green-200 px-2 py-1 text-xs font-bold text-green-700 hover:bg-green-100 disabled:opacity-50">
+            <ShieldCheck size={11} /> Approve
+          </button>
+        )}
+        {doc.status !== "rejected" && !rejecting && (
+          <button onClick={() => setRejecting(true)} disabled={saving}
+            className="flex items-center gap-1 rounded-lg bg-red-50 border border-red-200 px-2 py-1 text-xs font-bold text-red-600 hover:bg-red-100 disabled:opacity-50">
+            <ShieldX size={11} /> Reject
+          </button>
+        )}
+        <button onClick={() => setConfirmingDelete(true)} disabled={saving}
+          className="flex items-center gap-1 rounded-lg bg-gray-50 border border-gray-200 px-2 py-1 text-xs font-bold text-gray-500 hover:border-red-300 hover:text-red-600 disabled:opacity-50">
+          <Trash2 size={11} /> Delete
+        </button>
+      </div>
+      {confirmingDelete && (
+        <ConfirmDeleteModal
+          title="Delete Document"
+          message={`Permanently delete ${studentName}'s uploaded document (${doc.name}) — the file and its record will be removed.`}
+          confirmWord={studentName}
+          onClose={() => setConfirmingDelete(false)}
+          onConfirm={async () => { await adminDeleteDocument(doc!.id); onDeleted(doc!.id); }}
+        />
+      )}
+      {rejecting && (
+        <div className="mt-2 flex items-center gap-1">
+          <input autoFocus value={remarks} onChange={e => setRemarks(e.target.value)}
+            placeholder="Rejection reason…"
+            className="w-full rounded-lg border border-red-300 px-2 py-1 text-xs outline-none focus:border-red-500" />
+          <button onClick={() => verify("rejected", remarks)} disabled={saving || !remarks.trim()}
+            className="flex-shrink-0 rounded-lg bg-red-600 px-2 py-1 text-xs font-bold text-white hover:bg-red-700 disabled:opacity-50">
+            {saving ? "…" : "Confirm"}
+          </button>
+          <button onClick={() => setRejecting(false)} className="flex-shrink-0 text-xs text-gray-400 hover:text-gray-600">✕</button>
+        </div>
+      )}
+      {err && <p className="mt-1 text-[11px] font-semibold text-red-600">{err}</p>}
+    </div>
+  );
+}
+
+function AppCard({ app, doc, onStatusChange, onNoteSaved, onPaymentSaved, onDocVerified, onDocDeleted, onAppDeleted, isNew }: {
+  app: CourseApplication;
+  doc?: DocRecord;
   onStatusChange: (id: string, s: ApplicationStatus) => void;
   onNoteSaved: (id: string, note: string) => void;
+  onPaymentSaved: (id: string, changes: Partial<CourseApplication>) => void;
+  onDocVerified: (id: string, changes: Partial<DocRecord>) => void;
+  onDocDeleted: (id: string) => void;
+  onAppDeleted: (id: string) => void;
   isNew: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
   const meta = STATUS_META[app.status || "new"];
 
   return (
@@ -192,6 +408,14 @@ function AppCard({ app, onStatusChange, onNoteSaved, isNew }: {
                 )}
               </div>
             </InfoBlock>
+
+            <InfoBlock title="Documents">
+              <DocumentsCell doc={doc} studentName={app.fullName} onVerified={onDocVerified} onDeleted={onDocDeleted} />
+            </InfoBlock>
+
+            <InfoBlock title="Payment">
+              <PaymentCell app={app} onSaved={onPaymentSaved} />
+            </InfoBlock>
           </div>
 
           {app.message && (
@@ -236,7 +460,24 @@ function AppCard({ app, onStatusChange, onNoteSaved, isNew }: {
               </div>
             </div>
           )}
+
+          {/* Danger zone */}
+          <div className="mt-4 flex justify-end border-t border-gray-200 pt-3">
+            <button onClick={() => setConfirmingDelete(true)}
+              className="flex items-center gap-1.5 rounded-lg border border-red-200 bg-white px-3 py-1.5 text-xs font-bold text-red-500 hover:bg-red-50 transition">
+              <Trash2 size={12} /> Delete This Application
+            </button>
+          </div>
         </div>
+      )}
+      {confirmingDelete && (
+        <ConfirmDeleteModal
+          title="Delete Application"
+          message={`Permanently delete ${app.fullName}'s "${app.course}" application. This does not delete their student account or documents.`}
+          confirmWord={app.fullName}
+          onClose={() => setConfirmingDelete(false)}
+          onConfirm={async () => { if (app.id) { await adminDeleteApplication(app.id); onAppDeleted(app.id); } }}
+        />
       )}
     </div>
   );
@@ -260,12 +501,20 @@ function Row({ k, v }: { k: string; v: string }) {
 export default function AdminApplicationsPage() {
   const { authorized, adminUser } = useAdminGuard();
   const [applications, setApplications] = useState<CourseApplication[]>([]);
+  const [docsByUser, setDocsByUser] = useState<Record<string, DocRecord[]>>({});
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [actionError, setActionError] = useState("");
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState<"" | ApplicationStatus>("");
   const [filterCourse, setFilterCourse] = useState("");
+
+  // Prefill search from ?q= — lets "Manage" links from the Students page land
+  // straight on the right application instead of a blank search box.
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search).get("q");
+    if (q) setSearch(q);
+  }, []);
 
   useEffect(() => {
     if (!authorized) return;
@@ -277,6 +526,20 @@ export default function AdminApplicationsPage() {
         setLoadError(result.ok ? "" : (result.error || ""));
       })
       .finally(() => setLoading(false));
+
+    // Documents — so Status + Documents + Payment can all be handled from this
+    // one card instead of jumping to a separate /admin/documents page.
+    fetch("/api/admin/documents", { credentials: "include" })
+      .then(res => (res.ok ? res.json() : null))
+      .then(json => {
+        if (!json?.success || !Array.isArray(json.data)) return;
+        const byUser: Record<string, DocRecord[]> = {};
+        for (const d of json.data as DocRecord[]) {
+          if (d.uid) (byUser[d.uid] ||= []).push(d);
+        }
+        setDocsByUser(byUser);
+      })
+      .catch(() => {});
   }, [authorized]);
 
   async function handleStatusChange(id: string, status: ApplicationStatus) {
@@ -294,6 +557,34 @@ export default function AdminApplicationsPage() {
 
   function handleNoteSaved(id: string, note: string) {
     setApplications(prev => prev.map(a => a.id === id ? { ...a, note } : a));
+  }
+
+  function handlePaymentSaved(id: string, changes: Partial<CourseApplication>) {
+    setApplications(prev => prev.map(a => a.id === id ? { ...a, ...changes } : a));
+  }
+
+  function handleDocVerified(docId: string, changes: Partial<DocRecord>) {
+    setDocsByUser(prev => {
+      const next: Record<string, DocRecord[]> = {};
+      for (const [uid, docs] of Object.entries(prev)) {
+        next[uid] = docs.map(d => d.id === docId ? { ...d, ...changes } : d);
+      }
+      return next;
+    });
+  }
+
+  function handleDocDeleted(docId: string) {
+    setDocsByUser(prev => {
+      const next: Record<string, DocRecord[]> = {};
+      for (const [uid, docs] of Object.entries(prev)) {
+        next[uid] = docs.filter(d => d.id !== docId);
+      }
+      return next;
+    });
+  }
+
+  function handleAppDeleted(id: string) {
+    setApplications(prev => prev.filter(a => a.id !== id));
   }
 
   function exportCsv() {
@@ -483,8 +774,13 @@ export default function AdminApplicationsPage() {
               <AppCard
                 key={app.id}
                 app={app}
+                doc={app.userId ? representativeDoc(docsByUser[app.userId]) as DocRecord | undefined : undefined}
                 onStatusChange={handleStatusChange}
                 onNoteSaved={handleNoteSaved}
+                onPaymentSaved={handlePaymentSaved}
+                onDocVerified={handleDocVerified}
+                onDocDeleted={handleDocDeleted}
+                onAppDeleted={handleAppDeleted}
                 isNew={!app.status || app.status === "new"}
               />
             ))}

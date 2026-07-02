@@ -22,6 +22,7 @@ function serializeDoc(d: FirebaseFirestore.QueryDocumentSnapshot) {
     ...data,
     createdAt: data.createdAt?.toMillis ? data.createdAt.toMillis() : data.createdAt ?? null,
     noteUpdatedAt: data.noteUpdatedAt?.toMillis ? data.noteUpdatedAt.toMillis() : data.noteUpdatedAt ?? null,
+    paymentUpdatedAt: data.paymentUpdatedAt?.toMillis ? data.paymentUpdatedAt.toMillis() : data.paymentUpdatedAt ?? null,
   };
 }
 

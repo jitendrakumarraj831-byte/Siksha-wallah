@@ -13,6 +13,7 @@ export interface StudentProfile {
   phone: string;
   qualification?: string;
   address?: string;
+  photoURL?: string;
   profileComplete: boolean;
   updatedAt?: number;
   createdAt?: number;
@@ -145,6 +146,60 @@ export const studentService = {
 
       // Use /auto/upload so Cloudinary correctly handles both images and PDFs
       xhr.open('POST', `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`);
+      xhr.send(formData);
+    });
+  },
+
+  // Profile photo — uploads straight to Cloudinary (same credentials as document
+  // upload) and returns the URL. Unlike uploadDocumentFile, this never touches the
+  // `documents` collection — a profile photo isn't a document awaiting office
+  // verification, so it's saved directly onto the student's profile via
+  // updateProfile({ photoURL }).
+  uploadProfilePhoto(
+    uid: string,
+    file: File,
+    onProgress?: (percent: number) => void,
+  ): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+      const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
+      if (!cloudName || !uploadPreset) {
+        reject(new Error('Cloudinary is not configured. Check environment variables.'));
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', uploadPreset);
+      formData.append('folder', `profile-photos/${uid}`);
+
+      const xhr = new XMLHttpRequest();
+
+      xhr.upload.addEventListener('progress', (e) => {
+        if (e.lengthComputable) onProgress?.(Math.round((e.loaded / e.total) * 100));
+      });
+
+      xhr.addEventListener('load', () => {
+        try {
+          if (xhr.status < 200 || xhr.status >= 300) {
+            let errMsg = `Cloudinary upload failed (HTTP ${xhr.status})`;
+            try {
+              const errBody = JSON.parse(xhr.responseText);
+              if (errBody?.error?.message) errMsg = `Cloudinary: ${errBody.error.message}`;
+            } catch {}
+            throw new Error(errMsg);
+          }
+          const result = JSON.parse(xhr.responseText);
+          resolve(result.secure_url as string);
+        } catch (err: any) {
+          reject(new Error(err.message));
+        }
+      });
+
+      xhr.addEventListener('error', () => reject(new Error('Network error during upload')));
+
+      xhr.open('POST', `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`);
       xhr.send(formData);
     });
   },

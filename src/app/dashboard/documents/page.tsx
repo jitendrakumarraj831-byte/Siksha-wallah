@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/components/auth-provider';
 import { studentService, type Document, type DocumentVerificationStatus } from '@/services/student-service';
+import { REQUIRED_DOCUMENTS } from '@/lib/admission-journey';
 import { PortalShell } from '@/components/portal-shell';
 import {
   ArrowLeft, Loader, AlertCircle, CheckCircle2, Upload, Trash2,
@@ -22,11 +23,9 @@ const COMBINED_TYPE = 'all_documents'; // the single combined-PDF record
 const SIZE_ERROR = 'Please upload a single PDF containing all required documents. Maximum allowed size is 2 MB.';
 const TYPE_ERROR = 'Only PDF files are allowed. Please upload a single PDF containing all required documents.';
 
-// Guidance only — what the student should combine into the one PDF.
-const RECOMMENDED_DOCS = [
-  'Aadhaar Card', '10th Marksheet', '12th Marksheet', 'Graduation Marksheet (if any)',
-  'Passport Photo', 'Signature', 'Caste / Income / Domicile (if any)',
-];
+// Guidance only — what the student should combine into the one PDF. Shared
+// with the main dashboard checklist (see @/lib/admission-journey) so both
+// pages always list the exact same required documents.
 
 function isPdf(file: File): boolean {
   // Some mobile pickers report an empty/odd MIME type, so accept when EITHER the
@@ -275,8 +274,8 @@ export default function DocumentsPage() {
               <div className="mt-3 text-xs text-gray-500">
                 <p className="mb-1 font-semibold text-gray-600">📋 Include these in your PDF:</p>
                 <div className="flex flex-wrap gap-1.5">
-                  {RECOMMENDED_DOCS.map(d => (
-                    <span key={d} className="rounded-md border border-gray-200 bg-white px-2 py-0.5 text-[11px] font-medium text-gray-600">{d}</span>
+                  {REQUIRED_DOCUMENTS.map(d => (
+                    <span key={d.key} className="rounded-md border border-gray-200 bg-white px-2 py-0.5 text-[11px] font-medium text-gray-600">{d.label}</span>
                   ))}
                 </div>
               </div>

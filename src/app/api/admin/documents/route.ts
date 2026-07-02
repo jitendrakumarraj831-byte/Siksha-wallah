@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminDb } from "@/lib/firebase-admin";
 import { verifyAdminToken, ADMIN_COOKIE } from "@/lib/admin-session";
+import { deleteCloudinaryAsset } from "@/lib/cloudinary-admin";
 
 async function checkAdmin(request: NextRequest): Promise<boolean> {
   const session = await verifyAdminToken(request.cookies.get(ADMIN_COOKIE)?.value).catch(() => null);
@@ -105,6 +106,37 @@ export async function PATCH(request: NextRequest) {
         docType: docData.type,
       });
     } catch {}
+
+    return NextResponse.json({ success: true });
+  } catch (e: any) {
+    return NextResponse.json({ error: e.message }, { status: 500 });
+  }
+}
+
+// DELETE /api/admin/documents — permanently remove one uploaded document (its
+// Firestore record + the Cloudinary file). Cookie-gated (office session).
+export async function DELETE(request: NextRequest) {
+  if (!(await checkAdmin(request))) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const body = await request.json();
+    const { id } = body;
+    if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
+
+    const db = getAdminDb();
+    if (!db) return NextResponse.json({ error: "DB unavailable" }, { status: 503 });
+
+    const docRef = db.collection("documents").doc(id);
+    const snap = await docRef.get();
+    if (!snap.exists) {
+      return NextResponse.json({ error: "Document not found" }, { status: 404 });
+    }
+
+    const data = snap.data()!;
+    await deleteCloudinaryAsset(data.publicId, data.resourceType || "image");
+    await docRef.delete();
 
     return NextResponse.json({ success: true });
   } catch (e: any) {

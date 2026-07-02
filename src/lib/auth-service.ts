@@ -15,6 +15,8 @@ export interface UserProfile {
   email: string;
   name: string;
   phone?: string;
+  address?: string;
+  photoURL?: string;
   role: 'student' | 'admin' | 'counselor';
   enrolledCourses?: string[];
   profileComplete: boolean;
