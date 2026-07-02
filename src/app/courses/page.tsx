@@ -239,7 +239,7 @@ function CourseInfoModal({ course, streamKey, onClose }: { course: Course; strea
 }
 
 /* ─── Course Card (inside slider) ────────────────────────────────── */
-function CourseCard({ course, streamKey }: { course: Course; streamKey: StreamKey }) {
+function CourseCard({ course, streamKey, movedRef }: { course: Course; streamKey: StreamKey; movedRef: React.MutableRefObject<boolean> }) {
   const tab = streamTabs.find(s => s.key === streamKey)!;
   const colors = colorMap[tab.color];
   const slug = getCourseSlug(course.name);
@@ -252,10 +252,10 @@ function CourseCard({ course, streamKey }: { course: Course; streamKey: StreamKe
       <CourseInfoModal course={course} streamKey={streamKey} onClose={() => setModalOpen(false)} />
     )}
     <div className="group relative flex-shrink-0 w-[272px] sm:w-[288px] flex flex-col rounded-2xl border border-gray-100 bg-white shadow-sm overflow-hidden cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-gray-200 focus-within:ring-2 focus-within:ring-primary-blue focus-within:ring-offset-1">
-      {/* Whole-card clickable area — opens quick-info modal */}
+      {/* Whole-card clickable area — opens quick-info modal (skipped if the row was just dragged) */}
       <button
         type="button"
-        onClick={() => setModalOpen(true)}
+        onClick={() => { if (!movedRef.current) setModalOpen(true); }}
         className="absolute inset-0 z-10 rounded-2xl focus:outline-none"
         aria-label={`${course.full} की basic information देखें`}
         style={{ touchAction: "manipulation" }}
@@ -515,7 +515,6 @@ function StreamSlider({ tab }: { tab: typeof streamTabs[0] }) {
             onPointerMove={onPointerMove}
             onPointerUp={onPointerUp}
             onPointerLeave={onPointerUp}
-            onClickCapture={(e) => { if (movedRef.current) { e.preventDefault(); e.stopPropagation(); } }}
             onMouseEnter={() => {
               setPaused(true);
               // Stop any in-progress smooth-scroll animation instantly so the card
@@ -540,7 +539,7 @@ function StreamSlider({ tab }: { tab: typeof streamTabs[0] }) {
             }}
           >
             {tab.courses.map(course => (
-              <CourseCard key={course.name} course={course} streamKey={tab.key as StreamKey} />
+              <CourseCard key={course.name} course={course} streamKey={tab.key as StreamKey} movedRef={movedRef} />
             ))}
 
             {/* End CTA card */}
