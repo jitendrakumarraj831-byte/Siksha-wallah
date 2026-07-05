@@ -914,12 +914,12 @@ export default function Home() {
             {([
               {
                 name: "B.Ed",
-                shortDesc: "Bachelor of Education — सरकारी शिक्षक बनें",
+                shortDesc: "BA/B.Sc + B.Ed Integrated (CCSU, UP) सिर्फ ₹1,40,000 में",
                 stream: "teaching",
                 icon: BookMarked,
                 gradient: "from-blue-700 to-indigo-700",
                 badge: "bg-blue-100 text-blue-700",
-                tag: undefined,
+                tag: "🔥 BA/B.Sc + B.Ed",
               },
               {
                 name: "D.El.Ed",
