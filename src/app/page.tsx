@@ -919,14 +919,16 @@ export default function Home() {
                 icon: BookMarked,
                 gradient: "from-blue-700 to-indigo-700",
                 badge: "bg-blue-100 text-blue-700",
+                tag: undefined,
               },
               {
                 name: "D.El.Ed",
-                shortDesc: "Diploma — Primary teacher की guaranteed career",
+                shortDesc: "BA + D.El.Ed Integrated भी उपलब्ध — कम फीस में guaranteed teaching career",
                 stream: "teaching",
                 icon: GraduationCap,
                 gradient: "from-blue-600 to-blue-800",
                 badge: "bg-blue-100 text-blue-800",
+                tag: "🔥 BA Integrated",
               },
               {
                 name: "ANM",
@@ -935,6 +937,7 @@ export default function Home() {
                 icon: Stethoscope,
                 gradient: "from-blue-500 to-indigo-600",
                 badge: "bg-indigo-100 text-indigo-700",
+                tag: undefined,
               },
               {
                 name: "GNM",
@@ -943,6 +946,7 @@ export default function Home() {
                 icon: Stethoscope,
                 gradient: "from-indigo-600 to-blue-800",
                 badge: "bg-blue-100 text-blue-700",
+                tag: undefined,
               },
               {
                 name: "B.Sc Nursing",
@@ -951,6 +955,7 @@ export default function Home() {
                 icon: Stethoscope,
                 gradient: "from-blue-800 to-indigo-900",
                 badge: "bg-indigo-100 text-indigo-800",
+                tag: undefined,
               },
               {
                 name: "D.Pharma",
@@ -959,6 +964,7 @@ export default function Home() {
                 icon: FlaskConical,
                 gradient: "from-indigo-500 to-blue-700",
                 badge: "bg-blue-100 text-blue-700",
+                tag: undefined,
               },
               {
                 name: "B.Tech",
@@ -967,6 +973,7 @@ export default function Home() {
                 icon: Cpu,
                 gradient: "from-amber-500 to-amber-700",
                 badge: "bg-amber-100 text-amber-800",
+                tag: undefined,
               },
               {
                 name: "Polytechnic",
@@ -975,6 +982,7 @@ export default function Home() {
                 icon: Cpu,
                 gradient: "from-amber-600 to-orange-600",
                 badge: "bg-amber-100 text-amber-700",
+                tag: undefined,
               },
               {
                 name: "ITI",
@@ -983,6 +991,7 @@ export default function Home() {
                 icon: Briefcase,
                 gradient: "from-amber-400 to-amber-600",
                 badge: "bg-amber-100 text-amber-700",
+                tag: undefined,
               },
               {
                 name: "LLB",
@@ -991,8 +1000,9 @@ export default function Home() {
                 icon: Scale,
                 gradient: "from-[#001850] to-[#003590]",
                 badge: "bg-blue-100 text-blue-800",
+                tag: undefined,
               },
-            ] as const).map(({ name, shortDesc, stream, icon: Icon, gradient, badge }) => {
+            ] as const).map(({ name, shortDesc, stream, icon: Icon, gradient, badge, tag }) => {
               const slug = getCourseSlug(name);
               const detailsHref = slug ? `/courses/${slug}` : `/courses#${stream}`;
               return (
@@ -1000,6 +1010,11 @@ export default function Home() {
                 <div className="group relative flex flex-col rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl overflow-hidden h-full cursor-pointer">
                   {/* Whole-card click → full course details (stretched link). Buttons below sit above via z-index. */}
                   <Link href={detailsHref} aria-label={`${name} की पूरी details देखें`} className="absolute inset-0 z-10" />
+                  {tag && (
+                    <span className="absolute right-1.5 top-1.5 z-20 rounded-full bg-red-500 px-2 py-0.5 text-[9px] font-extrabold text-white shadow-sm">
+                      {tag}
+                    </span>
+                  )}
                   {/* Brand-palette header */}
                   <div className={`bg-gradient-to-br ${gradient} p-4 flex items-center justify-center`}>
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/20">
