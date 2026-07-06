@@ -26,6 +26,15 @@ function ResetPasswordForm() {
     }
   }, [oobCode]);
 
+  // Redirect to login 3s after a successful reset. Scheduled here (not inside
+  // handleSubmit) so the timer is actually cleared if the component unmounts
+  // before it fires.
+  useEffect(() => {
+    if (!done) return;
+    const t = setTimeout(() => router.push('/auth/login'), 3000);
+    return () => clearTimeout(t);
+  }, [done, router]);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError('');
@@ -41,8 +50,6 @@ function ResetPasswordForm() {
     try {
       await authService.confirmPasswordReset(oobCode, password);
       setDone(true);
-      const t = setTimeout(() => router.push('/auth/login'), 3000);
-      return () => clearTimeout(t);
     } catch (err: any) {
       setError(err.message || 'Could not reset your password. The link may have expired — please request a new one.');
     } finally {

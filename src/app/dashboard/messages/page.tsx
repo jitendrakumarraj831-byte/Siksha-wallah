@@ -25,6 +25,7 @@ export default function StudentMessagesPage() {
   const [loadError, setLoadError] = useState(false);
   const [text, setText] = useState('');
   const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState('');
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -62,6 +63,7 @@ export default function StudentMessagesPage() {
     const t = text.trim();
     if (!t || !user || sending) return;
     setSending(true);
+    setSendError('');
     setText('');
     try {
       await sendStudentMessage({
@@ -72,6 +74,7 @@ export default function StudentMessagesPage() {
       });
     } catch {
       setText(t); // restore on failure
+      setSendError('Message send नहीं हुआ। कृपया दोबारा कोशिश करें।');
     } finally {
       setSending(false);
     }
@@ -158,10 +161,15 @@ export default function StudentMessagesPage() {
             </div>
 
             {/* Composer */}
+            {sendError && (
+              <p className="border-t border-red-100 bg-red-50 px-4 py-2 text-center text-xs font-semibold text-red-600">
+                {sendError}
+              </p>
+            )}
             <form onSubmit={handleSend} className="flex items-center gap-2 border-t border-gray-100 bg-white px-3 py-3">
               <input
                 value={text}
-                onChange={(e) => setText(e.target.value)}
+                onChange={(e) => { setText(e.target.value); if (sendError) setSendError(''); }}
                 placeholder="अपना message type करें…"
                 maxLength={2000}
                 className="flex-1 rounded-xl border-2 border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-[#003f9f]"
