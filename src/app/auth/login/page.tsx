@@ -49,8 +49,8 @@ function LoginForm() {
         page: "/auth/login",
       });
       router.push(redirect);
-    } catch {
-      setError("Incorrect Email or Password.");
+    } catch (err: any) {
+      setError(err?.message || "Incorrect Email or Password.");
     } finally {
       setLoading(false);
     }

@@ -28,12 +28,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
+    // Tracks the most recent uid seen so a slower, older callback can't
+    // overwrite state with stale data after a newer one has already resolved.
+    let latestUid: string | null = null;
+
     const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
+      latestUid = firebaseUser?.uid ?? null;
       if (firebaseUser) {
         setUser(firebaseUser);
         try {
           const profile = await authService.getUserProfile(firebaseUser.uid);
-          setUserProfile(profile);
+          if (latestUid === firebaseUser.uid) setUserProfile(profile);
         } catch (error) {
           console.error('Failed to load user profile:', error);
         }
@@ -41,7 +46,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null);
         setUserProfile(null);
       }
-      setLoading(false);
+      if (latestUid === (firebaseUser?.uid ?? null)) setLoading(false);
     });
 
     return () => unsubscribe();
