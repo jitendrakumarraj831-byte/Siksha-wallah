@@ -215,6 +215,7 @@ function ApplyForm() {
     }
     setLoading(true);
     setError("");
+    console.log("[Apply] submit start", { course: form.course, docs: uploadedDocs.length });
     try {
       const id = await saveApplication({
         userId: user?.uid || undefined,
@@ -237,6 +238,7 @@ function ApplyForm() {
         message: form.message || undefined,
         uploadedDocuments: uploadedDocs.map(u => ({ name: u.name, url: u.url! })),
       });
+      console.log("[Apply] Firestore write completed", { id });
       const rno = receiptNo(id);
       setAppId(rno);
       saveInquiry({
@@ -261,7 +263,8 @@ function ApplyForm() {
         page: "/apply",
       }).catch(() => {});
       setSubmitted(true);
-    } catch {
+    } catch (err: any) {
+      console.error("[Apply] submit failed:", err?.stack || err);
       setError("तकनीकी कारणवश आवेदन अभी जमा नहीं हो पाया। कृपया हमें सीधे कॉल करें — हमारी team आपकी सहायता के लिए तैयार है।");
     } finally {
       setLoading(false);
