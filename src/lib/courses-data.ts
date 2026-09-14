@@ -876,12 +876,51 @@ export const COURSE_ID_MAP: Record<string, { course: Course; stream: StreamKey }
   'llm':          { course: lawCourses[3], stream: 'law' },
 };
 
-// Helper: resolve course name to its URL slug
-export function getCourseSlug(name: string): string | null {
-  const lower = name.toLowerCase().replace(/[\s.]/g, '');
-  for (const [slug, entry] of Object.entries(COURSE_ID_MAP)) {
-    const cn = entry.course.name.toLowerCase().replace(/[\s.]/g, '');
-    if (cn === lower || slug === lower) return slug;
+// Course names are written inconsistently across streams ("BMLT" vs "B.M.L.T"),
+// so slug lookups compare on a punctuation-free lowercase form.
+function normaliseCourseName(name: string): string {
+  return name.toLowerCase().replace(/[\s.]/g, '');
+}
+
+// Helper: resolve course name to its URL slug.
+//
+// "BMLT" (medical) and "B.M.L.T" (paramedical) normalise to the same string, so
+// a name-only lookup always resolved to the medical slug and left
+// /courses/bmlt-para without a single internal link anywhere on the site — the
+// sitemap listed it, nothing pointed at it, and Google left it "Discovered –
+// currently not indexed". Passing the stream disambiguates the two.
+export function getCourseSlug(name: string, stream?: StreamKey): string | null {
+  const lower = normaliseCourseName(name);
+  const entries = Object.entries(COURSE_ID_MAP);
+  const matches = (slug: string, entry: { course: Course; stream: StreamKey }) =>
+    normaliseCourseName(entry.course.name) === lower || slug === lower;
+
+  if (stream) {
+    const scoped = entries.find(([slug, entry]) => entry.stream === stream && matches(slug, entry));
+    if (scoped) return scoped[0];
   }
-  return null;
+  const any = entries.find(([slug, entry]) => matches(slug, entry));
+  return any ? any[0] : null;
+}
+
+export type CourseLink = { slug: string; name: string; full: string; stream: StreamKey };
+
+// Every course that has a detail page, in stream order. Used by the sitemap and
+// by the A–Z index on /courses so each detail page has a stable crawl path.
+export const ALL_COURSE_LINKS: CourseLink[] = Object.entries(COURSE_ID_MAP).map(
+  ([slug, { course, stream }]) => ({ slug, name: course.name, full: course.full, stream }),
+);
+
+// Sibling courses in the same stream, excluding the current one. Rendered at the
+// bottom of every course detail page so each page links to — and is linked from
+// — several others instead of hanging off /courses alone.
+export function getRelatedCourses(slug: string, limit = 8): CourseLink[] {
+  const current = COURSE_ID_MAP[slug];
+  if (!current) return [];
+  const sameStream = ALL_COURSE_LINKS.filter((c) => c.stream === current.stream && c.slug !== slug);
+  if (sameStream.length >= limit) return sameStream.slice(0, limit);
+  // Short streams (law has four courses) get topped up from other streams so the
+  // block is never a lone link.
+  const others = ALL_COURSE_LINKS.filter((c) => c.stream !== current.stream && c.slug !== slug);
+  return [...sameStream, ...others].slice(0, limit);
 }

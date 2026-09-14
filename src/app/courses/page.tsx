@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { SiteNavbar } from "@/components/site-navbar";
 import { SiteFooter } from "@/components/site-footer";
-import { streamTabs, colorMap, getCourseSlug, type StreamKey, type Course } from "@/lib/courses-data";
+import { streamTabs, colorMap, getCourseSlug, ALL_COURSE_LINKS, type StreamKey, type Course } from "@/lib/courses-data";
 import { saveActivity } from "@/services/activity-service";
 
 /* ─── per-stream taglines ─────────────────────────────────────────── */
@@ -25,7 +25,7 @@ const STREAM_TAGLINES: Record<StreamKey, string> = {
 function CourseInfoModal({ course, streamKey, onClose }: { course: Course; streamKey: StreamKey; onClose: () => void }) {
   const tab = streamTabs.find(s => s.key === streamKey)!;
   const colors = colorMap[tab.color];
-  const slug = getCourseSlug(course.name);
+  const slug = getCourseSlug(course.name, streamKey);
   const waText = `नमस्ते!%20मुझे%20${encodeURIComponent(course.name)}%20(${encodeURIComponent(course.full)})%20के%20बारे%20में%20fees%20aur%20admission%20की%20जानकारी%20चाहिए।`;
 
   useEffect(() => {
@@ -242,7 +242,7 @@ function CourseInfoModal({ course, streamKey, onClose }: { course: Course; strea
 function CourseCard({ course, streamKey, movedRef }: { course: Course; streamKey: StreamKey; movedRef: React.MutableRefObject<boolean> }) {
   const tab = streamTabs.find(s => s.key === streamKey)!;
   const colors = colorMap[tab.color];
-  const slug = getCourseSlug(course.name);
+  const slug = getCourseSlug(course.name, streamKey);
   const waText = `नमस्ते!%20मुझे%20${encodeURIComponent(course.name)}%20(${encodeURIComponent(course.full)})%20के%20बारे%20में%20fees%20aur%20admission%20की%20जानकारी%20चाहिए।`;
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -641,6 +641,53 @@ export default function CoursesPage() {
       {streamTabs.map((tab, i) => (
         <StreamSlider key={tab.key} tab={tab} />
       ))}
+
+      {/* ── ALL COURSES INDEX ─────────────────────────────────────
+          The sliders above scroll horizontally, so most course links sit far
+          off-screen. This flat index gives every detail page a plain, always
+          visible link from the courses hub — the crawl path that was missing
+          while those pages sat in "Discovered – currently not indexed". */}
+      <section className="bg-white py-12 border-t border-gray-100" id="all-courses">
+        <div className="container-shell">
+          <h2 className="font-headline text-xl font-extrabold text-gray-900">All Courses — A to Z</h2>
+          <p className="mt-1 text-sm text-gray-500">
+            हर course की detail page पर fees, eligibility, documents और career scope की पूरी जानकारी है।
+          </p>
+
+          <div className="mt-6 space-y-7">
+            {streamTabs.map(({ key, label, color }) => {
+              const courses = ALL_COURSE_LINKS
+                .filter(c => c.stream === key)
+                .sort((a, b) => a.name.localeCompare(b.name));
+              if (courses.length === 0) return null;
+              const c = colorMap[color];
+              return (
+                <div key={key}>
+                  <h3 className={`mb-3 inline-flex items-center rounded-full px-3 py-1 text-xs font-extrabold ${c.badge}`}>
+                    {label}
+                  </h3>
+                  <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3" role="list">
+                    {courses.map(course => (
+                      <li key={course.slug}>
+                        <Link
+                          href={`/courses/${course.slug}`}
+                          className="flex items-center justify-between gap-2 rounded-xl border border-gray-100 bg-gray-50 px-4 py-2.5 text-sm transition hover:border-gray-300 hover:bg-white"
+                        >
+                          <span>
+                            <span className="block font-bold text-gray-800">{course.name}</span>
+                            <span className="block text-xs text-gray-500">{course.full}</span>
+                          </span>
+                          <ArrowRight size={13} className="flex-shrink-0 text-gray-400" />
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
       {/* ── FINAL CTA ──────────────────────────────────────────── */}
       <section className="bg-gradient-to-br from-[#00102e] via-[#001850] to-[#003590] py-14 text-white text-center">

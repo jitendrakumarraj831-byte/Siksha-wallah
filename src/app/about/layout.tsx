@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About Us — Siksha Wallah Forbesganj",
+  title: "About Us — Admission Consultancy in Forbesganj Since 2015",
   description:
     "Learn about Siksha Wallah — Forbesganj's most trusted admission consultancy since 2015. Meet our expert counsellors and our mission to guide Bihar students.",
   openGraph: {

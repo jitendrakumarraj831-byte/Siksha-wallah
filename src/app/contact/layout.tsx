@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact Us — Siksha Wallah Forbesganj",
+  title: "Contact Us — College Chowk, Forbesganj, Araria",
   description:
     "Get in touch with Siksha Wallah for admission guidance. Visit us at College Chowk, Forbesganj, Araria, Bihar. Call: 6203138576 | WhatsApp available.",
   openGraph: {
