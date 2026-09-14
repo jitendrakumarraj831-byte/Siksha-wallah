@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Courses — B.Ed, Nursing, Engineering & More | Siksha Wallah",
+  title: {
+    default: "Courses — B.Ed, Nursing, Engineering & 40+ More",
+    // Re-declared so course detail pages under this segment keep the brand
+    // suffix; a plain-string title here would drop the root layout template.
+    template: "%s | Siksha Wallah",
+  },
   description:
     "Explore B.Ed, D.El.Ed, B.Sc Nursing, GNM, B.Pharma, B.Tech, BBA, MBA and more. Get admission guidance with Bihar Student Credit Card support.",
   keywords: [

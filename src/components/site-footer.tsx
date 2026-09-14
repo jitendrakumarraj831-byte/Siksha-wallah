@@ -14,18 +14,30 @@ const QUICK_LINKS = [
   { href: "/apply", label: "Book Free Counselling" },
 ];
 
-// Each course links to its matching stream section on the /courses page,
-// so clicking jumps straight to the relevant course list.
+// These used to be "/courses#teaching"-style anchors, which all resolved to the
+// same single page and gave the course detail pages no inbound links at all.
+// Linking straight to each detail page puts a crawlable link to every popular
+// course on every page of the site.
 const COURSES = [
-  { label: "B.Ed / D.El.Ed",           href: "/courses#teaching" },
-  { label: "M.Ed",                     href: "/courses#teaching" },
-  { label: "B.Sc Nursing / GNM / ANM", href: "/courses#medical" },
-  { label: "B.Pharma / D.Pharma",      href: "/courses#medical" },
-  { label: "MBBS / BDS",               href: "/courses#medical" },
-  { label: "BBA / MBA",                href: "/courses#technical" },
-  { label: "B.Tech / Polytechnic",     href: "/courses#technical" },
-  { label: "BCA / MCA / ITI",          href: "/courses#technical" },
+  { label: "B.Ed",          href: "/courses/bed" },
+  { label: "D.El.Ed",       href: "/courses/deled" },
+  { label: "B.Sc Nursing",  href: "/courses/bsc-nursing" },
+  { label: "GNM Nursing",   href: "/courses/gnm" },
+  { label: "ANM Nursing",   href: "/courses/anm" },
+  { label: "MBBS",          href: "/courses/mbbs" },
+  { label: "B.Pharma",      href: "/courses/bpharma" },
+  { label: "D.Pharma",      href: "/courses/dpharma" },
+  { label: "B.Tech",        href: "/courses/btech" },
+  { label: "Polytechnic",   href: "/courses/polytechnic" },
+  { label: "BBA / MBA",     href: "/courses/mba" },
+  { label: "LLB",           href: "/courses/llb" },
 ];
+
+// Developer credit shown in the footer bottom bar.
+const DEVELOPER = {
+  name: "Jitendra Kumar",
+  phones: ["8651070831", "8541849118"],
+};
 
 const PHONES = [
   { num: "6203138576", label: "Rajesh Kr. Sah — Primary Admission Contact" },
@@ -127,6 +139,11 @@ export function SiteFooter() {
                   </Link>
                 </li>
               ))}
+              <li className="pt-1">
+                <Link href="/courses#all-courses" className="font-semibold text-amber-400 transition hover:text-amber-300">
+                  View all 40+ courses →
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -184,6 +201,23 @@ export function SiteFooter() {
             <p>© {new Date().getFullYear()} Siksha Wallah Education Consultancy. All rights reserved. | College Chowk, Forbesganj, Araria, Bihar — 854318</p>
             <p className="text-gray-500">Trusted guidance for B.Ed • D.El.Ed • Nursing • Pharmacy • Engineering • Management</p>
           </div>
+          <p className="w-full border-t border-gray-800 pt-4 text-center text-gray-500">
+            Design and developed by{" "}
+            <span className="whitespace-nowrap font-semibold text-gray-300">{DEVELOPER.name}</span>
+            <span className="mx-1.5 text-gray-700" aria-hidden="true">·</span>
+            {DEVELOPER.phones.map((num, i) => (
+              <span key={num}>
+                {i > 0 && <span className="mx-1.5 text-gray-700" aria-hidden="true">·</span>}
+                <a
+                  href={`tel:+91${num}`}
+                  className="whitespace-nowrap transition hover:text-white"
+                  aria-label={`Call the developer ${DEVELOPER.name} at +91 ${num}`}
+                >
+                  +91 {num}
+                </a>
+              </span>
+            ))}
+          </p>
         </div>
       </div>
     </footer>

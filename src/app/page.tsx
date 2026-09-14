@@ -1021,7 +1021,7 @@ export default function Home() {
                 tag: undefined,
               },
             ] as const).map(({ name, shortDesc, stream, icon: Icon, gradient, badge, tag }) => {
-              const slug = getCourseSlug(name);
+              const slug = getCourseSlug(name, stream);
               const detailsHref = slug ? `/courses/${slug}` : `/courses#${stream}`;
               return (
               <AnimateIn key={name} type="zoom-in" className="w-[60%] shrink-0 snap-start sm:w-[42%] md:w-auto">

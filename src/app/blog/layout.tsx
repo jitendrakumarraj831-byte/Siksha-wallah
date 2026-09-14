@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Blog — Education Tips & Bihar Admission Guides | Siksha Wallah",
+  title: {
+    default: "Blog — Education Tips & Bihar Admission Guides",
+    // Re-declared so article pages under this segment keep the brand suffix.
+    template: "%s | Siksha Wallah",
+  },
   description:
     "Expert articles on B.Ed, Nursing, Engineering admissions in Bihar. BSCC loan guide, D.El.Ed vs B.Ed, top colleges and more — in Hindi & English.",
   openGraph: {

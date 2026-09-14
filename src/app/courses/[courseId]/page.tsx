@@ -3,13 +3,13 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { SiteNavbar } from '@/components/site-navbar';
 import { SiteFooter } from '@/components/site-footer';
-import { COURSE_ID_MAP, colorMap, streamTabs } from '@/lib/courses-data';
+import { COURSE_ID_MAP, colorMap, streamTabs, getRelatedCourses } from '@/lib/courses-data';
 import { CourseViewTracker } from '@/components/course-view-tracker';
 import { TrackedWhatsAppLink } from '@/components/tracked-whatsapp-link';
 import {
   ArrowLeft, Clock, CreditCard, CheckCircle2, Star, Sparkles,
   Award, Building2, Briefcase, BookMarked, ShieldCheck, FileText,
-  MessageCircle,
+  MessageCircle, ArrowRight,
 } from 'lucide-react';
 
 const BASE_URL = 'https://www.sikshawallahfbg.in';
@@ -130,11 +130,30 @@ export default async function CourseDetailPage(
     timeRequired: course.duration,
   };
 
+  // Breadcrumbs tell Google where this page sits in the site hierarchy, which is
+  // one of the signals it weighs when deciding whether a deep page is worth
+  // crawling and indexing.
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: BASE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Courses', item: `${BASE_URL}/courses` },
+      { '@type': 'ListItem', position: 3, name: course.name, item: `${BASE_URL}/courses/${courseId}` },
+    ],
+  };
+
+  const relatedCourses = getRelatedCourses(courseId);
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <CourseViewTracker courseId={courseId} name={course.name} full={course.full} />
       <SiteNavbar />
@@ -337,6 +356,39 @@ export default async function CourseDetailPage(
             </div>
           </div>
         </div>
+
+        {/* Related courses — every detail page links to its siblings so no course
+            page depends on /courses as its only inbound link. */}
+        {relatedCourses.length > 0 && (
+          <nav className="mt-12 rounded-2xl border bg-slate-50 p-6" aria-label="Related courses">
+            <h2 className="font-extrabold text-slate-900">Related Courses</h2>
+            <p className="mt-1 text-sm text-slate-500">
+              {tab.label} और दूसरे popular courses — fees, eligibility और career scope देखें।
+            </p>
+            <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3" role="list">
+              {relatedCourses.map((related) => (
+                <li key={related.slug}>
+                  <Link
+                    href={`/courses/${related.slug}`}
+                    className="flex items-center justify-between gap-2 rounded-xl border bg-white px-4 py-3 text-sm transition hover:border-slate-300 hover:shadow-sm"
+                  >
+                    <span>
+                      <span className="block font-bold text-slate-800">{related.name}</span>
+                      <span className="block text-xs text-slate-500">{related.full}</span>
+                    </span>
+                    <ArrowRight size={14} className="flex-shrink-0 text-slate-400" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/courses"
+              className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-primary-blue hover:underline"
+            >
+              सभी 40+ courses देखें <ArrowRight size={13} />
+            </Link>
+          </nav>
+        )}
       </div>
       <SiteFooter />
     </>
